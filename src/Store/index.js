@@ -70,14 +70,38 @@ Store.resolve = function (command) {
   if(!commands[command]) {
     throw new Error(command + ' is not registered with ace')
   }
-  const commandClass = Ioc.make(commands[command])
+  const commandInstance = Ioc.make(commands[command])
 
   /**
-   * throw error if command does have a handle method or
+   * throw error if command does have a handle method
+   */
+  if(typeof(commandInstance.handle) !== 'function') {
+    throw new Error(command + ' should have a handle method')
+  }
+
+  return commandInstance
+}
+
+
+/**
+ * @description resolves commands from Ioc comtainer
+ * @method resolve
+ * @param  {String} command
+ * @return {Mixed}
+ * @public
+ */
+Store.get = function (command) {
+  if(!commands[command]) {
+    throw new Error(command + ' is not registered with ace')
+  }
+  const commandClass = Ioc.use(commands[command])
+
+  /**
+   * throw error if command does have a signature or
    * description
    */
-  if(typeof(commandClass.handle) !== 'function' || !commandClass.description) {
-    throw new Error(command + ' should have a handle method and description')
+  if(!commandClass.description || !commandClass.signature) {
+    throw new Error(command + ' should have a signature and description')
   }
 
   return commandClass

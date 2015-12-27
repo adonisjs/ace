@@ -47,7 +47,7 @@ helpers.makeHelp = function (argv, packageFile) {
   /**
    * display help for all commands
    */
-  const commands = helpers.makeCommands()
+  const commands = helpers.getCommands()
   const options = {
     package: packageFile,
     commands: commands,
@@ -78,17 +78,38 @@ helpers.makeCommand = function (command) {
 }
 
 /**
- * @description makes all commands registered inside ace
+ * @description resolves a command to an object with its options, arguments
+ * and meta data
+ * @method getCommand
+ * @param  {String}    command
+ * @return {Object}
+ * @public
+ * @throws multiple errors
+ */
+helpers.getCommand = function (command) {
+  const resolvedCommand = Store.get(command)
+  const description = resolvedCommand.description()
+  const requirements = Parser.parseSignature(resolvedCommand.signature)
+  return {
+    name: command,
+    description: description,
+    arguments: requirements.args,
+    options: requirements.flags,
+  }
+}
+
+/**
+ * @description resolves all commands registered inside ace
  * store
- * @method makeCommands
+ * @method getCommands
  * @return {Array}
  * @public
  */
-helpers.makeCommands = function () {
+helpers.getCommands = function () {
   const commands = Store.getCommands()
   const formattedCommands = []
   Object.keys(commands).forEach(function (command) {
-    formattedCommands.push(helpers.makeCommand(command))
+    formattedCommands.push(helpers.getCommand(command))
   })
   return formattedCommands
 }
@@ -113,7 +134,7 @@ helpers.executeCommand = function (argv, packageFile) {
     return helpers.makeHelp(argv, packageFile)
   }
 
-  const commandOptions = helpers.makeCommand(command)
+  const commandOptions = helpers.getCommand(command)
   return helpers.validateAndTransform(commandOptions.arguments, commandOptions.options, argv)
 }
 

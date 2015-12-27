@@ -65,7 +65,7 @@ describe('Runner', function () {
       description () {
         return 'I am greet'
       }
-      * handle () {
+      signature () {
       }
      }
 
@@ -73,7 +73,7 @@ describe('Runner', function () {
       return new Greet()
     })
     Store.registerCommand('greet:user', 'App/Commands/Greet')
-    const command = runnerHelpers.makeCommands('greet:user')
+    const command = runnerHelpers.getCommands('greet:user')
     expect(command[0].name).to.equal('greet:user')
     expect(command[0].description).to.equal(new Greet().description())
     expect(command[0].arguments.length).to.equal(0)

@@ -79,19 +79,19 @@ describe('Store', function () {
       description () {
         return 'foo'
       }
-      * handle () {
+      signature () {
 
       }
     }
 
     Ioc.bind('App/Commands/Greet', function () {
-      return new Greet()
+      return Greet
     })
     Store.registerCommand('greet:user', 'App/Commands/Foo')
     const command = function () {
       return Store.resolve('greet:user')
     }
-    expect(command).to.throw(/should have a handle method and description/i)
+    expect(command).to.throw(/should have a handle method/i)
   })
 
 })
