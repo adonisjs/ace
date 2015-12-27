@@ -67,7 +67,7 @@ helpers.makeHelp = function (argv, packageFile) {
  */
 helpers.makeCommand = function (command) {
   const resolvedCommand = Store.resolve(command)
-  const description = resolvedCommand.description()
+  const description = resolvedCommand.description
   const requirements = Parser.parseSignature(resolvedCommand.signature)
   return {
     name: command,
@@ -88,7 +88,7 @@ helpers.makeCommand = function (command) {
  */
 helpers.getCommand = function (command) {
   const resolvedCommand = Store.get(command)
-  const description = resolvedCommand.description()
+  const description = resolvedCommand.description
   const requirements = Parser.parseSignature(resolvedCommand.signature)
   return {
     name: command,
