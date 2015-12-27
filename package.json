@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run hint && _mocha test --bail",
-    "hint": "jshint --config jshint.json src/**/*.js test/*.js",
-    "coverage": "istanbul cover -x src/Console/*.js _mocha test"
+    "standard": "standard src/**/*.js providers/*.js",
+    "coverage": "istanbul cover -x src/Console/*.js _mocha test",
   },
   "keywords": [
     "cli"
