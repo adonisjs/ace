@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run hint && _mocha test --bail",
     "standard": "standard src/**/*.js providers/*.js",
-    "coverage": "istanbul cover -x src/Console/*.js _mocha test",
+    "coverage": "istanbul cover -x src/Console/*.js _mocha test"
   },
   "keywords": [
     "cli"
@@ -18,7 +18,6 @@
     "chai": "^3.4.0",
     "co-mocha": "^1.1.2",
     "istanbul": "^0.4.0",
-    "jshint": "^2.8.0",
     "mocha": "^2.3.3"
   },
   "peerDependencies": {

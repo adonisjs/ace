@@ -12,7 +12,6 @@ const helpers = require('./helpers')
 const Console = require('../Console')
 const co = require('co')
 
-/*jshint -W120 */
 let Runner = exports = module.exports = {}
 
 /**
@@ -26,7 +25,7 @@ let Runner = exports = module.exports = {}
  */
 Runner.run = function * (command, options, flags) {
   const commandClass = Store.resolve(command)
-  return yield commandClass.handle.call(commandClass, options, flags)
+  return yield commandClass.handle(options, flags)
 }
 
 /**
@@ -38,24 +37,23 @@ Runner.run = function * (command, options, flags) {
  */
 /* istanbul ignore next */
 Runner.invoke = function (packageFile) {
-
   // is a help command
-  if(argv.help) {
+  if (argv.help) {
     return helpers.makeHelp(argv, packageFile)
   }
 
   co(function * () {
     const commandData = helpers.executeCommand(argv, packageFile)
-    if(commandData) {
+    if (commandData) {
       return yield Runner.run(argv._[0], commandData.args, commandData.options)
     }
   })
-  .then(function (response) {
-    if(response) {
-      Console.successBg(response)
-    }
-  })
-  .catch(function (e) {
-    Console.errorBg(e.message)
-  })
+    .then(function (response) {
+      if (response) {
+        Console.successBg(response)
+      }
+    })
+    .catch(function (e) {
+      Console.errorBg(e.message)
+    })
 }

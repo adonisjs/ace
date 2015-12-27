@@ -21,7 +21,6 @@ const globalOptions = [
   }
 ]
 
-/*jshint -W120 */
 let helpers = exports = module.exports = {}
 
 /**
@@ -40,7 +39,7 @@ helpers.makeHelp = function (argv, packageFile) {
    * help for that command
    */
   /* istanbul ignore if */
-  if(typeof(command) === 'string') {
+  if (typeof (command) === 'string') {
     return Help.commandMenu(helpers.makeCommand(command))
   }
 
@@ -73,7 +72,7 @@ helpers.makeCommand = function (command) {
     name: command,
     description: description,
     arguments: requirements.args,
-    options: requirements.flags,
+    options: requirements.flags
   }
 }
 
@@ -94,7 +93,7 @@ helpers.getCommand = function (command) {
     name: command,
     description: description,
     arguments: requirements.args,
-    options: requirements.flags,
+    options: requirements.flags
   }
 }
 
@@ -130,7 +129,7 @@ helpers.executeCommand = function (argv, packageFile) {
    * it command does not exists re-run the help
    * command
    */
-  if(!command) {
+  if (!command) {
     return helpers.makeHelp(argv, packageFile)
   }
 
@@ -149,7 +148,7 @@ helpers.executeCommand = function (argv, packageFile) {
  * @public
  */
 helpers.getValue = function (item, argv, index, type) {
-  return type === 'option' ? argv[item.name.replace('--', '')] || item.defaultValue : argv._[index+1] || item.defaultValue
+  return type === 'option' ? argv[item.name.replace('--', '')] || item.defaultValue : argv._[index + 1] || item.defaultValue
 }
 
 /**
@@ -168,7 +167,7 @@ helpers.validateAndTransform = function (args, options, argv) {
 
   args.forEach(function (item, index) {
     item.value = helpers.getValue(item, argv, index, 'argument')
-    if(!item.optional && !item.value) {
+    if (!item.optional && !item.value) {
       throw new Error(`${item.name} is required`)
     }
     formattedArgs[item.name] = item.value
@@ -176,7 +175,7 @@ helpers.validateAndTransform = function (args, options, argv) {
 
   options.forEach(function (item, index) {
     item.value = helpers.getValue(item, argv, index, 'option')
-    if(!item.optional && !item.value) {
+    if (!item.optional && !item.value) {
       throw new Error(`${item.name} is required`)
     }
     formattedOptions[item.name] = item.value

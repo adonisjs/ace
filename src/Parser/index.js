@@ -6,11 +6,9 @@
  * MIT Licensed
 */
 
-/*jshint -W120 */
 let Parser = exports = module.exports = {}
 const argumentsRegex = /{(-*.[^}]+)}/g
 const defaultValueRegex = /(.+)\=(.+)/
-
 
 /**
  * @description parse a given option to pull meta data from
@@ -26,14 +24,14 @@ const _parseField = function (field) {
   let description = ''
   let defaultValue = ''
 
-  if(field.includes(':')){
+  if (field.includes(':')) {
     const breakField = field.split(':')
     field = breakField[0]
     description = breakField[1].trim()
   }
 
   let defaultValueMatches = defaultValueRegex.exec(field)
-  if(defaultValueMatches && defaultValueMatches[2]){
+  if (defaultValueMatches && defaultValueMatches[2]) {
     defaultValue = defaultValueMatches[2]
     field = field.replace('=' + defaultValue, '')
   }
@@ -54,17 +52,16 @@ const _parseField = function (field) {
  * @public
  */
 Parser.parseSignature = function (signature) {
-  let match;
+  let match
   let parsed = {
     args: [],
     flags: []
   }
-  while ( ( match = argumentsRegex.exec(signature) ) !== null ){
+  while ((match = argumentsRegex.exec(signature)) !== null) {
     const matchedValue = match[1]
-    if(matchedValue.startsWith('--')){
+    if (matchedValue.startsWith('--')) {
       parsed.flags.push(_parseField(matchedValue))
-    }
-    else{
+    } else {
       parsed.args.push(_parseField(matchedValue))
     }
   }

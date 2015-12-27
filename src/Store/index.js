@@ -10,7 +10,6 @@ const Ioc = require('adonis-fold').Ioc
 
 let commands = {}
 
-/*jshint -W120 */
 let Store = exports = module.exports = {}
 
 /**
@@ -67,7 +66,7 @@ Store.registerCommand = function (name, namespace) {
  * @public
  */
 Store.resolve = function (command) {
-  if(!commands[command]) {
+  if (!commands[command]) {
     throw new Error(command + ' is not registered with ace')
   }
   const commandInstance = Ioc.make(commands[command])
@@ -75,13 +74,12 @@ Store.resolve = function (command) {
   /**
    * throw error if command does have a handle method
    */
-  if(typeof(commandInstance.handle) !== 'function') {
+  if (typeof (commandInstance.handle) !== 'function') {
     throw new Error(command + ' should have a handle method')
   }
 
   return commandInstance
 }
-
 
 /**
  * @description resolves commands from Ioc comtainer
@@ -91,7 +89,7 @@ Store.resolve = function (command) {
  * @public
  */
 Store.get = function (command) {
-  if(!commands[command]) {
+  if (!commands[command]) {
     throw new Error(command + ' is not registered with ace')
   }
   const commandClass = Ioc.use(commands[command])
@@ -100,7 +98,7 @@ Store.get = function (command) {
    * throw error if command does have a signature or
    * description
    */
-  if(!commandClass.description || !commandClass.signature) {
+  if (!commandClass.description || !commandClass.signature) {
     throw new Error(command + ' should have a signature and description')
   }
 

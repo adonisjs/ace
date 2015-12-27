@@ -24,7 +24,6 @@ const iconsWin = {
   error: colors.red('×')
 }
 
-/*jshint -W120 */
 let Console = exports = module.exports = {}
 
 /**
