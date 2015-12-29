@@ -14,7 +14,7 @@
   "author": "adonisjs",
   "license": "MIT",
   "devDependencies": {
-    "adonis-fold": "git://github.com/poppinss/adonis-fold.git",
+    "adonis-fold": "^2.0.0",
     "chai": "^3.4.0",
     "co-mocha": "^1.1.2",
     "coveralls": "^2.11.6",
@@ -23,7 +23,7 @@
     "mocha-lcov-reporter": "^1.0.0"
   },
   "peerDependencies": {
-    "adonis-fold": "git://github.com/poppinss/adonis-fold.git"
+    "adonis-fold": "^2.0.0"
   },
   "dependencies": {
     "cli-table": "^0.3.1",
