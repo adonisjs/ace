@@ -1,6 +1,6 @@
 {
   "name": "adonis-ace",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Ace commands",
   "main": "index.js",
   "scripts": {
@@ -14,19 +14,21 @@
   "author": "adonisjs",
   "license": "MIT",
   "devDependencies": {
-    "adonis-fold": "git://github.com/poppinss/adonis-fold.git",
+    "adonis-fold": "^2.0.0",
     "chai": "^3.4.0",
     "co-mocha": "^1.1.2",
     "coveralls": "^2.11.6",
     "istanbul": "^0.4.0",
     "mocha": "^2.3.3",
-    "mocha-lcov-reporter": "^1.0.0"
+    "mocha-lcov-reporter": "^1.0.0",
+    "standard": "^5.4.1"
   },
   "peerDependencies": {
-    "adonis-fold": "git://github.com/poppinss/adonis-fold.git"
+    "adonis-fold": "^2.0.0"
   },
   "dependencies": {
     "cli-table": "^0.3.1",
+    "co": "^4.6.0",
     "colors": "^1.1.2",
     "inquirer": "^0.11.0",
     "lodash": "^3.10.1",
