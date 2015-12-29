@@ -4,7 +4,7 @@
   "description": "Ace commands",
   "main": "index.js",
   "scripts": {
-    "test": "npm run hint && _mocha test --bail",
+    "test": "npm run standard && istanbul cover -x src/Console/*.js _mocha --report lcovonly -- -R spec test && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "standard": "standard src/**/*.js providers/*.js",
     "coverage": "istanbul cover -x src/Console/*.js _mocha test"
   },
@@ -17,8 +17,10 @@
     "adonis-fold": "git://github.com/poppinss/adonis-fold.git",
     "chai": "^3.4.0",
     "co-mocha": "^1.1.2",
+    "coveralls": "^2.11.6",
     "istanbul": "^0.4.0",
-    "mocha": "^2.3.3"
+    "mocha": "^2.3.3",
+    "mocha-lcov-reporter": "^1.0.0"
   },
   "peerDependencies": {
     "adonis-fold": "git://github.com/poppinss/adonis-fold.git"
