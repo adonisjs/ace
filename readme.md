@@ -1,7 +1,7 @@
 # Ace
 
-![](https://img.shields.io/travis/adonisjs/adonis-ace.svg)
-[![Coverage Status](https://coveralls.io/repos/adonisjs/adonis-ace/badge.svg?branch=master&service=github)](https://coveralls.io/github/adonisjs/adonis-ace?branch=master)
+![](https://img.shields.io/travis/adonisjs/ace.svg)
+[![Coverage Status](https://coveralls.io/repos/adonisjs/ace/badge.svg?branch=master&service=github)](https://coveralls.io/github/adonisjs/ace?branch=master)
 
 Ace is fully featured command line tool used in [adonis framework](http://adonisjs.com)
 
