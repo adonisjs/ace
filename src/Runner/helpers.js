@@ -178,7 +178,7 @@ helpers.validateAndTransform = function (args, options, argv) {
     if (!item.optional && !item.value) {
       throw new Error(`${item.name} is required`)
     }
-    formattedOptions[item.name] = item.value
+    formattedOptions[item.name.replace('--', '')] = item.value
   })
   return {args: formattedArgs, options: formattedOptions}
 }
