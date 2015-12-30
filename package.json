@@ -1,6 +1,6 @@
 {
   "name": "adonis-ace",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Ace commands",
   "main": "index.js",
   "scripts": {

@@ -202,7 +202,7 @@ describe('Runner', function () {
     expect(fn).to.throw(/--plain is required/)
   })
 
-  it('should throw not an error when option is optional and does not exists', function () {
+  it('should not throw an error when option is optional and does not exists', function () {
     const argv = {
     }
     const options = [
@@ -213,6 +213,21 @@ describe('Runner', function () {
       }
     ]
     runnerHelpers.validateAndTransform([], options, argv)
+  })
+
+  it('should return options value when it is present', function () {
+    const argv = {
+      plain: true
+    }
+    const options = [
+      {
+        name: '--plain',
+        optional: true,
+        defaultValue: ''
+      }
+    ]
+    const response = runnerHelpers.validateAndTransform([], options, argv)
+    expect(response.options.plain).to.equal(true)
   })
 
   it('should catch errors throw while executing non-existing command', function () {
