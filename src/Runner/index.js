@@ -9,7 +9,7 @@
 const argv = require('yargs').argv
 const Store = require('../Store')
 const helpers = require('./helpers')
-const Console = require('../Console')
+const Ansi = require('../Ansi')
 const co = require('co')
 
 let Runner = exports = module.exports = {}
@@ -50,10 +50,10 @@ Runner.invoke = function (packageFile) {
   })
     .then(function (response) {
       if (response) {
-        Console.successBg(response)
+        Ansi.successBg(response)
       }
     })
     .catch(function (e) {
-      Console.errorBg(e.message)
+      Ansi.errorBg(e.message)
     })
 }

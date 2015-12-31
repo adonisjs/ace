@@ -8,14 +8,14 @@
 
 const ServiceProvider = require('adonis-fold').ServiceProvider
 
-class ConsoleProvider extends ServiceProvider {
+class AnsiProvider extends ServiceProvider {
 
   * register () {
-    this.app.bind('Adonis/Src/Console', function () {
-      return require('../src/Console')
+    this.app.bind('Adonis/Src/Ansi', function () {
+      return require('../src/Ansi')
     })
   }
 
 }
 
-module.exports = ConsoleProvider
+module.exports = AnsiProvider
