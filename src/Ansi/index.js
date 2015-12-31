@@ -24,7 +24,7 @@ const iconsWin = {
   error: colors.red('×')
 }
 
-let Console = exports = module.exports = {}
+let Ansi = exports = module.exports = {}
 
 /**
 *  @description prompt to terminal using question body
@@ -78,7 +78,7 @@ const _toConsole = function (values, method) {
  * @return {void}
  * @public
  */
-Console.error = function () {
+Ansi.error = function () {
   const args = Array.prototype.slice.call(arguments)
   _toConsole(args, colors.red)
 }
@@ -89,7 +89,7 @@ Console.error = function () {
  * @return {void}
  * @public
  */
-Console.errorBg = function () {
+Ansi.errorBg = function () {
   const args = Array.prototype.slice.call(arguments)
   _toConsole(args, colors.bgRed.white)
 }
@@ -100,7 +100,7 @@ Console.errorBg = function () {
  * @return {void}
  * @public
  */
-Console.success = function () {
+Ansi.success = function () {
   const args = Array.prototype.slice.call(arguments)
   _toConsole(args, colors.green)
 }
@@ -111,7 +111,7 @@ Console.success = function () {
  * @return {void}
  * @public
  */
-Console.successBg = function () {
+Ansi.successBg = function () {
   const args = Array.prototype.slice.call(arguments)
   _toConsole(args, colors.bgGreen.white)
 }
@@ -122,7 +122,7 @@ Console.successBg = function () {
  * @return {void}
  * @public
  */
-Console.warn = function () {
+Ansi.warn = function () {
   const args = Array.prototype.slice.call(arguments)
   _toConsole(args, colors.yellow)
 }
@@ -134,7 +134,7 @@ Console.warn = function () {
  * @return {void}
  * @public
  */
-Console.warnBg = function () {
+Ansi.warnBg = function () {
   const args = Array.prototype.slice.call(arguments)
   _toConsole(args, colors.bgYellow.white)
 }
@@ -145,7 +145,7 @@ Console.warnBg = function () {
  * @return {void}
  * @public
  */
-Console.info = function () {
+Ansi.info = function () {
   const args = Array.prototype.slice.call(arguments)
   _toConsole(args, colors.blue)
 }
@@ -157,7 +157,7 @@ Console.info = function () {
  * @return {void}
  * @public
  */
-Console.infoBg = function () {
+Ansi.infoBg = function () {
   const args = Array.prototype.slice.call(arguments)
   _toConsole(args, colors.bgBlue.white)
 }
@@ -170,7 +170,7 @@ Console.infoBg = function () {
  * @yield {Object}
  * @public
  */
-Console.confirm = function *(question, defaultValue) {
+Ansi.confirm = function *(question, defaultValue) {
   const uniqueQuesId = new Date()
   const questionBody = _buildQuestion(uniqueQuesId, question, 'confirm', defaultValue)
   const answer = yield _prompt(questionBody)
@@ -185,7 +185,7 @@ Console.confirm = function *(question, defaultValue) {
  * @yield {Object}
  * @public
  */
-Console.ask = function *(question, defaultValue) {
+Ansi.ask = function *(question, defaultValue) {
   const uniqueQuesId = new Date()
   const questionBody = _buildQuestion(uniqueQuesId, question, 'input', defaultValue)
   const answer = yield _prompt(questionBody)
@@ -201,7 +201,7 @@ Console.ask = function *(question, defaultValue) {
  * @yield {Object}
  * @public
  */
-Console.choice = function *(question, choices, defaultValue) {
+Ansi.choice = function *(question, choices, defaultValue) {
   const uniqueQuesId = new Date()
   let questionBody = _buildQuestion(uniqueQuesId, question, 'list', defaultValue)
   questionBody.choices = choices
@@ -219,7 +219,7 @@ Console.choice = function *(question, choices, defaultValue) {
  * @yield {Object}
  * @public
  */
-Console.anticipate = function *(question, choices, defaultValue) {
+Ansi.anticipate = function *(question, choices, defaultValue) {
   const uniqueQuesId = new Date()
   let questionBody = _buildQuestion(uniqueQuesId, question, 'expand', defaultValue)
   questionBody.choices = choices
@@ -237,7 +237,7 @@ Console.anticipate = function *(question, choices, defaultValue) {
  * @yield {Object}
  * @public
  */
-Console.options = function *(question, choices, defaultValue) {
+Ansi.options = function *(question, choices, defaultValue) {
   const uniqueQuesId = new Date()
   let questionBody = _buildQuestion(uniqueQuesId, question, 'checkbox', defaultValue)
   questionBody.choices = choices
@@ -254,7 +254,7 @@ Console.options = function *(question, choices, defaultValue) {
  * @yield {Object}
  * @public
  */
-Console.secure = function *(question, defaultValue) {
+Ansi.secure = function *(question, defaultValue) {
   const uniqueQuesId = new Date()
   const questionBody = _buildQuestion(uniqueQuesId, question, 'password', defaultValue)
   const answer = yield _prompt(questionBody)
@@ -268,7 +268,7 @@ Console.secure = function *(question, defaultValue) {
  * @param  {Array} body
  * @public
  */
-Console.table = function (head, body) {
+Ansi.table = function (head, body) {
   let table = new Table({
     head: head
   })
@@ -285,6 +285,6 @@ Console.table = function (head, body) {
  * @return {void}
  * @public
  */
-Console.icon = function (type) {
+Ansi.icon = function (type) {
   return process.platform === 'win32' ? iconsWin[type] : iconsMain[type]
 }
