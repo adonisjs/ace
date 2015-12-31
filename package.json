@@ -4,9 +4,9 @@
   "description": "Ace commands",
   "main": "index.js",
   "scripts": {
-    "test": "npm run standard && istanbul cover -x src/Console/*.js _mocha --report lcovonly -- -R spec test && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
+    "test": "npm run standard && istanbul cover -x src/Ansi/*.js _mocha --report lcovonly -- -R spec test && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "standard": "standard src/**/*.js providers/*.js",
-    "coverage": "istanbul cover -x src/Console/*.js _mocha test"
+    "coverage": "istanbul cover -x src/Ansi/*.js _mocha test"
   },
   "keywords": [
     "cli"
