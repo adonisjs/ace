@@ -10,36 +10,26 @@ const Store = require('../src/Store')
 const Ioc = require('adonis-fold').Ioc
 const Runner = require('../src/Runner')
 
-class Greet {
-  description () {
-    return  'Greet a user'
-  }
-  signature () {
-    return '{name}'
-  }
-  * handle (options, flags) {
+let Greet = {}
+Greet.description = 'Greet a user'
+Greet.signature = '{name}'
+Greet.handle = function * (options, flags) {
 
-  }
 }
 
-class Make {
-  description () {
-    return  'Make a controller'
-  }
-  signature () {
-    return '{name} {--plain?}'
-  }
-  * handle (options, flags) {
-    console.log('i will make ' + options.name + ' controller for you')
-  }
+let Make = {}
+Make.description = 'Make a controller'
+Make.signature = '{name} {--plain?}'
+Make.handle = function * (options, flags) {
+   console.log('i will make ' + options.name + ' controller for you')
 }
 
 Ioc.bind('App/Commands/Greet', function () {
-  return new Greet()
+  return Greet
 })
 
 Ioc.bind('App/Commands/Make', function () {
-  return new Make()
+  return Make
 })
 
 

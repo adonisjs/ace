@@ -6,13 +6,13 @@
  * MIT Licensed
 */
 
-const Console = require('../src/Console')
+const Ansi = require('../src/Ansi')
 const co = require('co')
 
 co(function * () {
-  const name = yield Console.ask('What is you name? ', 'Harminder Virk')
-  const framework = yield Console.choice('What all frameworks you use ?', ['Express', 'Koa', 'Sails', 'Adonis'])
-  const party = yield Console.anticipate('Will you attend new year party', [
+  const name = yield Ansi.ask('What is you name? ', 'Harminder Virk')
+  const framework = yield Ansi.choice('What all frameworks you use ?', ['Express', 'Koa', 'Sails', 'Adonis'])
+  const party = yield Ansi.anticipate('Will you attend new year party', [
   {
     key: 'y',
     name: 'Yes',
@@ -29,17 +29,17 @@ co(function * () {
     value: 'maybe'
   }
 ])
-const food = yield Console.options('What all would like to eat', ['Chinese', 'Italian', 'Indian'])
-const drive = yield Console.confirm('Will you drive')
+const food = yield Ansi.options('What all would like to eat', ['Chinese', 'Italian', 'Indian'])
+const drive = yield Ansi.confirm('Will you drive')
 let license = ''
 if(drive) {
-  license = yield Console.secure('Can i have your driving license number')
+  license = yield Ansi.secure('Can i have your driving license number')
 }
 
 return {name, framework, party, food, drive, license}
 }).then(function (success) {
-  Console.success('Thanks for your info')
+  Ansi.success('Thanks for your info')
   console.log('%j', success)
 }).catch(function (error) {
-  Console.error(error)
+  Ansi.error(error)
 })
