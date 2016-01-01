@@ -40,7 +40,7 @@ helpers.makeHelp = function (argv, packageFile) {
    */
   /* istanbul ignore if */
   if (typeof (command) === 'string') {
-    return Help.commandMenu(helpers.makeCommand(command))
+    return Help.commandMenu(helpers.getCommand(command))
   }
 
   /**
