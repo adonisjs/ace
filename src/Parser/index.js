@@ -22,7 +22,7 @@ const defaultValueRegex = /(.+)\=(.+)/
 const _parseField = function (field) {
   let returnValue = {}
   let description = ''
-  let defaultValue = ''
+  let defaultValue = null
 
   if (field.includes(':')) {
     const breakField = field.split(':')
