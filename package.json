@@ -18,6 +18,7 @@
     "chai": "^3.4.0",
     "co-mocha": "^1.1.2",
     "coveralls": "^2.11.6",
+    "cz-conventional-changelog": "^1.1.5",
     "istanbul": "^0.4.0",
     "mocha": "^2.3.3",
     "mocha-lcov-reporter": "^1.0.0",
@@ -34,5 +35,22 @@
     "lodash": "^3.10.1",
     "terminal-help": "^1.0.0",
     "yargs": "^3.31.0"
-  }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adonisjs/ace.git"
+  },
+  "bugs": {
+    "url": "https://github.com/adonisjs/ace/issues"
+  },
+  "homepage": "https://github.com/adonisjs/ace#readme"
 }
