@@ -55,5 +55,6 @@ Runner.invoke = function (packageFile) {
     })
     .catch(function (e) {
       Ansi.errorBg(e.message)
+      process.exit(1)
     })
 }
