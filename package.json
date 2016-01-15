@@ -1,6 +1,6 @@
 {
   "name": "adonis-ace",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "Ace is a terminal utility for adonisjs framework",
   "main": "index.js",
   "scripts": {
