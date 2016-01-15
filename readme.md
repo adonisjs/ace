@@ -1,31 +1,37 @@
 # Ace
 
-![](https://img.shields.io/travis/adonisjs/ace.svg)
-[![Coverage Status](https://coveralls.io/repos/adonisjs/ace/badge.svg?branch=master&service=github)](https://coveralls.io/github/adonisjs/ace?branch=master)
+[![Gitter](https://img.shields.io/badge/+%20GITTER-JOIN%20CHAT%20%E2%86%92-1DCE73.svg?style=flat-square)](https://gitter.im/adonisjs/adonis-framework)
+[![Trello](https://img.shields.io/badge/TRELLO-%E2%86%92-89609E.svg?style=flat-square)](https://trello.com/b/yzpqCgdl/adonis-for-humans)
+[![Version](https://img.shields.io/npm/v/adonis-ace.svg?style=flat-square)](https://www.npmjs.com/package/adonis-ace)
+[![Build Status](https://img.shields.io/travis/adonisjs/ace/master.svg?style=flat-square)](https://travis-ci.org/adonisjs/ace)
+[![Coverage Status](https://img.shields.io/coveralls/adonisjs/ace/master.svg?style=flat-square)](https://coveralls.io/github/adonisjs/ace?branch=master)
+[![Downloads](https://img.shields.io/npm/dt/adonis-ace.svg?style=flat-square)](https://www.npmjs.com/package/adonis-ace)
+[![License](https://img.shields.io/npm/l/adonis-ace.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
-Ace is fully featured command line tool used in [adonis framework](http://adonisjs.com)
+> :pray: This repository contains command line utilities and terminal command runner for adonis framework.
 
-## The MIT License
+Adonis ace is a command line utility tool written for adonis framework. It makes super easy for you to create and write command line apps using es6 classes.
 
-COPYRIGHT (c) 2015 Harminder Virk
+You can learn more about Ace and all of its awesomeness on http://adonisjs.com/ace-commands :evergreen_tree:
 
-MIT License
+## Table of Contents
 
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
+* [Team Members](#team-members)
+* [Requirements](#requirements)
+* [Contribution Guidelines](#contribution-guidelines)
 
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
+## <a name="team-members"></a>Team Members
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+* Harminder Virk ([Medium Blog](https://medium.com/@amanvirk)) <virk.officials@gmail.com>
+
+## <a name="requirements"></a>Requirements
+
+AdonisJS is build on the top of ES2015, which makes the code more enjoyable and cleaner to read. It doesn't make use of any transpiler and depends upon Core V8 implemented features.
+
+For these reasons, AdonisJS require you to use `node >= 4.0` and `npm >= 3.0`.
+
+## <a name="contribution-guidelines"></a>Contribution Guidelines
+
+In favor of active development we accept contributions for everyone. You can contribute by submitting a bug, creating pull requests or even improving documentation.
+
+You can find a complete guide to be followed strictly before submitting your pull requests in the [Official Documentation](http://adonisjs.com/docs/2.0/contributing).
