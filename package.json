@@ -1,7 +1,7 @@
 {
   "name": "adonis-ace",
-  "version": "2.0.5",
-  "description": "Ace commands",
+  "version": "2.0.6",
+  "description": "Ace is a terminal utility for adonisjs framework",
   "main": "index.js",
   "scripts": {
     "test": "npm run standard && istanbul cover -x src/Ansi/*.js _mocha --report lcovonly -- -R spec test && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
@@ -9,7 +9,10 @@
     "coverage": "istanbul cover -x src/Ansi/*.js _mocha test"
   },
   "keywords": [
-    "cli"
+    "cli",
+    "adonisjs",
+    "adonis",
+    "terminal"
   ],
   "author": "adonisjs",
   "license": "MIT",
@@ -18,21 +21,39 @@
     "chai": "^3.4.0",
     "co-mocha": "^1.1.2",
     "coveralls": "^2.11.6",
+    "cz-conventional-changelog": "^1.1.5",
     "istanbul": "^0.4.0",
     "mocha": "^2.3.3",
     "mocha-lcov-reporter": "^1.0.0",
     "standard": "^5.4.1"
   },
   "peerDependencies": {
-    "adonis-fold": "^2.0.0"
+    "adonis-fold": "^2.0.1"
   },
   "dependencies": {
+    "adonis-fold": "^2.0.1",
     "cli-table": "^0.3.1",
     "co": "^4.6.0",
     "colors": "^1.1.2",
-    "inquirer": "^0.11.0",
-    "lodash": "^3.10.1",
-    "terminal-help": "^1.0.0",
-    "yargs": "^3.31.0"
-  }
+    "inquirer": "^0.11.2",
+    "terminal-help": "^1.0.2",
+    "yargs": "^3.32.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adonisjs/ace.git"
+  },
+  "bugs": {
+    "url": "https://github.com/adonisjs/ace/issues"
+  },
+  "homepage": "https://github.com/adonisjs/ace#readme"
 }

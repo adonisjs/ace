@@ -91,7 +91,7 @@ describe('Store', function () {
     const command = function () {
       return Store.resolve('greet:user')
     }
-    expect(command).to.throw(/should have a handle method/i)
+    expect(command).to.throw(/Cannot find module/i)
   })
 
 })
