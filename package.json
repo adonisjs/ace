@@ -28,15 +28,16 @@
     "standard": "^5.4.1"
   },
   "peerDependencies": {
-    "adonis-fold": "^2.0.0"
+    "adonis-fold": "^2.0.1"
   },
   "dependencies": {
+    "adonis-fold": "^2.0.1",
     "cli-table": "^0.3.1",
     "co": "^4.6.0",
     "colors": "^1.1.2",
     "inquirer": "^0.11.2",
     "terminal-help": "^1.0.2",
-    "yargs": "^3.31.0"
+    "yargs": "^3.32.0"
   },
   "config": {
     "commitizen": {
