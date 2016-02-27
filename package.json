@@ -35,7 +35,7 @@
     "cli-table": "^0.3.1",
     "co": "^4.6.0",
     "colors": "^1.1.2",
-    "inquirer": "^0.11.2",
+    "inquirer": "^0.12.0",
     "terminal-help": "^1.0.2",
     "yargs": "^4.2.0"
   },
