@@ -12,6 +12,8 @@
 const Store = require('../Store')
 const Parser = require('../Parser')
 const Help = require('terminal-help')
+const CatLog = require('cat-log')
+const logger = new CatLog('adonis:ace')
 const Ansi = require('../Ansi')
 
 const globalOptions = [
@@ -25,7 +27,7 @@ const globalOptions = [
   }
 ]
 
-let helpers = exports = module.exports = {}
+const helpers = exports = module.exports = {}
 
 /**
  * @description makes help screen for all the commands
@@ -128,7 +130,6 @@ helpers.getCommands = function () {
  */
 helpers.executeCommand = function (argv, packageFile) {
   const command = argv._[0]
-
   /**
    * it command does not exists re-run the help
    * command
@@ -137,6 +138,7 @@ helpers.executeCommand = function (argv, packageFile) {
     return helpers.makeHelp(argv, packageFile)
   }
 
+  logger.verbose('executing command %s', command)
   const commandOptions = helpers.getCommand(command)
   return helpers.validateAndTransform(commandOptions.arguments, commandOptions.options, argv)
 }
@@ -193,6 +195,9 @@ helpers.getValue = function (item, argv, index, type) {
 helpers.validateAndTransform = function (args, options, argv) {
   let formattedArgs = {}
   let formattedOptions = {}
+
+  logger.verbose('validating command expectations')
+  logger.verbose('payload %j expectations %j', argv, args)
 
   args.forEach(function (item, index) {
     item.value = helpers.getValue(item, argv, index, 'argument')

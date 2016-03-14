@@ -10,10 +10,12 @@
 */
 
 const Ioc = require('adonis-fold').Ioc
+const CatLog = require('cat-log')
+const logger = new CatLog('adonis:ace')
 
 let commands = {}
 
-let Store = exports = module.exports = {}
+const Store = exports = module.exports = {}
 
 /**
  * @description returns existing commands from commands
@@ -45,7 +47,9 @@ Store.clear = function () {
  * @public
  */
 Store.register = function (hashOfCommands) {
-  commands = hashOfCommands
+  Object.keys(hashOfCommands).forEach(function (command) {
+    Store.registerCommand(command, hashOfCommands[command])
+  })
 }
 
 /**
@@ -58,6 +62,7 @@ Store.register = function (hashOfCommands) {
  * @public
  */
 Store.registerCommand = function (name, namespace) {
+  logger.verbose('registered command %s with namespace %s', name, namespace)
   commands[name] = namespace
 }
 

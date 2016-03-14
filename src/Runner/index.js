@@ -13,9 +13,11 @@ const argv = require('yargs').argv
 const Store = require('../Store')
 const helpers = require('./helpers')
 const Ansi = require('../Ansi')
+const CatLog = require('cat-log')
+const logger = new CatLog('adonis:ace')
 const co = require('co')
 
-let Runner = exports = module.exports = {}
+const Runner = exports = module.exports = {}
 
 /**
  * @description runs commands handle method using command name
@@ -28,6 +30,7 @@ let Runner = exports = module.exports = {}
  */
 Runner.run = function * (command, options, flags) {
   const commandClass = Store.resolve(command)
+  logger.verbose('executing %s handle method', command)
   return yield commandClass.handle(options, flags)
 }
 

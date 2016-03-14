@@ -9,7 +9,10 @@
  * file that was distributed with this source code.
 */
 
-let Parser = exports = module.exports = {}
+const CatLog = require('cat-log')
+const logger = new CatLog('adonis:ace')
+
+const Parser = exports = module.exports = {}
 const argumentsRegex = /{(-*.[^}]+)}/g
 const defaultValueRegex = /(.+)\=(.+)/
 
@@ -23,6 +26,7 @@ const defaultValueRegex = /(.+)\=(.+)/
  * @private
  */
 const _parseField = function (field) {
+  logger.verbose('parsing signature option %s', field)
   let returnValue = {}
   let description = ''
   let defaultValue = null
@@ -48,6 +52,7 @@ const _parseField = function (field) {
   returnValue.name = nameWithAlias.name
   returnValue.aliases = nameWithAlias.aliases
   returnValue.alias = nameWithAlias.alias
+  logger.verbose('%j', returnValue)
   return returnValue
 }
 
@@ -102,6 +107,7 @@ Parser.parseFlagWithAlias = function (name) {
  * @public
  */
 Parser.parseSignature = function (signature) {
+  logger.verbose('parsing signature %s', signature)
   let match
   let parsed = {
     args: [],
