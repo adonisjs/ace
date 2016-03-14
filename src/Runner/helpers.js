@@ -152,7 +152,32 @@ helpers.executeCommand = function (argv, packageFile) {
  * @public
  */
 helpers.getValue = function (item, argv, index, type) {
-  return type === 'option' ? argv[item.name.replace('--', '')] || item.defaultValue : argv._[index + 1] || item.defaultValue
+  if (type === 'option') {
+    /**
+     * fetch value for original flag
+     */
+    let value = argv[item.name.replace('--', '')]
+
+    /**
+     * otherwise fetch value for a given alias
+     */
+    if (!value) {
+      item.aliases.forEach(function (alias) {
+        if (argv[alias]) {
+          value = argv[alias]
+        }
+      })
+    }
+
+    /**
+     * finally set value to the default value
+     */
+    if (!value) {
+      value = item.defaultValue
+    }
+    return value
+  }
+  return argv._[index + 1] || item.defaultValue
 }
 
 /**

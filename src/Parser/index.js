@@ -2,8 +2,11 @@
 
 /**
  * adonis-ace
- * Copyright(c) 2015-2015 Harminder Virk
- * MIT Licensed
+ *
+ * (c) Harminder Virk <virk@adonisjs.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
 */
 
 let Parser = exports = module.exports = {}
@@ -39,7 +42,54 @@ const _parseField = function (field) {
   returnValue.optional = field.endsWith('?')
   returnValue.description = description
   returnValue.defaultValue = defaultValue
-  returnValue.name = field.replace('?', '')
+  const name = field.replace('?', '')
+  const nameWithAlias = Parser.parseFlagWithAlias(name)
+  returnValue.isFlag = Parser.isFlag(name)
+  returnValue.name = nameWithAlias.name
+  returnValue.aliases = nameWithAlias.aliases
+  returnValue.alias = nameWithAlias.alias
+  return returnValue
+}
+
+/**
+ * tells whether an option is a flag or not.
+ *
+ * @method isFlag
+ *
+ * @param  {String}  name
+ * @return {Boolean}
+ *
+ * @public
+ */
+Parser.isFlag = function (name) {
+  return name.startsWith('--')
+}
+
+/**
+ * parses the name and extract it's aliases from it.
+ *
+ * @method parseFlagWithAlias
+ *
+ * @param  {String}           name
+ * @return {Object}
+ *
+ * @public
+ */
+Parser.parseFlagWithAlias = function (name) {
+  const nameParts = name.split('|')
+  const returnValue = {
+    name: null,
+    aliases: [],
+    alias: null
+  }
+  if (nameParts.length <= 1) {
+    returnValue.name = nameParts[0]
+    return returnValue
+  }
+  returnValue.name = `--${nameParts.pop()}`
+  nameParts[0] = nameParts[0].replace('--', '')
+  returnValue.aliases = nameParts
+  returnValue.alias = `--[${nameParts.join('|')}]`
   return returnValue
 }
 

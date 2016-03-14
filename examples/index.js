@@ -19,9 +19,10 @@ Greet.handle = function * (options, flags) {
 
 let Make = {}
 Make.description = 'Make a controller'
-Make.signature = '{name} {--plain?}'
+Make.signature = '{name} {--P|pp|plain}'
 Make.handle = function * (options, flags) {
-   console.log('i will make ' + options.name + ' controller for you')
+  console.log('i will make ' + options.name + ' controller for you')
+  console.log(flags.plain)
 }
 
 Ioc.bind('App/Commands/Greet', function () {
@@ -31,7 +32,6 @@ Ioc.bind('App/Commands/Greet', function () {
 Ioc.bind('App/Commands/Make', function () {
   return Make
 })
-
 
 Store.register(
   {

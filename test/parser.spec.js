@@ -60,6 +60,15 @@ describe('Parser', function() {
     expect(parsed.flags).to.be.an('array')
     expect(parsed.flags).to.have.length(1)
     expect(parsed.flags[0].defaultValue).to.equal('@value')
+    expect(parsed.flags[0].name).to.equal('--name')
+  })
+
+  it('should be able to define aliases for a flag', function () {
+    const parsed = Parser.parseSignature('{--V|vv|version?}')
+    expect(parsed.flags).to.be.an('array')
+    expect(parsed.flags).to.have.length(1)
+    expect(parsed.flags[0].aliases).deep.equal(['V', 'vv'])
+    expect(parsed.flags[0].name).to.equal('--version')
   })
 
   it('should return option name', function () {

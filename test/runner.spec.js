@@ -127,7 +127,8 @@ describe('Runner', function () {
     }
     const item = {
       name: '--plain',
-      defaultValue: false
+      defaultValue: false,
+      aliases: []
     }
     const value = runnerHelpers.getValue(item, argv, '', 'option')
     expect(value).to.equal(false)
@@ -139,7 +140,8 @@ describe('Runner', function () {
     }
     const item = {
       name: 'name',
-      defaultValue: ''
+      defaultValue: '',
+      aliases: []
     }
     const value = runnerHelpers.getValue(item, argv, 0, 'argument')
     expect(value).to.equal('UserController')
@@ -151,7 +153,8 @@ describe('Runner', function () {
     }
     const item = {
       name: 'name',
-      defaultValue: ''
+      defaultValue: '',
+      aliases: []
     }
     const value = runnerHelpers.getValue(item, argv, 0, 'argument')
     expect(value).to.equal('')
@@ -195,7 +198,8 @@ describe('Runner', function () {
       {
         name: '--plain',
         optional: false,
-        defaultValue: ''
+        defaultValue: '',
+        aliases: []
       }
     ]
     const fn = function () {
@@ -211,7 +215,8 @@ describe('Runner', function () {
       {
         name: '--plain',
         optional: true,
-        defaultValue: ''
+        defaultValue: '',
+        aliases: []
       }
     ]
     runnerHelpers.validateAndTransform([], options, argv)
@@ -225,7 +230,8 @@ describe('Runner', function () {
       {
         name: '--plain',
         optional: true,
-        defaultValue: ''
+        defaultValue: '',
+        aliases: []
       }
     ]
     const response = runnerHelpers.validateAndTransform([], options, argv)
