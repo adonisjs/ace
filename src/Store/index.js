@@ -2,8 +2,11 @@
 
 /**
  * adonis-ace
- * Copyright(c) 2015-2015 Harminder Virk
- * MIT Licensed
+ *
+ * (c) Harminder Virk <virk@adonisjs.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
 */
 
 const Ioc = require('adonis-fold').Ioc
@@ -98,8 +101,8 @@ Store.get = function (command) {
    * throw error if command does have a signature or
    * description
    */
-  if (!commandClass.description || !commandClass.signature) {
-    throw new Error(command + ' should have a signature and description')
+  if (!commandClass.description) {
+    throw new Error(command + ' should have a description')
   }
 
   return commandClass

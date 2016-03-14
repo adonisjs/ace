@@ -22,7 +22,7 @@ describe('Runner', function () {
 
   it('should call command handle method using run method', function * () {
     class Greet {
-      description () {
+      get description () {
         return 'foo'
       }
       * handle () {
@@ -41,10 +41,12 @@ describe('Runner', function () {
   it('should make command options to be used for making help menu', function () {
 
     class Greet {
-      description () {
+      get description () {
         return 'I am greet'
       }
+
       * handle () {
+
       }
      }
 
@@ -60,12 +62,12 @@ describe('Runner', function () {
   })
 
   it('should make all commands to be used for making help menu', function () {
-
     class Greet {
-      description () {
+      get description () {
         return 'I am greet'
       }
-      signature () {
+      get signature () {
+        return '{name}'
       }
      }
 
@@ -76,18 +78,18 @@ describe('Runner', function () {
     const command = runnerHelpers.getCommands(['greet:user'])
     expect(command[0].name).to.equal('greet:user')
     expect(command[0].description).to.equal(new Greet().description)
-    expect(command[0].arguments.length).to.equal(0)
+    expect(command[0].arguments.length).to.equal(1)
     expect(command[0].options.length).to.equal(0)
   })
 
   it('should make command options to be used for making help menu with signature', function () {
     class Greet {
-      description () {
+      get description () {
         return 'I am greet'
       }
       * handle () {
       }
-      signature () {
+      get signature () {
         return '{name:Enter name of the file} {--plain?:We will keep it plain}'
       }
      }
@@ -256,11 +258,11 @@ describe('Runner', function () {
       _: ['make:controller', 'UserController']
     }
     class Make {
-      signature () {
+      get signature () {
         return '{name}'
       }
-      description () {
-
+      get description () {
+        return 'Make a new controller'
       }
       *handle () {
 
@@ -277,4 +279,54 @@ describe('Runner', function () {
     expect(Object.keys(reply.options)).to.have.length(0)
   })
 
+  it('should parse a command with empty signature', function () {
+    const packageFile = require('../package.json')
+    const argv = {
+      _: ['make:controller']
+    }
+    class Make {
+      get signature () {
+      }
+      get description () {
+        return 'Make'
+      }
+      *handle () {
+
+      }
+    }
+    Ioc.bind('App/Commands/Make', function () {
+      return new Make()
+    })
+    Store.register({'make:controller': 'App/Commands/Make'})
+    const reply = runnerHelpers.executeCommand(argv, packageFile)
+    expect(reply).to.have.property('args')
+    expect(reply).to.have.property('options')
+    expect(Object.keys(reply.options)).to.have.length(0)
+    expect(Object.keys(reply.args)).to.have.length(0)
+  })
+
+  it('should excute command handle with empty signature', function * () {
+    const packageFile = require('../package.json')
+    let handleCalled = false
+    const argv = {
+      _: ['make:controller']
+    }
+    class Make {
+      get signature () {
+      }
+      get description () {
+        return 'Make'
+      }
+      * handle () {
+        handleCalled = true
+      }
+    }
+    Ioc.bind('App/Commands/Make', function () {
+      return new Make()
+    })
+    Store.register({'make:controller': 'App/Commands/Make'})
+    const commandData = runnerHelpers.executeCommand(argv, packageFile)
+    yield Runner.run(argv._[0], commandData.args, commandData.options)
+    expect(handleCalled).to.equal(true)
+  })
 })
