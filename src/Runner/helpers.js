@@ -2,8 +2,11 @@
 
 /**
  * adonis-ace
- * Copyright(c) 2015-2015 Harminder Virk
- * MIT Licensed
+ *
+ * (c) Harminder Virk <virk@adonisjs.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
 */
 
 const Store = require('../Store')
@@ -33,6 +36,12 @@ let helpers = exports = module.exports = {}
 helpers.makeHelp = function (argv, packageFile) {
   /* istanbul ignore next */
   const command = argv._[0] ? argv._[0] : argv.help
+  const commands = helpers.getCommands()
+  const options = {
+    package: packageFile,
+    commands: commands,
+    options: globalOptions
+  }
 
   /**
    * if help option has a string next to it, display
@@ -40,18 +49,12 @@ helpers.makeHelp = function (argv, packageFile) {
    */
   /* istanbul ignore if */
   if (typeof (command) === 'string') {
-    return Help.commandMenu(helpers.getCommand(command))
+    return Help.forCommand(command, options)
   }
 
   /**
    * display help for all commands
    */
-  const commands = helpers.getCommands()
-  const options = {
-    package: packageFile,
-    commands: commands,
-    options: globalOptions
-  }
   Help.menu(options)
 }
 

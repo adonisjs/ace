@@ -12,7 +12,7 @@ const Runner = require('../src/Runner')
 
 let Greet = {}
 Greet.description = 'Greet a user'
-Greet.signature = '{name}'
+Greet.signature = '{name:Name of the user to be printed}'
 Greet.handle = function * (options, flags) {
 
 }
