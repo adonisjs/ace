@@ -2,8 +2,11 @@
 
 /**
  * adonis-ace
- * Copyright(c) 2015-2015 Harminder Virk
- * MIT Licensed
+ *
+ * (c) Harminder Virk <virk@adonisjs.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
 */
 
 const colors = require('colors')
@@ -288,3 +291,11 @@ Ansi.table = function (head, body) {
 Ansi.icon = function (type) {
   return process.platform === 'win32' ? iconsWin[type] : iconsMain[type]
 }
+
+/**
+ * alias for colors module
+ * @type {Object}
+ *
+ * @public
+ */
+Ansi.colors = colors

@@ -12,6 +12,7 @@
 const Store = require('../Store')
 const Parser = require('../Parser')
 const Help = require('terminal-help')
+const Ansi = require('../Ansi')
 
 const globalOptions = [
   {
@@ -184,4 +185,17 @@ helpers.validateAndTransform = function (args, options, argv) {
     formattedOptions[item.name.replace('--', '')] = item.value
   })
   return {args: formattedArgs, options: formattedOptions}
+}
+
+/**
+ * shows framework version
+ *
+ * @method showVersion
+ *
+ * @param  {Object}    packageFile
+ *
+ * @public
+ */
+helpers.showVersion = function (packageFile) {
+  console.log(`${Ansi.colors.green(packageFile.name)} ${Ansi.colors.white('version')} ${Ansi.colors.yellow(packageFile.version)}`)
 }

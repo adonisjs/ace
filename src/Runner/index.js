@@ -2,8 +2,11 @@
 
 /**
  * adonis-ace
- * Copyright(c) 2015-2015 Harminder Virk
- * MIT Licensed
+ *
+ * (c) Harminder Virk <virk@adonisjs.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
 */
 
 const argv = require('yargs').argv
@@ -40,6 +43,11 @@ Runner.invoke = function (packageFile) {
   // is a help command
   if (argv.help) {
     return helpers.makeHelp(argv, packageFile)
+  }
+
+  // looking for version
+  if (argv.version) {
+    return helpers.showVersion(packageFile)
   }
 
   co(function * () {
