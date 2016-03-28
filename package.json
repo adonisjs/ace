@@ -1,9 +1,10 @@
 {
   "name": "adonis-ace",
   "version": "3.0.0",
-  "description": "[![Gitter](https://img.shields.io/badge/+%20GITTER-JOIN%20CHAT%20%E2%86%92-1DCE73.svg?style=flat-square)](https://gitter.im/adonisjs/adonis-framework) [![Trello](https://img.shields.io/badge/TRELLO-%E2%86%92-89609E.svg?style=flat-square)](https://trello.com/b/yzpqCgdl/adonis-for-humans) [![Version](https://img.shields.io/npm/v/adonis-framework.svg?style=flat-square)](https://www.npmjs.com/package/adonis-framework) [![Build Status](https://img.shields.io/travis/adonisjs/adonis-framework/master.svg?style=flat-square)](https://travis-ci.org/adonisjs/adonis-framework) [![Coverage Status](https://img.shields.io/coveralls/adonisjs/adonis-framework/master.svg?style=flat-square)](https://coveralls.io/github/adonisjs/adonis-framework?branch=master) [![Downloads](https://img.shields.io/npm/dt/adonis-framework.svg?style=flat-square)](https://www.npmjs.com/package/adonis-framework) [![License](https://img.shields.io/npm/l/adonis-framework.svg?style=flat-square)](https://opensource.org/licenses/MIT)",
+  "description": "Ace is a command line tool for adonisjs framework",
   "main": "index.js",
   "directories": {
+    "example": "examples",
     "test": "test"
   },
   "scripts": {
@@ -36,5 +37,20 @@
     "es6-class-mixin": "^1.0.5",
     "inquirer": "^0.12.0",
     "node-exceptions": "^1.0.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adonisjs/ace.git"
+  },
+  "keywords": [
+    "cli",
+    "adonisjs",
+    "adonis",
+    "terminal",
+    "adonis-ace"
+  ],
+  "bugs": {
+    "url": "https://github.com/adonisjs/ace/issues"
+  },
+  "homepage": "https://github.com/adonisjs/ace#readme"
 }
