@@ -188,4 +188,37 @@ describe('Command', function () {
     expect(generator.command._args[0].name).to.equal('name')
     expect(generator.command._args[0].required).to.equal(true)
   })
+
+  it('should parse options into sequential array', function () {
+    class Generator extends Command {}
+    const generator = new Generator()
+    const parsedOptions = generator._parseOptions({admin: true, queue: 'default'})
+    expect(parsedOptions).deep.equal(['--admin', '--queue', 'default'])
+  })
+
+  it('should remove the flag when value passed is falsy', function () {
+    class Generator extends Command {}
+    const generator = new Generator()
+    const parsedOptions = generator._parseOptions({admin: true, queue: false})
+    expect(parsedOptions).deep.equal(['--admin'])
+  })
+
+  it('should be able to execute a given command with in a different command', function () {
+    const commandData = {}
+    class ModelGenerator extends Command {
+      get signature () {
+        return 'make:model {name} {-m, --migration}'
+      }
+      * handle (args, options) {
+        commandData.args = args
+        commandData.options = options
+      }
+    }
+    class ControllerGenerator extends Command {}
+    new ModelGenerator().initialize()
+    const controller = new ControllerGenerator()
+    controller.run('make:model', ['UserModel'], {migration: true})
+    expect(commandData.args).deep.equal({name: 'UserModel'})
+    expect(commandData.options).deep.equal({migration: true})
+  })
 })

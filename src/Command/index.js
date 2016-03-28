@@ -13,6 +13,7 @@ const commander = require('commander')
 const _ = require('lodash')
 const Ansi = require('./Mixins/Ansi')
 const Prompt = require('./Mixins/Prompt')
+const Runner = require('./Mixins/Runner')
 const Parser = require('../Parser')
 const mixin = require('es6-class-mixin')
 const co = require('co')
@@ -199,7 +200,7 @@ class Command {
   }
 }
 
-class ExtendedCommand extends mixin(Command, Ansi, Prompt) {
+class ExtendedCommand extends mixin(Command, Ansi, Prompt, Runner) {
 }
 
 module.exports = ExtendedCommand

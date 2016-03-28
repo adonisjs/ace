@@ -10,12 +10,12 @@
   "scripts": {
     "test": "npm run standard && _mocha test/unit",
     "coverage": "istanbul cover -x src/Command/Mixins/Ansi.js -x src/Command/Mixins/Prompt.js _mocha test/unit",
-    "standard": "standard src/**/*.js src/**/**/*.js test/**/*.js"
+    "standard": "standard src/**/*.js src/**/**/*.js test/**/*.js providers/*.js"
   },
   "author": "adonisjs",
   "license": "MIT",
   "devDependencies": {
-    "adonis-fold": "^2.0.1",
+    "adonis-fold": "^3.0.0",
     "chai": "^3.5.0",
     "coveralls": "^2.11.9",
     "cz-conventional-changelog": "^1.1.5",
@@ -23,6 +23,9 @@
     "mocha": "^2.4.5",
     "sinon": "^1.17.3",
     "standard": "^6.0.8"
+  },
+  "peerDependencies": {
+    "adonis-fold": "^3.0.0"
   },
   "config": {
     "commitizen": {
