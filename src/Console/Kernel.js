@@ -13,14 +13,14 @@ const commander = require('commander')
 const Command = require('../Command')
 const CatLog = require('cat-log')
 const logger = new CatLog('adonis:ace')
-const NE = require('node-exceptions')
+const CE = require('../Exceptions')
 const _ = require('lodash')
 const Ioc = require('adonis-fold').Ioc
 
 class ConsoleKernel {
 
   constructor () {
-    this.commands = []
+    this.commands = {}
   }
 
   /**
@@ -31,7 +31,8 @@ class ConsoleKernel {
    * @public
    */
   add (command) {
-    this.commands.push(this.resolveCommand(command))
+    const commandInstance = this.resolveCommand(command)
+    this.commands[commandInstance.command._name] = commandInstance
   }
 
   /**
@@ -50,29 +51,49 @@ class ConsoleKernel {
    * resolves a command from the Ioc container and
    * makes sure it is instance of Command.
    *
-   * @param  {String|Object}       command [description]
+   * @param  {String|Object}       command
    *
    * @public
    */
   resolveCommand (command) {
     logger.verbose('resolving command %s', command)
-    const commandInstance = typeof (command) === 'string' ? Ioc.make(command) : command
+    const commandInstance = Ioc.make(command)
     if (commandInstance instanceof Command === false) {
-      throw new NE.InvalidArgumentException(`${command} must be an instance of ${Command.name}`)
+      throw new CE.InvalidArgumentException(`${command} must be an instance of Base Command`)
     }
     commandInstance.initialize()
-    commandInstance.setup()
+    return commandInstance
   }
 
   /**
    * invoke command.
    *
-   * @param  {Object} packageFile [description]
+   * @param  {Object} packageFile
    *
    * @public
    */
   invoke (packageFile) {
     commander.version(packageFile.version).parse(process.argv)
+  }
+
+  /**
+   * calls a given command and returns it's output back
+   *
+   * @param  {String} command
+   * @param  {Object} args
+   * @param  {Object} options
+   * @return {Mixed}
+   *
+   * @public
+   */
+  call (command, args, options) {
+    const commandInstance = this.commands[command]
+    if (!commandInstance) {
+      throw new CE.CommandNotFound(`${command} is not registered with ace`)
+    }
+    const formattedArgs = {}
+    _.each(args, (value, index) => { formattedArgs[commandInstance.args[index].name] = value })
+    return commandInstance.handle(formattedArgs, options)
   }
 
 }

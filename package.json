@@ -17,6 +17,7 @@
   "devDependencies": {
     "adonis-fold": "^3.0.0",
     "chai": "^3.5.0",
+    "co-mocha": "^1.1.2",
     "coveralls": "^2.11.9",
     "cz-conventional-changelog": "^1.1.5",
     "istanbul": "^0.4.2",
