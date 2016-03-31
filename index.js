@@ -9,6 +9,5 @@
  * file that was distributed with this source code.
 */
 
-module.exports = {
-  ConsoleKernel: require('./src/Console/Kernel')
-}
+const ConsoleKernel = require('./src/Console/Kernel')
+module.exports = new ConsoleKernel()
