@@ -72,6 +72,7 @@ class Command {
     _.each(commandOptions._events, (option, name) => {
       options[name] = commandOptions[name] || null
     })
+    this.setup()
     co(function * () {
       yield self.handle(params, options)
     })
@@ -181,8 +182,9 @@ class Command {
   }
 
   /**
-   * a method called by console kernel, it can be a good
-   * place to setup command requirements.
+   * a method called by console kernel just before the handle method.
+   * It can be a good place to setup command requirements, example
+   * setting up the database connection
    *
    * @public
    */
