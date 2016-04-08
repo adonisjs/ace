@@ -93,6 +93,7 @@ class ConsoleKernel {
     }
     const formattedArgs = {}
     _.each(args, (value, index) => { formattedArgs[commandInstance.args[index].name] = value })
+    commandInstance.setup()
     return commandInstance.handle(formattedArgs, options)
   }
 
