@@ -10,6 +10,8 @@
 */
 
 const colors = require('colors/safe')
+const _ = require('lodash')
+const Table = require('cli-table')
 
 const iconsMain = {
   info: colors.cyan('ℹ'),
@@ -124,6 +126,32 @@ Ansi.completed = function (name, message) {
  */
 Ansi.failed = function (name, message) {
   console.log(`${colors.red(name + ':')} ${message}`)
+}
+
+/**
+ * creates a table in the cli
+ *
+ * @param  {Array} head
+ * @param  {Object|Array} body
+ *
+ * @example
+ * this.table(['Name', 'Age'], [['virk', 22], ['joe', 23]])
+ * this.table(['Name', 'Age'], {virk: '22', joe: 21})
+ *
+ * @public
+ */
+Ansi.table = function (head, body) {
+  const table = new Table({head})
+  if (_.isArray(body)) {
+    _.each(body, (item) => {
+      table.push(item)
+    })
+  } else if (_.isObject(body)) {
+    _.each(body, (value, key) => {
+      table.push([key, value])
+    })
+  }
+  console.log(table.toString())
 }
 
 /**
