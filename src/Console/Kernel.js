@@ -73,6 +73,13 @@ class ConsoleKernel {
    * @public
    */
   invoke (packageFile) {
+    const commandName = process.argv.slice(2)
+    if (!commandName || !commandName[0]) {
+      return commander.outputHelp()
+    }
+    if (_.keys(this.commands).indexOf(commandName[0]) <= -1) {
+      return console.log(`${commandName[0]} is not registered with ace`)
+    }
     commander.version(packageFile.version).parse(process.argv)
   }
 
