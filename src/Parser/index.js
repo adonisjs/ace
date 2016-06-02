@@ -14,7 +14,7 @@ const logger = new CatLog('adonis:ace')
 
 const Parser = exports = module.exports = {}
 const argumentsRegex = /{(-*.[^}]+)}/g
-const defaultValueRegex = /(.+)\=(.+)/
+const defaultValueRegex = /(.+)=(.+)/
 
 /**
  * parse a given option to pull meta data. It can
