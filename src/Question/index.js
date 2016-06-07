@@ -33,21 +33,19 @@ class Question {
   /**
    * prompts for a question
    *
-   * @return {Object} [description]
+   * @return {Object}
    *
    * @private
    *
    */
   _prompt () {
-    return new Promise((resolve) => {
-      inquirer.prompt(this.options, resolve)
-    })
+    return inquirer.prompt(this.options)
   }
 
   /**
    * prints question on the terminal
    *
-   * @return {Mixed} [description]
+   * @return {Mixed}
    *
    * @public
    */

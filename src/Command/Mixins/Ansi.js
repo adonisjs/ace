@@ -45,6 +45,12 @@ const _toConsole = function (values, method) {
 }
 
 /**
+ * An alias to console.log just for the sake
+ * of uniform API
+ */
+Ansi.log = console.log
+
+/**
  * displays error message
  *
  * @method error

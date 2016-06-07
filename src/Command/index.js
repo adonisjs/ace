@@ -111,7 +111,7 @@ class Command {
    * @public
    */
   setName (name) {
-    this.command = commander.command(name)
+    this.command = commander.command(name).description(this.description)
   }
 
   /**

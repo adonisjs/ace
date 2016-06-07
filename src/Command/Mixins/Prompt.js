@@ -15,6 +15,30 @@ const _ = require('lodash')
 const Prompt = exports = module.exports = {}
 
 /**
+ * normalizes options into an consumable array
+ * to the sent to inquirer.
+ *
+ * @param   {Array} choices
+ *
+ * @return  {Array}
+ *
+ * @private
+ */
+Prompt._normalizeOptions = function (choices, defaults) {
+  defaults = defaults || []
+  const isPlainArray = _.isArray(choices)
+  return _.map(choices, (choice, key) => {
+    let choicePair = {}
+    if (isPlainArray) {
+      choicePair = {name: choice, value: choice, checked: defaults.indexOf(choice) > -1}
+    } else {
+      choicePair = {name: choice, value: key, checked: defaults.indexOf(key) > -1}
+    }
+    return choicePair
+  })
+}
+
+/**
  * creates an input type question
  *
  * @method ask
@@ -68,21 +92,14 @@ Prompt.anticipate = function (question, choices, defaultValue) {
  *
  * @param  {String} question
  * @param  {Array}  choices
- * @param  {String} defaultValue
+ * @param  {String} defaults
  * @return {Object}              instance of new Question
  *
  * @public
  */
-Prompt.multiple = function (question, choices, defaultValue) {
-  let choiceHash = []
-  _.each(choices, (choice) => {
-    if (typeof (choice) === 'string') {
-      choiceHash.push({name: choice})
-    } else {
-      choiceHash.push(choice)
-    }
-  })
-  return new Question({type: 'checkbox', message: question, default: defaultValue, choices: choiceHash})
+Prompt.multiple = function (question, choices, defaults) {
+  const choiceHash = Prompt._normalizeOptions(choices, defaults)
+  return new Question({type: 'checkbox', message: question, choices: choiceHash})
 }
 
 /**
