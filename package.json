@@ -1,0 +1,62 @@
+{
+  "name": "adonis-ace",
+  "version": "3.0.1",
+  "description": "Ace is a command line tool for adonisjs framework",
+  "main": "index.js",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "npm run lint && _mocha test/unit",
+    "coverage": "istanbul cover -x src/Command/Mixins/Ansi.js -x src/Command/Mixins/Prompt.js _mocha test/unit",
+    "lint": "standard src/**/*.js src/**/**/*.js test/**/*.js providers/*.js"
+  },
+  "author": "adonisjs",
+  "license": "MIT",
+  "devDependencies": {
+    "adonis-fold": "^3.0.2",
+    "chai": "^3.5.0",
+    "co-mocha": "^1.1.2",
+    "coveralls": "^2.11.9",
+    "cz-conventional-changelog": "^1.1.5",
+    "istanbul": "^0.4.2",
+    "mocha": "^2.4.5",
+    "sinon": "^1.17.3",
+    "standard": "^6.0.8"
+  },
+  "peerDependencies": {
+    "adonis-fold": "^3.0.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "dependencies": {
+    "cat-log": "^1.0.0",
+    "cli-table": "^0.3.1",
+    "co": "^4.6.0",
+    "colors": "^1.1.2",
+    "commander": "^2.9.0",
+    "es6-class-mixin": "^1.0.5",
+    "inquirer": "^1.0.2",
+    "lodash": "^4.6.1",
+    "node-exceptions": "^1.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adonisjs/ace.git"
+  },
+  "keywords": [
+    "cli",
+    "adonisjs",
+    "adonis",
+    "terminal",
+    "adonis-ace"
+  ],
+  "bugs": {
+    "url": "https://github.com/adonisjs/ace/issues"
+  },
+  "homepage": "https://github.com/adonisjs/ace#readme"
+}
