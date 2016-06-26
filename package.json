@@ -8,14 +8,14 @@
     "test": "test"
   },
   "scripts": {
-    "test": "npm run standard && _mocha test/unit",
+    "test": "npm run lint && _mocha test/unit",
     "coverage": "istanbul cover -x src/Command/Mixins/Ansi.js -x src/Command/Mixins/Prompt.js _mocha test/unit",
-    "standard": "standard src/**/*.js src/**/**/*.js test/**/*.js providers/*.js"
+    "lint": "standard src/**/*.js src/**/**/*.js test/**/*.js providers/*.js"
   },
   "author": "adonisjs",
   "license": "MIT",
   "devDependencies": {
-    "adonis-fold": "^3.0.1",
+    "adonis-fold": "^3.0.2",
     "chai": "^3.5.0",
     "co-mocha": "^1.1.2",
     "coveralls": "^2.11.9",
@@ -26,7 +26,7 @@
     "standard": "^6.0.8"
   },
   "peerDependencies": {
-    "adonis-fold": "^3.0.1"
+    "adonis-fold": "^3.0.2"
   },
   "config": {
     "commitizen": {
