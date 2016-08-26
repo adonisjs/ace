@@ -26,7 +26,7 @@
     "standard": "^7.1.1"
   },
   "peerDependencies": {
-    "adonis-fold": "^3.0.2"
+    "adonis-fold": "^3.0.3"
   },
   "config": {
     "commitizen": {
