@@ -25,9 +25,6 @@
     "sinon": "^1.17.3",
     "standard": "^7.1.1"
   },
-  "peerDependencies": {
-    "adonis-fold": "^3.0.3"
-  },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
