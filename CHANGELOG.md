@@ -1,3 +1,13 @@
+<a name="3.0.4"></a>
+## [3.0.4](https://github.com/adonisjs/ace/compare/v3.0.3...v3.0.4) (2016-09-26)
+
+
+### Features
+
+* **table:** add support for passing styles ([121d864](https://github.com/adonisjs/ace/commit/121d864))
+
+
+
 <a name="3.0.3"></a>
 ## [3.0.3](https://github.com/adonisjs/ace/compare/v3.0.2...v3.0.3) (2016-09-26)
 
