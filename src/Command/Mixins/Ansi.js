@@ -143,11 +143,13 @@ Ansi.failed = function (name, message) {
  * @example
  * this.table(['Name', 'Age'], [['virk', 22], ['joe', 23]])
  * this.table(['Name', 'Age'], {virk: '22', joe: 21})
+ * this.table(['Name', 'Age'], {virk: '22', joe: 21}, {head: ['cyan']})
  *
  * @public
  */
-Ansi.table = function (head, body) {
-  const table = new Table({head})
+Ansi.table = function (head, body, style) {
+  style = style || {}
+  const table = new Table({head, style})
   if (_.isArray(body)) {
     _.each(body, (item) => {
       table.push(item)
