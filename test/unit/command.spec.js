@@ -221,4 +221,23 @@ describe('Command', function () {
     expect(commandData.args).deep.equal({name: 'UserModel'})
     expect(commandData.options).deep.equal({migration: true})
   })
+
+  it('should be able to have options with hyphen', function () {
+    const commandData = {}
+    class NewCommand extends Command {
+      get signature () {
+        return 'new {name} {--skip-install}'
+      }
+      * handle (args, options) {
+        commandData.args = args
+        commandData.options = options
+      }
+    }
+    class ControllerGenerator extends Command {}
+    new NewCommand().initialize()
+    const controller = new ControllerGenerator()
+    controller.run('new', ['awesome-project'], {'skip-install': true})
+    expect(commandData.args).deep.equal({name: 'awesome-project'})
+    expect(commandData.options).deep.equal({'skip-install': true})
+  })
 })
