@@ -77,9 +77,12 @@ class ConsoleKernel {
     if (!commandName || !commandName[0]) {
       return commander.outputHelp()
     }
-    if (_.keys(this.commands).indexOf(commandName[0]) <= -1) {
-      return console.log(`${commandName[0]} is not registered with ace`)
-    }
+
+    commander.on('*', function (args) {
+      console.log(`${args[0]} is not registered with ace`)
+      process.exit(1)
+    })
+
     commander.version(packageFile.version).parse(process.argv)
   }
 
