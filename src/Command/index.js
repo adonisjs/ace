@@ -70,7 +70,7 @@ class Command {
       params[this.args[index].name] = value || null
     })
     _.each(commandOptions._events, (option, name) => {
-      options[name] = commandOptions[name] || null
+      options[name] = commandOptions[name] || commandOptions[_.camelCase(name)] || null
     })
     this.setup()
     co(function * () {

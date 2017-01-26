@@ -1,3 +1,14 @@
+<a name="3.0.6"></a>
+## [3.0.6](https://github.com/adonisjs/ace/compare/v3.0.5...v3.0.6) (2017-01-26)
+
+
+### Bug Fixes
+
+* **kernel:** listen event for unknown commands ([25fbb2d](https://github.com/adonisjs/ace/commit/25fbb2d))
+* **options:** Check if the option exists in camelCase ([#40](https://github.com/adonisjs/ace/issues/40)) ([f04cd46](https://github.com/adonisjs/ace/commit/f04cd46))
+
+
+
 <a name="3.0.5"></a>
 ## [3.0.5](https://github.com/adonisjs/ace/compare/v3.0.4...v3.0.5) (2016-12-12)
 
