@@ -153,7 +153,7 @@ class Command {
   _parseSignature () {
     if (this.signature) {
       const signatureHash = this.signature.split(' ')
-      const commandName = signatureHash[0]
+      const commandName = _.trim(signatureHash[0])
       this.setName(commandName)
       const commandOptions = Parser.parseSignature(_.tail(signatureHash).join(' '))
       _.each(commandOptions.args, (arg) => {
