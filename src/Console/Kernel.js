@@ -17,6 +17,13 @@ const CE = require('../Exceptions')
 const _ = require('lodash')
 const Ioc = require('adonis-fold').Ioc
 
+commander.on('--help', function () {
+  console.log('  Extras:')
+  console.log('')
+  console.log('    [command] --help output command detail info')
+  console.log('')
+})
+
 class ConsoleKernel {
 
   constructor () {
