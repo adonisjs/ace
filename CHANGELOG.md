@@ -1,3 +1,18 @@
+<a name="3.0.7"></a>
+## [3.0.7](https://github.com/adonisjs/ace/compare/v3.0.6...v3.0.7) (2017-02-25)
+
+
+### Bug Fixes
+
+* **package:** update inquirer to version 3.0.2 ([#45](https://github.com/adonisjs/ace/issues/45)) ([725c528](https://github.com/adonisjs/ace/commit/725c528))
+
+
+### Features
+
+* **console:** add extra help on help screen ([444e6e8](https://github.com/adonisjs/ace/commit/444e6e8))
+
+
+
 <a name="3.0.6"></a>
 ## [3.0.6](https://github.com/adonisjs/ace/compare/v3.0.5...v3.0.6) (2017-01-26)
 
