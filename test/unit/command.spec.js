@@ -226,7 +226,10 @@ describe('Command', function () {
     const commandData = {}
     class NewCommand extends Command {
       get signature () {
-        return 'new {name} {--skip-install}'
+        return `new
+                {name}
+                {--skip-install}
+               `
       }
       * handle (args, options) {
         commandData.args = args
