@@ -9,83 +9,105 @@
  * file that was distributed with this source code.
 */
 
-const chai = require('chai')
-const expect = chai.expect
+const test = require('japa')
 const Parser = require('../../src/Parser')
 
-/* global describe, it */
-describe('Parser', function () {
-  it('should parse signature to find command arguments', function () {
+test.group('Parser', function () {
+  test('should parse signature to find command arguments', function (assert) {
     const parsed = Parser.parseSignature('{name} {age}')
-    expect(parsed.args).to.be.an('array')
-    expect(parsed.args).to.have.length(2)
+    assert.isArray(parsed.args)
+    assert.lengthOf(parsed.args, 2)
   })
 
-  it('should parse signature to find command flags', function () {
+  test('should parse signature to find command flags', function (assert) {
     const parsed = Parser.parseSignature('{name} {--age}')
-    expect(parsed.args).to.be.an('array')
-    expect(parsed.args).to.have.length(1)
-    expect(parsed.flags).to.be.an('array')
-    expect(parsed.flags).to.have.length(1)
+    assert.isArray(parsed.args)
+    assert.lengthOf(parsed.args, 1)
+    assert.isArray(parsed.flags)
+    assert.lengthOf(parsed.flags, 1)
   })
 
-  it('should tell whether argument is optional or not', function () {
+  test('should parse signature to fing flags with aliases', function (assert) {
+    const parsed = Parser.parseSignature('{name} {-a, --age}')
+    assert.equal(parsed.flags[0].name, '-a, --age')
+  })
+
+  test('should tell whether argument is optional or not', function (assert) {
     const parsed = Parser.parseSignature('{name?}')
-    expect(parsed.args).to.be.an('array')
-    expect(parsed.args).to.have.length(1)
-    expect(parsed.args[0].optional).to.equal(true)
+    assert.isArray(parsed.args)
+    assert.lengthOf(parsed.args, 1)
+    assert.equal(parsed.args[0].optional, true)
   })
 
-  it('should find argument default value', function () {
+  test('should find argument default value', function (assert) {
     const parsed = Parser.parseSignature('{name?=virk}')
-    expect(parsed.args).to.be.an('array')
-    expect(parsed.args).to.have.length(1)
-    expect(parsed.args[0].defaultValue).to.equal('virk')
+    assert.isArray(parsed.args)
+    assert.lengthOf(parsed.args, 1)
+    assert.equal(parsed.args[0].defaultValue, 'virk')
   })
 
-  it('should read argument description', function () {
+  test('should read argument description', function (assert) {
     const parsed = Parser.parseSignature('{name=virk : Enter your username}')
-    expect(parsed.args).to.be.an('array')
-    expect(parsed.args).to.have.length(1)
-    expect(parsed.args[0].description).to.equal('Enter your username')
+    assert.isArray(parsed.args)
+    assert.lengthOf(parsed.args, 1)
+    assert.equal(parsed.args[0].description, 'Enter your username')
   })
 
-  it('should parse multiple options', function () {
+  test('should parse multiple options', function (assert) {
     const parsed = Parser.parseSignature('{name=virk : Enter your username} {age : Enter your age}')
-    expect(parsed.args).to.be.an('array')
-    expect(parsed.args).to.have.length(2)
-    expect(parsed.args[0].description).to.equal('Enter your username')
-    expect(parsed.args[1].description).to.equal('Enter your age')
+    assert.isArray(parsed.args)
+    assert.lengthOf(parsed.args, 2)
+    assert.equal(parsed.args[0].description, 'Enter your username')
+    assert.equal(parsed.args[1].description, 'Enter your age')
   })
 
-  it('should make flags accept values', function () {
+  test('should make flags accept values', function (assert) {
     const parsed = Parser.parseSignature('{--name=@value}')
-    expect(parsed.flags).to.be.an('array')
-    expect(parsed.flags).to.have.length(1)
-    expect(parsed.flags[0].defaultValue).to.equal('@value')
-    expect(parsed.flags[0].name).to.equal('--name')
+    assert.isArray(parsed.flags)
+    assert.lengthOf(parsed.flags, 1)
+    assert.equal(parsed.flags[0].defaultValue, '@value')
+    assert.equal(parsed.flags[0].name, '--name')
   })
 
-  it('should return option name', function () {
+  test('flags with alias must accept value', function (assert) {
+    const parsed = Parser.parseSignature('{-a, --age=@value}')
+    assert.isArray(parsed.flags)
+    assert.lengthOf(parsed.flags, 1)
+    assert.equal(parsed.flags[0].defaultValue, '@value')
+    assert.equal(parsed.flags[0].name, '-a, --age')
+  })
+
+  test('flags with value can be optional', function (assert) {
+    const parsed = Parser.parseSignature('{-a, --age?=@value}')
+    assert.isTrue(parsed.flags[0].optional)
+  })
+
+  test('flags with value can have description', function (assert) {
+    const parsed = Parser.parseSignature('{-a, --age?=@value:Enter your age}')
+    assert.isTrue(parsed.flags[0].optional)
+    assert.equal(parsed.flags[0].description, 'Enter your age')
+  })
+
+  test('should return option name', function (assert) {
     const parsed = Parser.parseSignature('{name}')
-    expect(parsed.args[0].name).to.equal('name')
+    assert.equal(parsed.args[0].name, 'name')
   })
 
-  it('should return option name when option is optional', function () {
+  test('should return option name when option is optional', function (assert) {
     const parsed = Parser.parseSignature('{name?}')
-    expect(parsed.args[0].name).to.equal('name')
+    assert.equal(parsed.args[0].name, 'name')
   })
 
-  it('should return option name when option has a default value', function () {
+  test('should return option name when option has a default value', function (assert) {
     const parsed = Parser.parseSignature('{name?=virk}')
-    expect(parsed.args[0].name).to.equal('name')
+    assert.equal(parsed.args[0].name, 'name')
   })
 
-  it('should return option name when option has a description', function () {
+  test('should return option name when option has a description', function (assert) {
     const parsed = Parser.parseSignature('{name?=virk:This is a name}')
-    expect(parsed.args[0].name).to.equal('name')
-    expect(parsed.args[0].description).to.equal('This is a name')
-    expect(parsed.args[0].defaultValue).to.equal('virk')
-    expect(parsed.args[0].optional).to.equal(true)
+    assert.equal(parsed.args[0].name, 'name')
+    assert.equal(parsed.args[0].description, 'This is a name')
+    assert.equal(parsed.args[0].defaultValue, 'virk')
+    assert.equal(parsed.args[0].optional, true)
   })
 })
