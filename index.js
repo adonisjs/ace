@@ -1,13 +1,12 @@
-'use strict'
+#!/usr/bin/env node
+const omelette = require('omelette')
 
-/**
- * adonis-ace
- *
- * (c) Harminder Virk <virk@adonisjs.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
-*/
+const firstArgument = ({ reply }) => {
+  reply([ 'beautiful', 'cruel', 'far' ])
+}
 
-const ConsoleKernel = require('./src/Console/Kernel')
-module.exports = new ConsoleKernel()
+const planet = ({ reply }) => {
+  reply([ 'world', 'mars', 'pluto' ])
+}
+
+omelette`hello|hi ${firstArgument} ${planet}`.init()

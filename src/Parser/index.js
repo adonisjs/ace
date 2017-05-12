@@ -49,9 +49,9 @@ class Parser {
    * @private
    */
   _extractDefaultValue (field) {
-    let defaultValue = ''
+    let defaultValue = null
     field = field.replace(this._defaultValueRegex, function (group, part1 = '', part2 = '') {
-      defaultValue = part2.trim()
+      defaultValue = part2.trim() || null
       return part1.trim()
     })
     return [field, defaultValue]
@@ -159,7 +159,7 @@ class Parser {
     let match
     const tokens = {
       args: [],
-      flags: []
+      options: []
     }
 
     /**
@@ -169,7 +169,7 @@ class Parser {
     while ((match = this._argumentsRegex.exec(signature)) !== null) {
       const matchedValue = match[1]
       const parsedValue = this._parseField(matchedValue)
-      matchedValue.startsWith('-') ? tokens.flags.push(parsedValue) : tokens.args.push(parsedValue)
+      matchedValue.startsWith('-') ? tokens.options.push(parsedValue) : tokens.args.push(parsedValue)
     }
 
     return tokens

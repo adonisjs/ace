@@ -10,7 +10,7 @@
 */
 
 const test = require('japa')
-const Parser = require('../../src/Parser')
+const Parser = require('../src/Parser')
 
 test.group('Parser', function () {
   test('should parse signature to find command arguments', function (assert) {
@@ -19,17 +19,17 @@ test.group('Parser', function () {
     assert.lengthOf(parsed.args, 2)
   })
 
-  test('should parse signature to find command flags', function (assert) {
+  test('should parse signature to find command options', function (assert) {
     const parsed = Parser.parseSignature('{name} {--age}')
     assert.isArray(parsed.args)
     assert.lengthOf(parsed.args, 1)
-    assert.isArray(parsed.flags)
-    assert.lengthOf(parsed.flags, 1)
+    assert.isArray(parsed.options)
+    assert.lengthOf(parsed.options, 1)
   })
 
-  test('should parse signature to fing flags with aliases', function (assert) {
+  test('should parse signature to fing options with aliases', function (assert) {
     const parsed = Parser.parseSignature('{name} {-a, --age}')
-    assert.equal(parsed.flags[0].name, '-a, --age')
+    assert.equal(parsed.options[0].name, '-a, --age')
   })
 
   test('should tell whether argument is optional or not', function (assert) {
@@ -61,31 +61,31 @@ test.group('Parser', function () {
     assert.equal(parsed.args[1].description, 'Enter your age')
   })
 
-  test('should make flags accept values', function (assert) {
+  test('should make options accept values', function (assert) {
     const parsed = Parser.parseSignature('{--name=@value}')
-    assert.isArray(parsed.flags)
-    assert.lengthOf(parsed.flags, 1)
-    assert.equal(parsed.flags[0].defaultValue, '@value')
-    assert.equal(parsed.flags[0].name, '--name')
+    assert.isArray(parsed.options)
+    assert.lengthOf(parsed.options, 1)
+    assert.equal(parsed.options[0].defaultValue, '@value')
+    assert.equal(parsed.options[0].name, '--name')
   })
 
-  test('flags with alias must accept value', function (assert) {
+  test('options with alias must accept value', function (assert) {
     const parsed = Parser.parseSignature('{-a, --age=@value}')
-    assert.isArray(parsed.flags)
-    assert.lengthOf(parsed.flags, 1)
-    assert.equal(parsed.flags[0].defaultValue, '@value')
-    assert.equal(parsed.flags[0].name, '-a, --age')
+    assert.isArray(parsed.options)
+    assert.lengthOf(parsed.options, 1)
+    assert.equal(parsed.options[0].defaultValue, '@value')
+    assert.equal(parsed.options[0].name, '-a, --age')
   })
 
-  test('flags with value can be optional', function (assert) {
+  test('options with value can be optional', function (assert) {
     const parsed = Parser.parseSignature('{-a, --age?=@value}')
-    assert.isTrue(parsed.flags[0].optional)
+    assert.isTrue(parsed.options[0].optional)
   })
 
-  test('flags with value can have description', function (assert) {
+  test('options with value can have description', function (assert) {
     const parsed = Parser.parseSignature('{-a, --age?=@value:Enter your age}')
-    assert.isTrue(parsed.flags[0].optional)
-    assert.equal(parsed.flags[0].description, 'Enter your age')
+    assert.isTrue(parsed.options[0].optional)
+    assert.equal(parsed.options[0].description, 'Enter your age')
   })
 
   test('should return option name', function (assert) {
