@@ -176,4 +176,11 @@ test.group('Kernel', (group) => {
     kernel.execCommand('up')
     assert.deepEqual(stack, ['down', 'up'])
   })
+
+  test('passing arrow function to inline command should throw exception', async (assert) => {
+    const fn = () => kernel.command('down', () => {
+      return 'down called'
+    })
+    assert.throw(fn, 'Inline command handler cannot be an arrow function')
+  })
 })

@@ -10,6 +10,7 @@
 */
 
 const _ = require('lodash')
+const isArrowFunction = require('is-arrow-function')
 const Command = require('../Command')
 const commander = require('../../lib/commander')
 const chalk = require('chalk')
@@ -115,6 +116,16 @@ class Kernel {
    * @param  {Function} handle
    *
    * @return {void}
+   *
+   * @example
+   * ```js
+   * ace.command('make:controller {name}', 'Add a controller', function () {
+   * })
+   *
+   * // with optional description
+   * ace.command('make:controller {name}', function () {
+   * })
+   * ```
    */
   command (signature, description, handle) {
     /**
@@ -126,7 +137,15 @@ class Kernel {
       description = ''
     }
 
-    class FakeCommand extends Command {
+    /**
+     * Since we bind the class instance to the handler, it cannot
+     * be an arrow function
+     */
+    if (isArrowFunction(handle)) {
+      throw new Error('Inline command handler cannot be an arrow function')
+    }
+
+    class InlineCommand extends Command {
       static get signature () {
         return signature
       }
@@ -139,7 +158,7 @@ class Kernel {
         return handle.bind(this)(...input)
       }
     }
-    this.addCommand(FakeCommand)
+    this.addCommand(InlineCommand)
   }
 
   /**
