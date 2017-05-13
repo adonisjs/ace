@@ -10,7 +10,7 @@
 */
 
 const _ = require('lodash')
-const commander = require('commander')
+const commander = require('../../lib/commander')
 const chalk = require('chalk')
 const WHITE_SPACE = ''
 
@@ -41,15 +41,17 @@ class Kernel {
   /**
    * Returns the biggest command name length
    *
+   * @package {Array} options
+   *
    * @method _largestCommandLength
    *
    * @return {String}
    *
    * @private
    */
-  _largestCommandLength () {
-    const command = _.maxBy(_.keys(this.commands), (command) => command.length)
-    return command ? command.length : 0
+  _largestCommandLength (options) {
+    const keys = _.keys(this.commands).concat(options)
+    return _.maxBy(keys, (command) => command.length).length
   }
 
   /**
@@ -67,7 +69,7 @@ class Kernel {
    *
    * @private
    */
-  _pushGroups (name, commands, maxWidth, strings) {
+  _pushGroups (name, commands, maxWidth, ctx, strings) {
     /**
      * Only push the group name when it is not `a`. A
      * is actual a group of all top level commands.
@@ -76,14 +78,14 @@ class Kernel {
      * sorting
      */
     if (name !== 'a') {
-      strings.push(` ${chalk.magenta.bold(name)}`)
+      strings.push(` ${ctx.magenta.bold(name)}`)
     }
 
     /**
      * Push each command to the strings array
      */
     _.each(_.sortBy(commands, 'commandName'), (command) => {
-      strings.push(`  ${chalk.blue(_.padEnd(command.commandName, maxWidth))} ${command.description}`)
+      strings.push(`  ${ctx.blue(_.padEnd(command.commandName, maxWidth))} ${command.description}`)
     })
   }
 
@@ -137,7 +139,7 @@ class Kernel {
    * @return {Mixed}
    */
   execCommand (name, args = {}, options = {}) {
-    return this.getCommand(name).exec(args, options)
+    return this.getCommand(name).exec(args, options, false)
   }
 
   /**
@@ -150,28 +152,51 @@ class Kernel {
    */
   invoke () {
     commander.parse(process.argv)
+
+    /**
+     * Handling global options
+     */
     if (commander.env) {
       process.env.NODE_ENV = commander.env
     }
+
+    /**
+     * Disable colored output
+     */
+    process.env.NO_ANSI = !!commander.noAnsi
   }
 
-  outputHelp (options) {
+  /**
+   * Returns a multiline string to be used for showing
+   * the help screen.
+   *
+   * @method outputHelp
+   *
+   * @param  {Object}   options
+   *
+   * @return {Array}
+   */
+  outputHelp (options, colorize = process.env.NO_ANSI === 'false') {
     const strings = []
+    const ctx = new chalk.constructor({ enabled: colorize })
     const commandsGroup = this._groupCommands()
     const groupNames = _.keys(commandsGroup).sort()
-    const maxWidth = this._largestCommandLength() + 2
+    const maxWidth = this._largestCommandLength(_.map(options, (option) => option.long)) + 2
 
     /**
      * Usage lines
      */
-    strings.push(chalk.magenta.bold('Usage:'))
+    strings.push(ctx.magenta.bold('Usage:'))
     strings.push('  command [arguments] [options]')
 
+    /**
+     * Only print global options when they exists.
+     */
     if (_.size(options)) {
       strings.push(WHITE_SPACE)
-      strings.push(chalk.magenta.bold('Global Options:'))
+      strings.push(ctx.magenta.bold('Global Options:'))
       _.each(options, (option) => {
-        strings.push(`  ${chalk.blue(_.padEnd(option.long, maxWidth))} ${option.description}`)
+        strings.push(`  ${ctx.blue(_.padEnd(option.long, maxWidth))} ${option.description}`)
       })
     }
 
@@ -180,9 +205,9 @@ class Kernel {
      */
     if (_.size(groupNames)) {
       strings.push(WHITE_SPACE)
-      strings.push(chalk.magenta.bold('Available Commands:'))
+      strings.push(ctx.magenta.bold('Available Commands:'))
       _.each(groupNames, (groupName) => {
-        this._pushGroups(groupName, commandsGroup[groupName], maxWidth, strings)
+        this._pushGroups(groupName, commandsGroup[groupName], maxWidth, ctx, strings)
       })
     }
 
@@ -202,7 +227,8 @@ commander.on('*', function (args) {
 })
 
 /**
- * Override the help screen.
+ * Customized help screen by overriding below
+ * method on commander.
  */
 commander.Command.prototype.outputHelp = function () {
   /**
@@ -216,6 +242,7 @@ commander.Command.prototype.outputHelp = function () {
   process.stdout.write(kernel.outputHelp(this.options))
 }
 
-commander.option('--env <environment>', 'Update env')
+commander.option('--env <environment>', 'Set NODE_ENV before running the commands')
+commander.option('--no-ansi', 'Disable colored output')
 
 module.exports = kernel

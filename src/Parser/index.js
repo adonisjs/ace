@@ -50,8 +50,8 @@ class Parser {
    */
   _extractDefaultValue (field) {
     let defaultValue = null
-    field = field.replace(this._defaultValueRegex, function (group, part1 = '', part2 = '') {
-      defaultValue = part2.trim() || null
+    field = field.replace(this._defaultValueRegex, function (group, part1, part2) {
+      defaultValue = part2.trim()
       return part1.trim()
     })
     return [field, defaultValue]
