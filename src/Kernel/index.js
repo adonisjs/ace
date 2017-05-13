@@ -10,6 +10,7 @@
 */
 
 const _ = require('lodash')
+const Command = require('../Command')
 const commander = require('../../lib/commander')
 const chalk = require('chalk')
 const WHITE_SPACE = ''
@@ -90,15 +91,55 @@ class Kernel {
   }
 
   /**
-   * Adding a new command
+   * Adding a new command by passing a command class
+   * or reference to the IoC container namespace.
    *
    * @method addCommand
    *
-   * @param  {Class}   command
+   * @param  {Class|String}   command
    */
   addCommand (command) {
     command.boot()
     this.commands[command.commandName] = command
+  }
+
+  /**
+   * Add a new inline command by defining a signature
+   * description and a closure to be executed when
+   * command runs
+   *
+   * @method command
+   *
+   * @param  {String}   signature
+   * @param  {String}   [description]
+   * @param  {Function} handle
+   *
+   * @return {void}
+   */
+  command (signature, description, handle) {
+    /**
+     * Since description is optional, one can pass
+     * handle method as 2nd argument too.
+     */
+    if (typeof (description) === 'function' && !handle) {
+      handle = description
+      description = ''
+    }
+
+    class FakeCommand extends Command {
+      static get signature () {
+        return signature
+      }
+
+      static get description () {
+        return description
+      }
+
+      handle (...input) {
+        return handle.bind(this)(...input)
+      }
+    }
+    this.addCommand(FakeCommand)
   }
 
   /**

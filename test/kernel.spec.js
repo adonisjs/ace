@@ -154,4 +154,26 @@ test.group('Kernel', (group) => {
     kernel.invoke()
     assert.equal(process.env.NO_ANSI, 'false')
   })
+
+  test('add inline command', async (assert) => {
+    kernel.command('down', function () {
+      return 'down called'
+    })
+    assert.equal(kernel.execCommand('down'), 'down called')
+  })
+
+  test('add multiple inline commands', async (assert) => {
+    const stack = []
+    kernel.command('down', function () {
+      stack.push('down')
+    })
+
+    kernel.command('up', function () {
+      stack.push('up')
+    })
+    kernel.execCommand('down')
+    assert.deepEqual(stack, ['down'])
+    kernel.execCommand('up')
+    assert.deepEqual(stack, ['down', 'up'])
+  })
 })
