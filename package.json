@@ -35,14 +35,14 @@
   },
   "dependencies": {
     "cli-table": "^0.3.1",
-    "colors": "^1.1.2",
     "commander": "^2.9.0",
     "debug": "^2.6.6",
-    "es6-class-mixin": "^1.0.5",
+    "fs-extra": "^3.0.1",
     "inquirer": "^3.0.6",
     "is-arrow-function": "^2.0.3",
     "lodash": "^4.17.4",
-    "node-exceptions": "^2.0.1"
+    "mustache": "^2.3.0",
+    "pify": "^2.3.0"
   },
   "repository": {
     "type": "git",

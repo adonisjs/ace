@@ -1,6 +1,7 @@
 'use strict'
 
 const test = require('japa')
+const path = require('path')
 const Command = require('../src/Command')
 
 test.group('Command', () => {
@@ -379,5 +380,39 @@ test.group('Command', () => {
     assert.equal(Generator.command.options[0].required, 0)
     assert.equal(Generator.command.options[0].long, '--file')
     assert.equal(Generator.command.options[0].description, 'Controller file')
+  })
+
+  test('create a new file to a given location', async (assert) => {
+    const command = new Command()
+    const foo = path.join(__dirname, '/foo.js')
+    await command.writeFile(foo, `module.exports = 2`)
+    assert.equal(require(foo), 2)
+    await command.removeFile(foo)
+  })
+
+  test('empty directory', async (assert) => {
+    const command = new Command()
+    const tmp = path.join(__dirname, '/tmp')
+    const foo = path.join(tmp, 'foo.js')
+    await command.writeFile(foo, `module.exports = 2`)
+    await command.emptyDir(tmp)
+    assert.isTrue((await command.pathExists(tmp)))
+    await command.removeDir(tmp)
+  })
+
+  test('ensure a file exists otherwise create one', async (assert) => {
+    const command = new Command()
+    const foo = path.join(__dirname, '/tmp', 'foo.js')
+    await command.ensureFile(foo)
+    assert.isTrue((await command.pathExists(foo)))
+    await command.removeDir(path.join(__dirname, '/tmp'))
+  })
+
+  test('ensure a directory exists otherwise create one', async (assert) => {
+    const command = new Command()
+    const dir = path.join(__dirname, '/tmp')
+    await command.ensureDir(dir)
+    assert.isTrue((await command.pathExists(dir)))
+    await command.removeDir(dir)
   })
 })
