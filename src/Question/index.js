@@ -12,6 +12,14 @@
 const _ = require('lodash')
 const inquirer = require('inquirer')
 
+/**
+ * Question class makes it simple to prompt user to share
+ * certain information on command line. You can ask
+ * simple questions to multiple choice question.
+ *
+ * @class Question
+ * @constructor
+ */
 class Question {
   constructor () {
     this._name = new Date().getTime()
@@ -21,7 +29,8 @@ class Question {
 
   /**
    * Returns a standard hash of question with
-   * some default values
+   * some default values. Meant to be used
+   * privately.
    *
    * @method _getQuestionsHash
    *
@@ -89,9 +98,14 @@ class Question {
   }
 
   /**
-   * Listen for certain events and return value.
-   * For now it only supports `validate` and
-   * `filter`.
+   * Listen for certain events on when they occur.
+   * This is not a proper implementation of event
+   * emitter, but instead a nice abstraction to
+   * `validate` and `filter` the user inputs.
+   *
+   * Right now you can listen for `validate` and
+   * `filter` events only. More details are
+   * shared in the docs.
    *
    * @method on
    *
@@ -104,13 +118,13 @@ class Question {
     if (event === 'validate') {
       this._validateFn = callback
     } else if (event === 'filter') {
-      this._validateFn = callback
+      this._filterFn = callback
     }
     return this
   }
 
   /**
-   * Prompts for an input type question
+   * Prompts for an `input` type question.
    *
    * @method ask
    * @async
@@ -119,6 +133,14 @@ class Question {
    * @param  {String} [defaultValue = null]
    *
    * @return {String|Null}
+   *
+   * @example
+   * ```js
+   * const name = await question.ask('Enter project name')
+   *
+   * // with default name
+   * const name = await question.ask('Enter project name', 'yardstick')
+   * ```
    */
   async ask (question, defaultValue = null) {
     const output = await inquirer.prompt(this._getQuestionsHash({
@@ -138,6 +160,11 @@ class Question {
    * @param  {String} question
    *
    * @return {Boolean}
+   *
+   * @example
+   * ```js
+   * const runMigrations = await question.confirm('Do you want to migrations?')
+   * ```
    */
   async confirm (question) {
     const output = await inquirer.prompt(this._getQuestionsHash({
@@ -148,7 +175,8 @@ class Question {
   }
 
   /**
-   * Prompts for an secure type question
+   * Prompts for an secure type questions like
+   * asking for passwords, secure keys etc.
    *
    * @method secure
    * @async
@@ -157,6 +185,11 @@ class Question {
    * @param  {String} [defaultValue = null]
    *
    * @return {String|Null}
+   *
+   * @example
+   * ```js
+   * const ghKey = await question.secure('Enter github key')
+   * ```
    */
   async secure (question, defaultValue = null) {
     const output = await inquirer.prompt(this._getQuestionsHash({
@@ -183,6 +216,11 @@ class Question {
    * @param  {String} [defaultValue = null]
    *
    * @return {String}
+   *
+   * @example
+   * ```js
+   * const message = await question.openEditor('Enter commit message')
+   * ```
    */
   async openEditor (question, defaultValue = null) {
     const output = await inquirer.prompt(this._getQuestionsHash({
@@ -204,6 +242,21 @@ class Question {
    * @param  {Array}  [selected = []]
    *
    * @return {Array}
+   *
+   * @example
+   * ```js
+   * const lunch = await question
+   *   .on('validate', function (selected) {
+   *     return selected.length > 2 ? 'Cannot select more than 2' : true
+   *   })
+   *   .multiple('Friday lunch ( 2 per person )', [
+   *     'Roasted vegetable lasagna',
+   *     'Vegetable & feta cheese filo pie',
+   *     'Chicken meatballs with lentil, tomato',
+   *     'Carrot + Tabbouleh',
+   *     'Roasted Cauliflower + Aubergine'
+   *   ])
+   * ```
    */
   async multiple (title, choices, selected = []) {
     const output = await inquirer.prompt(this._getQuestionsHash({
@@ -225,6 +278,20 @@ class Question {
    * @param  {String} defaultChoice
    *
    * @return {String}
+   *
+   * @example
+   * ```js
+   * const framework = await question.choice('Which framework do you use?', [
+   *   {
+   *     value: 'adonisjs',
+   *     name: 'AdonisJs'
+   *   },
+   *   {
+   *     value: '....',
+   *     name: 'That shiny framework'
+   *   }
+   * ])
+   * ```
    */
   async choice (title, choices, defaultChoice = null) {
     const transformedChoices = this._normalizeChoices(choices)
@@ -254,6 +321,22 @@ class Question {
    * @param  {String}   defaultChoice
    *
    * @return {String}
+   *
+   * @example
+   * ```js
+   * await question.anticipate('Conflict in server.js', [
+   *   {
+   *     name: 'Skip and continue',
+   *     key: 's',
+   *     value: 'skip'
+   *   },
+   *   {
+   *     name: 'Delete',
+   *     key: 'd',
+   *     value: 'delete'
+   *   }
+   * ])
+   * ```
    */
   async anticipate (title, choices, defaultChoice) {
     const transformedChoices = this._normalizeChoices(choices)

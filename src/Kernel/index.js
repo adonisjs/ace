@@ -17,8 +17,24 @@ const Command = require('../Command')
 const commander = require('../../lib/commander')
 const WHITE_SPACE = ''
 
+/**
+ * An Instance of kernel is exported as the
+ * main module. It is used to register
+ * and invoke commands on command line.
+ *
+ * Also ace can be used to call commands
+ * manually.
+ *
+ * @class Kernel
+ */
 class Kernel {
   constructor () {
+    /**
+     * An object containing all the
+     * registered commands.
+     *
+     * @type {Object}
+     */
     this.commands = {}
   }
 
@@ -96,9 +112,23 @@ class Kernel {
    * Adding a new command by passing a command class
    * or reference to the IoC container namespace.
    *
+   * The IoC container namespace only works when `use`
+   * global exists.
+   *
    * @method addCommand
    *
    * @param  {Class|String}   command
+   *
+   * @example
+   * ```js
+   * class Greet extends Command {
+   *   static get signature () {
+   *     return 'greet'
+   *   }
+   * }
+   *
+   * ace.addCommand(Greet)
+   * ```
    */
   addCommand (command) {
     /**
@@ -123,7 +153,7 @@ class Kernel {
   /**
    * Add a new inline command by defining a signature
    * description and a closure to be executed when
-   * command runs
+   * command runs.
    *
    * @method command
    *
@@ -178,7 +208,9 @@ class Kernel {
   }
 
   /**
-   * Wiring up each command with commander
+   * Wiring up each command with commander. It is
+   * only required when commands are invoked
+   * via command line.
    *
    * @method wireUpWithCommander
    *
@@ -191,7 +223,7 @@ class Kernel {
   }
 
   /**
-   * Returns the command class using it's name
+   * Returns the command class using it's name.
    *
    * @method getCommand
    *
@@ -204,17 +236,22 @@ class Kernel {
   }
 
   /**
-   * Executes the command using it's name
+   * Executes the command using it's name.
    *
-   * @method execCommand
+   * @method call
    *
    * @param  {String}    name
    * @param  {Object}    args
    * @param  {Object}    options
    *
    * @return {Mixed}
+   *
+   * @example
+   * ```js
+   * const output = await ace.call('greet', { name: 'virk' })
+   * ```
    */
-  execCommand (name, args = {}, options = {}) {
+  call (name, args = {}, options = {}) {
     return this.getCommand(name).exec(args, options, false)
   }
 

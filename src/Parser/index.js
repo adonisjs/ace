@@ -11,6 +11,14 @@
 
 const debug = require('debug')('adonis:ace')
 
+/**
+ * The parser class is used to parse the user
+ * signature into tokens of arguments and
+ * options.
+ *
+ * @class Parser
+ * @static
+ */
 class Parser {
   constructor () {
     this._argumentsRegex = /{(-*.[^}]+)}/g
@@ -28,6 +36,8 @@ class Parser {
    * @param  {String}            field
    *
    * @return {Array}
+   *
+   * @private
    */
   _extractDescription (field) {
     return field.includes(':') ? field.split(':') : [field, '']
