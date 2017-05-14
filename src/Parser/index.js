@@ -164,6 +164,7 @@ class Parser {
    * ```
    */
   parseSignature (signature) {
+    signature = signature.replace(/\s*({|:|=|})\s*/g, '$1')
     debug('parsing signature %s', signature)
 
     let match

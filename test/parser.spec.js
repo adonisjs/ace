@@ -110,4 +110,36 @@ test.group('Parser', function () {
     assert.equal(parsed.args[0].defaultValue, 'virk')
     assert.equal(parsed.args[0].optional, true)
   })
+
+  test('parse argument with spaces in between', function (assert) {
+    const parsed = Parser.parseSignature('{ name }')
+    assert.isArray(parsed.args)
+    assert.equal(parsed.args[0].name, 'name')
+    assert.equal(parsed.args[0].optional, false)
+  })
+
+  test('parse argument description with spaces in between', function (assert) {
+    const parsed = Parser.parseSignature('{ name :  This is a name}')
+    assert.isArray(parsed.args)
+    assert.equal(parsed.args[0].name, 'name')
+    assert.equal(parsed.args[0].description, 'This is a name')
+    assert.equal(parsed.args[0].optional, false)
+  })
+
+  test('parse argument defaultValue with spaces in between', function (assert) {
+    const parsed = Parser.parseSignature('{ name = virk}')
+    assert.isArray(parsed.args)
+    assert.equal(parsed.args[0].name, 'name')
+    assert.equal(parsed.args[0].defaultValue, 'virk')
+    assert.equal(parsed.args[0].optional, false)
+  })
+
+  test('parse argument defaultValue and description with spaces in between', function (assert) {
+    const parsed = Parser.parseSignature('{ name = virk : This is a name}')
+    assert.isArray(parsed.args)
+    assert.equal(parsed.args[0].name, 'name')
+    assert.equal(parsed.args[0].defaultValue, 'virk')
+    assert.equal(parsed.args[0].description, 'This is a name')
+    assert.equal(parsed.args[0].optional, false)
+  })
 })

@@ -415,4 +415,29 @@ test.group('Command', () => {
     assert.isTrue((await command.pathExists(dir)))
     await command.removeDir(dir)
   })
+
+  test('allow multi line signature', (assert) => {
+    class Generator extends Command {
+      static get signature () {
+        return `
+        make:controller
+        { name : Name of the controller}
+        { --force : Force command }
+        `
+      }
+    }
+
+    Generator.boot()
+    assert.deepEqual(
+      Generator.args,
+      [{name: 'name', optional: false, defaultValue: null, description: 'Name of the controller'}]
+    )
+
+    assert.deepEqual(
+      Generator.options,
+      [{name: '--force', optional: false, defaultValue: null, description: 'Force command'}]
+    )
+
+    assert.equal(Generator.commandName, 'make:controller')
+  })
 })
