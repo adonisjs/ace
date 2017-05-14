@@ -554,6 +554,17 @@ class Command {
   }
 
   /**
+   * Returns an instance of question
+   *
+   * @method question
+   *
+   * @return {Question}
+   */
+  get question () {
+    return new Question()
+  }
+
+  /**
    * The handle method to be executed
    * when running command
    *

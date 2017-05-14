@@ -10,10 +10,11 @@
 */
 
 const _ = require('lodash')
+const chalk = require('chalk')
 const isArrowFunction = require('is-arrow-function')
+
 const Command = require('../Command')
 const commander = require('../../lib/commander')
-const chalk = require('chalk')
 const WHITE_SPACE = ''
 
 class Kernel {
@@ -100,6 +101,21 @@ class Kernel {
    * @param  {Class|String}   command
    */
   addCommand (command) {
+    /**
+     * Get command if runtime has a global `use`
+     * function.
+     */
+    if (typeof (command) === 'string' && GLOBAL.use) {
+      command = GLOBAL.use(command)
+    }
+
+    /**
+     * Each command should inherit the base command
+     */
+    if (command.prototype instanceof Command === false) {
+      throw new Error(`Make sure ${command.name} extends the base command`)
+    }
+
     command.boot()
     this.commands[command.commandName] = command
   }
@@ -211,19 +227,8 @@ class Kernel {
    * @return {void}
    */
   invoke () {
+    process.env.NO_ANSI = 'false'
     commander.parse(process.argv)
-
-    /**
-     * Handling global options
-     */
-    if (commander.env) {
-      process.env.NODE_ENV = commander.env
-    }
-
-    /**
-     * Disable colored output
-     */
-    process.env.NO_ANSI = !!commander.noAnsi
   }
 
   /**
@@ -295,12 +300,26 @@ commander.Command.prototype.outputHelp = function () {
    * Output help for a single command
    */
   if (this._name && this.parent) {
-    process.stdout.write(kernel.getCommand(this._name).outputHelp(true))
+    process.stdout.write(kernel.getCommand(this._name).outputHelp())
     process.exit()
   }
 
   process.stdout.write(kernel.outputHelp(this.options))
 }
+
+/**
+ * Listen for global ansi option
+ */
+commander.on('ansi', function () {
+  process.env.NO_ANSI = this.ansi
+})
+
+/**
+ * Listen for global env option
+ */
+commander.on('env', function (env) {
+  process.env.NODE_ENV = env
+})
 
 commander.option('--env <environment>', 'Set NODE_ENV before running the commands')
 commander.option('--no-ansi', 'Disable colored output')

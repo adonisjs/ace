@@ -1,12 +1,13 @@
-#!/usr/bin/env node
-const omelette = require('omelette')
+'use strict'
 
-const firstArgument = ({ reply }) => {
-  reply([ 'beautiful', 'cruel', 'far' ])
-}
+/*
+ * adonis-ace
+ *
+ * (c) Harminder Virk <virk@adonisjs.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+*/
 
-const planet = ({ reply }) => {
-  reply([ 'world', 'mars', 'pluto' ])
-}
-
-omelette`hello|hi ${firstArgument} ${planet}`.init()
+exports = module.exports = require('./src/Kernel')
+exports.Command = require('./src/Command')

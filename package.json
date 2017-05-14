@@ -19,7 +19,6 @@
   "author": "adonisjs",
   "license": "MIT",
   "devDependencies": {
-    "adonis-fold": "^3.0.3",
     "coveralls": "^2.13.1",
     "cz-conventional-changelog": "^2.0.0",
     "japa": "^1.0.3",
@@ -41,8 +40,7 @@
     "inquirer": "^3.0.6",
     "is-arrow-function": "^2.0.3",
     "lodash": "^4.17.4",
-    "mustache": "^2.3.0",
-    "pify": "^2.3.0"
+    "mustache": "^2.3.0"
   },
   "repository": {
     "type": "git",

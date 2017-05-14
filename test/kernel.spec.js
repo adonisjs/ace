@@ -183,4 +183,10 @@ test.group('Kernel', (group) => {
     })
     assert.throw(fn, 'Inline command handler cannot be an arrow function')
   })
+
+  test('throw exception if command does not inherits the base command', async (assert) => {
+    class Generator {}
+    const fn = () => kernel.addCommand(Generator)
+    assert.throw(fn, 'Make sure Generator extends the base command')
+  })
 })
