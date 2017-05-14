@@ -51,7 +51,7 @@ test.group('Kernel', (group) => {
       }
     }
     kernel.addCommand(Generator)
-    assert.equal(await (kernel.execCommand('make:controller')), 'bar')
+    assert.equal(await (kernel.call('make:controller')), 'bar')
   })
 
   test('exec async command and return output', async (assert) => {
@@ -67,7 +67,7 @@ test.group('Kernel', (group) => {
       }
     }
     kernel.addCommand(Generator)
-    assert.equal(await (kernel.execCommand('make:controller')), 'bar')
+    assert.equal(await (kernel.call('make:controller')), 'bar')
   })
 
   test('wireup commands with commander when instructed', async (assert) => {
@@ -159,7 +159,7 @@ test.group('Kernel', (group) => {
     kernel.command('down', function () {
       return 'down called'
     })
-    assert.equal(kernel.execCommand('down'), 'down called')
+    assert.equal(kernel.call('down'), 'down called')
   })
 
   test('add multiple inline commands', async (assert) => {
@@ -171,9 +171,9 @@ test.group('Kernel', (group) => {
     kernel.command('up', function () {
       stack.push('up')
     })
-    kernel.execCommand('down')
+    kernel.call('down')
     assert.deepEqual(stack, ['down'])
-    kernel.execCommand('up')
+    kernel.call('up')
     assert.deepEqual(stack, ['down', 'up'])
   })
 
