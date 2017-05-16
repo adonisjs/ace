@@ -18,7 +18,7 @@ kernel.command(
     const validateName = function (input) {
       return !input ? 'Enter your name' : true
     }
-    name = name || await this.question.on('validate', validateName).ask('Can u share your name')
+    name = name || await this.on('validate', validateName).ask('Can u share your name')
     this.success(`Hello ${name}`)
   }
 )
