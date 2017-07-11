@@ -238,6 +238,6 @@ describe('Command', function () {
     const controller = new ControllerGenerator()
     controller.run('new', ['awesome-project'], {'skip-install': true})
     expect(commandData.args).deep.equal({name: 'awesome-project'})
-    expect(commandData.options).deep.equal({'skip-install': true})
+    expect(commandData.options).deep.equal({skipInstall: true})
   })
 })

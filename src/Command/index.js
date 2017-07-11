@@ -63,14 +63,14 @@ class Command {
     const self = this
     const args = _.toArray(arguments)
     const paramsLength = this.args.length
-    const commandOptions = args[paramsLength]
+    const commandOptions = args[args.length - 1]
     const params = {}
     const options = {}
     _.each(_.take(args, paramsLength), (value, index) => {
       params[this.args[index].name] = value || null
     })
-    _.each(commandOptions._events, (option, name) => {
-      options[name] = commandOptions[name] || commandOptions[_.camelCase(name)] || null
+    _.each(commandOptions.opts(), (option, name) => {
+      options[name] = commandOptions[name] || null
     })
     this.setup()
     co(function * () {

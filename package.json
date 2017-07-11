@@ -1,6 +1,6 @@
 {
   "name": "adonis-ace",
-  "version": "3.0.7",
+  "version": "3.0.8",
   "description": "Ace is a command line tool for adonisjs framework",
   "main": "index.js",
   "directories": {
@@ -22,7 +22,7 @@
     "cz-conventional-changelog": "^2.0.0",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
-    "sinon": "^1.17.6",
+    "sinon": "^2.0.0",
     "standard": "^8.6.0"
   },
   "config": {
@@ -39,7 +39,7 @@
     "es6-class-mixin": "^1.0.5",
     "inquirer": "^3.0.2",
     "lodash": "^4.17.2",
-    "node-exceptions": "^1.0.3"
+    "node-exceptions": "^2.0.0"
   },
   "repository": {
     "type": "git",
