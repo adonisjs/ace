@@ -15,7 +15,6 @@ kernel.command(
   'greet {name?: Enter the name of the person you want to greet} { --is-admin }',
   'Greet a user',
   async function ({ name }) {
-    console.log(arguments)
     const validateName = function (input) {
       return !input ? 'Enter your name' : true
     }
