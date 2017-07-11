@@ -1,3 +1,14 @@
+<a name="3.0.8"></a>
+## [3.0.8](https://github.com/adonisjs/ace/compare/v3.0.7...v3.0.8) (2017-07-11)
+
+
+### Bug Fixes
+
+* **command:** use command.opts() over command._events ([da5e4e8](https://github.com/adonisjs/ace/commit/da5e4e8)), closes [#604](https://github.com/adonisjs/ace/issues/604)
+* **package:** update node-exceptions to version 2.0.0 ([#49](https://github.com/adonisjs/ace/issues/49)) ([89dab62](https://github.com/adonisjs/ace/commit/89dab62))
+
+
+
 <a name="3.0.7"></a>
 ## [3.0.7](https://github.com/adonisjs/ace/compare/v3.0.6...v3.0.7) (2017-02-25)
 
