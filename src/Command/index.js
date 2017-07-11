@@ -865,38 +865,6 @@ class Command {
   }
 
   /**
-   * Copy file from src directory to destination
-   *
-   * @method copy
-   * @async
-   *
-   * @param  {String} src
-   * @param  {String} dest
-   * @param  {Object} [options = {}]
-   *
-   * @return {Promise}
-   */
-  copy (src, dest, options) {
-    return fs.copy(src, dest, options)
-  }
-
-  /**
-   * Move file from src directory to destination
-   *
-   * @method move
-   * @async
-   *
-   * @param  {String} src
-   * @param  {String} dest
-   * @param  {Object} [options = {}]
-   *
-   * @return {Promise}
-   */
-  move (src, dest, options) {
-    return fs.move(src, dest, options)
-  }
-
-  /**
    * Generate file from a mustache template. In the process
    * it will make sure that file does not exists before
    * creating it.
