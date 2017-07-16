@@ -135,8 +135,8 @@ class Kernel {
      * Get command if runtime has a global `use`
      * function.
      */
-    if (typeof (command) === 'string' && GLOBAL.use) {
-      command = GLOBAL.use(command)
+    if (typeof (command) === 'string' && global.use) {
+      command = global.use(command)
     }
 
     /**
@@ -252,7 +252,11 @@ class Kernel {
    * ```
    */
   call (name, args = {}, options = {}) {
-    return this.getCommand(name).exec(args, options, false)
+    const command = this.getCommand(name)
+    if (!command) {
+      throw new Error(`${name} is not a registered command`)
+    }
+    return command.exec(args, options, false)
   }
 
   /**

@@ -189,4 +189,13 @@ test.group('Kernel', (group) => {
     const fn = () => kernel.addCommand(Generator)
     assert.throw(fn, 'Make sure Generator extends the base command')
   })
+
+  test('throw exception when command doesn\'t exists', async (assert) => {
+    assert.plan(1)
+    try {
+      await kernel.call('make:controller')
+    } catch ({ message }) {
+      assert.equal(message, 'make:controller is not a registered command')
+    }
+  })
 })
