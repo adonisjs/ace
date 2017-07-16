@@ -548,7 +548,7 @@ class Command {
    * @return {Mixed}
    */
   static exec (args, options, viaAce) {
-    const commandInstance = new this()
+    const commandInstance = typeof (global.make) === 'function' ? global.make(this) : new this()
     commandInstance.viaAce = viaAce
     return commandInstance.handle(args, options)
   }
@@ -816,6 +816,21 @@ class Command {
    */
   removeFile (file) {
     return fs.remove(file)
+  }
+
+  /**
+   * Read file from the disk
+   *
+   * @method readFile
+   * @async
+   *
+   * @param  {String} file
+   * @param  {String} [encoding]
+   *
+   * @return {String}
+   */
+  readFile (file, encoding) {
+    return fs.readFile(file, encoding)
   }
 
   /**
