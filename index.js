@@ -1,6 +1,6 @@
 'use strict'
 
-/**
+/*
  * adonis-ace
  *
  * (c) Harminder Virk <virk@adonisjs.com>
@@ -9,5 +9,5 @@
  * file that was distributed with this source code.
 */
 
-const ConsoleKernel = require('./src/Console/Kernel')
-module.exports = new ConsoleKernel()
+exports = module.exports = require('./src/Kernel')
+exports.Command = require('./src/Command')

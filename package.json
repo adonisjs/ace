@@ -1,6 +1,6 @@
 {
-  "name": "adonis-ace",
-  "version": "3.0.8",
+  "name": "@adonisjs/ace",
+  "version": "4.0.0",
   "description": "Ace is a command line tool for adonisjs framework",
   "main": "index.js",
   "directories": {
@@ -8,22 +8,25 @@
     "test": "test"
   },
   "scripts": {
-    "test": "npm run lint && _mocha test/unit",
-    "coverage": "istanbul cover -x src/Command/Mixins/Ansi.js -x src/Command/Mixins/Prompt.js _mocha test/unit",
-    "lint": "standard src/**/*.js src/**/**/*.js test/**/*.js providers/*.js"
+    "lint": "standard",
+    "pretest": "npm run lint",
+    "posttest": "npm run coverage",
+    "test:local": "FORCE_COLOR=true node bin/index.js --local",
+    "test": "nyc npm run test:local",
+    "test:win": "set FORCE_COLOR=true && node bin/index.js --win",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "author": "adonisjs",
   "license": "MIT",
   "devDependencies": {
-    "adonis-fold": "^3.0.3",
-    "chai": "^3.5.0",
-    "co-mocha": "^1.1.3",
-    "coveralls": "^2.11.15",
+    "coveralls": "^2.13.1",
     "cz-conventional-changelog": "^2.0.0",
-    "istanbul": "^0.4.5",
-    "mocha": "^3.2.0",
-    "sinon": "^2.0.0",
-    "standard": "^8.6.0"
+    "japa": "^1.0.3",
+    "japa-cli": "^1.0.1",
+    "nyc": "^11.0.3",
+    "semver": "^5.3.0",
+    "sinon": "^2.2.0",
+    "standard": "^10.0.2"
   },
   "config": {
     "commitizen": {
@@ -31,15 +34,14 @@
     }
   },
   "dependencies": {
-    "cat-log": "^1.0.2",
     "cli-table": "^0.3.1",
-    "co": "^4.6.0",
-    "colors": "^1.1.2",
     "commander": "^2.9.0",
-    "es6-class-mixin": "^1.0.5",
-    "inquirer": "^3.0.2",
-    "lodash": "^4.17.2",
-    "node-exceptions": "^2.0.0"
+    "debug": "^2.6.6",
+    "fs-extra": "^3.0.1",
+    "inquirer": "^3.0.6",
+    "is-arrow-function": "^2.0.3",
+    "lodash": "^4.17.4",
+    "mustache": "^2.3.0"
   },
   "repository": {
     "type": "git",
@@ -55,5 +57,8 @@
   "bugs": {
     "url": "https://github.com/adonisjs/ace/issues"
   },
-  "homepage": "https://github.com/adonisjs/ace#readme"
+  "homepage": "https://github.com/adonisjs/ace#readme",
+  "bin": {
+    "ada": "examples/index.js"
+  }
 }
