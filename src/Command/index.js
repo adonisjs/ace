@@ -527,7 +527,7 @@ class Command {
      * Options to be passed to the handle method
      */
     const options = _.transform(command.opts(), (result, option, name) => {
-      result[name] = command[name] || false
+      result[name] = result[name] = command.hasOwnProperty(name) ? command[name] : null
       return result
     }, {})
 
