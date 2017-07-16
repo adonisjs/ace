@@ -1,3 +1,24 @@
+<a name="4.0.0"></a>
+# [4.0.0](https://github.com/adonisjs/ace/compare/v3.0.8...v4.0.0) (2017-07-16)
+
+
+### Bug Fixes
+
+* **test:** fix breaking test ([5a07228](https://github.com/adonisjs/ace/commit/5a07228))
+
+
+### Features
+
+* add basic functionality for commands ([02a9178](https://github.com/adonisjs/ace/commit/02a9178))
+* **command:** add methods to copy and move files ([7216597](https://github.com/adonisjs/ace/commit/7216597))
+* **command:** add readfile method ([af2b67e](https://github.com/adonisjs/ace/commit/af2b67e))
+* **command:** use command.opts() over command._events ([e0bcade](https://github.com/adonisjs/ace/commit/e0bcade))
+* **kernel:** add support for inline commands ([8ce9fdc](https://github.com/adonisjs/ace/commit/8ce9fdc))
+* **question:** add support for questions ([24fd3ce](https://github.com/adonisjs/ace/commit/24fd3ce))
+* **scaffolding:** add scaffolding commands ([257b09d](https://github.com/adonisjs/ace/commit/257b09d))
+
+
+
 <a name="3.0.8"></a>
 ## [3.0.8](https://github.com/adonisjs/ace/compare/v3.0.7...v3.0.8) (2017-07-11)
 

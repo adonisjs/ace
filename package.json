@@ -1,6 +1,6 @@
 {
   "name": "@adonisjs/ace",
-  "version": "3.0.7",
+  "version": "4.0.0",
   "description": "Ace is a command line tool for adonisjs framework",
   "main": "index.js",
   "directories": {
