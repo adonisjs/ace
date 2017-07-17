@@ -1,3 +1,18 @@
+<a name="4.0.2"></a>
+## [4.0.2](https://github.com/adonisjs/ace/compare/v4.0.1...v4.0.2) (2017-07-17)
+
+
+### Bug Fixes
+
+* **kernel:** use commander.command over commander.on ([09a25ad](https://github.com/adonisjs/ace/commit/09a25ad))
+
+
+### Features
+
+* **kernel:** show help when no command is executed ([0e65c76](https://github.com/adonisjs/ace/commit/0e65c76))
+
+
+
 <a name="4.0.1"></a>
 ## [4.0.1](https://github.com/adonisjs/ace/compare/v4.0.0...v4.0.1) (2017-07-16)
 
