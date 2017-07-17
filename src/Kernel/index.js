@@ -333,10 +333,12 @@ const kernel = new Kernel()
 /**
  * When command is not registered with ace
  */
-commander.on('*', function (args) {
-  console.log(`\n  error: \`${args[0]}\` is not a registered command \n`)
-  process.exit(1)
-})
+commander
+  .command('*')
+  .action(function (command) {
+    console.log(`\n  error: \`${command}\` is not a registered command \n`)
+    process.exit(1)
+  })
 
 /**
  * Customized help screen by overriding below
