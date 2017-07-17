@@ -269,6 +269,12 @@ class Kernel {
    */
   invoke () {
     process.env.NO_ANSI = 'false'
+
+    const commandName = process.argv.slice(2)
+    if (!commandName || !commandName[0]) {
+      return commander.outputHelp()
+    }
+
     commander.parse(process.argv)
   }
 
