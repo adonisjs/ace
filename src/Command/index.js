@@ -519,7 +519,7 @@ class Command {
      * and make a flat object out of it.
      */
     const args = _.transform(_.initial(input), (result, arg, index) => {
-      result[this.args[index].name] = arg || null
+      result[this.args[index].name] = arg || this.args[index].defaultValue || null
       return result
     }, {})
 
