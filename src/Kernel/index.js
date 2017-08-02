@@ -267,12 +267,19 @@ class Kernel {
    *
    * @return {void}
    */
-  invoke () {
+  invoke (packageJson) {
     process.env.NO_ANSI = 'false'
 
     const commandName = process.argv.slice(2)
     if (!commandName || !commandName[0]) {
       return commander.outputHelp()
+    }
+
+    /**
+     * Set version when exists
+     */
+    if (packageJson && packageJson.version) {
+      commander.version(packageJson.version)
     }
 
     commander.parse(process.argv)
