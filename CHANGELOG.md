@@ -1,3 +1,8 @@
+<a name="4.0.4"></a>
+## [4.0.4](https://github.com/adonisjs/ace/compare/v4.0.3...v4.0.4) (2017-08-02)
+
+
+
 <a name="4.0.3"></a>
 ## [4.0.3](https://github.com/adonisjs/ace/compare/v4.0.2...v4.0.3) (2017-07-28)
 
