@@ -54,7 +54,7 @@ It is always helpful if we try to follow certain practices when creating issues 
 Commands can be registered by calling the `command` method.
 ```js
 const ace = require('@adonisjs/ace')
-ace.command('greet {name: Name of the user to greet}', 'description', ({ name }) => {
+ace.command('greet {name: Name of the user to greet}', 'description', function ({ name }) {
   console.log(`Hello ${name}`)
 })
 ```
