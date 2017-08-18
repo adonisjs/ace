@@ -1,6 +1,6 @@
 {
   "name": "@adonisjs/ace",
-  "version": "4.0.4",
+  "version": "4.0.5",
   "description": "Ace is a command line tool for adonisjs framework",
   "main": "index.js",
   "directories": {
@@ -60,5 +60,8 @@
   "homepage": "https://github.com/adonisjs/ace#readme",
   "bin": {
     "ada": "examples/index.js"
+  },
+  "nyc": {
+    "exclude": ["bin", "src/Question", "test"]
   }
 }

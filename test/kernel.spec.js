@@ -155,6 +155,12 @@ test.group('Kernel', (group) => {
     assert.equal(process.env.NO_ANSI, 'false')
   })
 
+  test('set version option when package has version', async (assert) => {
+    process.argv = ['node', 'test', 'foo']
+    kernel.invoke({ version: '1.0.0' })
+    assert.equal(commander._version, '1.0.0')
+  })
+
   test('add inline command', async (assert) => {
     kernel.command('down', function () {
       return 'down called'
