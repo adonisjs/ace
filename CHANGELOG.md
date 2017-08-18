@@ -1,3 +1,13 @@
+<a name="4.0.5"></a>
+## [4.0.5](https://github.com/adonisjs/ace/compare/v4.0.4...v4.0.5) (2017-08-18)
+
+
+### Bug Fixes
+
+* **readme-example:** arrow function are not allowed here ([#63](https://github.com/adonisjs/ace/issues/63)) ([1551ce9](https://github.com/adonisjs/ace/commit/1551ce9))
+
+
+
 <a name="4.0.4"></a>
 ## [4.0.4](https://github.com/adonisjs/ace/compare/v4.0.3...v4.0.4) (2017-08-02)
 
