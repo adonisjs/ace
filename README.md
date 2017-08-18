@@ -11,6 +11,88 @@ This repo contains the code to use and build ace commands.
 
 <img src="http://res.cloudinary.com/adonisjs/image/upload/q_100/v1497112678/adonis-purple_pzkmzt.svg" width="200px" align="right" hspace="30px" vspace="140px">
 
+## What's in the box?
+
+1. Colorful help screen.
+2. Manage and register commands via `Es6 classes`.
+3. Lean and simple API.
+4. Inbuilt prompts.
+5. Namespaced commands
+6. Colorful messages via [chalk](https://npmjs.org/package/chalk).
+
+
+![](http://res.cloudinary.com/adonisjs/image/upload/q_100/v1501173605/adonis-cli-help_qiqdsq.png)
+
+## Setup
+
+```bash
+npm i --save @adonisjs/ace
+```
+
+Next create `index.js` file.
+
+```js
+const ace = require('@adonisjs/ace')
+ace.command(
+  'greet {name: Name of the user to greet}',
+  'Command description',
+  function ({ name }) {
+   console.log(`Hello ${name}`)
+ }
+)
+
+// Boot ace to execute commands
+ace.wireUpWithCommander()
+ace.invoke()
+```
+
+The command method expects three arguments as follows.
+
+1. **signature**: The command signature to define the command name and the expected/required inputs.
+2. **description**: The command description
+3. **callback** Callback to run when command is executed. The callback will receive an object of `inputs` and `options`.
+
+## Command as classes
+
+Ace has first-class support for registering commands by passing `Es6 classes`.
+
+Let's create a new command inside `Greet.js` file.
+
+```js
+const { Command } = require('@adonisjs/ace')
+
+class Greet extends Command {
+
+  static get signature () {
+     return 'greet {name: Name of the user to greet}'
+  }
+  
+  static get description () {
+    return 'Command description'
+  }
+  
+  async handle ({ name }) {
+    console.log(`Hello ${name}`)
+  }
+
+}
+
+module.exports = Greet 
+```
+
+Next is to register the command.
+
+```js
+const ace = require('@adonisjs/ace')
+
+// register commands
+ace.addCommand(require('./Greet'))
+
+// Boot ace to execute commands
+ace.wireUpWithCommander()
+ace.invoke()
+```
+
 ## Node/OS Target
 
 This repo/branch is supposed to run fine on all major OS platforms and targets `Node.js >=7.0`
@@ -48,22 +130,6 @@ It is always helpful if we try to follow certain practices when creating issues 
 2. Share some context on what you are trying to do, with enough code to reproduce the issue.
 3. For general questions, please create a forum thread.
 4. When creating a PR for a feature, make sure to create a parallel PR for docs too.
-
-
-## Registering commands
-Commands can be registered by calling the `command` method.
-```js
-const ace = require('@adonisjs/ace')
-ace.command('greet {name: Name of the user to greet}', 'description', function ({ name }) {
-  console.log(`Hello ${name}`)
-})
-```
-
-The command method expects three arguments as follows.
-
-1. **signature**: The command signature to define the command name and the expected/required inputs.
-2. **description**: The command description
-3. **callback** Callback to run when command is executed. The callback will receive an object of `inputs` and `options`.
 
 ## Documentation
 You can learn more about ace in the [official documentation](http://adonisjs.com/ace)
