@@ -337,6 +337,7 @@ class Kernel {
 
 const kernel = new Kernel()
 
+/* istanbul ignore next */
 /**
  * When command is not registered with ace
  */
@@ -352,6 +353,7 @@ commander
  * method on commander.
  */
 commander.Command.prototype.outputHelp = function () {
+  /* istanbul ignore next */
   /**
    * Output help for a single command
    */
@@ -363,6 +365,7 @@ commander.Command.prototype.outputHelp = function () {
   process.stdout.write(kernel.outputHelp(this.options))
 }
 
+/* istanbul ignore next */
 /**
  * Listen for global ansi option
  */
@@ -370,6 +373,7 @@ commander.on('ansi', function () {
   process.env.NO_ANSI = this.ansi
 })
 
+/* istanbul ignore next */
 /**
  * Listen for global env option
  */

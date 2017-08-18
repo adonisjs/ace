@@ -3,6 +3,7 @@
 const test = require('japa')
 const path = require('path')
 const Command = require('../src/Command')
+const commander = require('../lib/commander')
 
 test.group('Command', () => {
   test('throw exception when command does not have handle method', (assert) => {
@@ -439,5 +440,77 @@ test.group('Command', () => {
     )
 
     assert.equal(Generator.commandName, 'make:controller')
+  })
+
+  test('generate file from template', async (assert) => {
+    const command = new Command()
+    await command.generateFile(path.join(__dirname, 'sample.js'), `module.exports = '{{ name }}'`, { name: 'virk' })
+    assert.equal(require(path.join(__dirname, 'sample.js')), 'virk')
+    await command.removeFile(path.join(__dirname, 'sample.js'))
+  })
+
+  test('throw exception when file already exists', async (assert) => {
+    assert.plan(1)
+    const command = new Command()
+    await command.generateFile(path.join(__dirname, 'sample.js'), `module.exports = '{{ name }}'`, { name: 'virk' })
+
+    try {
+      await command.generateFile(path.join(__dirname, 'sample.js'), `module.exports = '{{ name }}'`, { name: 'virk' })
+    } catch ({ message }) {
+      assert.match(message, /already exists/)
+    }
+
+    await command.removeFile(path.join(__dirname, 'sample.js'))
+  })
+
+  test('make sure all question methods can be called from command prototype', async (assert) => {
+    const methods = ['ask', 'confirm', 'multiple', 'choice', 'secure', 'openEditor', 'anticipate', 'on']
+    const command = new Command()
+    methods.forEach((method) => {
+      assert.isFunction(command[method])
+    })
+  })
+
+  test('execute command from command line', async (assert) => {
+    assert.plan(2)
+    class Generator extends Command {
+      static get signature () {
+        return 'greet {name} {--admin}'
+      }
+
+      static get description () {
+        return 'Generate a controller'
+      }
+
+      handle ({ name }, { admin }) {
+        assert.equal(name, 'Virk')
+        assert.isTrue(admin)
+      }
+    }
+
+    Generator.boot()
+    Generator.wireUpWithCommander()
+    commander.parse(['node', 'test', 'greet', 'Virk', '--admin'])
+  })
+
+  test('define optional args', async (assert) => {
+    assert.plan(1)
+    class Generator extends Command {
+      static get signature () {
+        return 'foo {name?=virk}'
+      }
+
+      static get description () {
+        return 'Generate a controller'
+      }
+
+      handle ({ name }) {
+        assert.equal(name, 'virk')
+      }
+    }
+
+    Generator.boot()
+    Generator.wireUpWithCommander()
+    commander.parse(['node', 'test', 'foo'])
   })
 })

@@ -565,6 +565,7 @@ class Command {
     throw new Error(`Make sure to implement handle method for ${this.constructor.commandName} command`)
   }
 
+  /* istanbul ignore next */
   /**
    * Log info message to the console with cyan
    * color.
@@ -584,6 +585,7 @@ class Command {
     console.log(this.chalk.cyan(...input))
   }
 
+  /* istanbul ignore next */
   /**
    * Log warn message to the console with yellow color.
    * Also this method will use `console.warn` instead
@@ -604,6 +606,7 @@ class Command {
     console.warn(this.chalk.yellow(...input))
   }
 
+  /* istanbul ignore next */
   /**
    * Log success message to the console with green color.
    *
@@ -622,6 +625,7 @@ class Command {
     console.log(this.chalk.green(...input))
   }
 
+  /* istanbul ignore next */
   /**
    * Log error message to the console with red color.
    * Also this method will use `console.error`
@@ -642,6 +646,7 @@ class Command {
     console.error(this.chalk.red(...input))
   }
 
+  /* istanbul ignore next */
   /**
    * Print an action with message to the console
    *
@@ -661,6 +666,7 @@ class Command {
     console.log(`${this.chalk.green(action + ':')} ${message}`)
   }
 
+  /* istanbul ignore next */
   /**
    * Print failed action the console. Also `console.error`
    * is used over `console.log`
@@ -681,6 +687,7 @@ class Command {
     console.error(`${this.chalk.red(action + ':')} ${message}`)
   }
 
+  /* istanbul ignore next */
   /**
    * Print table to the command line.
    *
@@ -713,6 +720,7 @@ class Command {
     console.log(table.toString())
   }
 
+  /* istanbul ignore next */
   /**
    * Returns a colored icon for a given type. Allowed
    * types are `info`, `warn`, `success` and `error`.
@@ -727,6 +735,7 @@ class Command {
     return process.platform === 'win32' ? this.iconsWin[type] : this.iconsMain[type]
   }
 
+  /* istanbul ignore next */
   /**
    * Write file to a given location if parent
    * directory/directories does not exists
@@ -745,6 +754,7 @@ class Command {
     return fs.outputFile(file, content, options)
   }
 
+  /* istanbul ignore next */
   /**
    * Empty the directory by removing everything
    * from it but not the directory itself.
@@ -760,6 +770,7 @@ class Command {
     return fs.emptyDir(dir)
   }
 
+  /* istanbul ignore next */
   /**
    * Make sure the file exists, otherwise create the
    * empty file.
@@ -775,6 +786,7 @@ class Command {
     return fs.ensureFile(file)
   }
 
+  /* istanbul ignore next */
   /**
    * Ensure a directory exists or create one
    *
@@ -789,6 +801,7 @@ class Command {
     return fs.ensureDir(dir)
   }
 
+  /* istanbul ignore next */
   /**
    * Returns a boolean indicating whether file
    * exists or not.
@@ -804,6 +817,7 @@ class Command {
     return fs.pathExists(file)
   }
 
+  /* istanbul ignore next */
   /**
    * Removes the file from the disk
    *
@@ -818,6 +832,7 @@ class Command {
     return fs.remove(file)
   }
 
+  /* istanbul ignore next */
   /**
    * Read file from the disk
    *
@@ -833,6 +848,7 @@ class Command {
     return fs.readFile(file, encoding)
   }
 
+  /* istanbul ignore next */
   /**
    * Removes directory
    *
@@ -847,6 +863,7 @@ class Command {
     return fs.remove(dir)
   }
 
+  /* istanbul ignore next */
   /**
    * Copy file from src directory to destination
    *
@@ -863,6 +880,7 @@ class Command {
     return fs.copy(src, dest, options)
   }
 
+  /* istanbul ignore next */
   /**
    * Move file from src directory to destination
    *
@@ -906,6 +924,7 @@ class Command {
   }
 }
 
+/* istanbul ignore next */
 /**
  * Add all question methods to the command prototype and
  * each method will instantiate the question class
