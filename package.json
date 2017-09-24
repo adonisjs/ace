@@ -21,12 +21,12 @@
   "devDependencies": {
     "coveralls": "^2.13.1",
     "cz-conventional-changelog": "^2.0.0",
-    "japa": "^1.0.3",
+    "japa": "^1.0.4",
     "japa-cli": "^1.0.1",
-    "nyc": "^11.0.3",
-    "semver": "^5.3.0",
-    "sinon": "^2.2.0",
-    "standard": "^10.0.2"
+    "nyc": "^11.2.1",
+    "semver": "^5.4.1",
+    "sinon": "^3.3.0",
+    "standard": "^10.0.3"
   },
   "config": {
     "commitizen": {
@@ -35,10 +35,10 @@
   },
   "dependencies": {
     "cli-table": "^0.3.1",
-    "commander": "^2.9.0",
-    "debug": "^2.6.6",
+    "commander": "^2.11.0",
+    "debug": "^3.0.1",
     "fs-extra": "^4.0.2",
-    "inquirer": "^3.0.6",
+    "inquirer": "^3.3.0",
     "is-arrow-function": "^2.0.3",
     "lodash": "^4.17.4",
     "mustache": "^2.3.0"
@@ -62,6 +62,10 @@
     "ada": "examples/index.js"
   },
   "nyc": {
-    "exclude": ["bin", "src/Question", "test"]
+    "exclude": [
+      "bin",
+      "src/Question",
+      "test"
+    ]
   }
 }
