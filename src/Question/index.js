@@ -10,7 +10,7 @@
 */
 
 const _ = require('lodash')
-const inquirer = require('inquirer')
+const inquirer = require('../../lib/inquirer')
 
 /**
  * Question class makes it simple to prompt user to share
@@ -35,12 +35,13 @@ class Question {
    * @method _getQuestionsHash
    *
    * @param  {Object}          question
+   * @param  {Object}          [options]
    *
    * @return {Object}
    *
    * @private
    */
-  _getQuestionsHash (question) {
+  _getQuestionsHash (question, options) {
     const questionHash = {
       name: this._name
     }
@@ -59,7 +60,7 @@ class Question {
       questionHash.filter = this._filterFn
     }
 
-    return _.merge({}, questionHash, question)
+    return _.merge({}, questionHash, question, options)
   }
 
   /**
@@ -131,6 +132,7 @@ class Question {
    *
    * @param  {String} question
    * @param  {String} [defaultValue = null]
+   * @param  {Object} [options]
    *
    * @return {String|Null}
    *
@@ -142,12 +144,12 @@ class Question {
    * const name = await question.ask('Enter project name', 'yardstick')
    * ```
    */
-  async ask (question, defaultValue = null) {
+  async ask (question, defaultValue = null, options) {
     const output = await inquirer.prompt(this._getQuestionsHash({
       type: 'input',
       message: question,
       default: defaultValue
-    }))
+    }, options))
     return output[this._name]
   }
 
@@ -158,6 +160,7 @@ class Question {
    * @method confirm
    *
    * @param  {String} question
+   * @param  {Object} [options]
    *
    * @return {Boolean}
    *
@@ -166,11 +169,12 @@ class Question {
    * const runMigrations = await question.confirm('Do you want to migrations?')
    * ```
    */
-  async confirm (question) {
+  async confirm (question, options) {
     const output = await inquirer.prompt(this._getQuestionsHash({
       type: 'confirm',
       message: question
-    }))
+    }, options))
+
     return output[this._name]
   }
 
@@ -183,6 +187,7 @@ class Question {
    *
    * @param  {String} question
    * @param  {String} [defaultValue = null]
+   * @param  {Object} [options]
    *
    * @return {String|Null}
    *
@@ -191,12 +196,13 @@ class Question {
    * const ghKey = await question.secure('Enter github key')
    * ```
    */
-  async secure (question, defaultValue = null) {
+  async secure (question, defaultValue = null, options) {
     const output = await inquirer.prompt(this._getQuestionsHash({
       type: 'password',
       message: question,
       default: defaultValue
-    }))
+    }, options))
+
     return output[this._name]
   }
 
@@ -214,6 +220,7 @@ class Question {
    *
    * @param  {String} question
    * @param  {String} [defaultValue = null]
+   * @param  {Object} [options]
    *
    * @return {String}
    *
@@ -222,12 +229,13 @@ class Question {
    * const message = await question.openEditor('Enter commit message')
    * ```
    */
-  async openEditor (question, defaultValue = null) {
+  async openEditor (question, defaultValue = null, options) {
     const output = await inquirer.prompt(this._getQuestionsHash({
       type: 'editor',
       message: question,
       default: defaultValue
-    }))
+    }, options))
+
     return output[this._name]
   }
 
