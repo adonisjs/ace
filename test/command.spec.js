@@ -513,4 +513,25 @@ test.group('Command', () => {
     Generator.wireUpWithCommander()
     commander.parse(['node', 'test', 'foo'])
   })
+
+  test('should work with name argument', async (assert) => {
+    assert.plan(1)
+    class Generator extends Command {
+      static get signature () {
+        return 'foo {name}'
+      }
+
+      static get description () {
+        return 'Generate a controller'
+      }
+
+      handle ({ name }) {
+        assert.equal(name, 'virk')
+      }
+    }
+
+    Generator.boot()
+    Generator.wireUpWithCommander()
+    commander.parse(['node', 'test', 'foo', 'virk'])
+  })
 })
