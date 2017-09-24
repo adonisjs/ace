@@ -10,7 +10,7 @@
 */
 
 const _ = require('lodash')
-const inquirer = require('inquirer')
+const inquirer = require('../../lib/inquirer')
 
 /**
  * Question class makes it simple to prompt user to share
