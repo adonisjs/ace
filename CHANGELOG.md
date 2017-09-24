@@ -1,3 +1,14 @@
+<a name="4.0.6"></a>
+## [4.0.6](https://github.com/adonisjs/ace/compare/v4.0.5...v4.0.6) (2017-09-24)
+
+
+### Features
+
+* **inquirer:** expose inquirer to be extended ([4415f32](https://github.com/adonisjs/ace/commit/4415f32))
+* **question:** allow to pass extra inquirer options ([3d672ed](https://github.com/adonisjs/ace/commit/3d672ed))
+
+
+
 <a name="4.0.5"></a>
 ## [4.0.5](https://github.com/adonisjs/ace/compare/v4.0.4...v4.0.5) (2017-08-18)
 
