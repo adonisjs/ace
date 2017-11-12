@@ -38,7 +38,7 @@
     "commander": "^2.11.0",
     "debug": "^3.1.0",
     "fs-extra": "^4.0.2",
-    "inquirer": "^3.3.0",
+    "inquirer": "^4.0.0",
     "is-arrow-function": "^2.0.3",
     "lodash": "^4.17.4",
     "mustache": "^2.3.0"
