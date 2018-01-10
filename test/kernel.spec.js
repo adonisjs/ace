@@ -10,14 +10,21 @@
 */
 
 const test = require('japa')
-const kernel = require('../src/Kernel')
-const Command = require('../src/Command')
-const commander = require('../lib/commander')
+const clearModule = require('clear-module')
+
+let Command = require('../src/Command')
+let kernel = require('../src/Kernel')
+let commander = require('../lib/commander')
 
 test.group('Kernel', (group) => {
   group.beforeEach(() => {
-    commander.commands = []
-    kernel.commands = {}
+    clearModule('../lib/commander')
+    clearModule('../src/Kernel')
+    clearModule('../src/Command')
+
+    commander = require('../lib/commander')
+    kernel = require('../src/Kernel')
+    Command = require('../src/Command')
   })
 
   test('add command to the kernel', (assert) => {
@@ -77,16 +84,13 @@ test.group('Kernel', (group) => {
       }
 
       handle () {
-        return new Promise((resolve) => {
-          setTimeout(() => { resolve('bar') }, 100)
-        })
       }
     }
 
-    assert.lengthOf(commander.commands, 0)
+    assert.lengthOf(commander.commands, 1)
     kernel.addCommand(Generator)
     kernel.wireUpWithCommander()
-    assert.lengthOf(commander.commands, 1)
+    assert.lengthOf(commander.commands, 2)
   })
 
   test('output help for global options', async (assert) => {
@@ -156,6 +160,19 @@ test.group('Kernel', (group) => {
   })
 
   test('set version option when package has version', async (assert) => {
+    class Foo extends Command {
+      static get signature () {
+        return 'foo'
+      }
+
+      handle () {
+      }
+    }
+
+    kernel.addCommand(Foo)
+    Foo.boot()
+    Foo.wireUpWithCommander()
+
     process.argv = ['node', 'test', 'foo']
     kernel.invoke({ version: '1.0.0' })
     assert.equal(commander._version, '1.0.0')
