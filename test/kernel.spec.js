@@ -182,7 +182,8 @@ test.group('Kernel', (group) => {
     kernel.command('down', function () {
       return 'down called'
     })
-    assert.equal(kernel.call('down'), 'down called')
+    const response = await kernel.call('down')
+    assert.equal(response, 'down called')
   })
 
   test('add multiple inline commands', async (assert) => {
@@ -220,5 +221,24 @@ test.group('Kernel', (group) => {
     } catch ({ message }) {
       assert.equal(message, 'make:controller is not a registered command')
     }
+  })
+
+  test('report command errors', (assert, done) => {
+    assert.plan(2)
+
+    kernel.command('down', function () {
+      throw new Error('down exploded')
+    })
+
+    kernel.onError(function (error, name) {
+      assert.equal(error.message, 'down exploded')
+      assert.equal(name, 'down')
+      done()
+    })
+
+    kernel.commands.down.wireUpWithCommander()
+
+    process.argv = ['node', 'test', 'down']
+    kernel.invoke({ version: '1.0.0' })
   })
 })

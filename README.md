@@ -93,6 +93,24 @@ ace.wireUpWithCommander()
 ace.invoke()
 ```
 
+## Error handling
+You can also listen for errors thrown by commands and display them the way you want.
+
+```js
+const ace = require('@adonisjs/ace')
+
+ace.addCommand(require('./Greet'))
+
+ace.onError(function (error, commandName) {
+  console.log(`${commandName} reported ${error.message}`)
+  process.exit(1)
+})
+
+// Boot ace to execute commands
+ace.wireUpWithCommander()
+ace.invoke()
+```
+
 ## Node/OS Target
 
 This repo/branch is supposed to run fine on all major OS platforms and targets `Node.js >=7.0`

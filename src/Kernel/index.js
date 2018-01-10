@@ -36,6 +36,13 @@ class Kernel {
      * @type {Object}
      */
     this.commands = {}
+
+    /**
+     * Handler to listen for command errors
+     *
+     * @type {Function}
+     */
+    this._cmdErrorHandler = null
   }
 
   /**
@@ -109,6 +116,42 @@ class Kernel {
   }
 
   /**
+   * Bubbles command errors to the main error listener
+   *
+   * @method _bubbleError
+   *
+   * @param  {Object}     error
+   * @param  {String}     commandName
+   *
+   * @return {void}
+   *
+   * @private
+   */
+  _bubbleError (error, commandName) {
+    if (typeof (this._cmdErrorHandler) === 'function') {
+      this._cmdErrorHandler(error, commandName)
+    }
+  }
+
+  /**
+   * Attach callback to listen for command errors. The
+   * errors are only reported for top level commands.
+   *
+   * If an internal invoked command throws an exception,
+   * it will be not be reported to this handler.
+   *
+   * @method onError
+   *
+   * @param  {Function} callback
+   *
+   * @chainable
+   */
+  onError (callback) {
+    this._cmdErrorHandler = callback
+    return this
+  }
+
+  /**
    * Adding a new command by passing a command class
    * or reference to the IoC container namespace.
    *
@@ -158,7 +201,7 @@ class Kernel {
    * @method command
    *
    * @param  {String}   signature
-   * @param  {String}   [description]
+   * @param  {String}
    * @param  {Function} handle
    *
    * @return {void}
@@ -282,6 +325,7 @@ class Kernel {
       commander.version(packageJson.version)
     }
 
+    commander.once('cmd:error', this._bubbleError.bind(this))
     commander.parse(process.argv)
   }
 

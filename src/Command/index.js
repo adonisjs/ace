@@ -531,7 +531,11 @@ class Command {
       return result
     }, {})
 
-    return this.exec(args, options, true)
+    this
+    .exec(args, options, true)
+    .catch((error) => {
+      commander.emit('cmd:error', error, this.commandName)
+    })
   }
 
   /**
@@ -550,7 +554,15 @@ class Command {
   static exec (args, options, viaAce) {
     const commandInstance = typeof (global.make) === 'function' ? global.make(this) : new this()
     commandInstance.viaAce = viaAce
-    return commandInstance.handle(args, options)
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await commandInstance.handle(args, options)
+        resolve(response)
+      } catch (error) {
+        reject(error)
+      }
+    })
   }
 
   /**
