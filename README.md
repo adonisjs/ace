@@ -150,7 +150,7 @@ It is always helpful if we try to follow certain practices when creating issues 
 4. When creating a PR for a feature, make sure to create a parallel PR for docs too.
 
 ## Documentation
-You can learn more about ace in the [official documentation](http://adonisjs.com/ace)
+You can learn more about ace in the [official documentation](https://adonisjs.com/docs/ace)
 
 [appveyor-image]: https://img.shields.io/appveyor/ci/thetutlage/ace/master.svg?style=flat-square
 
