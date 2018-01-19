@@ -1,5 +1,11 @@
-<<<<<<< HEAD
-=======
+<a name="4.0.8"></a>
+## [4.0.8](https://github.com/adonisjs/ace/compare/v4.0.7...v4.0.8) (2018-01-19)
+
+
+### Features
+
+* **kernel:** expose method to listen for command errors ([ca34085](https://github.com/adonisjs/ace/commit/ca34085))
+
 <a name="4.0.7"></a>
 ## [4.0.7](https://github.com/adonisjs/ace/compare/v4.0.5...v4.0.7) (2017-10-29)
 
@@ -9,14 +15,6 @@
 * **package:** update fs-extra to version 4.0.2 ([#65](https://github.com/adonisjs/ace/issues/65)) ([3bc49a2](https://github.com/adonisjs/ace/commit/3bc49a2))
 
 
-### Features
-
-* **inquirer:** expose inquirer to be extended ([c9280da](https://github.com/adonisjs/ace/commit/c9280da))
-* **question:** allow to pass extra inquirer options ([aa5bac1](https://github.com/adonisjs/ace/commit/aa5bac1))
-
-
-
->>>>>>> release-4.0.7
 <a name="4.0.6"></a>
 ## [4.0.6](https://github.com/adonisjs/ace/compare/v4.0.5...v4.0.6) (2017-09-24)
 
