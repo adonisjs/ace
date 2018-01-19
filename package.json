@@ -25,8 +25,7 @@
     "japa": "^1.0.6",
     "japa-cli": "^1.0.1",
     "nyc": "^11.4.1",
-    "semver": "^5.4.1",
-    "sinon": "^4.1.4",
+    "semver": "^5.5.0",
     "standard": "^10.0.3"
   },
   "config": {
@@ -36,7 +35,7 @@
   },
   "dependencies": {
     "cli-table": "^0.3.1",
-    "commander": "^2.12.2",
+    "commander": "^2.13.0",
     "debug": "^3.1.0",
     "fs-extra": "^5.0.0",
     "inquirer": "^5.0.0",
