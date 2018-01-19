@@ -10,14 +10,21 @@
 */
 
 const test = require('japa')
-const kernel = require('../src/Kernel')
-const Command = require('../src/Command')
-const commander = require('../lib/commander')
+const clearModule = require('clear-module')
+
+let Command = require('../src/Command')
+let kernel = require('../src/Kernel')
+let commander = require('../lib/commander')
 
 test.group('Kernel', (group) => {
   group.beforeEach(() => {
-    commander.commands = []
-    kernel.commands = {}
+    clearModule('../lib/commander')
+    clearModule('../src/Kernel')
+    clearModule('../src/Command')
+
+    commander = require('../lib/commander')
+    kernel = require('../src/Kernel')
+    Command = require('../src/Command')
   })
 
   test('add command to the kernel', (assert) => {
@@ -77,16 +84,13 @@ test.group('Kernel', (group) => {
       }
 
       handle () {
-        return new Promise((resolve) => {
-          setTimeout(() => { resolve('bar') }, 100)
-        })
       }
     }
 
-    assert.lengthOf(commander.commands, 0)
+    assert.lengthOf(commander.commands, 1)
     kernel.addCommand(Generator)
     kernel.wireUpWithCommander()
-    assert.lengthOf(commander.commands, 1)
+    assert.lengthOf(commander.commands, 2)
   })
 
   test('output help for global options', async (assert) => {
@@ -156,6 +160,19 @@ test.group('Kernel', (group) => {
   })
 
   test('set version option when package has version', async (assert) => {
+    class Foo extends Command {
+      static get signature () {
+        return 'foo'
+      }
+
+      handle () {
+      }
+    }
+
+    kernel.addCommand(Foo)
+    Foo.boot()
+    Foo.wireUpWithCommander()
+
     process.argv = ['node', 'test', 'foo']
     kernel.invoke({ version: '1.0.0' })
     assert.equal(commander._version, '1.0.0')
@@ -165,7 +182,8 @@ test.group('Kernel', (group) => {
     kernel.command('down', function () {
       return 'down called'
     })
-    assert.equal(kernel.call('down'), 'down called')
+    const response = await kernel.call('down')
+    assert.equal(response, 'down called')
   })
 
   test('add multiple inline commands', async (assert) => {
@@ -203,5 +221,24 @@ test.group('Kernel', (group) => {
     } catch ({ message }) {
       assert.equal(message, 'make:controller is not a registered command')
     }
+  })
+
+  test('report command errors', (assert, done) => {
+    assert.plan(2)
+
+    kernel.command('down', function () {
+      throw new Error('down exploded')
+    })
+
+    kernel.onError(function (error, name) {
+      assert.equal(error.message, 'down exploded')
+      assert.equal(name, 'down')
+      done()
+    })
+
+    kernel.commands.down.wireUpWithCommander()
+
+    process.argv = ['node', 'test', 'down']
+    kernel.invoke({ version: '1.0.0' })
   })
 })

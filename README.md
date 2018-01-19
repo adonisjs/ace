@@ -93,6 +93,24 @@ ace.wireUpWithCommander()
 ace.invoke()
 ```
 
+## Error handling
+You can also listen for errors thrown by commands and display them the way you want.
+
+```js
+const ace = require('@adonisjs/ace')
+
+ace.addCommand(require('./Greet'))
+
+ace.onError(function (error, commandName) {
+  console.log(`${commandName} reported ${error.message}`)
+  process.exit(1)
+})
+
+// Boot ace to execute commands
+ace.wireUpWithCommander()
+ace.invoke()
+```
+
 ## Node/OS Target
 
 This repo/branch is supposed to run fine on all major OS platforms and targets `Node.js >=7.0`
@@ -132,7 +150,7 @@ It is always helpful if we try to follow certain practices when creating issues 
 4. When creating a PR for a feature, make sure to create a parallel PR for docs too.
 
 ## Documentation
-You can learn more about ace in the [official documentation](http://adonisjs.com/ace)
+You can learn more about ace in the [official documentation](https://adonisjs.com/docs/ace)
 
 [appveyor-image]: https://img.shields.io/appveyor/ci/thetutlage/ace/master.svg?style=flat-square
 

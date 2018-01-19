@@ -2,10 +2,20 @@
 
 const test = require('japa')
 const path = require('path')
-const Command = require('../src/Command')
-const commander = require('../lib/commander')
+const clearModule = require('clear-module')
 
-test.group('Command', () => {
+let Command = require('../src/Command')
+let commander = require('../lib/commander')
+
+test.group('Command', (group) => {
+  group.beforeEach(() => {
+    clearModule('../lib/commander')
+    clearModule('../src/Command')
+
+    commander = require('../lib/commander')
+    Command = require('../src/Command')
+  })
+
   test('throw exception when command does not have handle method', (assert) => {
     class Foo extends Command {
       static get commandName () {
