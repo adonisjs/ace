@@ -1,3 +1,18 @@
+<a name="5.0.0"></a>
+# [5.0.0](https://github.com/adonisjs/ace/compare/v4.0.8...v5.0.0) (2018-02-07)
+
+
+### Chores
+
+* **prompts:** use enquirer over inquirer ([13eae0f](https://github.com/adonisjs/ace/commit/13eae0f))
+
+
+### BREAKING CHANGES
+
+* **prompts:** removed openEditor fn
+
+
+
 <a name="4.0.8"></a>
 ## [4.0.8](https://github.com/adonisjs/ace/compare/v4.0.7...v4.0.8) (2018-01-19)
 
