@@ -35,13 +35,18 @@
   },
   "dependencies": {
     "cli-table": "^0.3.1",
-    "commander": "^2.13.0",
+    "commander": "^2.14.0",
     "debug": "^3.1.0",
+    "enquirer": "^1.0.3",
     "fs-extra": "^5.0.0",
-    "inquirer": "^5.0.0",
     "is-arrow-function": "^2.0.3",
-    "lodash": "^4.17.4",
-    "mustache": "^2.3.0"
+    "lodash": "^4.17.5",
+    "mustache": "^2.3.0",
+    "prompt-checkbox": "^2.2.0",
+    "prompt-confirm": "^1.2.0",
+    "prompt-expand": "^1.0.0",
+    "prompt-list": "^3.1.2",
+    "prompt-password": "^1.2.0"
   },
   "repository": {
     "type": "git",
@@ -60,6 +65,9 @@
   "homepage": "https://github.com/adonisjs/ace#readme",
   "bin": {
     "ada": "examples/index.js"
+  },
+  "standard": {
+    "ignore": "examples/"
   },
   "nyc": {
     "exclude": [

@@ -20,7 +20,7 @@ const parser = require('../Parser')
 const commander = require('../../lib/commander')
 
 const WHITE_SPACE = ''
-const QUESTION_METHODS = ['ask', 'confirm', 'multiple', 'choice', 'secure', 'openEditor', 'anticipate', 'on']
+const QUESTION_METHODS = ['ask', 'confirm', 'multiple', 'choice', 'secure', 'anticipate', 'on']
 
 /**
  * Command argument and options defaults

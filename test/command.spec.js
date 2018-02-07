@@ -474,7 +474,7 @@ test.group('Command', (group) => {
   })
 
   test('make sure all question methods can be called from command prototype', async (assert) => {
-    const methods = ['ask', 'confirm', 'multiple', 'choice', 'secure', 'openEditor', 'anticipate', 'on']
+    const methods = ['ask', 'confirm', 'multiple', 'choice', 'secure', 'anticipate', 'on']
     const command = new Command()
     methods.forEach((method) => {
       assert.isFunction(command[method])
