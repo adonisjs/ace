@@ -10,7 +10,23 @@
 */
 
 const _ = require('lodash')
-const inquirer = require('../../lib/inquirer')
+const enquirer = require('../../lib/enquirer')
+
+/**
+ * The enquirer has a bug where it returns
+ * the name over the key, which is wrong.
+ *
+ * This method overrides that behavior
+ *
+ * @method multipleFilterFn
+ *
+ * @return {Array}
+ */
+function multipleFilterFn () {
+  return this.choices.choices
+    .filter((choice) => choice.checked)
+    .map((choice) => choice.key)
+}
 
 /**
  * Question class makes it simple to prompt user to share
@@ -22,7 +38,7 @@ const inquirer = require('../../lib/inquirer')
  */
 class Question {
   constructor () {
-    this._name = new Date().getTime()
+    this._name = String(new Date().getTime())
     this._validateFn = null
     this._filterFn = null
   }
@@ -43,7 +59,8 @@ class Question {
    */
   _getQuestionsHash (question, options) {
     const questionHash = {
-      name: this._name
+      name: this._name,
+      prefix: '> '
     }
 
     /**
@@ -71,30 +88,21 @@ class Question {
    * @method _normalizeChoices
    *
    * @param  {Array}          choices
-   * @param  {Array}           selected
    *
    * @return {Array}
    *
    * @private
    */
-  _normalizeChoices (choices, selected = []) {
+  _normalizeChoices (choices) {
     return _.map(choices, (choice) => {
-      let returnHash = {}
-      if (typeof (choice) === 'string') {
-        returnHash.name = choice
-        returnHash.value = choice
-      } else if (_.isPlainObject(choice)) {
-        returnHash = choice
-      }
-
       /**
-       * Mark checked only when selected array
-       * is defined
+       * To be backward compatable
        */
-      if (_.size(selected) && selected.indexOf(returnHash.value) > -1) {
-        returnHash.checked = true
+      if (_.isPlainObject(choice)) {
+        choice.key = choice.value
+        delete choice.value
       }
-      return returnHash
+      return choice
     })
   }
 
@@ -118,7 +126,7 @@ class Question {
   on (event, callback) {
     if (event === 'validate') {
       this._validateFn = callback
-    } else if (event === 'filter') {
+    } else if (['filter', 'transform'].indexOf(event) > -1) {
       this._filterFn = callback
     }
     return this
@@ -145,7 +153,7 @@ class Question {
    * ```
    */
   async ask (question, defaultValue = null, options) {
-    const output = await inquirer.prompt(this._getQuestionsHash({
+    const output = await enquirer.prompt(this._getQuestionsHash({
       type: 'input',
       message: question,
       default: defaultValue
@@ -170,7 +178,7 @@ class Question {
    * ```
    */
   async confirm (question, options) {
-    const output = await inquirer.prompt(this._getQuestionsHash({
+    const output = await enquirer.prompt(this._getQuestionsHash({
       type: 'confirm',
       message: question
     }, options))
@@ -197,41 +205,8 @@ class Question {
    * ```
    */
   async secure (question, defaultValue = null, options) {
-    const output = await inquirer.prompt(this._getQuestionsHash({
+    const output = await enquirer.prompt(this._getQuestionsHash({
       type: 'password',
-      message: question,
-      default: defaultValue
-    }, options))
-
-    return output[this._name]
-  }
-
-  /**
-   * Open up system editor for user input. Temporary
-   * file will be created and file contents will be
-   * returned.
-   *
-   * It makes use of `$VISUAL` and `$EDITOR` env
-   * variables for choosing the editor. If both
-   * are missing. `vim` will be choosen on mac,
-   * linux and notepad on windows.
-   *
-   * @method openEditor
-   *
-   * @param  {String} question
-   * @param  {String} [defaultValue = null]
-   * @param  {Object} [options]
-   *
-   * @return {String}
-   *
-   * @example
-   * ```js
-   * const message = await question.openEditor('Enter commit message')
-   * ```
-   */
-  async openEditor (question, defaultValue = null, options) {
-    const output = await inquirer.prompt(this._getQuestionsHash({
-      type: 'editor',
       message: question,
       default: defaultValue
     }, options))
@@ -245,9 +220,10 @@ class Question {
    *
    * @method multiple
    *
-   * @param  {String} title
-   * @param  {Array}  choices
-   * @param  {Array}  [selected = []]
+   * @param  {String}  title
+   * @param  {Array}   choices
+   * @param  {Array}   [selected = []]
+   * @param  {Object}  [options = {}]
    *
    * @return {Array}
    *
@@ -266,12 +242,16 @@ class Question {
    *   ])
    * ```
    */
-  async multiple (title, choices, selected = []) {
-    const output = await inquirer.prompt(this._getQuestionsHash({
+  async multiple (title, choices, selected = [], options) {
+    this._filterFn = this._filterFn || multipleFilterFn
+
+    const output = await enquirer.prompt(this._getQuestionsHash({
       type: 'checkbox',
       message: title,
-      choices: this._normalizeChoices(choices, selected)
-    }))
+      choices: this._normalizeChoices(choices),
+      default: selected
+    }, options))
+
     return output[this._name]
   }
 
@@ -281,9 +261,10 @@ class Question {
    *
    * @method choice
    *
-   * @param  {String} title
-   * @param  {Array} choices
-   * @param  {String} defaultChoice
+   * @param  {String}  title
+   * @param  {Array}   choices
+   * @param  {String}  [defaultChoice]
+   * @param  {Object}  [options = {}]
    *
    * @return {String}
    *
@@ -301,18 +282,14 @@ class Question {
    * ])
    * ```
    */
-  async choice (title, choices, defaultChoice = null) {
-    const transformedChoices = this._normalizeChoices(choices)
-    let defaultChoiceIndex = _.findIndex(transformedChoices, (choice) => {
-      return choice.value === defaultChoice
-    })
-
-    const output = await inquirer.prompt(this._getQuestionsHash({
+  async choice (title, choices, defaultChoice = null, options) {
+    const output = await enquirer.prompt(this._getQuestionsHash({
       type: 'list',
       message: title,
-      choices: transformedChoices,
-      default: defaultChoiceIndex
-    }))
+      choices: this._normalizeChoices(choices),
+      default: defaultChoice
+    }, options))
+
     return output[this._name]
   }
 
@@ -324,9 +301,10 @@ class Question {
    *
    * @method anticipate
    *
-   * @param  {String}   title
+   * @param  {String}  title
    * @param  {Array}   choices
-   * @param  {String}   defaultChoice
+   * @param  {String}  defaultChoice
+   * @param  {Object}  [options = {}]
    *
    * @return {String}
    *
@@ -346,18 +324,14 @@ class Question {
    * ])
    * ```
    */
-  async anticipate (title, choices, defaultChoice) {
-    const transformedChoices = this._normalizeChoices(choices)
-    let defaultChoiceIndex = _.findIndex(transformedChoices, (choice) => {
-      return choice.value === defaultChoice
-    })
-
-    const output = await inquirer.prompt(this._getQuestionsHash({
+  async anticipate (title, choices, defaultChoice, options) {
+    const output = await enquirer.prompt(this._getQuestionsHash({
       type: 'expand',
       message: title,
-      choices: transformedChoices,
-      default: defaultChoiceIndex
-    }))
+      choices: choices,
+      default: defaultChoice
+    }, options))
+
     return output[this._name]
   }
 }

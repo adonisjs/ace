@@ -11,4 +11,4 @@
 
 exports = module.exports = require('./src/Kernel')
 exports.Command = require('./src/Command')
-exports.inquirer = require('./lib/inquirer')
+exports.enquirer = require('./lib/enquirer')
