@@ -532,10 +532,10 @@ class Command {
     }, {})
 
     this
-    .exec(args, options, true)
-    .catch((error) => {
-      commander.emit('cmd:error', error, this.commandName)
-    })
+      .exec(args, options, true)
+      .catch((error) => {
+        commander.emit('cmd:error', error, this.commandName)
+      })
   }
 
   /**
