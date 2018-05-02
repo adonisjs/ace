@@ -39,7 +39,7 @@
     "commander": "^2.14.1",
     "debug": "^3.1.0",
     "enquirer": "^1.0.3",
-    "fs-extra": "^5.0.0",
+    "fs-extra": "^6.0.0",
     "is-arrow-function": "^2.0.3",
     "lodash": "^4.17.5",
     "mustache": "^2.3.0",
