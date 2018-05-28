@@ -44,7 +44,7 @@
     "lodash": "^4.17.5",
     "mustache": "^2.3.0",
     "prompt-checkbox": "^2.2.0",
-    "prompt-confirm": "^1.2.0",
+    "prompt-confirm": "^2.0.0",
     "prompt-expand": "^1.0.0",
     "prompt-list": "^3.1.2",
     "prompt-password": "^1.2.0"
