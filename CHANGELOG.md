@@ -1,3 +1,13 @@
+<a name="5.0.3"></a>
+## [5.0.3](https://github.com/adonisjs/ace/compare/v5.0.1...v5.0.3) (2018-07-16)
+
+
+### Bug Fixes
+
+* **package:** update fs-extra to version 6.0.0 ([#76](https://github.com/adonisjs/ace/issues/76)) ([1065807](https://github.com/adonisjs/ace/commit/1065807))
+
+
+
 <a name="5.0.2"></a>
 ## [5.0.2](https://github.com/adonisjs/ace/compare/v5.0.1...v5.0.2) (2018-06-04)
 
