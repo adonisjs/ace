@@ -19,8 +19,8 @@
   "author": "adonisjs",
   "license": "MIT",
   "devDependencies": {
-    "clear-module": "^2.1.0",
-    "coveralls": "^3.0.1",
+    "clear-module": "^3.0.0",
+    "coveralls": "^3.0.2",
     "cz-conventional-changelog": "^2.1.0",
     "japa": "^1.0.6",
     "japa-cli": "^1.0.1",
@@ -36,7 +36,7 @@
   "dependencies": {
     "chalk": "^2.4.1",
     "cli-table": "^0.3.1",
-    "commander": "^2.15.1",
+    "commander": "^2.16.0",
     "debug": "^3.1.0",
     "enquirer": "^1.0.3",
     "fs-extra": "^6.0.1",
