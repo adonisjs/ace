@@ -388,8 +388,12 @@ const kernel = new Kernel()
 commander
   .command('*')
   .action(function (command) {
+    const levenshtein = require('fast-levenshtein')
+    const similarCommands = Object.keys(kernel.commands).filter((c) => levenshtein.get(command, c) <= 3)
+
     console.log(`\n  error: \`${command}\` is not a registered command \n`)
-    commander.Command.prototype.outputHelp()
+    console.log(`Did you mean ${chalk.magenta.bold(similarCommands.join(','))} instead?`)
+    console.log(`You can also type ${chalk.magenta.bold('adonis')} without any arguments to view all available commands!`)
     process.exit(1)
   })
 
