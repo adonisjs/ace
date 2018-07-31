@@ -389,6 +389,7 @@ commander
   .command('*')
   .action(function (command) {
     console.log(`\n  error: \`${command}\` is not a registered command \n`)
+    commander.Command.prototype.outputHelp()
     process.exit(1)
   })
 
