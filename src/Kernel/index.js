@@ -393,7 +393,6 @@ commander
 
     console.log(`\n  error: \`${command}\` is not a registered command \n`)
     console.log(`Did you mean ${chalk.magenta.bold(similarCommands.join(','))} instead?`)
-    console.log(`You can also type ${chalk.magenta.bold('adonis')} without any arguments to view all available commands!`)
     process.exit(1)
   })
 
