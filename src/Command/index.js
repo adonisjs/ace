@@ -10,7 +10,7 @@
 */
 
 const _ = require('lodash')
-const chalk = require('chalk')
+const kleur = require('kleur')
 const fs = require('fs-extra')
 const mustache = require('mustache')
 const Table = require('cli-table')
@@ -43,7 +43,11 @@ const defaults = {
  */
 class Command {
   constructor () {
-    this.chalk = new chalk.constructor({ enabled: process.env.NO_ANSI === 'false' })
+    this.chalk = kleur
+
+    if (process.env.NO_ANSI === 'false') {
+      kleur.enabled = false
+    }
 
     /**
      * List of icons
@@ -390,9 +394,12 @@ class Command {
    * @return {String}
    */
   static outputHelp (colorize = process.env.NO_ANSI === 'false') {
-    const ctx = new chalk.constructor({ enabled: colorize })
     const stringifiedArgs = this._stringifyArgs()
     const maxWidth = this.biggestArg()
+
+    if (!colorize) {
+      kleur.enabled = false
+    }
 
     /**
      * Push new lines to the strings array
@@ -407,7 +414,7 @@ class Command {
      *
      * @type {String}
      */
-    strings.push(ctx.magenta.bold('Usage:'))
+    strings.push(kleur.magenta.bold('Usage:'))
     const args = stringifiedArgs.length ? ` ${stringifiedArgs}` : ''
     strings.push(`  ${this.commandName}${args} [options]`)
 
@@ -416,9 +423,9 @@ class Command {
      */
     if (this.args.length) {
       strings.push(WHITE_SPACE)
-      strings.push(ctx.magenta.bold('Arguments:'))
+      strings.push(kleur.magenta.bold('Arguments:'))
       _.each(this.args, (arg) => {
-        strings.push(`  ${ctx.blue(_.padEnd(arg.name, maxWidth))} ${arg.description}`)
+        strings.push(`  ${kleur.blue(_.padEnd(arg.name, maxWidth))} ${arg.description}`)
       })
     }
 
@@ -427,9 +434,9 @@ class Command {
      */
     if (this.options.length) {
       strings.push(WHITE_SPACE)
-      strings.push(ctx.magenta.bold('Options:'))
+      strings.push(kleur.magenta.bold('Options:'))
       _.each(this.options, (option) => {
-        strings.push(`  ${ctx.blue(_.padEnd(this._getArgOrOptionName(option), maxWidth))} ${option.description}`)
+        strings.push(`  ${kleur.blue(_.padEnd(this._getArgOrOptionName(option), maxWidth))} ${option.description}`)
       })
     }
 
@@ -438,10 +445,11 @@ class Command {
      */
     if (this.description) {
       strings.push(WHITE_SPACE)
-      strings.push(ctx.magenta.bold('About:'))
+      strings.push(kleur.magenta.bold('About:'))
       strings.push(`  ${this.description}`)
     }
 
+    kleur.enabled = true
     strings.push(WHITE_SPACE)
     return strings.join('\n')
   }
