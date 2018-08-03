@@ -1,6 +1,6 @@
 {
   "name": "@adonisjs/ace",
-  "version": "5.0.3",
+  "version": "5.0.4",
   "description": "Ace is a command line tool for adonisjs framework",
   "main": "index.js",
   "directories": {
@@ -21,7 +21,7 @@
   "author": "adonisjs",
   "license": "MIT",
   "devDependencies": {
-    "@adonisjs/mrm-preset": "^1.0.9",
+    "@adonisjs/mrm-preset": "^1.0.10",
     "clear-module": "^3.0.0",
     "commitizen": "^2.10.1",
     "coveralls": "^3.0.2",
@@ -40,13 +40,14 @@
     }
   },
   "dependencies": {
-    "chalk": "^2.4.1",
     "cli-table": "^0.3.1",
     "commander": "^2.16.0",
     "debug": "^3.1.0",
     "enquirer": "^1.0.3",
-    "fs-extra": "^6.0.1",
+    "fast-levenshtein": "^2.0.6",
+    "fs-extra": "^7.0.0",
     "is-arrow-function": "^2.0.3",
+    "kleur": "^2.0.1",
     "lodash": "^4.17.10",
     "mustache": "^2.3.0",
     "prompt-checkbox": "^2.2.0",

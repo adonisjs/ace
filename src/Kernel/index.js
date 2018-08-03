@@ -10,7 +10,7 @@
 */
 
 const _ = require('lodash')
-const chalk = require('chalk')
+const kleur = require('kleur')
 const isArrowFunction = require('is-arrow-function')
 
 const Command = require('../Command')
@@ -341,15 +341,18 @@ class Kernel {
    */
   outputHelp (options, colorize = process.env.NO_ANSI === 'false') {
     const strings = []
-    const ctx = new chalk.constructor({ enabled: colorize })
     const commandsGroup = this._groupCommands()
     const groupNames = _.keys(commandsGroup).sort()
     const maxWidth = this._largestCommandLength(_.map(options, (option) => option.long)) + 2
 
+    if (!colorize) {
+      kleur.enabled = false
+    }
+
     /**
      * Usage lines
      */
-    strings.push(ctx.magenta.bold('Usage:'))
+    strings.push(kleur.magenta.bold('Usage:'))
     strings.push('  command [arguments] [options]')
 
     /**
@@ -357,9 +360,9 @@ class Kernel {
      */
     if (_.size(options)) {
       strings.push(WHITE_SPACE)
-      strings.push(ctx.magenta.bold('Global Options:'))
+      strings.push(kleur.magenta.bold('Global Options:'))
       _.each(options, (option) => {
-        strings.push(`  ${ctx.blue(_.padEnd(option.long, maxWidth))} ${option.description}`)
+        strings.push(`  ${kleur.blue(_.padEnd(option.long, maxWidth))} ${option.description}`)
       })
     }
 
@@ -368,12 +371,13 @@ class Kernel {
      */
     if (_.size(groupNames)) {
       strings.push(WHITE_SPACE)
-      strings.push(ctx.magenta.bold('Available Commands:'))
+      strings.push(kleur.magenta.bold('Available Commands:'))
       _.each(groupNames, (groupName) => {
-        this._pushGroups(groupName, commandsGroup[groupName], maxWidth, ctx, strings)
+        this._pushGroups(groupName, commandsGroup[groupName], maxWidth, kleur, strings)
       })
     }
 
+    kleur.enabled = true
     strings.push(WHITE_SPACE)
     return strings.join('\n')
   }
@@ -388,7 +392,11 @@ const kernel = new Kernel()
 commander
   .command('*')
   .action(function (command) {
+    const levenshtein = require('fast-levenshtein')
+    const similarCommands = Object.keys(kernel.commands).filter((c) => levenshtein.get(command, c) <= 3)
+
     console.log(`\n  error: \`${command}\` is not a registered command \n`)
+    console.log(`Did you mean ${kleur.magenta.bold(similarCommands.join(', '))} instead?`)
     process.exit(1)
   })
 

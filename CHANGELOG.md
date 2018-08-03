@@ -1,3 +1,14 @@
+<a name="5.0.4"></a>
+## [5.0.4](https://github.com/adonisjs/ace/compare/v5.0.3...v5.0.4) (2018-08-03)
+
+
+### Features
+
+* **colors:** use kleur instead of chalk ([#80](https://github.com/adonisjs/ace/issues/80)) ([193f30f](https://github.com/adonisjs/ace/commit/193f30f))
+* **kernel:** display help when command isn't found ([#79](https://github.com/adonisjs/ace/issues/79)) ([343cdcf](https://github.com/adonisjs/ace/commit/343cdcf))
+
+
+
 <a name="5.0.3"></a>
 ## [5.0.3](https://github.com/adonisjs/ace/compare/v5.0.1...v5.0.3) (2018-07-16)
 
