@@ -396,7 +396,11 @@ commander
     const similarCommands = Object.keys(kernel.commands).filter((c) => levenshtein.get(command, c) <= 3)
 
     console.log(`\n  error: \`${command}\` is not a registered command \n`)
-    console.log(`Did you mean ${kleur.magenta.bold(similarCommands.join(', '))} instead?`)
+
+    if (similarCommands.length > 0) {
+      console.log(`Did you mean ${kleur.magenta.bold(similarCommands.join(', '))} instead?`)
+    }
+
     process.exit(1)
   })
 
