@@ -73,7 +73,7 @@ test.group('Command', (group) => {
     }
 
     Generator.boot()
-    assert.deepEqual(Generator.args, [{name: 'name', optional: false, defaultValue: null, description: ''}])
+    assert.deepEqual(Generator.args, [{ name: 'name', optional: false, defaultValue: null, description: '' }])
   })
 
   test('add option with a name', (assert) => {
@@ -91,7 +91,7 @@ test.group('Command', (group) => {
     }
 
     Generator.boot()
-    assert.deepEqual(Generator.options, [{name: '--file', optional: false, defaultValue: null, description: ''}])
+    assert.deepEqual(Generator.options, [{ name: '--file', optional: false, defaultValue: null, description: '' }])
   })
 
   test('parse signature add set arguments', (assert) => {
@@ -102,7 +102,7 @@ test.group('Command', (group) => {
     }
 
     Generator.boot()
-    assert.deepEqual(Generator.args, [{name: 'name', optional: false, defaultValue: null, description: ''}])
+    assert.deepEqual(Generator.args, [{ name: 'name', optional: false, defaultValue: null, description: '' }])
     assert.equal(Generator.commandName, 'make:controller')
   })
 
@@ -281,7 +281,7 @@ test.group('Command', (group) => {
     }
 
     Generator.boot().wireUpWithCommander()
-    assert.deepEqual(Generator.command._args, [{name: 'name', required: true, variadic: false}])
+    assert.deepEqual(Generator.command._args, [{ name: 'name', required: true, variadic: false }])
   })
 
   test('register multiple arguments with commander when calling wireUpWithCommander', (assert) => {
@@ -301,8 +301,8 @@ test.group('Command', (group) => {
 
     Generator.boot().wireUpWithCommander()
     assert.deepEqual(Generator.command._args, [
-      {name: 'name', required: true, variadic: false},
-      {name: 'file', required: false, variadic: false}
+      { name: 'name', required: true, variadic: false },
+      { name: 'file', required: false, variadic: false }
     ])
   })
 
@@ -441,12 +441,12 @@ test.group('Command', (group) => {
     Generator.boot()
     assert.deepEqual(
       Generator.args,
-      [{name: 'name', optional: false, defaultValue: null, description: 'Name of the controller'}]
+      [{ name: 'name', optional: false, defaultValue: null, description: 'Name of the controller' }]
     )
 
     assert.deepEqual(
       Generator.options,
-      [{name: '--force', optional: false, defaultValue: null, description: 'Force command'}]
+      [{ name: '--force', optional: false, defaultValue: null, description: 'Force command' }]
     )
 
     assert.equal(Generator.commandName, 'make:controller')

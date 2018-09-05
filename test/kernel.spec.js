@@ -34,7 +34,7 @@ test.group('Kernel', (group) => {
       }
     }
     kernel.addCommand(Generator)
-    assert.deepEqual(kernel.commands, {'make:controller': Generator})
+    assert.deepEqual(kernel.commands, { 'make:controller': Generator })
   })
 
   test('get registered command', (assert) => {
