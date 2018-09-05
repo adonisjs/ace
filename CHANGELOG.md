@@ -1,3 +1,13 @@
+<a name="5.0.5"></a>
+## [5.0.5](https://github.com/adonisjs/ace/compare/v5.0.4...v5.0.5) (2018-09-05)
+
+
+### Bug Fixes
+
+* **help:** doesn't display similar command when none is found ([#81](https://github.com/adonisjs/ace/issues/81)) ([3a3eb26](https://github.com/adonisjs/ace/commit/3a3eb26))
+
+
+
 <a name="5.0.4"></a>
 ## [5.0.4](https://github.com/adonisjs/ace/compare/v5.0.3...v5.0.4) (2018-08-03)
 

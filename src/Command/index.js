@@ -727,7 +727,7 @@ class Command {
    * ```
    */
   table (head, body, style = { head: ['cyan'] }) {
-    const table = new Table({head, style})
+    const table = new Table({ head, style })
     if (_.isArray(body)) {
       _.each(body, (item) => {
         table.push(item)
