@@ -1,3 +1,13 @@
+<a name="5.0.7"></a>
+## [5.0.7](https://github.com/adonisjs/ace/compare/v5.0.6...v5.0.7) (2018-10-01)
+
+
+### Bug Fixes
+
+* **package:** remove bin paths ([d529e97](https://github.com/adonisjs/ace/commit/d529e97))
+
+
+
 <a name="5.0.6"></a>
 ## [5.0.6](https://github.com/adonisjs/ace/compare/v5.0.5...v5.0.6) (2018-10-01)
 
