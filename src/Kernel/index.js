@@ -425,7 +425,7 @@ commander.Command.prototype.outputHelp = function () {
 /**
  * Listen for global ansi option
  */
-commander.on('ansi', function () {
+commander.on('option:ansi', function () {
   process.env.NO_ANSI = this.ansi
 })
 
@@ -433,7 +433,7 @@ commander.on('ansi', function () {
 /**
  * Listen for global env option
  */
-commander.on('env', function (env) {
+commander.on('option:env', function (env) {
   process.env.NODE_ENV = env
 })
 

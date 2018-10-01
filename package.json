@@ -1,6 +1,6 @@
 {
   "name": "@adonisjs/ace",
-  "version": "5.0.7",
+  "version": "5.0.8",
   "description": "Ace is a command line tool for adonisjs framework",
   "main": "index.js",
   "directories": {
@@ -14,7 +14,6 @@
   "scripts": {
     "mrm": "mrm --preset=@adonisjs/mrm-preset",
     "pretest": "npm run lint",
-    "posttest": "npm run coverage",
     "test:local": "FORCE_COLOR=true node bin/index.js --local",
     "test": "nyc node japaFile.js",
     "test:win": "node ./node_modules/japa-cli/index.js",
