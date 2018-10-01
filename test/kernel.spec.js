@@ -11,6 +11,7 @@
 
 const test = require('japa')
 const clearModule = require('clear-module')
+const path = require('path')
 
 let Command = require('../src/Command')
 let kernel = require('../src/Kernel')
@@ -18,9 +19,9 @@ let commander = require('../lib/commander')
 
 test.group('Kernel', (group) => {
   group.beforeEach(() => {
-    clearModule('../lib/commander')
-    clearModule('../src/Kernel')
-    clearModule('../src/Command')
+    clearModule(path.join(__dirname, '../lib/commander'))
+    clearModule(path.join(__dirname, '../src/Kernel'))
+    clearModule(path.join(__dirname, '../src/Command'))
 
     commander = require('../lib/commander')
     kernel = require('../src/Kernel')

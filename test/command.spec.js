@@ -9,8 +9,8 @@ let commander = require('../lib/commander')
 
 test.group('Command', (group) => {
   group.beforeEach(() => {
-    clearModule('../lib/commander')
-    clearModule('../src/Command')
+    clearModule(path.join(__dirname, '../lib/commander'))
+    clearModule(path.join(__dirname, '../src/Command'))
 
     commander = require('../lib/commander')
     Command = require('../src/Command')
