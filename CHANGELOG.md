@@ -1,3 +1,8 @@
+<a name="5.0.6"></a>
+## [5.0.6](https://github.com/adonisjs/ace/compare/v5.0.5...v5.0.6) (2018-10-01)
+
+
+
 <a name="5.0.5"></a>
 ## [5.0.5](https://github.com/adonisjs/ace/compare/v5.0.4...v5.0.5) (2018-09-05)
 
