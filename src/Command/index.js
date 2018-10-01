@@ -44,10 +44,7 @@ const defaults = {
 class Command {
   constructor () {
     this.chalk = kleur
-
-    if (process.env.NO_ANSI === 'true') {
-      kleur.enabled = false
-    }
+    kleur.enabled = process.env.NO_ANSI === 'false'
 
     /**
      * List of icons

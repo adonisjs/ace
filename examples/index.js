@@ -27,7 +27,6 @@ kernel.command(
   'greet {name?: Enter the name of the person you want to greet} { --is-admin }',
   'Greet a user',
   async function () {
-
     /**
      * Ask name
      */
