@@ -1,18 +1,23 @@
 {
   "name": "@adonisjs/ace",
-  "version": "5.0.5",
+  "version": "5.0.6",
   "description": "Ace is a command line tool for adonisjs framework",
   "main": "index.js",
   "directories": {
     "example": "examples",
     "test": "test"
   },
+  "files": [
+    "src",
+    "lib",
+    "index.js"
+  ],
   "scripts": {
     "mrm": "mrm --preset=@adonisjs/mrm-preset",
     "pretest": "npm run lint",
     "posttest": "npm run coverage",
     "test:local": "FORCE_COLOR=true node bin/index.js --local",
-    "test": "nyc japa",
+    "test": "nyc node japaFile.js",
     "test:win": "node ./node_modules/japa-cli/index.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "commit": "git-cz",
@@ -21,12 +26,12 @@
   "author": "adonisjs",
   "license": "MIT",
   "devDependencies": {
-    "@adonisjs/mrm-preset": "^1.0.11",
+    "@adonisjs/mrm-preset": "^1.0.13",
     "clear-module": "^3.0.0",
     "commitizen": "^2.10.1",
     "coveralls": "^3.0.2",
     "cz-conventional-changelog": "^2.1.0",
-    "japa": "^1.0.6",
+    "japa": "^2.0.3",
     "japa-cli": "^1.0.1",
     "mrm": "^1.2.1",
     "nyc": "^13.0.1",
@@ -41,15 +46,15 @@
   },
   "dependencies": {
     "cli-table": "^0.3.1",
-    "commander": "^2.17.1",
-    "debug": "^3.1.0",
+    "commander": "^2.18.0",
+    "debug": "^4.0.1",
     "enquirer": "^1.0.3",
     "fast-levenshtein": "^2.0.6",
     "fs-extra": "^7.0.0",
     "is-arrow-function": "^2.0.3",
     "kleur": "^2.0.2",
-    "lodash": "^4.17.10",
-    "mustache": "^2.3.2",
+    "lodash": "^4.17.11",
+    "mustache": "^3.0.0",
     "prompt-checkbox": "^2.2.0",
     "prompt-confirm": "^2.0.4",
     "prompt-expand": "^1.0.1",
@@ -79,9 +84,7 @@
   },
   "nyc": {
     "exclude": [
-      "test",
-      "src/Question/index.js",
-      "japaFile.js"
+      "test"
     ]
   }
 }
