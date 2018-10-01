@@ -1,3 +1,14 @@
+<a name="5.0.8"></a>
+## [5.0.8](https://github.com/adonisjs/ace/compare/v5.0.7...v5.0.8) (2018-10-01)
+
+
+### Bug Fixes
+
+* **command:** disable kluer when no ansi is true ([6ec44e8](https://github.com/adonisjs/ace/commit/6ec44e8))
+* **command:** properly handle no-ansi flag ([3b68504](https://github.com/adonisjs/ace/commit/3b68504))
+
+
+
 <a name="5.0.7"></a>
 ## [5.0.7](https://github.com/adonisjs/ace/compare/v5.0.6...v5.0.7) (2018-10-01)
 
