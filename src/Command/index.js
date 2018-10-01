@@ -45,7 +45,7 @@ class Command {
   constructor () {
     this.chalk = kleur
 
-    if (process.env.NO_ANSI === 'false') {
+    if (process.env.NO_ANSI === 'true') {
       kleur.enabled = false
     }
 
