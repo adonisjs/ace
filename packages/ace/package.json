@@ -31,9 +31,9 @@
     "url": "https://github.com/adonisjs/ace/tree/master/packages/ace"
   },
   "license": "MIT",
-  "devDependencies": {
-  },
   "dependencies": {
+    "getopts": "^2.2.4",
+    "kleur": "^3.0.3"
   },
   "nyc": {
     "exclude": [
