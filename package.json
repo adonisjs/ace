@@ -24,13 +24,14 @@
   },
   "husky": {
     "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "node bin/updateTestHash && git add package.json"
     }
   },
   "scripts": {
     "postinstall": "lerna bootstrap",
     "pretest": "lerna run build",
-    "test": "lerna run test",
+    "test": "lerna run test --since d9db6c67d3de51b65ae0825d2c58d65eb26b3c26",
     "publish": "lerna run build && lerna publish"
   }
 }
