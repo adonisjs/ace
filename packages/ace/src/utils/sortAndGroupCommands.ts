@@ -7,30 +7,29 @@
 * file that was distributed with this source code.
 */
 
-import { CommandConstructorContract } from '../Contracts'
+import { CommandConstructorContract, CommandsGroup } from '../Contracts'
 
-/**
- * Shape of groups and their commands
- */
-type Grouped = {
-  group: string,
-  commands: CommandConstructorContract[],
-}[]
-
-/**
+ /**
  * Loops over the commands and converts them to an array of sorted groups with
  * nested commands inside them. The grouping is done using the command
  * namespace seperated with `:`. Example: `make:controller`
  */
-export function sortAndGroupCommands (commands: CommandConstructorContract[]): Grouped {
+export function sortAndGroupCommands (commands: CommandConstructorContract[]): CommandsGroup {
   /**
    * Create a group of commands using it's namespace
    */
   const groupsLiteral = commands.reduce((result, command) => {
     const tokens = command.commandName.split(':')
+
+    /**
+     * Use the command namespace or move it inside the `root` group when
+     * it is not namespaced.
+     */
     const group = tokens.length > 1 ? tokens.shift()! : 'root'
+
     result[group] = result[group] || []
     result[group].push(command)
+
     return result
   }, {} as { [key: string]: CommandConstructorContract[] })
 
