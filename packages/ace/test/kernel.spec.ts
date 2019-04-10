@@ -313,4 +313,70 @@ test.group('Kernel', () => {
       admin: true,
     })
   })
+
+  test('parse flags as array when type is set to array', (assert) => {
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      public static args = [
+        {
+          name: 'name',
+          required: true,
+        },
+      ]
+
+      public static flags = [
+        {
+          name: 'files',
+          type: 'array',
+        },
+      ]
+
+      public name: string
+    }
+
+    const kernel = new Kernel()
+    kernel.register([Greet])
+
+    const argv = ['greet', 'virk', '--files=foo.js']
+    const command = kernel.make(kernel.find(argv)!, argv)
+
+    assert.equal(command['name'], 'virk')
+    assert.deepEqual(command['files'], ['foo.js'])
+  })
+
+  test('execute command handle method', async (assert) => {
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      public static args = [
+        {
+          name: 'name',
+          required: true,
+        },
+      ]
+
+      public static flags = [
+        {
+          name: 'files',
+          type: 'array',
+        },
+      ]
+
+      public name: string
+      public executed: boolean = false
+
+      public async handle () {
+        this.executed = true
+      }
+    }
+
+    const kernel = new Kernel()
+    kernel.register([Greet])
+
+    const argv = ['greet', 'virk', '--files=foo.js']
+    const command = await kernel.exec(kernel.find(argv)!, argv)
+
+    assert.isTrue(command['executed'])
+  })
 })

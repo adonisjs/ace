@@ -34,8 +34,8 @@ export class Kernel {
    */
   public find (argv: string[]): CommandConstructorContract | null {
     /**
-     * We though in `Unix` the command name may appear in between or last, with
-     * ace we always want the command name to the first argument. However, the
+     * Enen though in `Unix` the command name may appear in between or at last, with
+     * ace we always want the command name to be the first argument. However, the
      * arguments to the command itself can appear in any sequence. For example:
      *
      * Works
@@ -45,8 +45,7 @@ export class Kernel {
      * Doesn't work
      *    - node ace foo make:controller
      */
-    const commandName = argv[0]
-    return this._commands[commandName] || null
+    return this._commands[argv[0]] || null
   }
 
   /**
@@ -60,28 +59,41 @@ export class Kernel {
     const requiredArgs = command.args.filter((arg) => arg.required)
 
     /**
-     * Aliases list for `getopts` to properly parse
-     * flags
+     * Building getopts options by inspecting all flags. Make sure to
+     * check `getops` documentation to understand what all options
+     * does.
      */
     const options = command.flags.reduce((result: getopts.Options, flag) => {
+      /**
+       * Register alias (when exists)
+       */
       if (flag.alias) {
         result.alias![flag.alias] = flag.name
       }
 
+      /**
+       * Register flag as boolean when `flag.type === 'boolean'`
+       */
       if (flag.type === 'boolean') {
         result.boolean!.push(flag.name)
       }
 
-      if (flag.type === 'string') {
+      /**
+       * Register flag as string when `flag.type === 'string' | 'array'`
+       */
+      if (['string', 'array'].indexOf(flag.type) > -1) {
         result.string!.push(flag.name)
       }
 
+      /**
+       * Set default value when defined on the flag
+       */
       if (flag.default !== undefined) {
         result.default![flag.name] = flag.default
       }
 
       return result
-    }, { alias: {}, boolean: [], default: {} })
+    }, { alias: {}, boolean: [], default: {}, string: [] })
 
     /**
      * Parsed options via getopts
@@ -113,9 +125,19 @@ export class Kernel {
      * Set value for flags
      */
     command.flags.forEach((flag) => {
-      commandInstance[flag.name] = parsed[flag.name]
+      const value = parsed[flag.name]
+      commandInstance[flag.name] = flag.type === 'array' && !Array.isArray(value) ? [value] : value
     })
 
+    return commandInstance
+  }
+
+  /**
+   * Execute the command instance by parsing `process.argv`
+   */
+  public async exec (command: CommandConstructorContract, argv: string[]): Promise<CommandContract> {
+    const commandInstance = this.make(command, argv)
+    await commandInstance.handle()
     return commandInstance
   }
 }
