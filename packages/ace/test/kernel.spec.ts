@@ -28,7 +28,9 @@ test.group('Kernel', () => {
     assert.isNull(kernel.find(['greet']))
   })
 
-  test('raise exception when required argument is missing', (assert) => {
+  test('raise exception when required argument is missing', async (assert) => {
+    assert.plan(1)
+
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
@@ -44,13 +46,16 @@ test.group('Kernel', () => {
     kernel.register([Greet])
 
     const argv = ['greet']
-    const command = kernel.find(argv)
-    const fn = () => kernel.make(command!, argv)
-
-    assert.throw(fn, 'Missing value for name argument')
+    try {
+      await kernel.handle(argv)
+    } catch ({ message }) {
+      assert.equal(message, 'Missing value for name argument')
+    }
   })
 
-  test('work fine when argument is missing and is optional', (assert) => {
+  test('work fine when argument is missing and is optional', async (assert) => {
+    assert.plan(1)
+
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
@@ -60,18 +65,22 @@ test.group('Kernel', () => {
           required: false,
         },
       ]
+
+      public async handle () {
+        assert.deepEqual(this.parsed, { _: [] })
+      }
     }
 
     const kernel = new Kernel()
     kernel.register([Greet])
 
     const argv = ['greet']
-    const command = kernel.find(argv)
-
-    assert.instanceOf(kernel.make(command!, argv), Greet)
+    await kernel.handle(argv)
   })
 
-  test('work fine when argument is defined', (assert) => {
+  test('work fine when required argument is defined', async (assert) => {
+    assert.plan(2)
+
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
@@ -83,17 +92,23 @@ test.group('Kernel', () => {
       ]
 
       public name: string
+
+      public async handle () {
+        assert.deepEqual(this.parsed, { _: ['virk'] })
+        assert.equal(this.name, 'virk')
+      }
     }
 
     const kernel = new Kernel()
     kernel.register([Greet])
 
     const argv = ['greet', 'virk']
-    const command = kernel.make(kernel.find(argv)!, argv)
-    assert.equal(command['name'], 'virk')
+    await kernel.handle(argv)
   })
 
-  test('set arguments and flags', (assert) => {
+  test('set arguments and flags', async (assert) => {
+    assert.plan(3)
+
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
@@ -112,18 +127,25 @@ test.group('Kernel', () => {
       ]
 
       public name: string
+      public admin: boolean
+
+      public async handle () {
+        assert.deepEqual(this.parsed, { _: ['virk'], admin: true })
+        assert.equal(this.name, 'virk')
+        assert.isTrue(this.admin)
+      }
     }
 
     const kernel = new Kernel()
     kernel.register([Greet])
 
     const argv = ['greet', 'virk', '--admin']
-    const command = kernel.make(kernel.find(argv)!, argv)
-    assert.equal(command['name'], 'virk')
-    assert.equal(command['admin'], true)
+    await kernel.handle(argv)
   })
 
-  test('set arguments and flags when flag is defined with = sign', (assert) => {
+  test('set arguments and flags when flag is defined with = sign', async (assert) => {
+    assert.plan(3)
+
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
@@ -142,18 +164,25 @@ test.group('Kernel', () => {
       ]
 
       public name: string
+      public admin: boolean
+
+      public async handle () {
+        assert.deepEqual(this.parsed, { _: ['virk'], admin: true })
+        assert.equal(this.name, 'virk')
+        assert.isTrue(this.admin)
+      }
     }
 
     const kernel = new Kernel()
     kernel.register([Greet])
 
     const argv = ['greet', 'virk', '--admin=true']
-    const command = kernel.make(kernel.find(argv)!, argv)
-    assert.equal(command['name'], 'virk')
-    assert.equal(command['admin'], true)
+    await kernel.handle(argv)
   })
 
-  test('set arguments and flags when flag alias is passed', (assert) => {
+  test('set arguments and flags when flag alias is passed', async (assert) => {
+    assert.plan(3)
+
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
@@ -173,18 +202,25 @@ test.group('Kernel', () => {
       ]
 
       public name: string
+      public admin: boolean
+
+      public async handle () {
+        assert.deepEqual(this.parsed, { _: ['virk'], admin: true, a: true })
+        assert.equal(this.name, 'virk')
+        assert.isTrue(this.admin)
+      }
     }
 
     const kernel = new Kernel()
     kernel.register([Greet])
 
     const argv = ['greet', 'virk', '-a']
-    const command = kernel.make(kernel.find(argv)!, argv)
-    assert.equal(command['name'], 'virk')
-    assert.equal(command['admin'], true)
+    await kernel.handle(argv)
   })
 
-  test('parse boolean flags as boolean always', (assert) => {
+  test('parse boolean flags as boolean always', async (assert) => {
+    assert.plan(3)
+
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
@@ -203,18 +239,25 @@ test.group('Kernel', () => {
       ]
 
       public name: string
+      public admin: boolean
+
+      public async handle () {
+        assert.deepEqual(this.parsed, { _: ['virk'], admin: true })
+        assert.equal(this.name, 'virk')
+        assert.isTrue(this.admin)
+      }
     }
 
     const kernel = new Kernel()
     kernel.register([Greet])
 
     const argv = ['greet', 'virk', '--admin=true']
-    const command = kernel.make(kernel.find(argv)!, argv)
-    assert.equal(command['name'], 'virk')
-    assert.equal(command['admin'], true)
+    await kernel.handle(argv)
   })
 
-  test('parse boolean flags as boolean always also when aliases are defined', (assert) => {
+  test('parse boolean flags as boolean always also when aliases are defined', async (assert) => {
+    assert.plan(3)
+
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
@@ -234,18 +277,25 @@ test.group('Kernel', () => {
       ]
 
       public name: string
+      public admin: boolean
+
+      public async handle () {
+        assert.deepEqual(this.parsed, { _: ['virk'], admin: true, a: true })
+        assert.equal(this.name, 'virk')
+        assert.isTrue(this.admin)
+      }
     }
 
     const kernel = new Kernel()
     kernel.register([Greet])
 
     const argv = ['greet', 'virk', '-a=true']
-    const command = kernel.make(kernel.find(argv)!, argv)
-    assert.equal(command['name'], 'virk')
-    assert.equal(command['admin'], true)
+    await kernel.handle(argv)
   })
 
-  test('do not override default value when flag is not defined', (assert) => {
+  test('do not override default value when flag is not defined', async (assert) => {
+    assert.plan(3)
+
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
@@ -267,54 +317,24 @@ test.group('Kernel', () => {
 
       public name: string
       public admin: boolean
+
+      public async handle () {
+        assert.deepEqual(this.parsed, { _: ['virk'], admin: true, a: true })
+        assert.equal(this.name, 'virk')
+        assert.isTrue(this.admin)
+      }
     }
 
     const kernel = new Kernel()
     kernel.register([Greet])
 
     const argv = ['greet', 'virk']
-    const command = kernel.make(kernel.find(argv)!, argv)
-    assert.equal(command['name'], 'virk')
-    assert.equal(command['admin'], true)
+    await kernel.handle(argv)
   })
 
-  test('pass parsed output to the command', (assert) => {
-    class Greet extends BaseCommand {
-      public static commandName = 'greet'
+  test('parse flags as array when type is set to array', async (assert) => {
+    assert.plan(3)
 
-      public static args = [
-        {
-          name: 'name',
-          required: true,
-        },
-      ]
-
-      public static flags = [
-        {
-          name: 'admin',
-          alias: 'a',
-          default: true,
-          type: 'boolean' as 'boolean',
-        },
-      ]
-
-      public name: string
-      public admin: boolean
-    }
-
-    const kernel = new Kernel()
-    kernel.register([Greet])
-
-    const argv = ['greet', 'virk', '-a=true']
-    const command = kernel.make(kernel.find(argv)!, argv)
-    assert.deepEqual(command['parsed'], {
-      _: ['virk'],
-      a: true,
-      admin: true,
-    })
-  })
-
-  test('parse flags as array when type is set to array', (assert) => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
@@ -333,41 +353,12 @@ test.group('Kernel', () => {
       ]
 
       public name: string
-    }
-
-    const kernel = new Kernel()
-    kernel.register([Greet])
-
-    const argv = ['greet', 'virk', '--files=foo.js']
-    const command = kernel.make(kernel.find(argv)!, argv)
-
-    assert.equal(command['name'], 'virk')
-    assert.deepEqual(command['files'], ['foo.js'])
-  })
-
-  test('execute command handle method', async (assert) => {
-    class Greet extends BaseCommand {
-      public static commandName = 'greet'
-
-      public static args = [
-        {
-          name: 'name',
-          required: true,
-        },
-      ]
-
-      public static flags = [
-        {
-          name: 'files',
-          type: 'array',
-        },
-      ]
-
-      public name: string
-      public executed: boolean = false
+      public files: string[]
 
       public async handle () {
-        this.executed = true
+        assert.deepEqual(this.parsed, { _: ['virk'], files: 'foo.js' })
+        assert.equal(this.name, 'virk')
+        assert.deepEqual(this.files, ['foo.js'])
       }
     }
 
@@ -375,8 +366,86 @@ test.group('Kernel', () => {
     kernel.register([Greet])
 
     const argv = ['greet', 'virk', '--files=foo.js']
-    const command = await kernel.exec(kernel.find(argv)!, argv)
+    await kernel.handle(argv)
+  })
 
-    assert.isTrue(command['executed'])
+  test('register global flags', async (assert) => {
+    assert.plan(2)
+
+    const kernel = new Kernel()
+    kernel.flag('env', (env, parsed) => {
+      assert.equal(env, 'production')
+      assert.deepEqual(parsed, { _: [], env: 'production' })
+    }, { type: 'string' })
+
+    const argv = ['--env=production']
+    await kernel.handle(argv)
+  })
+
+  test('register global boolean flags', async (assert) => {
+    assert.plan(2)
+
+    const kernel = new Kernel()
+    kernel.flag('ansi', (ansi, parsed) => {
+      assert.equal(ansi, true)
+      assert.deepEqual(parsed, { _: [], ansi: true })
+    }, {})
+
+    const argv = ['--ansi']
+    await kernel.handle(argv)
+  })
+
+  test('register global reverse boolean flags', async (assert) => {
+    assert.plan(2)
+
+    const kernel = new Kernel()
+    kernel.flag('ansi', (ansi, parsed) => {
+      assert.equal(ansi, false)
+      assert.deepEqual(parsed, { _: [], ansi: false })
+    }, {})
+
+    const argv = ['--no-ansi']
+    await kernel.handle(argv)
+  })
+
+  test('do not execute global flag when flag is not defined', async () => {
+    const kernel = new Kernel()
+    kernel.flag('env', () => {
+      throw new Error('Not expected to be called')
+    }, { type: 'string' })
+
+    const argv = ['--ansi']
+    await kernel.handle(argv)
+  })
+
+  test('pass command instance to the global flag, when flag is defined on a command', async (assert) => {
+    assert.plan(3)
+    const kernel = new Kernel()
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      public static args = [
+        {
+          name: 'name',
+          required: true,
+        },
+      ]
+
+      public name: string
+      public async handle () {
+      }
+    }
+
+    kernel.register([Greet])
+
+    kernel.flag('env', (env, parsed, command) => {
+      assert.equal(env, 'production')
+      assert.deepEqual(parsed, { _: ['virk'], env: 'production' })
+      assert.deepEqual(command, Greet)
+    }, { type: 'string' })
+
+    const argv = ['greet', 'virk', '--env=production']
+    await kernel.handle(argv)
   })
 })

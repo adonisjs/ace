@@ -1,3 +1,5 @@
+import { ParsedOptions } from 'getopts'
+
 /*
 * @adonisjs/ace
 *
@@ -27,6 +29,12 @@ export type CommandFlag = {
   default?: any,
 }
 
+export type GlobalFlagHandler = (
+  value: any,
+  parsed: ParsedOptions,
+  command?: CommandConstructorContract,
+) => void
+
 /**
  * Shape of grouped commands. Required when displaying
  * help
@@ -51,5 +59,6 @@ export interface CommandConstructorContract {
  * The shape of command class
  */
 export interface CommandContract {
+  parsed?: ParsedOptions,
   handle (): Promise<void>,
 }
