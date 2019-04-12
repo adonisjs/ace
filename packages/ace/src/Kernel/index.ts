@@ -44,6 +44,14 @@ export class Kernel {
   }
 
   /**
+   * Returns an array of command names suggestions for a given name.
+   */
+  public getSuggestions (name: string, distance = 3): string[] {
+    const levenshtein = require('fast-levenshtein')
+    return Object.keys(this.commands).filter((commandName) => levenshtein.get(name, commandName) <= distance)
+  }
+
+  /**
    * Register a global flag to be set on any command. The flag callback is
    * executed before executing the registered command.
    */

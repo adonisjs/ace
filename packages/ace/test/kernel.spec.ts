@@ -32,9 +32,19 @@ test.group('Kernel | register', () => {
     assert.throw(fn, 'Required argument {age} cannot come after optional argument {name}')
   })
 
-  test('return null when unable to find command', (assert) => {
+  test('return command suggestions for a given string', (assert) => {
     const kernel = new Kernel()
-    assert.isNull(kernel.find(['greet']))
+
+    class Install extends BaseCommand {
+      public static commandName = 'install'
+    }
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+    }
+
+    kernel.register([Install, Greet])
+    assert.deepEqual(kernel.getSuggestions('itall'), ['install'])
   })
 })
 

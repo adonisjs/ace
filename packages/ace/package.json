@@ -32,6 +32,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "fast-levenshtein": "^2.0.6",
     "getopts": "^2.2.4",
     "kleur": "^3.0.3",
     "pad-right": "^0.2.2"
