@@ -15,15 +15,15 @@ import { Parser } from '../Parser'
  * parsing `process.argv.splice(2)` value.
  */
 export class Kernel {
-  private _commands: { [name: string]: CommandConstructorContract } = {}
-  private _flags: { [name: string]: CommandFlag & { handler: GlobalFlagHandler } } = {}
+  public commands: { [name: string]: CommandConstructorContract } = {}
+  public flags: { [name: string]: CommandFlag & { handler: GlobalFlagHandler } } = {}
 
   /**
    * Register an array of commands
    */
   public register (commands: CommandConstructorContract[]): this {
     commands.forEach((command) => {
-      this._commands[command.commandName] = command
+      this.commands[command.commandName] = command
     })
 
     return this
@@ -38,7 +38,7 @@ export class Kernel {
     handler: GlobalFlagHandler,
     options: Partial<Pick<CommandFlag, Exclude<keyof CommandFlag, 'name'>>>,
   ): this {
-    this._flags[name] = Object.assign({ name, handler, type: 'boolean' }, options)
+    this.flags[name] = Object.assign({ name, handler, type: 'boolean' }, options)
     return this
   }
 
@@ -59,7 +59,7 @@ export class Kernel {
      * Doesn't work
      *    - node ace foo make:controller
      */
-    return this._commands[argv[0]] || null
+    return this.commands[argv[0]] || null
   }
 
   /**
@@ -72,7 +72,7 @@ export class Kernel {
     }
 
     const hasMentionedCommand = !argv[0].startsWith('-')
-    const parser = new Parser(this._flags)
+    const parser = new Parser(this.flags)
 
     /**
      * Parse flags when no command is defined
