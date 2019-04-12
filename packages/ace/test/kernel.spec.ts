@@ -11,7 +11,34 @@ import * as test from 'japa'
 import { Kernel } from '../src/Kernel'
 import { BaseCommand } from '../src/BaseCommand'
 
-test.group('Kernel', () => {
+test.group('Kernel | register', () => {
+  test('raise error when required argument comes after optional argument', (assert) => {
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+      public static args = [
+        {
+          name: 'name',
+          required: false,
+        },
+        {
+          name: 'age',
+          required: true,
+        },
+      ]
+    }
+
+    const kernel = new Kernel()
+    const fn = () => kernel.register([Greet])
+    assert.throw(fn, 'Required argument {age} cannot come after optional argument {name}')
+  })
+
+  test('return null when unable to find command', (assert) => {
+    const kernel = new Kernel()
+    assert.isNull(kernel.find(['greet']))
+  })
+})
+
+test.group('Kernel | find', () => {
   test('find relevant command from the commands list', (assert) => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
@@ -27,7 +54,9 @@ test.group('Kernel', () => {
     const kernel = new Kernel()
     assert.isNull(kernel.find(['greet']))
   })
+})
 
+test.group('Kernel | handle', () => {
   test('raise exception when required argument is missing', async (assert) => {
     assert.plan(1)
 

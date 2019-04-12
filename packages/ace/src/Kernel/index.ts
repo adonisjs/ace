@@ -7,7 +7,7 @@
 * file that was distributed with this source code.
 */
 
-import { CommandConstructorContract, CommandFlag, GlobalFlagHandler } from '../Contracts'
+import { CommandConstructorContract, CommandFlag, GlobalFlagHandler, CommandArg } from '../Contracts'
 import { Parser } from '../Parser'
 
 /**
@@ -18,11 +18,25 @@ export class Kernel {
   public commands: { [name: string]: CommandConstructorContract } = {}
   public flags: { [name: string]: CommandFlag & { handler: GlobalFlagHandler } } = {}
 
+  private _validateArgs (command: CommandConstructorContract) {
+    let optionalArg: CommandArg
+    command.args.forEach((arg) => {
+      if (optionalArg && arg.required) {
+        throw new Error(`Required argument {${arg.name}} cannot come after optional argument {${optionalArg.name}}`)
+      }
+
+      if (!arg.required) {
+        optionalArg = arg
+      }
+    })
+  }
+
   /**
    * Register an array of commands
    */
   public register (commands: CommandConstructorContract[]): this {
     commands.forEach((command) => {
+      this._validateArgs(command)
       this.commands[command.commandName] = command
     })
 
