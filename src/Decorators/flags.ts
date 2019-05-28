@@ -7,33 +7,60 @@
 * file that was distributed with this source code.
 */
 
-import { CommandFlag } from '../Contracts'
+import { CommandFlag, FlagTypes } from '../Contracts'
 
 type DecoratorFlag = Partial<Pick<CommandFlag, Exclude<keyof CommandFlag, 'type'>>>
 
-function addFlag (target: any, propertyKey: string, options: DecoratorFlag) {
-  target.constructor.flags = target.constructor.flags || []
-  target.constructor.flags.push(Object.assign({
-    name: propertyKey,
-  }, options))
+/**
+ * Pushes flag to the list of command flags with predefined
+ * types.
+ */
+function addFlag (type: FlagTypes, options: DecoratorFlag) {
+  return function flag (target: any, propertyKey: string) {
+    if (!target.constructor.hasOwnProperty('flags')) {
+      Object.defineProperty(target.constructor, 'flags', { value: [] })
+    }
+
+    target.constructor.flags.push(Object.assign({
+      name: propertyKey,
+      type,
+    }, options))
+  }
 }
 
 export const flags = {
+  /**
+   * Create a flag that excepts string values
+   */
   string (options?: DecoratorFlag) {
-    return function flagStringDecorator (target: any, propertyKey: string) {
-      addFlag(target, propertyKey, Object.assign({ type: 'string' }, options))
-    }
+    return addFlag('string', options || {})
   },
 
+  /**
+   * Create a flag that excepts numeric values
+   */
+  number (options?: DecoratorFlag) {
+    return addFlag('number', options || {})
+  },
+
+  /**
+   * Create a flag that excepts boolean values
+   */
   boolean (options?: DecoratorFlag) {
-    return function flagStringDecorator (target: any, propertyKey: string) {
-      addFlag(target, propertyKey, Object.assign({ type: 'boolean' }, options))
-    }
+    return addFlag('boolean', options || {})
   },
 
+  /**
+   * Create a flag that excepts array of string values
+   */
   array (options?: DecoratorFlag) {
-    return function flagStringDecorator (target: any, propertyKey: string) {
-      addFlag(target, propertyKey, Object.assign({ type: 'array' }, options))
-    }
+    return addFlag('array', options || {})
+  },
+
+  /**
+   * Create a flag that excepts array of numeric values
+   */
+  numArray (options?: DecoratorFlag) {
+    return addFlag('numArray', options || {})
   },
 }

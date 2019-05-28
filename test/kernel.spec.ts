@@ -10,26 +10,49 @@
 import * as test from 'japa'
 import { Kernel } from '../src/Kernel'
 import { BaseCommand } from '../src/BaseCommand'
+import { args } from '../src/Decorators/args'
+import { flags } from '../src/Decorators/flags'
 
 test.group('Kernel | register', () => {
   test('raise error when required argument comes after optional argument', (assert) => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
-      public static args = [
-        {
-          name: 'name',
-          required: false,
-        },
-        {
-          name: 'age',
-          required: true,
-        },
-      ]
+
+      @args.string({ required: false })
+      public name: string
+
+      @args.string()
+      public age: string
     }
 
     const kernel = new Kernel()
     const fn = () => kernel.register([Greet])
-    assert.throw(fn, 'Required argument {age} cannot come after optional argument {name}')
+    assert.throw(fn, 'option argument {name} must be after required argument {age}')
+  })
+
+  test('raise error when command name is missing', (assert) => {
+    class Greet extends BaseCommand {
+    }
+
+    const kernel = new Kernel()
+    const fn = () => kernel.register([Greet])
+    assert.throw(fn, 'missing command name for Greet class')
+  })
+
+  test('raise error when spread argument isn\'t the last one', (assert) => {
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.spread()
+      public files: string[]
+
+      @args.string()
+      public name: string
+    }
+
+    const kernel = new Kernel()
+    const fn = () => kernel.register([Greet])
+    assert.throw(fn, 'spread arguments must be last')
   })
 
   test('return command suggestions for a given string', (assert) => {
@@ -73,12 +96,8 @@ test.group('Kernel | handle', () => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
-      public static args = [
-        {
-          name: 'name',
-          required: true,
-        },
-      ]
+      @args.string()
+      public name: string
     }
 
     const kernel = new Kernel()
@@ -88,7 +107,7 @@ test.group('Kernel | handle', () => {
     try {
       await kernel.handle(argv)
     } catch ({ message }) {
-      assert.equal(message, 'Missing value for name argument')
+      assert.equal(message, 'missing required argument name')
     }
   })
 
@@ -98,12 +117,8 @@ test.group('Kernel | handle', () => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
-      public static args = [
-        {
-          name: 'name',
-          required: false,
-        },
-      ]
+      @args.string({ required: false })
+      public name: string
 
       public async handle () {
         assert.deepEqual(this.parsed, { _: [] })
@@ -123,13 +138,7 @@ test.group('Kernel | handle', () => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
-      public static args = [
-        {
-          name: 'name',
-          required: true,
-        },
-      ]
-
+      @args.string()
       public name: string
 
       public async handle () {
@@ -145,27 +154,68 @@ test.group('Kernel | handle', () => {
     await kernel.handle(argv)
   })
 
+  test('define spread arguments', async (assert) => {
+    assert.plan(2)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.spread()
+      public files: string[]
+
+      public async handle () {
+        assert.deepEqual(this.parsed, { _: ['foo.js', 'bar.js'] })
+        assert.deepEqual(this.files, ['foo.js', 'bar.js'])
+      }
+    }
+
+    const kernel = new Kernel()
+    kernel.register([Greet])
+
+    const argv = ['greet', 'foo.js', 'bar.js']
+    await kernel.handle(argv)
+  })
+
+  test('define spread arguments with regular arguments', async (assert) => {
+    assert.plan(4)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.string()
+      public name: string
+
+      @args.string()
+      public age: string
+
+      @args.spread()
+      public files: string[]
+
+      public async handle () {
+        assert.deepEqual(this.parsed, { _: ['virk', '22', 'foo.js', 'bar.js'] })
+        assert.equal(this.name, 'virk')
+        assert.equal(this.age, '22')
+        assert.deepEqual(this.files, ['foo.js', 'bar.js'])
+      }
+    }
+
+    const kernel = new Kernel()
+    kernel.register([Greet])
+
+    const argv = ['greet', 'virk', '22', 'foo.js', 'bar.js']
+    await kernel.handle(argv)
+  })
+
   test('set arguments and flags', async (assert) => {
     assert.plan(3)
 
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
-      public static args = [
-        {
-          name: 'name',
-          required: true,
-        },
-      ]
-
-      public static flags = [
-        {
-          name: 'admin',
-          type: 'boolean' as 'boolean',
-        },
-      ]
-
+      @args.string()
       public name: string
+
+      @flags.boolean()
       public admin: boolean
 
       public async handle () {
@@ -188,21 +238,10 @@ test.group('Kernel | handle', () => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
-      public static args = [
-        {
-          name: 'name',
-          required: true,
-        },
-      ]
-
-      public static flags = [
-        {
-          name: 'admin',
-          type: 'boolean' as 'boolean',
-        },
-      ]
-
+      @args.string()
       public name: string
+
+      @flags.boolean()
       public admin: boolean
 
       public async handle () {
@@ -225,22 +264,10 @@ test.group('Kernel | handle', () => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
-      public static args = [
-        {
-          name: 'name',
-          required: true,
-        },
-      ]
-
-      public static flags = [
-        {
-          name: 'admin',
-          alias: 'a',
-          type: 'boolean' as 'boolean',
-        },
-      ]
-
+      @args.string()
       public name: string
+
+      @flags.boolean({ alias: 'a' })
       public admin: boolean
 
       public async handle () {
@@ -263,21 +290,10 @@ test.group('Kernel | handle', () => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
-      public static args = [
-        {
-          name: 'name',
-          required: true,
-        },
-      ]
-
-      public static flags = [
-        {
-          name: 'admin',
-          type: 'boolean' as 'boolean',
-        },
-      ]
-
+      @args.string()
       public name: string
+
+      @flags.boolean()
       public admin: boolean
 
       public async handle () {
@@ -300,22 +316,10 @@ test.group('Kernel | handle', () => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
-      public static args = [
-        {
-          name: 'name',
-          required: true,
-        },
-      ]
-
-      public static flags = [
-        {
-          name: 'admin',
-          alias: 'a',
-          type: 'boolean' as 'boolean',
-        },
-      ]
-
+      @args.string()
       public name: string
+
+      @flags.boolean({ alias: 'a' })
       public admin: boolean
 
       public async handle () {
@@ -338,23 +342,10 @@ test.group('Kernel | handle', () => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
-      public static args = [
-        {
-          name: 'name',
-          required: true,
-        },
-      ]
-
-      public static flags = [
-        {
-          name: 'admin',
-          alias: 'a',
-          default: true,
-          type: 'boolean' as 'boolean',
-        },
-      ]
-
+      @args.string()
       public name: string
+
+      @flags.boolean({ default: true, alias: 'a' })
       public admin: boolean
 
       public async handle () {
@@ -377,25 +368,14 @@ test.group('Kernel | handle', () => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
-      public static args = [
-        {
-          name: 'name',
-          required: true,
-        },
-      ]
-
-      public static flags = [
-        {
-          name: 'files',
-          type: 'array',
-        },
-      ]
-
+      @args.string()
       public name: string
+
+      @flags.array()
       public files: string[]
 
       public async handle () {
-        assert.deepEqual(this.parsed, { _: ['virk'], files: 'foo.js' })
+        assert.deepEqual(this.parsed, { _: ['virk'], files: ['foo.js'] })
         assert.equal(this.name, 'virk')
         assert.deepEqual(this.files, ['foo.js'])
       }
@@ -447,11 +427,31 @@ test.group('Kernel | handle', () => {
     await kernel.handle(argv)
   })
 
-  test('do not execute global flag when flag is not defined', async () => {
+  test('do not execute string global flag when flag is not defined', async () => {
     const kernel = new Kernel()
     kernel.flag('env', () => {
       throw new Error('Not expected to be called')
     }, { type: 'string' })
+
+    const argv = ['--ansi']
+    await kernel.handle(argv)
+  })
+
+  test('do not execute array global flag when flag is not defined', async () => {
+    const kernel = new Kernel()
+    kernel.flag('env', () => {
+      throw new Error('Not expected to be called')
+    }, { type: 'array' })
+
+    const argv = ['--ansi']
+    await kernel.handle(argv)
+  })
+
+  test('do not execute num array type global flag when flag is not defined', async () => {
+    const kernel = new Kernel()
+    kernel.flag('env', () => {
+      throw new Error('Not expected to be called')
+    }, { type: 'numArray' })
 
     const argv = ['--ansi']
     await kernel.handle(argv)
@@ -464,14 +464,9 @@ test.group('Kernel | handle', () => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
-      public static args = [
-        {
-          name: 'name',
-          required: true,
-        },
-      ]
-
+      @args.string()
       public name: string
+
       public async handle () {
       }
     }

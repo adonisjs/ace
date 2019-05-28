@@ -7,20 +7,20 @@
 * file that was distributed with this source code.
 */
 
-import { printHelpFor } from '../src/utils/help'
+// import { printHelpFor } from '../src/utils/help'
 import { BaseCommand } from '../src/BaseCommand'
 import { Kernel } from '../src/Kernel'
-import { arg } from '../src/Decorators/arg'
+import { args } from '../src/Decorators/args'
 import { flags } from '../src/Decorators/flags'
 
 class Greet extends BaseCommand {
   public static commandName = 'greet'
   public static description = 'Greet a user with their name'
 
-  @arg({ description: 'The name of the person you want to greet' })
+  @args.string({ description: 'The name of the person you want to greet' })
   public name: string
 
-  @arg()
+  @args.number()
   public age: number
 
   @flags.string({ description: 'The environment to use to specialize certain commands' })
@@ -31,6 +31,10 @@ class Greet extends BaseCommand {
 
   @flags.array({ description: 'HTML fragments loaded on demand', alias: 'f' })
   public fragment: string
+
+  public async handle () {
+    console.log(typeof (this.age))
+  }
 }
 
 class MakeController extends BaseCommand {
@@ -54,4 +58,6 @@ kernel.flag('env', (value) => {
   process.env.NODE_ENV = value
 }, { type: 'string' })
 
-printHelpFor(Greet)
+kernel.handle(process.argv.splice(2))
+
+// printHelpFor(Greet)

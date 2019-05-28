@@ -26,6 +26,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@poppinss/utils": "^1.0.1",
     "fast-levenshtein": "^2.0.6",
     "getopts": "^2.2.4",
     "kleur": "^3.0.3",

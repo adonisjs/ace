@@ -39,37 +39,36 @@ export class Kernel {
    * The concept is similar to Javascript function arguments, you cannot have a
    * required argument after an optional argument.
    */
-  private _validateArgs (command: CommandConstructorContract) {
+  private _validateCommand (command: CommandConstructorContract) {
+    /**
+     * Ensure command has a name
+     */
+    if (!command.commandName) {
+      throw new Error(`missing command name for ${command.name} class`)
+    }
+
     let optionalArg: CommandArg
-    command.args.forEach((arg) => {
+
+    command.args.forEach((arg, index) => {
+      /**
+       * Ensure optional arguments comes after required
+       * arguments
+       */
       if (optionalArg && arg.required) {
-        throw new Error(`Required argument {${arg.name}} cannot come after optional argument {${optionalArg.name}}`)
+        throw new Error(`option argument {${optionalArg.name}} must be after required argument {${arg.name}}`)
+      }
+
+      /**
+       * Ensure spread arg is the last arg
+       */
+      if (arg.type === 'spread' && command.args.length > index + 1) {
+        throw new Error('spread arguments must be last')
       }
 
       if (!arg.required) {
         optionalArg = arg
       }
     })
-  }
-
-  /**
-   * Casting runtime flag value to the expected flag value of
-   * the command. Currently, we just need to normalize
-   * arrays.
-   */
-  private _castFlagValue (flag: CommandFlag, value: any): any {
-    return flag.type === 'array' && !Array.isArray(value) ? [value] : value
-  }
-
-  /**
-   * Validates the runtime command line arguments to ensure they satisfy
-   * the length of required arguments for a given command.
-   */
-  private _validateRuntimeArgs (args: string[], command: CommandConstructorContract) {
-    const requiredArgs = command!.args.filter((arg) => arg.required)
-    if (args.length < requiredArgs.length) {
-      throw new Error(`Missing value for ${requiredArgs[args.length].name} argument`)
-    }
   }
 
   /**
@@ -84,10 +83,16 @@ export class Kernel {
     const globalFlags = Object.keys(this.flags)
 
     globalFlags.forEach((name) => {
-      if (options[name] || options[name] === false) {
-        const value = this._castFlagValue(this.flags[name], options[name])
-        this.flags[name].handler(value, options, command)
+      const value = options[name]
+      if (value === undefined) {
+        return
       }
+
+      if ((typeof (value) === 'string' || Array.isArray(value)) && !value.length) {
+        return
+      }
+
+      this.flags[name].handler(options[name], options, command)
     })
   }
 
@@ -96,7 +101,7 @@ export class Kernel {
    */
   public register (commands: CommandConstructorContract[]): this {
     commands.forEach((command) => {
-      this._validateArgs(command)
+      this._validateCommand(command)
       this.commands[command.commandName] = command
     })
 
@@ -182,12 +187,6 @@ export class Kernel {
     this._executeGlobalFlagsHandlers(parsedOptions, command)
 
     /**
-     * Ensure that the runtime arguments satisfies the command
-     * arguments requirements.
-     */
-    this._validateRuntimeArgs(parsedOptions._, command)
-
-    /**
      * Creating a new command instance and setting
      * parsed options on it.
      */
@@ -198,12 +197,21 @@ export class Kernel {
      * Setup command instance argument and flag
      * properties.
      */
-    command.args.forEach((arg, index) => {
-      commandInstance[arg.name] = parsedOptions._[index]
-    })
+    for (let i = 0; i < command.args.length; i++) {
+      const arg = command.args[i]
+      if (arg.type === 'spread') {
+        commandInstance[arg.name] = parsedOptions._.slice(i)
+        break
+      } else {
+        commandInstance[arg.name] = parsedOptions._[i]
+      }
+    }
 
+    /**
+     * Set flag value on the command instance
+     */
     command.flags.forEach((flag) => {
-      commandInstance[flag.name] = this._castFlagValue(flag, parsedOptions[flag.name])
+      commandInstance[flag.name] = parsedOptions[flag.name]
     })
 
     /**

@@ -9,11 +9,15 @@
 
 import { ParsedOptions } from 'getopts'
 
+export type FlagTypes = 'string' | 'number' | 'boolean' | 'array' | 'numArray'
+export type ArgTypes = 'string' | 'spread'
+
 /**
  * The shape of command argument
  */
 export type CommandArg = {
   name: string,
+  type: ArgTypes,
   required: boolean,
   description?: string,
 }
@@ -23,7 +27,7 @@ export type CommandArg = {
  */
 export type CommandFlag = {
   name: string,
-  type: string,
+  type: FlagTypes,
   description?: string,
   alias?: string,
   default?: any,

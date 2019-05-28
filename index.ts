@@ -9,6 +9,6 @@
 
 export { Kernel } from './src/Kernel'
 export { BaseCommand } from './src/BaseCommand'
-export { arg } from './src/Decorators/arg'
+export { args } from './src/Decorators/args'
 export { flags } from './src/Decorators/flags'
 export { printHelp, printHelpFor } from './src/utils/help'
