@@ -152,38 +152,15 @@ export class Kernel {
   }
 
   /**
-   * Makes instance of a given command by processing command line arguments
-   * and setting them on the command instance
+   * Run a given command by parsing the command line arguments
    */
-  public async handle (argv: string[]) {
-    if (!argv.length) {
-      return
-    }
-
-    const hasMentionedCommand = !argv[0].startsWith('-')
+  public async runCommand (argv: string[], command: CommandConstructorContract) {
     const parser = new Parser(this.flags)
-
-    /**
-     * Parse flags when no command is defined
-     */
-    if (!hasMentionedCommand) {
-      const parsedOptions = parser.parse(argv)
-      this._executeGlobalFlagsHandlers(parsedOptions)
-      return
-    }
-
-    /**
-     * If command doesn't exists, then raise an error for same
-     */
-    const command = this.find(argv)
-    if (!command) {
-      throw new Error(`${argv[0]} is not a registered command`)
-    }
 
     /**
      * Parse argv and execute the `handle` method.
      */
-    const parsedOptions = parser.parse(argv.splice(1), command)
+    const parsedOptions = parser.parse(argv, command)
     this._executeGlobalFlagsHandlers(parsedOptions, command)
 
     /**
@@ -219,5 +196,36 @@ export class Kernel {
      * `Kernel` must handle the command errors.
      */
     return commandInstance.handle()
+  }
+
+  /**
+   * Makes instance of a given command by processing command line arguments
+   * and setting them on the command instance
+   */
+  public async handle (argv: string[]) {
+    if (!argv.length) {
+      return
+    }
+
+    const hasMentionedCommand = !argv[0].startsWith('-')
+
+    /**
+     * Parse flags when no command is defined
+     */
+    if (!hasMentionedCommand) {
+      const parsedOptions = new Parser(this.flags).parse(argv)
+      this._executeGlobalFlagsHandlers(parsedOptions)
+      return
+    }
+
+    /**
+     * If command doesn't exists, then raise an error for same
+     */
+    const command = this.find(argv)
+    if (!command) {
+      throw new Error(`${argv[0]} is not a registered command`)
+    }
+
+    return this.runCommand(argv.splice(1), command)
   }
 }
