@@ -17,3 +17,4 @@ yarn.lock
 shrinkwrap.yaml
 docs
 api-docs
+package-lock.json

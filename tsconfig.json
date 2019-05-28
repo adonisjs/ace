@@ -1,5 +1,5 @@
 {
-  "extends": "../../_tsconfig.json",
+  "extends": "./node_modules/@adonisjs/mrm-preset/_tsconfig",
   "compilerOptions": {
     "outDir": "./build"
   },

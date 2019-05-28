@@ -54,10 +54,19 @@ class MakeController extends BaseCommand {
 class MakeModel extends BaseCommand {
   public static commandName = 'make:model'
   public static description = 'Create database model'
+
+  public async handle () {
+    console.log(process.env.NODE_ENV)
+  }
 }
 
 const kernel = new Kernel()
-kernel.flag('env', () => {}, { type: 'string' })
+kernel.register([Greet, MakeController, MakeModel])
+
+kernel.flag('env', (value) => {
+  process.env.NODE_ENV = value
+}, { type: 'string' })
+
 printHelp([Greet, MakeController, MakeModel], Object.keys(kernel.flags).map((flag) => {
   return kernel.flags[flag]
 }))

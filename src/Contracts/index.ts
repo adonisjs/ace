@@ -1,5 +1,3 @@
-import { ParsedOptions } from 'getopts'
-
 /*
 * @adonisjs/ace
 *
@@ -8,6 +6,8 @@ import { ParsedOptions } from 'getopts'
 * For the full copyright and license information, please view the LICENSE
 * file that was distributed with this source code.
 */
+
+import { ParsedOptions } from 'getopts'
 
 /**
  * The shape of command argument
@@ -29,6 +29,10 @@ export type CommandFlag = {
   default?: any,
 }
 
+/**
+ * The handler that handles the global
+ * flags
+ */
 export type GlobalFlagHandler = (
   value: any,
   parsed: ParsedOptions,
