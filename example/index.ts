@@ -7,43 +7,30 @@
 * file that was distributed with this source code.
 */
 
-import { printHelp } from '../src/utils/help'
+import { printHelpFor } from '../src/utils/help'
 import { BaseCommand } from '../src/BaseCommand'
 import { Kernel } from '../src/Kernel'
+import { arg } from '../src/Decorators/arg'
+import { flags } from '../src/Decorators/flags'
 
 class Greet extends BaseCommand {
   public static commandName = 'greet'
   public static description = 'Greet a user with their name'
-  public static args = [
-    {
-      name: 'name',
-      description: 'The name of the person you want to greet',
-      required: true,
-    },
-    {
-      name: 'age',
-      required: false,
-    },
-  ]
 
-  public static flags = [
-    {
-      name: 'env',
-      description: 'The environment to use to specialize certain commands',
-      type: 'boolean',
-    },
-    {
-      name: 'entrypoint',
-      description: 'The main HTML file that will be requested',
-      type: 'string',
-    },
-    {
-      name: 'fragment',
-      alias: 'f',
-      description: 'HTML fragments loaded on demand',
-      type: 'array',
-    },
-  ]
+  @arg({ description: 'The name of the person you want to greet' })
+  public name: string
+
+  @arg()
+  public age: number
+
+  @flags.string({ description: 'The environment to use to specialize certain commands' })
+  public env: string
+
+  @flags.string({ description: 'The main HTML file that will be requested' })
+  public entrypoint: string
+
+  @flags.array({ description: 'HTML fragments loaded on demand', alias: 'f' })
+  public fragment: string
 }
 
 class MakeController extends BaseCommand {
@@ -67,6 +54,4 @@ kernel.flag('env', (value) => {
   process.env.NODE_ENV = value
 }, { type: 'string' })
 
-printHelp([Greet, MakeController, MakeModel], Object.keys(kernel.flags).map((flag) => {
-  return kernel.flags[flag]
-}))
+printHelpFor(Greet)
