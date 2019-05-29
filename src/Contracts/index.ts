@@ -49,7 +49,7 @@ export type GlobalFlagHandler = (
  */
 export type CommandsGroup = {
   group: string,
-  commands: CommandConstructorContract[],
+  commands: HelpCommand[],
 }[]
 
 /**
@@ -84,3 +84,9 @@ export type ManifestCommand = Pick<
 export type ManifestNode = {
   [command: string]: ManifestCommand,
 }
+
+/**
+ * Shape of command required for the help screen. The node is a
+ * neutral point between `CommandConstructor` and `ManifestCommand`.
+ */
+export type HelpCommand = Pick<ManifestCommand, Exclude<keyof ManifestCommand, 'commandPath'>>

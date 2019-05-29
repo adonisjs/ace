@@ -11,6 +11,7 @@ import * as getopts from 'getopts'
 
 import { Parser } from '../Parser'
 import { validateCommand } from '../utils/validateCommand'
+import { printHelp, printHelpFor } from '../utils/help'
 import { CommandConstructorContract, CommandFlag, GlobalFlagHandler } from '../Contracts'
 
 /**
@@ -184,5 +185,18 @@ export class Kernel {
     }
 
     return this.runCommand(argv.splice(1), command)
+  }
+
+  /**
+   * Print the help screen for a given command or all commands/flags
+   */
+  public printHelp (command?: CommandConstructorContract) {
+    if (command) {
+      printHelpFor(command)
+    } else {
+      const commands = Object.keys(this.commands).map((name) => this.commands[name])
+      const flags = Object.keys(this.flags).map((name) => this.flags[name])
+      printHelp(commands, flags)
+    }
   }
 }

@@ -7,14 +7,14 @@
 * file that was distributed with this source code.
 */
 
-import { CommandConstructorContract, CommandsGroup } from '../Contracts'
+import { CommandsGroup, HelpCommand } from '../Contracts'
 
  /**
  * Loops over the commands and converts them to an array of sorted groups with
  * nested commands inside them. The grouping is done using the command
  * namespace seperated with `:`. Example: `make:controller`
  */
-export function sortAndGroupCommands (commands: CommandConstructorContract[]): CommandsGroup {
+export function sortAndGroupCommands (commands: HelpCommand[]): CommandsGroup {
   /**
    * Create a group of commands using it's namespace
    */
@@ -31,7 +31,7 @@ export function sortAndGroupCommands (commands: CommandConstructorContract[]): C
     result[group].push(command)
 
     return result
-  }, {} as { [key: string]: CommandConstructorContract[] })
+  }, {} as { [key: string]: HelpCommand[] })
 
   /**
    * Convert the object literal groups and it's command to an

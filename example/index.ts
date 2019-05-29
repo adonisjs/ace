@@ -7,7 +7,6 @@
 * file that was distributed with this source code.
 */
 
-// import { printHelpFor } from '../src/utils/help'
 import { BaseCommand } from '../src/BaseCommand'
 import { Kernel } from '../src/Kernel'
 import { args } from '../src/Decorators/args'
@@ -20,7 +19,7 @@ class Greet extends BaseCommand {
   @args.string({ description: 'The name of the person you want to greet' })
   public name: string
 
-  @args.number()
+  @args.string()
   public age: number
 
   @flags.string({ description: 'The environment to use to specialize certain commands' })
@@ -59,5 +58,4 @@ kernel.flag('env', (value) => {
 }, { type: 'string' })
 
 kernel.handle(process.argv.splice(2))
-
-// printHelpFor(Greet)
+kernel.printHelp(Greet)
