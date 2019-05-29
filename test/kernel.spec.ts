@@ -12,6 +12,11 @@ import { Kernel } from '../src/Kernel'
 import { BaseCommand } from '../src/BaseCommand'
 import { args } from '../src/Decorators/args'
 import { flags } from '../src/Decorators/flags'
+import { Manifest } from '../src/Manifest'
+import { Filesystem } from '@adonisjs/dev-utils'
+import { join } from 'path'
+
+const fs = new Filesystem(join(__dirname, '__app'))
 
 test.group('Kernel | register', () => {
   test('raise error when required argument comes after optional argument', (assert) => {
@@ -86,6 +91,30 @@ test.group('Kernel | find', () => {
   test('return null when unable to find command', (assert) => {
     const kernel = new Kernel()
     assert.isNull(kernel.find(['greet']))
+  })
+
+  test('find command from manifest when manifestCommands exists', async (assert) => {
+    const kernel = new Kernel()
+    const manifest = new Manifest(fs.basePath)
+
+    await fs.add(`ace-manifest.json`, JSON.stringify({
+      greet: {
+        commandName: 'greet',
+        commandPath: 'Commands/Greet.ts',
+      },
+    }))
+
+    await fs.add('Commands/Greet.ts', `export default class Greet {
+      public static commandName = 'greet'
+    }`)
+
+    kernel.useManifest(manifest)
+    kernel.manifestCommands = await manifest.load()
+
+    const greet = kernel.find(['greet'])
+    assert.equal(greet!.name, 'Greet')
+
+    await fs.cleanup()
   })
 })
 

@@ -10,9 +10,16 @@
 import * as getopts from 'getopts'
 
 import { Parser } from '../Parser'
+import { Manifest } from '../Manifest'
 import { validateCommand } from '../utils/validateCommand'
 import { printHelp, printHelpFor } from '../utils/help'
-import { CommandConstructorContract, CommandFlag, GlobalFlagHandler } from '../Contracts'
+import {
+  CommandConstructorContract,
+  CommandFlag,
+  GlobalFlagHandler,
+  ManifestCommand,
+  ManifestNode,
+} from '../Contracts'
 
 /**
  * Ace kernel class is used to register, find and invoke commands by
@@ -25,9 +32,22 @@ export class Kernel {
   public commands: { [name: string]: CommandConstructorContract } = {}
 
   /**
+   * Reference to commands defined inside the manifest file. This only exists
+   * when you call [[Kernel.useManifest]].
+   */
+  public manifestCommands?: ManifestNode
+
+  /**
    * List of registered flags
    */
   public flags: { [name: string]: CommandFlag & { handler: GlobalFlagHandler } } = {}
+
+  /**
+   * Reference to the manifest instance. When this exists, the kernel
+   * will give prefrence to the manifest file over the registered
+   * commands
+   */
+  private _manifest?: Manifest
 
   /**
    * Executing global flag handlers. The global flag handlers are
@@ -95,6 +115,7 @@ export class Kernel {
    */
   public find (argv: string[]): CommandConstructorContract | null {
     /**
+     * ----------------------------------------------------------------------------
      * Even though in `Unix` the command name may appear in between or at last, with
      * ace we always want the command name to be the first argument. However, the
      * arguments to the command itself can appear in any sequence. For example:
@@ -105,6 +126,19 @@ export class Kernel {
      *
      * Doesn't work
      *    - node ace foo make:controller
+     * ----------------------------------------------------------------------------
+     */
+
+    /**
+     * Manifest commands gets preference over manually registered commands.
+     */
+    if (this.manifestCommands && this.manifestCommands[argv[0]]) {
+      return this._manifest!.loadCommand(this.manifestCommands[argv[0]].commandPath)
+    }
+
+    /**
+     * Try to find command inside manually registered command or fallback
+     * to null
      */
     return this.commands[argv[0]] || null
   }
@@ -165,6 +199,15 @@ export class Kernel {
       return
     }
 
+    /**
+     * Load manifest commands when instance of manifest exists. From here the
+     * kernel will give preference to the `manifest` file vs manually
+     * registered commands.
+     */
+    if (this._manifest) {
+      this.manifestCommands = await this._manifest.load()
+    }
+
     const hasMentionedCommand = !argv[0].startsWith('-')
 
     /**
@@ -179,12 +222,20 @@ export class Kernel {
     /**
      * If command doesn't exists, then raise an error for same
      */
-    const command = this.find(argv)
+    let command = this.find(argv)
     if (!command) {
       throw new Error(`${argv[0]} is not a registered command`)
     }
 
     return this.runCommand(argv.splice(1), command)
+  }
+
+  /**
+   * Use manifest instance to lazy load commands
+   */
+  public useManifest (manifest: Manifest): this {
+    this._manifest = manifest
+    return this
   }
 
   /**
@@ -194,7 +245,17 @@ export class Kernel {
     if (command) {
       printHelpFor(command)
     } else {
-      const commands = Object.keys(this.commands).map((name) => this.commands[name])
+      let commands: ManifestCommand[] | CommandConstructorContract[]
+
+      /**
+       * Using manifest commands over registered commands
+       */
+      if (this.manifestCommands) {
+        commands = Object.keys(this.manifestCommands).map((name) => this.commands[name])
+      } else {
+        commands = Object.keys(this.commands).map((name) => this.commands[name])
+      }
+
       const flags = Object.keys(this.flags).map((name) => this.flags[name])
       printHelp(commands, flags)
     }

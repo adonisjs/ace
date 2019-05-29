@@ -27,13 +27,12 @@ export class Manifest {
   /**
    * Require and return command
    */
-  private _getCommand (commandPath: string): CommandConstructorContract {
+  public loadCommand (commandPath: string): CommandConstructorContract {
     const command = esmRequire(join(this._appRoot, commandPath))
     if (!command.name) {
       throw CommandValidationException.invalidManifestExport(commandPath)
     }
 
-    validateCommand(command)
     return command
   }
 
@@ -57,7 +56,8 @@ export class Manifest {
    */
   public async generate (commandPaths: string[]) {
     const manifest = commandPaths.reduce((manifest: ManifestNode, commandPath) => {
-      const command = this._getCommand(commandPath)
+      const command = this.loadCommand(commandPath)
+      validateCommand(command)
 
       manifest[command.commandName] = {
         commandPath: commandPath,
