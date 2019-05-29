@@ -70,3 +70,17 @@ export interface CommandContract {
   parsed?: ParsedOptions,
   handle (): Promise<void>,
 }
+
+/**
+ * Shape of a command inside the manifest file.
+ */
+export type ManifestCommand = Pick<
+  CommandConstructorContract, Exclude<keyof CommandConstructorContract, 'new'>
+> & { commandPath: string }
+
+/**
+ * Shape of manifest JSON file
+ */
+export type ManifestNode = {
+  [command: string]: ManifestCommand,
+}

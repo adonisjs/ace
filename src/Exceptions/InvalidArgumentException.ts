@@ -9,14 +9,25 @@
 
 import { Exception } from '@poppinss/utils'
 
+/**
+ * InvalidArgumentException is raised when command arguments
+ * or flags doesn't satisfy the requirements of a given
+ * command.
+ */
 export class InvalidArgumentException extends Exception {
+  /**
+   * Argument or flag type validation failed.
+   */
   public static invalidType (prop: string, expected: string) {
-    const message = `${prop} must be defined as a ${expected}`
+    const message = `{${prop}} must be defined as a {${expected}}`
     return new InvalidArgumentException(message, 500)
   }
 
+  /**
+   * A required argument is missing
+   */
   public static missingArgument (name: string) {
-    const message = `missing required argument ${name}`
+    const message = `missing required argument {${name}}`
     return new InvalidArgumentException(message, 500)
   }
 }

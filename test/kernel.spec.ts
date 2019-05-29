@@ -27,7 +27,7 @@ test.group('Kernel | register', () => {
 
     const kernel = new Kernel()
     const fn = () => kernel.register([Greet])
-    assert.throw(fn, 'option argument {name} must be after required argument {age}')
+    assert.throw(fn, 'optional argument {name} must be after required argument {age}')
   })
 
   test('raise error when command name is missing', (assert) => {
@@ -36,7 +36,7 @@ test.group('Kernel | register', () => {
 
     const kernel = new Kernel()
     const fn = () => kernel.register([Greet])
-    assert.throw(fn, 'missing command name for Greet class')
+    assert.throw(fn, 'missing command name for {Greet} class')
   })
 
   test('raise error when spread argument isn\'t the last one', (assert) => {
@@ -52,7 +52,7 @@ test.group('Kernel | register', () => {
 
     const kernel = new Kernel()
     const fn = () => kernel.register([Greet])
-    assert.throw(fn, 'spread arguments must be last')
+    assert.throw(fn, 'spread argument {files} must be at last position')
   })
 
   test('return command suggestions for a given string', (assert) => {
@@ -107,7 +107,7 @@ test.group('Kernel | handle', () => {
     try {
       await kernel.handle(argv)
     } catch ({ message }) {
-      assert.equal(message, 'missing required argument name')
+      assert.equal(message, 'missing required argument {name}')
     }
   })
 

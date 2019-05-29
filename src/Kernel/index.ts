@@ -6,15 +6,12 @@
 * For the full copyright and license information, please view the LICENSE
 * file that was distributed with this source code.
 */
-import { Parser } from '../Parser'
-import {
-  CommandConstructorContract,
-  CommandFlag,
-  GlobalFlagHandler,
-  CommandArg,
-} from '../Contracts'
 
 import * as getopts from 'getopts'
+
+import { Parser } from '../Parser'
+import { validateCommand } from '../utils/validateCommand'
+import { CommandConstructorContract, CommandFlag, GlobalFlagHandler } from '../Contracts'
 
 /**
  * Ace kernel class is used to register, find and invoke commands by
@@ -30,46 +27,6 @@ export class Kernel {
    * List of registered flags
    */
   public flags: { [name: string]: CommandFlag & { handler: GlobalFlagHandler } } = {}
-
-  /**
-   * Since arguments are matched based on their position, we need to make
-   * sure that the command author doesn't put optional args before the
-   * required args.
-   *
-   * The concept is similar to Javascript function arguments, you cannot have a
-   * required argument after an optional argument.
-   */
-  private _validateCommand (command: CommandConstructorContract) {
-    /**
-     * Ensure command has a name
-     */
-    if (!command.commandName) {
-      throw new Error(`missing command name for ${command.name} class`)
-    }
-
-    let optionalArg: CommandArg
-
-    command.args.forEach((arg, index) => {
-      /**
-       * Ensure optional arguments comes after required
-       * arguments
-       */
-      if (optionalArg && arg.required) {
-        throw new Error(`option argument {${optionalArg.name}} must be after required argument {${arg.name}}`)
-      }
-
-      /**
-       * Ensure spread arg is the last arg
-       */
-      if (arg.type === 'spread' && command.args.length > index + 1) {
-        throw new Error('spread arguments must be last')
-      }
-
-      if (!arg.required) {
-        optionalArg = arg
-      }
-    })
-  }
 
   /**
    * Executing global flag handlers. The global flag handlers are
@@ -101,7 +58,7 @@ export class Kernel {
    */
   public register (commands: CommandConstructorContract[]): this {
     commands.forEach((command) => {
-      this._validateCommand(command)
+      validateCommand(command)
       this.commands[command.commandName] = command
     })
 
