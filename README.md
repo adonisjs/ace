@@ -14,7 +14,8 @@
 - [Usage](#usage)
 - [Displaying help](#displaying-help)
 - [Decorators](#decorators)
-    - [arg](#arg)
+    - [args.string](#argsstring)
+    - [args.spread](#argsspread)
     - [flags.boolean](#flagsboolean)
     - [flags.string](#flagsstring)
     - [flags.array](#flagsarray)
@@ -37,15 +38,15 @@ And then use it as follows:
 import {
   Kernel,
   BaseCommand,
-  arg,
+  args,
   flags
 } from '@adonisjs/ace'
 
 class Make extends BaseCommand {
-  @arg()
+  @args.string()
   public resource: string
 
-  @arg()
+  @args.string()
   public name: string
 
   @flags.boolean()
@@ -69,27 +70,22 @@ kernel.handle(process.argv.splice(2))
 ```
 
 ## Displaying help
-
-The module comes with handful of helpers to display help for a single command or all commands.
-
-We keep the event of displaying help decoupled from the internals of `ace`, giving you more freedom on how and when to display the help.
+Ace doesn't hijack any flags or commands to display the help. You are free to decide when and how to show the help screen.
 
 ```ts
-import {
-  Kernel,
-  BaseCommand,
-  printHelpFor,
-  printHelp
-} from '@adonisjs/ace'
+import { Kernel, BaseCommand } from '@adonisjs/ace'
 
 const kernel = new Kernel()
 kernel.flag('help', (value, options, command) => {
-  if (command) {
-    printHelpFor(command)
-  } else {
-    printHelp(kernel.commands)
+  if (!value) {
+    return
   }
-  
+
+  /**
+   * When a command is not defined, then it will show
+   * help for all the commands
+   */
+  Kernel.printHelp(command)
   process.exit(0)
 })
 
@@ -99,17 +95,27 @@ kernel.handle(process.argv.splice(2))
 ## Decorators
 The module comes with ES6 decorators to define arguments and flags for a given command.
 
-#### arg
+#### args.string
 Define an argument. To make the argument optional, you can set the `required` property to false
 
 ```ts
-arg({ required: false })
+args.string({ required: false })
 ```
 
 You can also define the argument description as follows:
 
 ```ts
-arg({ description: 'The resource type to create' })
+args.string({ description: 'The resource type to create' })
+```
+
+#### args.spread
+Argument that receives all of the remaining values passed as arguments to a given command. Think of it as a spread operator in Javascript.
+
+```ts
+class Make extends BaseCommand {
+  @args.spread({ description: 'One or more files' })
+  public files: string[]
+}
 ```
  
 #### flags.boolean
