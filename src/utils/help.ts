@@ -17,7 +17,8 @@ import { CommandArg, CommandFlag, HelpCommand } from '../Contracts'
  * required or not.
  */
 function wrapArg (arg: CommandArg): string {
-  return arg.required ? `<${arg.name}>` : `[${arg.name}]`
+  const displayName = arg.type === 'spread' ? `${arg.name}...` : arg.name
+  return arg.required ? `<${displayName}>` : `[${displayName}]`
 }
 
 function getFlagsForDisplay (flags: CommandFlag[]) {
@@ -32,7 +33,24 @@ function getFlagsForDisplay (flags: CommandFlag[]) {
      * The type hints the user about the expectation on the flag type. We only
      * print the type, when flag is not a boolean.
      */
-    const displayType = type === 'array' ? 'string[]' : type === 'string' ? 'string' : ''
+    let displayType = ''
+    switch (type) {
+      case 'array':
+        displayType = 'string[]'
+        break
+      case 'numArray':
+        displayType = 'number[]'
+        break
+      case 'string':
+        displayType = 'string'
+        break
+      case 'boolean':
+        displayType = 'boolean'
+        break
+      case 'number':
+        displayType = 'number'
+        break
+    }
 
     return {
       displayName,

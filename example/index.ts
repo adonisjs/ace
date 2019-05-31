@@ -22,17 +22,20 @@ class Greet extends BaseCommand {
   @args.string()
   public age: number
 
+  @args.spread()
+  public files: string[]
+
   @flags.string({ description: 'The environment to use to specialize certain commands' })
   public env: string
 
   @flags.string({ description: 'The main HTML file that will be requested' })
   public entrypoint: string
 
-  @flags.array({ description: 'HTML fragments loaded on demand', alias: 'f' })
+  @flags.numArray({ description: 'HTML fragments loaded on demand', alias: 'f' })
   public fragment: string
 
   public async handle () {
-    console.log(typeof (this.age))
+    console.log(typeof (this.files))
   }
 }
 
