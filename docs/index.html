@@ -75,7 +75,8 @@
 					<li><a href="#usage">Usage</a></li>
 					<li><a href="#displaying-help">Displaying help</a></li>
 					<li><a href="#decorators">Decorators</a><ul>
-							<li><a href="#arg">arg</a></li>
+							<li><a href="#argsstring">args.string</a></li>
+							<li><a href="#argsspread">args.spread</a></li>
 							<li><a href="#flagsboolean">flags.boolean</a></li>
 							<li><a href="#flagsstring">flags.string</a></li>
 							<li><a href="#flagsarray">flags.array</a></li>
@@ -93,15 +94,15 @@ yarn add @adonisjs/ace</code></pre>
 				<pre><code class="language-ts"><span class="hljs-keyword">import</span> {
   Kernel,
   BaseCommand,
-  arg,
+  args,
   flags
 } <span class="hljs-keyword">from</span> <span class="hljs-string">'@adonisjs/ace'</span>
 
 <span class="hljs-keyword">class</span> Make <span class="hljs-keyword">extends</span> BaseCommand {
-  <span class="hljs-meta">@arg</span>()
+  <span class="hljs-meta">@args</span>.string()
   <span class="hljs-keyword">public</span> resource: <span class="hljs-built_in">string</span>
 
-  <span class="hljs-meta">@arg</span>()
+  <span class="hljs-meta">@args</span>.string()
   <span class="hljs-keyword">public</span> name: <span class="hljs-built_in">string</span>
 
   <span class="hljs-meta">@flags</span>.boolean()
@@ -123,34 +124,37 @@ kernel.register([Make])
 
 kernel.handle(process.argv.splice(<span class="hljs-number">2</span>))</code></pre>
 				<h2 id="displaying-help">Displaying help</h2>
-				<p>The module comes with handful of helpers to display help for a single command or all commands.</p>
-				<p>We keep the event of displaying help decoupled from the internals of <code>ace</code>, giving you more freedom on how and when to display the help.</p>
-				<pre><code class="language-ts"><span class="hljs-keyword">import</span> {
-  Kernel,
-  BaseCommand,
-  printHelpFor,
-  printHelp
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'@adonisjs/ace'</span>
+				<p>Ace doesn&#39;t hijack any flags or commands to display the help. You are free to decide when and how to show the help screen.</p>
+				<pre><code class="language-ts"><span class="hljs-keyword">import</span> { Kernel, BaseCommand } <span class="hljs-keyword">from</span> <span class="hljs-string">'@adonisjs/ace'</span>
 
 <span class="hljs-keyword">const</span> kernel = <span class="hljs-keyword">new</span> Kernel()
 kernel.flag(<span class="hljs-string">'help'</span>, <span class="hljs-function">(<span class="hljs-params">value, options, command</span>) =&gt;</span> {
-  <span class="hljs-keyword">if</span> (command) {
-    printHelpFor(command)
-  } <span class="hljs-keyword">else</span> {
-    printHelp(kernel.commands)
+  <span class="hljs-keyword">if</span> (!value) {
+    <span class="hljs-keyword">return</span>
   }
 
+  <span class="hljs-comment">/**
+   * When a command is not defined, then it will show
+   * help for all the commands
+   */</span>
+  Kernel.printHelp(command)
   process.exit(<span class="hljs-number">0</span>)
 })
 
 kernel.handle(process.argv.splice(<span class="hljs-number">2</span>))</code></pre>
 				<h2 id="decorators">Decorators</h2>
 				<p>The module comes with ES6 decorators to define arguments and flags for a given command.</p>
-				<h4 id="arg">arg</h4>
+				<h4 id="args-string">args.string</h4>
 				<p>Define an argument. To make the argument optional, you can set the <code>required</code> property to false</p>
-				<pre><code class="language-ts">arg({ required: <span class="hljs-literal">false</span> })</code></pre>
+				<pre><code class="language-ts">args.string({ required: <span class="hljs-literal">false</span> })</code></pre>
 				<p>You can also define the argument description as follows:</p>
-				<pre><code class="language-ts">arg({ description: <span class="hljs-string">'The resource type to create'</span> })</code></pre>
+				<pre><code class="language-ts">args.string({ description: <span class="hljs-string">'The resource type to create'</span> })</code></pre>
+				<h4 id="args-spread">args.spread</h4>
+				<p>Argument that receives all of the remaining values passed as arguments to a given command. Think of it as a spread operator in Javascript.</p>
+				<pre><code class="language-ts"><span class="hljs-keyword">class</span> Make <span class="hljs-keyword">extends</span> BaseCommand {
+  <span class="hljs-meta">@args</span>.spread({ description: <span class="hljs-string">'One or more files'</span> })
+  <span class="hljs-keyword">public</span> files: <span class="hljs-built_in">string</span>[]
+}</code></pre>
 				<h4 id="flags-boolean">flags.boolean</h4>
 				<p>Define a flag that accepts a <code>boolean</code> value.</p>
 				<h4 id="flags-string">flags.string</h4>
