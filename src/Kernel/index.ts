@@ -62,14 +62,25 @@ export class Kernel {
 
     globalFlags.forEach((name) => {
       const value = options[name]
+
+      /**
+       * Flag was not specified
+       */
       if (value === undefined) {
         return
       }
 
+      /**
+       * Flag was not specified, but `getops` will return empty array or
+       * empty string, when we coerce flag to be a string or array
+       */
       if ((typeof (value) === 'string' || Array.isArray(value)) && !value.length) {
         return
       }
 
+      /**
+       * Calling the handler
+       */
       this.flags[name].handler(options[name], options, command)
     })
   }
@@ -91,7 +102,8 @@ export class Kernel {
    */
   public getSuggestions (name: string, distance = 3): string[] {
     const levenshtein = require('fast-levenshtein')
-    return Object.keys(this.commands).filter((commandName) => {
+    const commands = this.manifestCommands ? this.manifestCommands : this.commands
+    return Object.keys(commands).filter((commandName) => {
       return levenshtein.get(name, commandName) <= distance
     })
   }
