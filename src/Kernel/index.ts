@@ -15,6 +15,7 @@ import { validateCommand } from '../utils/validateCommand'
 import { printHelp, printHelpFor } from '../utils/help'
 import {
   CommandConstructorContract,
+  CommandContract,
   CommandFlag,
   GlobalFlagHandler,
   ManifestCommand,
@@ -158,8 +159,15 @@ export class Kernel {
   /**
    * Run a given command by parsing the command line arguments
    */
-  public async runCommand (argv: string[], command: CommandConstructorContract) {
+  public async runCommand (argv: string[], commandInstance: CommandContract) {
+    /**
+     * The first value in the `argv` array is the command name. Now since
+     * we know the command already, we remove the first value.
+     */
+    argv = argv.splice(1)
+
     const parser = new Parser(this.flags)
+    const command = commandInstance.constructor as CommandConstructorContract
 
     /**
      * Parse argv and execute the `handle` method.
@@ -171,7 +179,6 @@ export class Kernel {
      * Creating a new command instance and setting
      * parsed options on it.
      */
-    const commandInstance = new command()
     commandInstance.parsed = parsedOptions
 
     /**
@@ -239,7 +246,7 @@ export class Kernel {
       throw new Error(`${argv[0]} is not a registered command`)
     }
 
-    return this.runCommand(argv.splice(1), command)
+    return this.runCommand(argv, new command())
   }
 
   /**

@@ -51,6 +51,13 @@ function getLabelBadge (label: LabelsList) {
  */
 export abstract class BaseCommand implements CommandContract {
   /**
+   * When set to true, the command will collect the output of [[this.colors]]
+   * and [[this.log]] in memory, instead of printing them to the console.
+   */
+  constructor (public rawMode: boolean = false) {
+  }
+
+  /**
    * Command arguments
    */
   public static args: CommandArg[] = []
@@ -76,13 +83,6 @@ export abstract class BaseCommand implements CommandContract {
    * is executed via kernel
    */
   public parsed?: ParsedOptions
-
-  /**
-   * When set to true, it will collect the output of [[this.colors]]
-   * and [[this.log]] in memory, instead of printing them to the
-   * console.
-   */
-  public rawMode: boolean
 
   /**
    * An array of collected logs

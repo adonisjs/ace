@@ -522,3 +522,30 @@ test.group('Kernel | handle', () => {
     await kernel.handle(argv)
   })
 })
+
+test.group('Kernel | runCommand', () => {
+  test('run command in raw mode', async (assert) => {
+    assert.plan(1)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.string()
+      public name: string
+
+      public async handle () {
+        this.$log(`Hello ${this.colors.cyan(this.name)}`)
+      }
+    }
+
+    const kernel = new Kernel()
+    kernel.register([Greet])
+
+    const argv = ['greet', 'virk']
+    const command = kernel.find(argv)!
+    const commandInstance = new command(true)
+    await kernel.runCommand(argv, commandInstance)
+
+    assert.deepEqual(commandInstance.logs, ['Hello cyan(virk)'])
+  })
+})

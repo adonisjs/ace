@@ -60,7 +60,7 @@ export interface CommandConstructorContract {
   flags: CommandFlag[],
   commandName: string,
   description: string,
-  new (): CommandContract,
+  new (rawMode?: boolean): CommandContract,
 }
 
 /**
@@ -68,6 +68,7 @@ export interface CommandConstructorContract {
  */
 export interface CommandContract {
   parsed?: ParsedOptions,
+  logs: string[],
   handle (): Promise<void>,
 }
 
