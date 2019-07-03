@@ -524,7 +524,7 @@ test.group('Kernel | handle', () => {
 })
 
 test.group('Kernel | runCommand', () => {
-  test('run command in raw mode', async (assert) => {
+  test('test logs in raw mode', async (assert) => {
     assert.plan(1)
 
     class Greet extends BaseCommand {
@@ -547,5 +547,266 @@ test.group('Kernel | runCommand', () => {
     await kernel.runCommand(argv, commandInstance)
 
     assert.deepEqual(commandInstance.logs, ['Hello cyan(virk)'])
+  })
+
+  test('test input prompt in raw mode', async (assert) => {
+    assert.plan(1)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.string()
+      public name: string
+
+      public async handle () {
+        const username = await this.prompt.ask('What\'s your username?', {
+          name: 'username',
+        })
+
+        this.$log(username)
+      }
+    }
+
+    const kernel = new Kernel()
+    kernel.register([Greet])
+
+    const argv = ['greet', 'virk']
+    const command = kernel.find(argv)!
+    const commandInstance = new command(true)
+
+    /**
+     * Responding to prompt programatically
+     */
+    commandInstance.prompt.on('prompt', (prompt) => {
+      prompt.answer('virk')
+    })
+
+    await kernel.runCommand(argv, commandInstance)
+    assert.deepEqual(commandInstance.logs, ['virk'])
+  })
+
+  test('test input prompt validation in raw mode', async (assert) => {
+    assert.plan(2)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.string()
+      public name: string
+
+      public async handle () {
+        const username = await this.prompt.ask('What\'s your username?', {
+          name: 'username',
+          validate (value) {
+            return !!value
+          },
+        })
+
+        this.$log(username)
+      }
+    }
+
+    const kernel = new Kernel()
+    kernel.register([Greet])
+
+    const argv = ['greet', 'virk']
+    const command = kernel.find(argv)!
+    const commandInstance = new command(true)
+
+    /**
+     * Responding to prompt programatically
+     */
+    commandInstance.prompt.on('prompt', (prompt) => {
+      prompt.answer('')
+    })
+
+    commandInstance.prompt.on('prompt:error', (message) => {
+      assert.equal(message, 'Enter the value')
+    })
+
+    await kernel.runCommand(argv, commandInstance)
+    assert.deepEqual(commandInstance.logs, [''])
+  })
+
+  test('test choice prompt in raw mode', async (assert) => {
+    assert.plan(1)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.string()
+      public name: string
+
+      public async handle () {
+        const client = await this.prompt.choice('Select the installation client', ['npm', 'yarn'])
+        this.$log(client)
+      }
+    }
+
+    const kernel = new Kernel()
+    kernel.register([Greet])
+
+    const argv = ['greet', 'virk']
+    const command = kernel.find(argv)!
+    const commandInstance = new command(true)
+
+    /**
+     * Responding to prompt programatically
+     */
+    commandInstance.prompt.on('prompt', (prompt) => {
+      prompt.select(0)
+    })
+
+    await kernel.runCommand(argv, commandInstance)
+    assert.deepEqual(commandInstance.logs, ['npm'])
+  })
+
+  test('test choice prompt validation in raw mode', async (assert) => {
+    assert.plan(2)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.string()
+      public name: string
+
+      public async handle () {
+        const client = await this.prompt.choice('Select the installation client', ['npm', 'yarn'], {
+          validate (answer) {
+            return !!answer
+          },
+        })
+        this.$log(client)
+      }
+    }
+
+    const kernel = new Kernel()
+    kernel.register([Greet])
+
+    const argv = ['greet', 'virk']
+    const command = kernel.find(argv)!
+    const commandInstance = new command(true)
+
+    /**
+     * Responding to prompt programatically
+     */
+    commandInstance.prompt.on('prompt', (prompt) => {
+      prompt.answer('')
+    })
+
+    commandInstance.prompt.on('prompt:error', (message) => {
+      assert.equal(message, 'Enter the value')
+    })
+
+    await kernel.runCommand(argv, commandInstance)
+    assert.deepEqual(commandInstance.logs, [''])
+  })
+
+  test('test multiple prompt in raw mode', async (assert) => {
+    assert.plan(1)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.string()
+      public name: string
+
+      public async handle () {
+        const clients = await this.prompt.multiple('Select the installation client', ['npm', 'yarn'])
+        this.$log(clients.join(','))
+      }
+    }
+
+    const kernel = new Kernel()
+    kernel.register([Greet])
+
+    const argv = ['greet', 'virk']
+    const command = kernel.find(argv)!
+    const commandInstance = new command(true)
+
+    /**
+     * Responding to prompt programatically
+     */
+    commandInstance.prompt.on('prompt', (prompt) => {
+      prompt.select(0)
+    })
+
+    await kernel.runCommand(argv, commandInstance)
+    assert.deepEqual(commandInstance.logs, ['npm'])
+  })
+
+  test('test multiple prompt validation in raw mode', async (assert) => {
+    assert.plan(2)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.string()
+      public name: string
+
+      public async handle () {
+        const client = await this.prompt.multiple('Select the installation client', ['npm', 'yarn'], {
+          validate (answer) {
+            return answer.length > 0
+          },
+        })
+
+        this.$log(client.join(','))
+      }
+    }
+
+    const kernel = new Kernel()
+    kernel.register([Greet])
+
+    const argv = ['greet', 'virk']
+    const command = kernel.find(argv)!
+    const commandInstance = new command(true)
+
+    /**
+     * Responding to prompt programatically
+     */
+    commandInstance.prompt.on('prompt', (prompt) => {
+      prompt.answer([])
+    })
+
+    commandInstance.prompt.on('prompt:error', (message) => {
+      assert.equal(message, 'Enter the value')
+    })
+
+    await kernel.runCommand(argv, commandInstance)
+    assert.deepEqual(commandInstance.logs, [''])
+  })
+
+  test('test toggle prompt in raw mode', async (assert) => {
+    assert.plan(1)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.string()
+      public name: string
+
+      public async handle () {
+        const deleteFile = await this.prompt.toggle('Delete the file?', ['Yep', 'Nope'])
+        this.$log(deleteFile ? 'Yep' : 'Nope')
+      }
+    }
+
+    const kernel = new Kernel()
+    kernel.register([Greet])
+
+    const argv = ['greet', 'virk']
+    const command = kernel.find(argv)!
+    const commandInstance = new command(true)
+
+    /**
+     * Responding to prompt programatically
+     */
+    commandInstance.prompt.on('prompt', (prompt) => {
+      prompt.accept()
+    })
+
+    await kernel.runCommand(argv, commandInstance)
+    assert.deepEqual(commandInstance.logs, ['Yep'])
   })
 })

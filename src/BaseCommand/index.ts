@@ -11,9 +11,18 @@ import * as figures from 'figures'
 import { format } from 'util'
 import { ParsedOptions } from 'getopts'
 import { CommandContract, CommandArg, CommandFlag, LabelsList } from '../Contracts'
+
+/**
+ * Colors modules. We switch between `kleur` and `stringify`
+ * based upon the raw mode.
+ */
+import { Colors } from '../Colors/Base'
 import { Kleur } from '../Colors/Kleur'
 import { Stringify } from '../Colors/Stringify'
-import { Colors } from '../Colors/Base'
+
+import { Enquirer } from '../Prompts/Enquirer'
+import { Emitter } from '../Prompts/Emitter'
+import { Prompt } from '../Prompts/Base'
 
 /**
  * Returns the distance between two labels. We consider the `complete`
@@ -88,6 +97,11 @@ export abstract class BaseCommand implements CommandContract {
    * An array of collected logs
    */
   public logs: string[] = []
+
+  /**
+   * The prompt for the command
+   */
+  public prompt: Prompt = this.rawMode ? new Emitter() : new Enquirer()
 
   /**
    * Prints a fancy log for a pre-defined label

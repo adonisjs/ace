@@ -10,7 +10,7 @@
 import * as padRight from 'pad-right'
 import { green, bold, yellow, dim } from 'kleur'
 import { sortAndGroupCommands } from './sortAndGroupCommands'
-import { CommandArg, CommandFlag, HelpCommand } from '../Contracts'
+import { CommandArg, CommandFlag, SerializedCommandContract } from '../Contracts'
 
 /**
  * Wraps the command arg inside `<>` or `[]` brackets based upon if it's
@@ -71,7 +71,7 @@ function getArgsForDisplay (args: CommandArg[]) {
   })
 }
 
-function getCommandsForDisplay (commands: HelpCommand[]) {
+function getCommandsForDisplay (commands: SerializedCommandContract[]) {
   return commands.map(({ commandName, description }) => {
     return { displayName: commandName, description, width: commandName.length }
   })
@@ -81,7 +81,7 @@ function getCommandsForDisplay (commands: HelpCommand[]) {
  * Prints help for all the commands by sorting them in alphabetical order
  * and grouping them as per their namespace.
  */
-export function printHelp (commands: HelpCommand[], flags: CommandFlag[]): void {
+export function printHelp (commands: SerializedCommandContract[], flags: CommandFlag[]): void {
   const flagsList = getFlagsForDisplay(flags)
   const commandsList = getCommandsForDisplay(commands)
 
@@ -121,7 +121,7 @@ export function printHelp (commands: HelpCommand[], flags: CommandFlag[]): void 
 /**
  * Prints help for a single command
  */
-export function printHelpFor (command: HelpCommand): void {
+export function printHelpFor (command: SerializedCommandContract): void {
   if (command.description) {
     console.log('')
     console.log(command.description)
