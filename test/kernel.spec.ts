@@ -28,6 +28,8 @@ test.group('Kernel | register', () => {
 
       @args.string()
       public age: string
+
+      public async handle () {}
     }
 
     const kernel = new Kernel()
@@ -37,6 +39,7 @@ test.group('Kernel | register', () => {
 
   test('raise error when command name is missing', (assert) => {
     class Greet extends BaseCommand {
+      public async handle () {}
     }
 
     const kernel = new Kernel()
@@ -53,6 +56,8 @@ test.group('Kernel | register', () => {
 
       @args.string()
       public name: string
+
+      public async handle () {}
     }
 
     const kernel = new Kernel()
@@ -65,10 +70,12 @@ test.group('Kernel | register', () => {
 
     class Install extends BaseCommand {
       public static commandName = 'install'
+      public async handle () {}
     }
 
     class Greet extends BaseCommand {
       public static commandName = 'greet'
+      public async handle () {}
     }
 
     kernel.register([Install, Greet])
@@ -80,6 +87,7 @@ test.group('Kernel | find', () => {
   test('find relevant command from the commands list', (assert) => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
+      public async handle () {}
     }
 
     const kernel = new Kernel()
@@ -127,6 +135,8 @@ test.group('Kernel | handle', () => {
 
       @args.string()
       public name: string
+
+      public async handle () {}
     }
 
     const kernel = new Kernel()

@@ -90,3 +90,5 @@ export type ManifestNode = {
  * neutral point between `CommandConstructor` and `ManifestCommand`.
  */
 export type HelpCommand = Pick<ManifestCommand, Exclude<keyof ManifestCommand, 'commandPath'>>
+
+export type LabelsList = 'success' | 'error' | 'warning' | 'info' | 'complete' | 'note' | 'await'

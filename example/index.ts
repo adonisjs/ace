@@ -35,13 +35,22 @@ class Greet extends BaseCommand {
   public fragment: string
 
   public async handle () {
-    console.log(typeof (this.files))
+    this.$success('Operation successful')
+    this.$error('Unable to acquire lock')
+    this.$info('Hello')
+    this.$warning('Write release notes for %s', '1.2.0')
+    this.$await('Write release notes for')
+    this.$complete('That is done')
+    this.$note('Please get it done')
   }
 }
 
 class MakeController extends BaseCommand {
   public static commandName = 'make:controller'
   public static description = 'Create a HTTP controller'
+
+  public async handle () {
+  }
 }
 
 class MakeModel extends BaseCommand {

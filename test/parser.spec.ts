@@ -204,6 +204,8 @@ test.group('Parser | args', () => {
     class Greet extends BaseCommand {
       @args.string()
       public name: string
+
+      public async handle () {}
     }
 
     const parser = new Parser({})
@@ -216,6 +218,8 @@ test.group('Parser | args', () => {
     class Greet extends BaseCommand {
       @args.string()
       public name: string
+
+      public async handle () {}
     }
 
     const parser = new Parser({})
@@ -228,6 +232,8 @@ test.group('Parser | args', () => {
     class Greet extends BaseCommand {
       @args.string({ required: false })
       public name: string
+
+      public async handle () {}
     }
 
     const parser = new Parser({})
