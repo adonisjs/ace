@@ -27,7 +27,7 @@
   "license": "MIT",
   "dependencies": {
     "@poppinss/utils": "^1.0.1",
-    "enquirer": "^2.3.0",
+    "enquirer": "^2.3.1",
     "fast-levenshtein": "^2.0.6",
     "figures": "^3.0.0",
     "getopts": "^2.2.4",
@@ -49,7 +49,7 @@
   "devDependencies": {
     "@adonisjs/dev-utils": "^1.4.0",
     "@adonisjs/mrm-preset": "^2.0.3",
-    "@types/node": "^12.0.3",
+    "@types/node": "^12.6.2",
     "commitizen": "^3.1.1",
     "cz-conventional-changelog": "^2.1.0",
     "del-cli": "^2.0.0",
@@ -63,7 +63,7 @@
     "tslint-eslint-rules": "^5.4.0",
     "typedoc": "^0.14.2",
     "typedoc-plugin-external-module-name": "^2.1.0",
-    "typescript": "^3.4.5"
+    "typescript": "^3.5.3"
   },
   "main": "build/index.js",
   "files": [
