@@ -270,7 +270,7 @@ export class Kernel {
        * Using manifest commands over registered commands
        */
       if (this.manifestCommands) {
-        commands = Object.keys(this.manifestCommands).map((name) => this.commands[name])
+        commands = Object.keys(this.manifestCommands).map((name) => this.manifestCommands[name])
       } else {
         commands = Object.keys(this.commands).map((name) => this.commands[name])
       }
