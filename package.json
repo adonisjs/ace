@@ -1,6 +1,6 @@
 {
   "name": "@adonisjs/ace",
-  "version": "6.1.0",
+  "version": "6.1.1",
   "description": "Commandline apps framework used by AdonisJs",
   "scripts": {
     "mrm": "mrm --preset=@adonisjs/mrm-preset",
