@@ -50,7 +50,7 @@
     "@adonisjs/dev-utils": "^1.4.0",
     "@adonisjs/mrm-preset": "^2.0.3",
     "@types/node": "^12.6.6",
-    "commitizen": "^3.1.1",
+    "commitizen": "^4.0.1",
     "cz-conventional-changelog": "^2.1.0",
     "del-cli": "^2.0.0",
     "doctoc": "^1.4.0",
