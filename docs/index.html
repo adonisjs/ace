@@ -63,14 +63,18 @@
 				<div align="center">
 					<img src="https://res.cloudinary.com/adonisjs/image/upload/q_100/v1558612869/adonis-readme_zscycu.jpg" width="600px">
 				</div>
-				<h1 id="ace">Ace</h1>
+				<a href="#ace" id="ace" style="color: inherit; text-decoration: none;">
+					<h1>Ace</h1>
+				</a>
 				<blockquote>
 					<p>Node.js framework for creating command line applications. Used by AdonisJs</p>
 				</blockquote>
 				<p><a href="https://circleci.com/gh/adonisjs/ace" title="circleci"><img src="https://img.shields.io/circleci/project/github/adonisjs/ace/master.svg?style=for-the-badge&logo=circleci" alt="circleci-image"></a> <a href="https://npmjs.org/package/@adonisjs/ace" title="npm"><img src="https://img.shields.io/npm/v/@adonisjs/ace.svg?style=for-the-badge&logo=npm" alt="npm-image"></a> <img src="https://img.shields.io/badge/Typescript-294E80.svg?style=for-the-badge&logo=typescript" alt=""></p>
 				<!-- START doctoc generated TOC please keep comment here to allow auto update -->
 				<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-				<h2 id="table-of-contents">Table of contents</h2>
+				<a href="#table-of-contents" id="table-of-contents" style="color: inherit; text-decoration: none;">
+					<h2>Table of contents</h2>
+				</a>
 				<ul>
 					<li><a href="#usage">Usage</a></li>
 					<li><a href="#displaying-help">Displaying help</a></li>
@@ -84,7 +88,9 @@
 					</li>
 				</ul>
 				<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-				<h2 id="usage">Usage</h2>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h2>Usage</h2>
+				</a>
 				<p>Install the package from npm registry as follows:</p>
 				<pre><code class="language-sh">npm i @adonisjs/ace
 
@@ -123,7 +129,9 @@ yarn add @adonisjs/ace</code></pre>
 kernel.register([Make]) 
 
 kernel.handle(process.argv.splice(<span class="hljs-number">2</span>))</code></pre>
-				<h2 id="displaying-help">Displaying help</h2>
+				<a href="#displaying-help" id="displaying-help" style="color: inherit; text-decoration: none;">
+					<h2>Displaying help</h2>
+				</a>
 				<p>Ace doesn&#39;t hijack any flags or commands to display the help. You are free to decide when and how to show the help screen.</p>
 				<pre><code class="language-ts"><span class="hljs-keyword">import</span> { Kernel, BaseCommand } <span class="hljs-keyword">from</span> <span class="hljs-string">'@adonisjs/ace'</span>
 
@@ -142,24 +150,36 @@ kernel.flag(<span class="hljs-string">'help'</span>, <span class="hljs-function"
 })
 
 kernel.handle(process.argv.splice(<span class="hljs-number">2</span>))</code></pre>
-				<h2 id="decorators">Decorators</h2>
+				<a href="#decorators" id="decorators" style="color: inherit; text-decoration: none;">
+					<h2>Decorators</h2>
+				</a>
 				<p>The module comes with ES6 decorators to define arguments and flags for a given command.</p>
-				<h4 id="args-string">args.string</h4>
+				<a href="#argsstring" id="argsstring" style="color: inherit; text-decoration: none;">
+					<h4>args.string</h4>
+				</a>
 				<p>Define an argument. To make the argument optional, you can set the <code>required</code> property to false</p>
 				<pre><code class="language-ts">args.string({ required: <span class="hljs-literal">false</span> })</code></pre>
 				<p>You can also define the argument description as follows:</p>
 				<pre><code class="language-ts">args.string({ description: <span class="hljs-string">'The resource type to create'</span> })</code></pre>
-				<h4 id="args-spread">args.spread</h4>
+				<a href="#argsspread" id="argsspread" style="color: inherit; text-decoration: none;">
+					<h4>args.spread</h4>
+				</a>
 				<p>Argument that receives all of the remaining values passed as arguments to a given command. Think of it as a spread operator in Javascript.</p>
 				<pre><code class="language-ts"><span class="hljs-keyword">class</span> Make <span class="hljs-keyword">extends</span> BaseCommand {
   <span class="hljs-meta">@args</span>.spread({ description: <span class="hljs-string">'One or more files'</span> })
   <span class="hljs-keyword">public</span> files: <span class="hljs-built_in">string</span>[]
 }</code></pre>
-				<h4 id="flags-boolean">flags.boolean</h4>
+				<a href="#flagsboolean" id="flagsboolean" style="color: inherit; text-decoration: none;">
+					<h4>flags.boolean</h4>
+				</a>
 				<p>Define a flag that accepts a <code>boolean</code> value.</p>
-				<h4 id="flags-string">flags.string</h4>
+				<a href="#flagsstring" id="flagsstring" style="color: inherit; text-decoration: none;">
+					<h4>flags.string</h4>
+				</a>
 				<p>Define a flag that accepts a <code>string</code> value.</p>
-				<h4 id="flags-array">flags.array</h4>
+				<a href="#flagsarray" id="flagsarray" style="color: inherit; text-decoration: none;">
+					<h4>flags.array</h4>
+				</a>
 				<p>Define a flag that accepts an array of values.</p>
 				<p>You can also define description for a flag, similar to the arg. Also, a flag can define aliases and the default values.</p>
 				<pre><code class="language-ts"><span class="hljs-keyword">class</span> Make <span class="hljs-keyword">extends</span> BaseCommand {
@@ -264,6 +284,7 @@ kernel.handle(process.argv.splice(<span class="hljs-number">2</span>))</code></p
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
 				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
@@ -312,7 +333,7 @@ kernel.handle(process.argv.splice(<span class="hljs-number">2</span>))</code></p
 	</div>
 </footer>
 <div class="container tsd-generator">
-	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>
