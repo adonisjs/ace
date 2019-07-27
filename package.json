@@ -26,10 +26,6 @@
   ],
   "author": "virk",
   "homepage": "https://adonisjs.com",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/adonisjs/ace/tree/master/packages/ace"
-  },
   "license": "MIT",
   "dependencies": {
     "@poppinss/utils": "^1.0.1",
@@ -85,5 +81,17 @@
   "np": {
     "contents": ".",
     "anyBranch": false
+  },
+  "directories": {
+    "doc": "docs",
+    "example": "example",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adonisjs/ace.git"
+  },
+  "bugs": {
+    "url": "https://github.com/adonisjs/ace/issues"
   }
 }
