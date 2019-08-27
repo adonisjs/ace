@@ -8,8 +8,15 @@
 */
 
 import * as getopts from 'getopts'
-import { CommandFlag, GlobalFlagHandler, CommandConstructorContract, CommandArg } from '../Contracts'
-import { InvalidArgumentException } from '../Exceptions/InvalidArgumentException'
+import {
+  CommandFlag,
+  GlobalFlagHandler,
+  CommandConstructorContract,
+  CommandArg,
+} from '../Contracts'
+
+import { MissingCommandArgument } from '../Exceptions/MissingCommandArgument'
+import { InvalidFlagType } from '../Exceptions/InvalidFlagType'
 
 /**
  * The job of the parser is to parse the command line values by taking
@@ -98,18 +105,22 @@ export class Parser {
    * Validating the flag to ensure that it's valid as per the
    * desired data type.
    */
-  public validateFlag (flag: CommandFlag, parsed: getopts.ParsedOptions) {
+  public validateFlag (
+    flag: CommandFlag,
+    parsed: getopts.ParsedOptions,
+    command?: CommandConstructorContract,
+  ) {
     const value = parsed[flag.name]
     if (value === undefined) {
       return
     }
 
     if (flag.type === 'string' && typeof (value) !== 'string') {
-      throw InvalidArgumentException.invalidType(flag.name, flag.type)
+      throw InvalidFlagType.invoke(flag.name, flag.type, command)
     }
 
     if (flag.type === 'number' && typeof (value) !== 'number') {
-      throw InvalidArgumentException.invalidType(flag.name, flag.type)
+      throw InvalidFlagType.invoke(flag.name, flag.type, command)
     }
 
     /**
@@ -119,7 +130,7 @@ export class Parser {
     if (flag.type === 'numArray' && value.findIndex((one: any) => {
       return typeof (one) !== 'number' || isNaN(one)
     }) > -1) {
-      throw InvalidArgumentException.invalidType(flag.name, flag.type)
+      throw InvalidFlagType.invoke(flag.name, flag.type, command)
     }
   }
 
@@ -127,11 +138,16 @@ export class Parser {
    * Validates the value to ensure that values are defined for
    * required arguments.
    */
-  public validateArg (arg: CommandArg, index: number, parsed: getopts.ParsedOptions) {
+  public validateArg (
+    arg: CommandArg,
+    index: number,
+    parsed: getopts.ParsedOptions,
+    command: CommandConstructorContract,
+  ) {
     const value = parsed._[index]
 
     if (value === undefined && arg.required) {
-      throw InvalidArgumentException.missingArgument(arg.name)
+      throw MissingCommandArgument.invoke(arg.name, command)
     }
   }
 
@@ -173,7 +189,7 @@ export class Parser {
     if (command) {
       command.flags.forEach((flag) => {
         this.castFlag(flag, parsed)
-        this.validateFlag(flag, parsed)
+        this.validateFlag(flag, parsed, command)
       })
     }
 

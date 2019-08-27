@@ -128,7 +128,7 @@ test.group('Kernel | find', () => {
 
 test.group('Kernel | handle', () => {
   test('raise exception when required argument is missing', async (assert) => {
-    assert.plan(1)
+    assert.plan(3)
 
     class Greet extends BaseCommand {
       public static commandName = 'greet'
@@ -145,8 +145,10 @@ test.group('Kernel | handle', () => {
     const argv = ['greet']
     try {
       await kernel.handle(argv)
-    } catch ({ message }) {
-      assert.equal(message, 'missing required argument {name}')
+    } catch ({ message, argumentName, command }) {
+      assert.equal(message, 'E_MISSING_ARGUMENT: missing required argument name')
+      assert.equal(argumentName, 'name')
+      assert.deepEqual(command, Greet)
     }
   })
 

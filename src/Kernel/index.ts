@@ -181,7 +181,7 @@ export class Kernel {
      * with the validaty of command itself
      */
     command.args.forEach((arg, index) => {
-      parser.validateArg(arg, index, parsedOptions)
+      parser.validateArg(arg, index, parsedOptions, command)
     })
 
     /**
