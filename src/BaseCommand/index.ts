@@ -7,22 +7,13 @@
 * file that was distributed with this source code.
 */
 
-import * as figures from 'figures'
 import { format } from 'util'
+import * as figures from 'figures'
 import { ParsedOptions } from 'getopts'
+import { Colors, FakeColors } from '@poppinss/colors'
+import { Prompt, FakePrompt } from '@poppinss/prompts'
+
 import { CommandContract, CommandArg, CommandFlag, LabelsList } from '../Contracts'
-
-/**
- * Colors modules. We switch between `kleur` and `stringify`
- * based upon the raw mode.
- */
-import { Colors } from '../Colors/Base'
-import { Kleur } from '../Colors/Kleur'
-import { Stringify } from '../Colors/Stringify'
-
-import { Enquirer } from '../Prompts/Enquirer'
-import { Emitter } from '../Prompts/Emitter'
-import { Prompt } from '../Prompts/Base'
 
 /**
  * Returns the distance between two labels. We consider the `complete`
@@ -101,7 +92,7 @@ export abstract class BaseCommand implements CommandContract {
   /**
    * The prompt for the command
    */
-  public prompt: Prompt = this.rawMode ? new Emitter() : new Enquirer()
+  public prompt: Prompt | FakePrompt = this.rawMode ? new FakePrompt() : new Prompt()
 
   /**
    * Prints a fancy log for a pre-defined label
@@ -148,8 +139,8 @@ export abstract class BaseCommand implements CommandContract {
    * which has consistent output tailored for testing, otherwise
    * an instance of [[Kleur]] is returned
    */
-  public get colors (): Colors {
-    return this.rawMode ? new Stringify() : new Kleur()
+  public get colors (): Colors | FakeColors {
+    return this.rawMode ? new FakeColors() : new Colors()
   }
 
   /**
