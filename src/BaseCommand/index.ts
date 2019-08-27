@@ -150,7 +150,7 @@ export abstract class BaseCommand implements CommandContract {
    *
    * You can access in-memory logs by accessing [[this.logs]] property.
    */
-  protected $log (text: string, ...optionalParams: any[]): void {
+  public $log (text: string, ...optionalParams: any[]): void {
     if (this.rawMode) {
       /**
        * Define `logs` on the children class if it's missing
@@ -169,7 +169,7 @@ export abstract class BaseCommand implements CommandContract {
   /**
    * Similar to [[this.log]] but instead logs to `stderr`
    */
-  protected $logError (text: string, ...optionalParams: any[]): void {
+  public $logError (text: string, ...optionalParams: any[]): void {
     if (this.rawMode) {
       /**
        * Define `logs` on the children class if it's missing
@@ -188,7 +188,7 @@ export abstract class BaseCommand implements CommandContract {
   /**
    * Log a success message
    */
-  protected $success (text: string, ...optionalParams: any[]) {
+  public $success (text: string, ...optionalParams: any[]) {
     this._printFancy('success', 'green', text, ...optionalParams)
   }
 
