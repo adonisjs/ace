@@ -46,10 +46,12 @@ test.group('Manifest', (group) => {
         args: [{
           name: 'name',
           type: 'string',
+          propertyName: 'name',
           required: true,
         }],
         flags: [{
           name: 'adult',
+          propertyName: 'adult',
           type: 'boolean',
         }],
       },
@@ -108,12 +110,14 @@ test.group('Manifest', (group) => {
         description: 'Greet a user',
         args: [{
           name: 'name',
+          propertyName: 'name',
           type: 'string',
           required: true,
         }],
         flags: [{
           name: 'adult',
           type: 'boolean',
+          propertyName: 'adult',
         }],
       },
     })

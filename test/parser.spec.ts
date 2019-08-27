@@ -18,6 +18,7 @@ test.group('Parser | flags', () => {
       admin: {
         type: 'boolean' as 'boolean',
         name: 'admin',
+        propertyName: 'admin',
         handler: () => {},
       },
     })
@@ -31,6 +32,7 @@ test.group('Parser | flags', () => {
       admin: {
         type: 'boolean' as 'boolean',
         name: 'admin',
+        propertyName: 'admin',
         handler: () => {},
       },
     })
@@ -44,6 +46,7 @@ test.group('Parser | flags', () => {
       admin: {
         type: 'boolean' as 'boolean',
         name: 'admin',
+        propertyName: 'admin',
         handler: () => {},
       },
     })
@@ -57,6 +60,7 @@ test.group('Parser | flags', () => {
       admin: {
         type: 'boolean' as 'boolean',
         name: 'admin',
+        propertyName: 'admin',
         handler: () => {},
       },
     })
@@ -70,6 +74,7 @@ test.group('Parser | flags', () => {
       admin: {
         type: 'string' as 'string',
         name: 'admin',
+        propertyName: 'admin',
         handler: () => {},
       },
     })
@@ -83,6 +88,7 @@ test.group('Parser | flags', () => {
       admin: {
         type: 'string' as 'string',
         name: 'admin',
+        propertyName: 'admin',
         handler: () => {},
       },
     })
@@ -96,6 +102,7 @@ test.group('Parser | flags', () => {
       age: {
         type: 'number' as 'number',
         name: 'age',
+        propertyName: 'age',
         handler: () => {},
       },
     })
@@ -109,6 +116,7 @@ test.group('Parser | flags', () => {
       age: {
         type: 'string' as 'string',
         name: 'age',
+        propertyName: 'age',
         handler: () => {},
       },
     })
@@ -122,6 +130,7 @@ test.group('Parser | flags', () => {
       age: {
         type: 'number' as 'number',
         name: 'age',
+        propertyName: 'age',
         handler: () => {},
       },
     })
@@ -135,6 +144,7 @@ test.group('Parser | flags', () => {
       names: {
         type: 'array' as 'array',
         name: 'names',
+        propertyName: 'names',
         handler: () => {},
       },
     })
@@ -148,6 +158,7 @@ test.group('Parser | flags', () => {
       names: {
         type: 'array' as 'array',
         name: 'names',
+        propertyName: 'names',
         handler: () => {},
       },
     })
@@ -161,6 +172,7 @@ test.group('Parser | flags', () => {
       scores: {
         type: 'numArray' as 'numArray',
         name: 'scores',
+        propertyName: 'scores',
         handler: () => {},
       },
     })
@@ -174,6 +186,7 @@ test.group('Parser | flags', () => {
       scores: {
         type: 'numArray' as 'numArray',
         name: 'scores',
+        propertyName: 'scores',
         handler: () => {},
       },
     })
@@ -187,6 +200,7 @@ test.group('Parser | flags', () => {
       scores: {
         type: 'numArray' as 'numArray',
         name: 'scores',
+        propertyName: 'scores',
         handler: () => {},
       },
     })
