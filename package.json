@@ -31,11 +31,9 @@
     "@poppinss/colors": "^1.0.0",
     "@poppinss/prompts": "^1.0.2",
     "@poppinss/utils": "^1.0.1",
-    "enquirer": "^2.3.1",
     "fast-levenshtein": "^2.0.6",
     "figures": "^3.0.0",
     "getopts": "^2.2.4",
-    "kleur": "^3.0.3",
     "pad-right": "^0.2.2"
   },
   "nyc": {
