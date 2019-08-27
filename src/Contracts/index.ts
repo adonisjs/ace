@@ -25,6 +25,7 @@ export type ArgTypes = 'string' | 'spread'
  * The shape of command argument
  */
 export type CommandArg = {
+  propertyName: string,
   name: string,
   type: ArgTypes,
   required: boolean,
@@ -35,6 +36,7 @@ export type CommandArg = {
  * The shape of a command flag
  */
 export type CommandFlag = {
+  propertyName: string,
   name: string,
   type: FlagTypes,
   description?: string,

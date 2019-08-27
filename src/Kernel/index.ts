@@ -116,9 +116,15 @@ export class Kernel {
   public flag (
     name: string,
     handler: GlobalFlagHandler,
-    options: Partial<Pick<CommandFlag, Exclude<keyof CommandFlag, 'name'>>>,
+    options: Partial<Exclude<CommandFlag, 'name' | 'propertyName'>>,
   ): this {
-    this.flags[name] = Object.assign({ name, handler, type: 'boolean' }, options)
+    this.flags[name] = Object.assign({
+      name,
+      propertyName: name,
+      handler,
+      type: 'boolean',
+    }, options)
+
     return this
   }
 
@@ -197,10 +203,10 @@ export class Kernel {
     for (let i = 0; i < command.args.length; i++) {
       const arg = command.args[i]
       if (arg.type === 'spread') {
-        commandInstance[arg.name] = parsedOptions._.slice(i)
+        commandInstance[arg.propertyName] = parsedOptions._.slice(i)
         break
       } else {
-        commandInstance[arg.name] = parsedOptions._[i]
+        commandInstance[arg.propertyName] = parsedOptions._[i]
       }
     }
 
@@ -208,7 +214,7 @@ export class Kernel {
      * Set flag value on the command instance
      */
     command.flags.forEach((flag) => {
-      commandInstance[flag.name] = parsedOptions[flag.name]
+      commandInstance[flag.propertyName] = parsedOptions[flag.name]
     })
 
     /**

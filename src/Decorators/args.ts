@@ -16,10 +16,11 @@ type DecoratorArg = Partial<Pick<CommandArg, Exclude<keyof CommandArg, 'type'>>>
  * type.
  */
 function addArg (type: ArgTypes, options: DecoratorArg) {
-  return function arg (target: any, propertyKey: string) {
+  return function arg (target: any, propertyName: string) {
     const arg: CommandArg = Object.assign({
       type,
-      name: propertyKey,
+      propertyName,
+      name: propertyName,
       required: true,
     }, options)
 

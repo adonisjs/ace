@@ -16,15 +16,18 @@ type DecoratorFlag = Partial<Pick<CommandFlag, Exclude<keyof CommandFlag, 'type'
  * types.
  */
 function addFlag (type: FlagTypes, options: DecoratorFlag) {
-  return function flag (target: any, propertyKey: string) {
+  return function flag (target: any, propertyName: string) {
+    const flag: CommandFlag = Object.assign({
+      name: propertyName,
+      propertyName,
+      type,
+    }, options)
+
     if (!target.constructor.hasOwnProperty('flags')) {
       Object.defineProperty(target.constructor, 'flags', { value: [] })
     }
 
-    target.constructor.flags.push(Object.assign({
-      name: propertyKey,
-      type,
-    }, options))
+    target.constructor.flags.push(flag)
   }
 }
 

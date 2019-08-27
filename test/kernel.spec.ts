@@ -65,7 +65,24 @@ test.group('Kernel | register', () => {
     assert.throw(fn, 'spread argument {files} must be at last position')
   })
 
-  test('return command suggestions for a given string', (assert) => {
+  test('register command', (assert) => {
+    const kernel = new Kernel()
+
+    class Install extends BaseCommand {
+      public static commandName = 'install'
+      public async handle () {}
+    }
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+      public async handle () {}
+    }
+
+    kernel.register([Install, Greet])
+    assert.deepEqual(kernel.commands, { install: Install, greet: Greet })
+  })
+
+  test('return command name suggestions for a given string', (assert) => {
     const kernel = new Kernel()
 
     class Install extends BaseCommand {
@@ -521,6 +538,50 @@ test.group('Kernel | handle', () => {
     }, { type: 'string' })
 
     const argv = ['greet', 'virk', '--env=production']
+    await kernel.handle(argv)
+  })
+
+  test('define arg name different from property name', async (assert) => {
+    assert.plan(2)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.string({ name: 'theName' })
+      public name: string
+
+      public async handle () {
+        assert.deepEqual(this.parsed, { _: ['virk'] })
+        assert.equal(this.name, 'virk')
+      }
+    }
+
+    const kernel = new Kernel()
+    kernel.register([Greet])
+
+    const argv = ['greet', 'virk']
+    await kernel.handle(argv)
+  })
+
+  test('define flag name different from property name', async (assert) => {
+    assert.plan(2)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @flags.boolean({ name: 'isAdmin' })
+      public admin: boolean
+
+      public async handle () {
+        assert.deepEqual(this.parsed, { _: [], isAdmin: true })
+        assert.isTrue(this.admin)
+      }
+    }
+
+    const kernel = new Kernel()
+    kernel.register([Greet])
+
+    const argv = ['greet', '--isAdmin']
     await kernel.handle(argv)
   })
 })
