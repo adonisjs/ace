@@ -214,20 +214,6 @@ test.group('Parser | args', () => {
     assert.deepEqual(output, { _: ['virk'] })
   })
 
-  test('raise exception when argument value is missing', (assert) => {
-    class Greet extends BaseCommand {
-      @args.string()
-      public name: string
-
-      public async handle () {}
-    }
-
-    const parser = new Parser({})
-
-    const output = () => parser.parse([], Greet)
-    assert.throw(output, 'missing required argument {name}')
-  })
-
   test('mark argument as optional', (assert) => {
     class Greet extends BaseCommand {
       @args.string({ required: false })

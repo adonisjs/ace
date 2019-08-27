@@ -176,6 +176,15 @@ export class Kernel {
     this._executeGlobalFlagsHandlers(parsedOptions, command)
 
     /**
+     * We validate the command arguments after the global flags have been
+     * executed. It is required, since flags may have nothing to do
+     * with the validaty of command itself
+     */
+    command.args.forEach((arg, index) => {
+      parser.validateArg(arg, index, parsedOptions)
+    })
+
+    /**
      * Creating a new command instance and setting
      * parsed options on it.
      */

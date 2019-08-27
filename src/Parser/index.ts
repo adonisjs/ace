@@ -57,7 +57,7 @@ export class Parser {
    * Casts value of a flag to it's expected data type. These values
    * are then later validated to ensure that casting was successful.
    */
-  private _castFlag (flag: CommandFlag, parsed: getopts.ParsedOptions) {
+  public castFlag (flag: CommandFlag, parsed: getopts.ParsedOptions) {
     const value = parsed[flag.name]
 
     /**
@@ -98,7 +98,7 @@ export class Parser {
    * Validating the flag to ensure that it's valid as per the
    * desired data type.
    */
-  private _validateFlag (flag: CommandFlag, parsed: getopts.ParsedOptions) {
+  public validateFlag (flag: CommandFlag, parsed: getopts.ParsedOptions) {
     const value = parsed[flag.name]
     if (value === undefined) {
       return
@@ -127,7 +127,7 @@ export class Parser {
    * Validates the value to ensure that values are defined for
    * required arguments.
    */
-  private _validateArg (arg: CommandArg, index: number, parsed: getopts.ParsedOptions) {
+  public validateArg (arg: CommandArg, index: number, parsed: getopts.ParsedOptions) {
     const value = parsed._[index]
 
     if (value === undefined && arg.required) {
@@ -163,8 +163,8 @@ export class Parser {
      * Validating global flags (if any)
      */
     globalFlags.forEach((flag) => {
-      this._castFlag(flag, parsed)
-      this._validateFlag(flag, parsed)
+      this.castFlag(flag, parsed)
+      this.validateFlag(flag, parsed)
     })
 
     /**
@@ -172,12 +172,8 @@ export class Parser {
      */
     if (command) {
       command.flags.forEach((flag) => {
-        this._castFlag(flag, parsed)
-        this._validateFlag(flag, parsed)
-      })
-
-      command.args.forEach((arg, index) => {
-        this._validateArg(arg, index, parsed)
+        this.castFlag(flag, parsed)
+        this.validateFlag(flag, parsed)
       })
     }
 
