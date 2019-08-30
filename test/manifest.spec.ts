@@ -7,10 +7,11 @@
 * file that was distributed with this source code.
 */
 
-import * as test from 'japa'
-import { Manifest } from '../src/Manifest'
+import test from 'japa'
 import { join } from 'path'
 import { Filesystem } from '@adonisjs/dev-utils'
+
+import { Manifest } from '../src/Manifest'
 
 const fs = new Filesystem(join(__dirname, '__app'))
 

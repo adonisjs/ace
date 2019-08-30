@@ -7,12 +7,13 @@
 * file that was distributed with this source code.
 */
 
-import * as getopts from 'getopts'
+import getopts from 'getopts'
 
 import { Parser } from '../Parser'
 import { Manifest } from '../Manifest'
 import { validateCommand } from '../utils/validateCommand'
 import { printHelp, printHelpFor } from '../utils/help'
+
 import {
   CommandConstructorContract,
   CommandContract,

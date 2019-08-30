@@ -8,7 +8,7 @@
 */
 
 import { format } from 'util'
-import * as figures from 'figures'
+import figures from 'figures'
 import { ParsedOptions } from 'getopts'
 import { Colors, FakeColors } from '@poppinss/colors'
 import { Prompt, FakePrompt } from '@poppinss/prompts'
@@ -237,5 +237,5 @@ export abstract class BaseCommand implements CommandContract {
   /**
    * Must be defined by the parent class
    */
-  public async abstract handle ()
+  public async abstract handle (): Promise<void>
 }

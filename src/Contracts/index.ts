@@ -92,13 +92,13 @@ export interface CommandContract {
   handle (): Promise<void>,
   $log (text: string, ...optionalParams: any[]): void,
   $logError (text: string, ...optionalParams: any[]): void,
-  $success (text: string, ...optionalParams: any[]),
-  $info (text: string, ...optionalParams: any[]),
-  $error (text: string, ...optionalParams: any[]),
-  $warning (text: string, ...optionalParams: any[]),
-  $complete (text: string, ...optionalParams: any[]),
-  $note (text: string, ...optionalParams: any[]),
-  $await (text: string, ...optionalParams: any[]),
+  $success (text: string, ...optionalParams: any[]): void,
+  $info (text: string, ...optionalParams: any[]): void,
+  $error (text: string, ...optionalParams: any[]): void,
+  $warning (text: string, ...optionalParams: any[]): void,
+  $complete (text: string, ...optionalParams: any[]): void,
+  $note (text: string, ...optionalParams: any[]): void,
+  $await (text: string, ...optionalParams: any[]): void,
 }
 
 /**

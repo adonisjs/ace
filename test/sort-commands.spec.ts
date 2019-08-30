@@ -7,9 +7,10 @@
 * file that was distributed with this source code.
 */
 
-import * as test from 'japa'
-import { sortAndGroupCommands } from '../src/utils/sortAndGroupCommands'
+import test from 'japa'
+
 import { BaseCommand } from '../src/BaseCommand'
+import { sortAndGroupCommands } from '../src/utils/sortAndGroupCommands'
 
 test.group('utils | sortAndGroupCommands', () => {
   test('sort commands in alphabetical order', (assert) => {

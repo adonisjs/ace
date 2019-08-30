@@ -7,14 +7,15 @@
 * file that was distributed with this source code.
 */
 
-import * as test from 'japa'
+import test from 'japa'
+import { join } from 'path'
+import { Filesystem } from '@adonisjs/dev-utils'
+
 import { Kernel } from '../src/Kernel'
-import { BaseCommand } from '../src/BaseCommand'
+import { Manifest } from '../src/Manifest'
 import { args } from '../src/Decorators/args'
 import { flags } from '../src/Decorators/flags'
-import { Manifest } from '../src/Manifest'
-import { Filesystem } from '@adonisjs/dev-utils'
-import { join } from 'path'
+import { BaseCommand } from '../src/BaseCommand'
 
 const fs = new Filesystem(join(__dirname, '__app'))
 

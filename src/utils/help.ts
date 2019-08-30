@@ -7,7 +7,7 @@
 * file that was distributed with this source code.
 */
 
-import * as padRight from 'pad-right'
+import padRight from 'pad-right'
 import { green, bold, yellow, dim } from 'kleur'
 import { sortAndGroupCommands } from './sortAndGroupCommands'
 import { CommandArg, CommandFlag, SerializedCommandContract } from '../Contracts'

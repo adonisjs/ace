@@ -7,10 +7,11 @@
 * file that was distributed with this source code.
 */
 
-import * as test from 'japa'
+import test from 'japa'
+
 import { Parser } from '../src/Parser'
-import { BaseCommand } from '../src/BaseCommand'
 import { args } from '../src/Decorators/args'
+import { BaseCommand } from '../src/BaseCommand'
 
 test.group('Parser | flags', () => {
   test('parse flags as boolean', (assert) => {

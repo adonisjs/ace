@@ -7,7 +7,8 @@
 * file that was distributed with this source code.
 */
 
-import * as getopts from 'getopts'
+import getopts from 'getopts'
+
 import {
   CommandFlag,
   GlobalFlagHandler,
