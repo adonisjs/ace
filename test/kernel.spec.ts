@@ -101,8 +101,6 @@ test.group('Kernel | register', () => {
   })
 
   test('change camelCase alias name to dashcase', (assert) => {
-    const kernel = new Kernel()
-
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
