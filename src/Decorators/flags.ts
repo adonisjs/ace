@@ -7,6 +7,7 @@
 * file that was distributed with this source code.
 */
 
+import paramCase from 'param-case'
 import { CommandFlag, FlagTypes } from '../Contracts'
 
 type DecoratorFlag = Partial<Pick<CommandFlag, Exclude<keyof CommandFlag, 'type'>>>
@@ -18,7 +19,7 @@ type DecoratorFlag = Partial<Pick<CommandFlag, Exclude<keyof CommandFlag, 'type'
 function addFlag (type: FlagTypes, options: DecoratorFlag) {
   return function flag (target: any, propertyName: string) {
     const flag: CommandFlag = Object.assign({
-      name: propertyName,
+      name: paramCase(propertyName),
       propertyName,
       type,
     }, options)

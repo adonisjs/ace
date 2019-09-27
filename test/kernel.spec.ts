@@ -99,6 +99,21 @@ test.group('Kernel | register', () => {
     kernel.register([Install, Greet])
     assert.deepEqual(kernel.getSuggestions('itall'), ['install'])
   })
+
+  test('change camelCase alias name to dashcase', (assert) => {
+    const kernel = new Kernel()
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @flags.boolean()
+      public isAdmin: boolean
+
+      public async handle () {}
+    }
+
+    assert.deepEqual(Greet.flags[0].name, 'is-admin')
+  })
 })
 
 test.group('Kernel | find', () => {
@@ -333,6 +348,32 @@ test.group('Kernel | handle', () => {
         assert.deepEqual(this.parsed, { _: ['virk'], admin: true, a: true })
         assert.equal(this.name, 'virk')
         assert.isTrue(this.admin)
+      }
+    }
+
+    const kernel = new Kernel()
+    kernel.register([Greet])
+
+    const argv = ['greet', 'virk', '-a']
+    await kernel.handle(argv)
+  })
+
+  test('set flag when it\'s name is different from command property', async (assert) => {
+    assert.plan(3)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.string()
+      public name: string
+
+      @flags.boolean({ name: 'admin', alias: 'a' })
+      public isAdmin: boolean
+
+      public async handle () {
+        assert.deepEqual(this.parsed, { _: ['virk'], admin: true, a: true })
+        assert.equal(this.name, 'virk')
+        assert.isTrue(this.isAdmin)
       }
     }
 
