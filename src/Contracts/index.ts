@@ -7,9 +7,10 @@
 * file that was distributed with this source code.
 */
 
+import { Kleur } from 'kleur'
 import { ParsedOptions } from 'getopts'
 import { PromptContract } from '@poppinss/prompts'
-import { Kleur } from 'kleur'
+import { Logger } from '@poppinss/fancy-logs'
 
 /**
  * The types of flags can be defined on a command.
@@ -86,19 +87,10 @@ export interface CommandConstructorContract extends SerializedCommandContract {
  */
 export interface CommandContract {
   parsed?: ParsedOptions,
-  logs: string[],
+  logger: Logger,
   prompt: PromptContract,
   colors: Kleur,
   handle (): Promise<void>,
-  $log (text: string, ...optionalParams: any[]): void,
-  $logError (text: string, ...optionalParams: any[]): void,
-  $success (text: string, ...optionalParams: any[]): void,
-  $info (text: string, ...optionalParams: any[]): void,
-  $error (text: string, ...optionalParams: any[]): void,
-  $warning (text: string, ...optionalParams: any[]): void,
-  $complete (text: string, ...optionalParams: any[]): void,
-  $note (text: string, ...optionalParams: any[]): void,
-  $await (text: string, ...optionalParams: any[]): void,
 }
 
 /**

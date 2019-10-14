@@ -637,7 +637,7 @@ test.group('Kernel | runCommand', () => {
       public name: string
 
       public async handle () {
-        this.$log(`Hello ${this.colors.cyan(this.name)}`)
+        this.logger.info(`Hello ${this.name}`)
       }
     }
 
@@ -649,7 +649,7 @@ test.group('Kernel | runCommand', () => {
     const commandInstance = new command(true)
     await kernel.runCommand(argv, commandInstance)
 
-    assert.deepEqual(commandInstance.logs, ['Hello cyan(virk)'])
+    assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) Hello virk'])
   })
 
   test('test input prompt in raw mode', async (assert) => {
@@ -665,8 +665,7 @@ test.group('Kernel | runCommand', () => {
         const username = await this.prompt.ask('What\'s your username?', {
           name: 'username',
         })
-
-        this.$log(username)
+        this.logger.info(username)
       }
     }
 
@@ -685,7 +684,7 @@ test.group('Kernel | runCommand', () => {
     })
 
     await kernel.runCommand(argv, commandInstance)
-    assert.deepEqual(commandInstance.logs, ['virk'])
+    assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) virk'])
   })
 
   test('test input prompt validation in raw mode', async (assert) => {
@@ -705,7 +704,7 @@ test.group('Kernel | runCommand', () => {
           },
         })
 
-        this.$log(username)
+        this.logger.info(username)
       }
     }
 
@@ -728,7 +727,7 @@ test.group('Kernel | runCommand', () => {
     })
 
     await kernel.runCommand(argv, commandInstance)
-    assert.deepEqual(commandInstance.logs, [''])
+    assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) '])
   })
 
   test('test choice prompt in raw mode', async (assert) => {
@@ -742,7 +741,7 @@ test.group('Kernel | runCommand', () => {
 
       public async handle () {
         const client = await this.prompt.choice('Select the installation client', ['npm', 'yarn'])
-        this.$log(client)
+        this.logger.info(client)
       }
     }
 
@@ -761,7 +760,7 @@ test.group('Kernel | runCommand', () => {
     })
 
     await kernel.runCommand(argv, commandInstance)
-    assert.deepEqual(commandInstance.logs, ['npm'])
+    assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) npm'])
   })
 
   test('test choice prompt validation in raw mode', async (assert) => {
@@ -779,7 +778,7 @@ test.group('Kernel | runCommand', () => {
             return !!answer
           },
         })
-        this.$log(client)
+        this.logger.info(client)
       }
     }
 
@@ -802,7 +801,7 @@ test.group('Kernel | runCommand', () => {
     })
 
     await kernel.runCommand(argv, commandInstance)
-    assert.deepEqual(commandInstance.logs, [''])
+    assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) '])
   })
 
   test('test multiple prompt in raw mode', async (assert) => {
@@ -816,7 +815,7 @@ test.group('Kernel | runCommand', () => {
 
       public async handle () {
         const clients = await this.prompt.multiple('Select the installation client', ['npm', 'yarn'])
-        this.$log(clients.join(','))
+        this.logger.info(clients.join(','))
       }
     }
 
@@ -835,7 +834,7 @@ test.group('Kernel | runCommand', () => {
     })
 
     await kernel.runCommand(argv, commandInstance)
-    assert.deepEqual(commandInstance.logs, ['npm'])
+    assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) npm'])
   })
 
   test('test multiple prompt validation in raw mode', async (assert) => {
@@ -854,7 +853,7 @@ test.group('Kernel | runCommand', () => {
           },
         })
 
-        this.$log(client.join(','))
+        this.logger.info(client.join(','))
       }
     }
 
@@ -877,7 +876,7 @@ test.group('Kernel | runCommand', () => {
     })
 
     await kernel.runCommand(argv, commandInstance)
-    assert.deepEqual(commandInstance.logs, [''])
+    assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) '])
   })
 
   test('test toggle prompt in raw mode', async (assert) => {
@@ -891,7 +890,7 @@ test.group('Kernel | runCommand', () => {
 
       public async handle () {
         const deleteFile = await this.prompt.toggle('Delete the file?', ['Yep', 'Nope'])
-        this.$log(deleteFile ? 'Yep' : 'Nope')
+        this.logger.info(deleteFile ? 'Yep' : 'Nope')
       }
     }
 
@@ -910,6 +909,6 @@ test.group('Kernel | runCommand', () => {
     })
 
     await kernel.runCommand(argv, commandInstance)
-    assert.deepEqual(commandInstance.logs, ['Yep'])
+    assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) Yep'])
   })
 })

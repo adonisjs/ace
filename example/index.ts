@@ -35,13 +35,12 @@ class Greet extends BaseCommand {
   public fragment: string
 
   public async handle () {
-    this.$success('Operation successful')
-    this.$error('Unable to acquire lock')
-    this.$info('Hello')
-    this.$warning('Write release notes for %s', '1.2.0')
-    this.$await('Write release notes for')
-    this.$complete('That is done')
-    this.$note('Please get it done')
+    this.logger.success('Operation successful')
+    this.logger.error('Unable to acquire lock')
+    this.logger.info('Hello')
+    this.logger.pending('Write release notes for')
+    this.logger.complete('That is done')
+    this.logger.info('Please get it done')
   }
 }
 
