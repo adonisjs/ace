@@ -106,6 +106,7 @@ export type ManifestNode = {
 }
 
 /**
- * List of named labels for which we can print fancy logs
+ * Callbacks for different style of hooks
  */
-export type LabelsList = 'success' | 'error' | 'warning' | 'info' | 'complete' | 'note' | 'await'
+export type FindHookCallback = (command: SerializedCommandContract | null) => Promise<void> | void
+export type RunHookCallback = (command: CommandContract) => Promise<void> | void

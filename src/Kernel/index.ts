@@ -9,18 +9,21 @@
 
 import getopts from 'getopts'
 
+import { Hooks } from '../Hooks'
 import { Parser } from '../Parser'
 import { Manifest } from '../Manifest'
 import { validateCommand } from '../utils/validateCommand'
 import { printHelp, printHelpFor } from '../utils/help'
 
 import {
-  CommandConstructorContract,
-  CommandContract,
   CommandFlag,
-  GlobalFlagHandler,
-  ManifestCommand,
   ManifestNode,
+  CommandContract,
+  ManifestCommand,
+  RunHookCallback,
+  FindHookCallback,
+  GlobalFlagHandler,
+  CommandConstructorContract,
 } from '../Contracts'
 
 /**
@@ -50,6 +53,12 @@ export class Kernel {
    * commands
    */
   private _manifest?: Manifest
+
+  /**
+   * Reference to hooks class to execute lifecycle
+   * hooks
+   */
+  private _hooks = new Hooks()
 
   /**
    * Executing global flag handlers. The global flag handlers are
@@ -85,6 +94,26 @@ export class Kernel {
        */
       this.flags[name].handler(options[name], options, command)
     })
+  }
+
+  /**
+   * Register a before hook
+   */
+  public before (action: 'run', callback: RunHookCallback): this
+  public before (action: 'find', callback: FindHookCallback): this
+  public before (action: 'run' | 'find', callback: RunHookCallback | FindHookCallback): this {
+    this._hooks.add('before', action, callback)
+    return this
+  }
+
+  /**
+   * Register an after hook
+   */
+  public after (action: 'run', callback: RunHookCallback): this
+  public after (action: 'find', callback: FindHookCallback): this
+  public after (action: 'run' | 'find', callback: RunHookCallback | FindHookCallback): this {
+    this._hooks.add('after', action, callback)
+    return this
   }
 
   /**
@@ -133,7 +162,7 @@ export class Kernel {
    * Finds the command from the command line argv array. If command for
    * the given name doesn't exists, then it will return `null`.
    */
-  public find (argv: string[]): CommandConstructorContract | null {
+  public async find (argv: string[]): Promise<CommandConstructorContract | null> {
     /**
      * ----------------------------------------------------------------------------
      * Even though in `Unix` the command name may appear in between or at last, with
@@ -153,14 +182,33 @@ export class Kernel {
      * Manifest commands gets preference over manually registered commands.
      */
     if (this.manifestCommands && this.manifestCommands[argv[0]]) {
-      return this._manifest!.loadCommand(this.manifestCommands[argv[0]].commandPath)
+      /**
+       * Passing manifest node to the command
+       */
+      await this._hooks.excute('before', 'find', this.manifestCommands[argv[0]])
+      const command = this._manifest!.loadCommand(this.manifestCommands[argv[0]].commandPath)
+
+      /**
+       * Passing actual command constructor
+       */
+      await this._hooks.excute('after', 'find', command)
+      return command
     }
 
     /**
      * Try to find command inside manually registered command or fallback
      * to null
      */
-    return this.commands[argv[0]] || null
+    const command = this.commands[argv[0]] || null
+
+    /**
+     * Executing before and after together to be compatible
+     * with the manifest find before and after hooks
+     */
+    await this._hooks.excute('before', 'find', command)
+    await this._hooks.excute('after', 'find', command)
+
+    return command
   }
 
   /**
@@ -218,11 +266,11 @@ export class Kernel {
       commandInstance[flag.propertyName] = parsedOptions[flag.name]
     })
 
-    /**
-     * Finally calling the `handle` method. The consumer consuming the
-     * `Kernel` must handle the command errors.
-     */
-    return commandInstance.handle()
+    await this._hooks.excute('before', 'run', commandInstance)
+    const response = await commandInstance.handle()
+    await this._hooks.excute('after', 'run', commandInstance)
+
+    return response
   }
 
   /**
@@ -257,7 +305,7 @@ export class Kernel {
     /**
      * If command doesn't exists, then raise an error for same
      */
-    let command = this.find(argv)
+    let command = await this.find(argv)
     if (!command) {
       throw new Error(`${argv[0]} is not a registered command`)
     }

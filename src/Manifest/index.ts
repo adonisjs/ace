@@ -25,18 +25,6 @@ export class Manifest {
   }
 
   /**
-   * Require and return command
-   */
-  public loadCommand (commandPath: string): CommandConstructorContract {
-    const command = esmRequire(join(this._appRoot, commandPath))
-    if (!command.name) {
-      throw CommandValidationException.invalidManifestExport(commandPath)
-    }
-
-    return command
-  }
-
-  /**
    * Write file to the disk
    */
   private _writeManifest (manifest: ManifestNode): Promise<void> {
@@ -49,6 +37,18 @@ export class Manifest {
         }
       })
     })
+  }
+
+  /**
+   * Require and return command
+   */
+  public loadCommand (commandPath: string): CommandConstructorContract {
+    const command = esmRequire(join(this._appRoot, commandPath))
+    if (!command.name) {
+      throw CommandValidationException.invalidManifestExport(commandPath)
+    }
+
+    return command
   }
 
   /**

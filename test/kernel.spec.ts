@@ -115,7 +115,7 @@ test.group('Kernel | register', () => {
 })
 
 test.group('Kernel | find', () => {
-  test('find relevant command from the commands list', (assert) => {
+  test('find relevant command from the commands list', async (assert) => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
       public async handle () {}
@@ -124,12 +124,15 @@ test.group('Kernel | find', () => {
     const kernel = new Kernel()
     kernel.register([Greet])
 
-    assert.deepEqual(kernel.find(['greet']), Greet)
+    const greet = await kernel.find(['greet'])
+    assert.deepEqual(greet, Greet)
   })
 
-  test('return null when unable to find command', (assert) => {
+  test('return null when unable to find command', async (assert) => {
     const kernel = new Kernel()
-    assert.isNull(kernel.find(['greet']))
+    const greet = await kernel.find(['greet'])
+
+    assert.isNull(greet)
   })
 
   test('find command from manifest when manifestCommands exists', async (assert) => {
@@ -150,10 +153,72 @@ test.group('Kernel | find', () => {
     kernel.useManifest(manifest)
     kernel.manifestCommands = await manifest.load()
 
-    const greet = kernel.find(['greet'])
+    const greet = await kernel.find(['greet'])
     assert.equal(greet!.name, 'Greet')
 
     await fs.cleanup()
+  })
+
+  test('execute before and after hook when finding command from manifest', async (assert) => {
+    assert.plan(3)
+
+    const kernel = new Kernel()
+    const manifest = new Manifest(fs.basePath)
+
+    await fs.add(`ace-manifest.json`, JSON.stringify({
+      greet: {
+        commandName: 'greet',
+        commandPath: 'Commands/Greet.ts',
+      },
+    }))
+
+    await fs.add('Commands/Greet.ts', `export default class Greet {
+      public static commandName = 'greet'
+    }`)
+
+    kernel.useManifest(manifest)
+    kernel.before('find', (command) => {
+      assert.equal(command!.commandName, 'greet')
+    })
+
+    kernel.after('find', (command) => {
+      assert.equal(command!.commandName, 'greet')
+      assert.equal(command!['name'], 'Greet') // It is command constructor
+    })
+
+    kernel.manifestCommands = await manifest.load()
+
+    await kernel.find(['greet'])
+    await fs.cleanup()
+  })
+
+  test('pass null to before and after hook when unable to find command', async (assert) => {
+    assert.plan(3)
+
+    const kernel = new Kernel()
+    kernel.before('find', (command) => assert.isNull(command))
+    kernel.after('find', (command) => assert.isNull(command))
+
+    const greet = await kernel.find(['greet'])
+
+    assert.isNull(greet)
+  })
+
+  test('pass command constructor to before and after hook found command from local commands', async (assert) => {
+    assert.plan(3)
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+      public async handle () {}
+    }
+
+    const kernel = new Kernel()
+    kernel.register([Greet])
+
+    kernel.before('find', (command) => assert.deepEqual(command, Greet))
+    kernel.after('find', (command) => assert.deepEqual(command, Greet))
+
+    const greet = await kernel.find(['greet'])
+    assert.deepEqual(greet, Greet)
   })
 })
 
@@ -624,6 +689,34 @@ test.group('Kernel | handle', () => {
     const argv = ['greet', '--isAdmin']
     await kernel.handle(argv)
   })
+
+  test('execute before and after run hooks', async (assert) => {
+    assert.plan(2)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @flags.boolean({ name: 'isAdmin' })
+      public admin: boolean
+
+      public async handle () {
+      }
+    }
+
+    const kernel = new Kernel()
+    kernel.before('run', (command) => {
+      assert.instanceOf(command, Greet)
+    })
+
+    kernel.after('run', (command) => {
+      assert.instanceOf(command, Greet)
+    })
+
+    kernel.register([Greet])
+
+    const argv = ['greet']
+    await kernel.handle(argv)
+  })
 })
 
 test.group('Kernel | runCommand', () => {
@@ -645,8 +738,8 @@ test.group('Kernel | runCommand', () => {
     kernel.register([Greet])
 
     const argv = ['greet', 'virk']
-    const command = kernel.find(argv)!
-    const commandInstance = new command(true)
+    const command = await kernel.find(argv)
+    const commandInstance = new command!(true)
     await kernel.runCommand(argv, commandInstance)
 
     assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) Hello virk'])
@@ -673,8 +766,8 @@ test.group('Kernel | runCommand', () => {
     kernel.register([Greet])
 
     const argv = ['greet', 'virk']
-    const command = kernel.find(argv)!
-    const commandInstance = new command(true)
+    const command = await kernel.find(argv)
+    const commandInstance = new command!(true)
 
     /**
      * Responding to prompt programatically
@@ -712,8 +805,8 @@ test.group('Kernel | runCommand', () => {
     kernel.register([Greet])
 
     const argv = ['greet', 'virk']
-    const command = kernel.find(argv)!
-    const commandInstance = new command(true)
+    const command = await kernel.find(argv)
+    const commandInstance = new command!(true)
 
     /**
      * Responding to prompt programatically
@@ -749,8 +842,8 @@ test.group('Kernel | runCommand', () => {
     kernel.register([Greet])
 
     const argv = ['greet', 'virk']
-    const command = kernel.find(argv)!
-    const commandInstance = new command(true)
+    const command = await kernel.find(argv)
+    const commandInstance = new command!(true)
 
     /**
      * Responding to prompt programatically
@@ -786,8 +879,8 @@ test.group('Kernel | runCommand', () => {
     kernel.register([Greet])
 
     const argv = ['greet', 'virk']
-    const command = kernel.find(argv)!
-    const commandInstance = new command(true)
+    const command = await kernel.find(argv)
+    const commandInstance = new command!(true)
 
     /**
      * Responding to prompt programatically
@@ -823,8 +916,8 @@ test.group('Kernel | runCommand', () => {
     kernel.register([Greet])
 
     const argv = ['greet', 'virk']
-    const command = kernel.find(argv)!
-    const commandInstance = new command(true)
+    const command = await kernel.find(argv)
+    const commandInstance = new command!(true)
 
     /**
      * Responding to prompt programatically
@@ -861,8 +954,8 @@ test.group('Kernel | runCommand', () => {
     kernel.register([Greet])
 
     const argv = ['greet', 'virk']
-    const command = kernel.find(argv)!
-    const commandInstance = new command(true)
+    const command = await kernel.find(argv)
+    const commandInstance = new command!(true)
 
     /**
      * Responding to prompt programatically
@@ -898,8 +991,8 @@ test.group('Kernel | runCommand', () => {
     kernel.register([Greet])
 
     const argv = ['greet', 'virk']
-    const command = kernel.find(argv)!
-    const commandInstance = new command(true)
+    const command = await kernel.find(argv)
+    const commandInstance = new command!(true)
 
     /**
      * Responding to prompt programatically
