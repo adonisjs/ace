@@ -21,6 +21,9 @@ function wrapArg (arg: CommandArg): string {
   return arg.required ? `<${displayName}>` : `[${displayName}]`
 }
 
+/**
+ * Returns an array of flags for displaying the help screen
+ */
 function getFlagsForDisplay (flags: CommandFlag[]) {
   return flags.map(({ name, type, alias, description }) => {
     /**
@@ -61,6 +64,9 @@ function getFlagsForDisplay (flags: CommandFlag[]) {
   })
 }
 
+/**
+ * Returns an array of args for displaying the help screen
+ */
 function getArgsForDisplay (args: CommandArg[]) {
   return args.map(({ name, description }) => {
     return {
