@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;src/utils/validateCommand&quot; | @adonisjs/ace</title>
+	<title>Hooks | @adonisjs/ace</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,57 +52,136 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_src_utils_validatecommand_.html">&quot;src/utils/validateCommand&quot;</a>
+					<a href="../modules/_src_hooks_index_.html">&quot;src/Hooks/index&quot;</a>
+				</li>
+				<li>
+					<a href="_src_hooks_index_.hooks.html">Hooks</a>
 				</li>
 			</ul>
-			<h1>External module &quot;src/utils/validateCommand&quot;</h1>
+			<h1>Class Hooks</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Exposes the API to register and execute async hooks</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">Hooks</span>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Functions</h3>
+							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_src_utils_validatecommand_.html#validatecommand" class="tsd-kind-icon">validate<wbr>Command</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_hooks_index_.hooks.html#add" class="tsd-kind-icon">add</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_hooks_index_.hooks.html#excute" class="tsd-kind-icon">excute</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Functions</h2>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
-					<a name="validatecommand" class="tsd-anchor"></a>
-					<h3>validate<wbr>Command</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">validate<wbr>Command<span class="tsd-signature-symbol">(</span>command<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_contracts_index_.commandconstructorcontract.html" class="tsd-signature-type">CommandConstructorContract</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="add" class="tsd-anchor"></a>
+					<h3>add</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>lifecycle<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"before"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"after"</span>, action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/utils/validateCommand.ts#L17">src/utils/validateCommand.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Hooks/index.ts#L25">src/Hooks/index.ts:25</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Validates the command static properties to ensure that all the
-									values are correctly defined for a command to be executed.</p>
+									<p>Register hook for a given action and lifecycle</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>command: <a href="../interfaces/_src_contracts_index_.commandconstructorcontract.html" class="tsd-signature-type">CommandConstructorContract</a></h5>
+									<h5>lifecycle: <span class="tsd-signature-type">"before"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"after"</span></h5>
+								</li>
+								<li>
+									<h5>action: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>handler: <span class="tsd-signature-type">function</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-siganture">
+											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-parameters-title">Parameters</h4>
+													<ul class="tsd-parameters">
+														<li>
+															<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+														</li>
+													</ul>
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span>
+														<span class="tsd-signature-symbol"> | </span>
+														<span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span>
+													</h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="excute" class="tsd-anchor"></a>
+					<h3>excute</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">excute<span class="tsd-signature-symbol">(</span>lifecycle<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"before"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"after"</span>, action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Hooks/index.ts#L43">src/Hooks/index.ts:43</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Execute hooks for a given action and lifecycle</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>lifecycle: <span class="tsd-signature-type">"before"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"after"</span></h5>
+								</li>
+								<li>
+									<h5>action: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>data: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -115,63 +194,75 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_example_index_.html">"example/index"</a>
+						<a href="../modules/_example_index_.html">"example/index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_index_.html">"index"</a>
+						<a href="../modules/_index_.html">"index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_src_basecommand_index_.html">"src/<wbr>Base<wbr>Command/index"</a>
+						<a href="../modules/_src_basecommand_index_.html">"src/<wbr>Base<wbr>Command/index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_src_contracts_index_.html">"src/<wbr>Contracts/index"</a>
+						<a href="../modules/_src_contracts_index_.html">"src/<wbr>Contracts/index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_src_decorators_args_.html">"src/<wbr>Decorators/args"</a>
+						<a href="../modules/_src_decorators_args_.html">"src/<wbr>Decorators/args"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_src_decorators_flags_.html">"src/<wbr>Decorators/flags"</a>
+						<a href="../modules/_src_decorators_flags_.html">"src/<wbr>Decorators/flags"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_src_exceptions_commandvalidationexception_.html">"src/<wbr>Exceptions/<wbr>Command<wbr>Validation<wbr>Exception"</a>
+						<a href="../modules/_src_exceptions_commandvalidationexception_.html">"src/<wbr>Exceptions/<wbr>Command<wbr>Validation<wbr>Exception"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_src_exceptions_invalidflagtype_.html">"src/<wbr>Exceptions/<wbr>Invalid<wbr>Flag<wbr>Type"</a>
+						<a href="../modules/_src_exceptions_invalidflagtype_.html">"src/<wbr>Exceptions/<wbr>Invalid<wbr>Flag<wbr>Type"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_src_exceptions_missingcommandargument_.html">"src/<wbr>Exceptions/<wbr>Missing<wbr>Command<wbr>Argument"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_hooks_index_.html">"src/<wbr>Hooks/index"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_kernel_index_.html">"src/<wbr>Kernel/index"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_manifest_index_.html">"src/<wbr>Manifest/index"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_parser_index_.html">"src/<wbr>Parser/index"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_utils_handleerror_.html">"src/utils/handle<wbr>Error"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_utils_help_.html">"src/utils/help"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_utils_sortandgroupcommands_.html">"src/utils/sort<wbr>And<wbr>Group<wbr>Commands"</a>
+						<a href="../modules/_src_exceptions_missingcommandargument_.html">"src/<wbr>Exceptions/<wbr>Missing<wbr>Command<wbr>Argument"</a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="_src_utils_validatecommand_.html">"src/utils/validate<wbr>Command"</a>
+						<a href="../modules/_src_hooks_index_.html">"src/<wbr>Hooks/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_kernel_index_.html">"src/<wbr>Kernel/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_manifest_index_.html">"src/<wbr>Manifest/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_parser_index_.html">"src/<wbr>Parser/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_utils_handleerror_.html">"src/utils/handle<wbr>Error"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_utils_help_.html">"src/utils/help"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_utils_sortandgroupcommands_.html">"src/utils/sort<wbr>And<wbr>Group<wbr>Commands"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_utils_validatecommand_.html">"src/utils/validate<wbr>Command"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="_src_utils_validatecommand_.html#validatecommand" class="tsd-kind-icon">validate<wbr>Command</a>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_src_hooks_index_.hooks.html" class="tsd-kind-icon">Hooks</a>
+						<ul>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_src_hooks_index_.hooks.html#add" class="tsd-kind-icon">add</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_src_hooks_index_.hooks.html#excute" class="tsd-kind-icon">excute</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 				</ul>
 			</nav>
 		</div>

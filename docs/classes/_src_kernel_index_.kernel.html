@@ -96,6 +96,8 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_kernel_index_.kernel.html#after" class="tsd-kind-icon">after</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_kernel_index_.kernel.html#before" class="tsd-kind-icon">before</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_kernel_index_.kernel.html#find" class="tsd-kind-icon">find</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_kernel_index_.kernel.html#flag" class="tsd-kind-icon">flag</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_kernel_index_.kernel.html#getsuggestions" class="tsd-kind-icon">get<wbr>Suggestions</a></li>
@@ -117,7 +119,7 @@
 					<div class="tsd-signature tsd-kind-icon">commands<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/d85fbd9/src/Kernel/index.ts#L34">src/Kernel/index.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Kernel/index.ts#L37">src/Kernel/index.ts:37</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -140,7 +142,7 @@
 					<div class="tsd-signature tsd-kind-icon">flags<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/d85fbd9/src/Kernel/index.ts#L45">src/Kernel/index.ts:45</a></li>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Kernel/index.ts#L48">src/Kernel/index.ts:48</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -163,7 +165,7 @@
 					<div class="tsd-signature tsd-kind-icon">manifest<wbr>Commands<span class="tsd-signature-symbol">:</span> <a href="../modules/_src_contracts_index_.html#manifestnode" class="tsd-signature-type">ManifestNode</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/d85fbd9/src/Kernel/index.ts#L40">src/Kernel/index.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Kernel/index.ts#L43">src/Kernel/index.ts:43</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -177,16 +179,114 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="find" class="tsd-anchor"></a>
-					<h3>find</h3>
+					<a name="after" class="tsd-anchor"></a>
+					<h3>after</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">find<span class="tsd-signature-symbol">(</span>argv<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_contracts_index_.commandconstructorcontract.html" class="tsd-signature-type">CommandConstructorContract</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+						<li class="tsd-signature tsd-kind-icon">after<span class="tsd-signature-symbol">(</span>action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"run"</span>, callback<span class="tsd-signature-symbol">: </span><a href="../modules/_src_contracts_index_.html#runhookcallback" class="tsd-signature-type">RunHookCallback</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">after<span class="tsd-signature-symbol">(</span>action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"find"</span>, callback<span class="tsd-signature-symbol">: </span><a href="../modules/_src_contracts_index_.html#findhookcallback" class="tsd-signature-type">FindHookCallback</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/d85fbd9/src/Kernel/index.ts#L136">src/Kernel/index.ts:136</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Kernel/index.ts#L112">src/Kernel/index.ts:112</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Register an after hook</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>action: <span class="tsd-signature-type">"run"</span></h5>
+								</li>
+								<li>
+									<h5>callback: <a href="../modules/_src_contracts_index_.html#runhookcallback" class="tsd-signature-type">RunHookCallback</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Kernel/index.ts#L113">src/Kernel/index.ts:113</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>action: <span class="tsd-signature-type">"find"</span></h5>
+								</li>
+								<li>
+									<h5>callback: <a href="../modules/_src_contracts_index_.html#findhookcallback" class="tsd-signature-type">FindHookCallback</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="before" class="tsd-anchor"></a>
+					<h3>before</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">before<span class="tsd-signature-symbol">(</span>action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"run"</span>, callback<span class="tsd-signature-symbol">: </span><a href="../modules/_src_contracts_index_.html#runhookcallback" class="tsd-signature-type">RunHookCallback</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">before<span class="tsd-signature-symbol">(</span>action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"find"</span>, callback<span class="tsd-signature-symbol">: </span><a href="../modules/_src_contracts_index_.html#findhookcallback" class="tsd-signature-type">FindHookCallback</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Kernel/index.ts#L102">src/Kernel/index.ts:102</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Register a before hook</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>action: <span class="tsd-signature-type">"run"</span></h5>
+								</li>
+								<li>
+									<h5>callback: <a href="../modules/_src_contracts_index_.html#runhookcallback" class="tsd-signature-type">RunHookCallback</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Kernel/index.ts#L103">src/Kernel/index.ts:103</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>action: <span class="tsd-signature-type">"find"</span></h5>
+								</li>
+								<li>
+									<h5>callback: <a href="../modules/_src_contracts_index_.html#findhookcallback" class="tsd-signature-type">FindHookCallback</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="find" class="tsd-anchor"></a>
+					<h3>find</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">find<span class="tsd-signature-symbol">(</span>argv<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_src_contracts_index_.commandconstructorcontract.html" class="tsd-signature-type">CommandConstructorContract</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Kernel/index.ts#L166">src/Kernel/index.ts:166</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -201,10 +301,7 @@
 									<h5>argv: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_src_contracts_index_.commandconstructorcontract.html" class="tsd-signature-type">CommandConstructorContract</a>
-								<span class="tsd-signature-symbol"> | </span>
-								<span class="tsd-signature-type">null</span>
-							</h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_src_contracts_index_.commandconstructorcontract.html" class="tsd-signature-type">CommandConstructorContract</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -218,7 +315,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/d85fbd9/src/Kernel/index.ts#L117">src/Kernel/index.ts:117</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Kernel/index.ts#L147">src/Kernel/index.ts:147</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -253,7 +350,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/d85fbd9/src/Kernel/index.ts#L105">src/Kernel/index.ts:105</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Kernel/index.ts#L135">src/Kernel/index.ts:135</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -284,7 +381,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/d85fbd9/src/Kernel/index.ts#L232">src/Kernel/index.ts:232</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Kernel/index.ts#L281">src/Kernel/index.ts:281</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -313,7 +410,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/d85fbd9/src/Kernel/index.ts#L279">src/Kernel/index.ts:279</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Kernel/index.ts#L328">src/Kernel/index.ts:328</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -341,7 +438,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/d85fbd9/src/Kernel/index.ts#L93">src/Kernel/index.ts:93</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Kernel/index.ts#L122">src/Kernel/index.ts:122</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -369,7 +466,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/d85fbd9/src/Kernel/index.ts#L169">src/Kernel/index.ts:169</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Kernel/index.ts#L218">src/Kernel/index.ts:218</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -400,7 +497,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/d85fbd9/src/Kernel/index.ts#L271">src/Kernel/index.ts:271</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Kernel/index.ts#L320">src/Kernel/index.ts:320</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -453,6 +550,9 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_src_exceptions_missingcommandargument_.html">"src/<wbr>Exceptions/<wbr>Missing<wbr>Command<wbr>Argument"</a>
 					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_hooks_index_.html">"src/<wbr>Hooks/index"</a>
+					</li>
 					<li class="current tsd-kind-external-module">
 						<a href="../modules/_src_kernel_index_.html">"src/<wbr>Kernel/index"</a>
 					</li>
@@ -491,6 +591,12 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_src_kernel_index_.kernel.html#manifestcommands" class="tsd-kind-icon">manifest<wbr>Commands</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_src_kernel_index_.kernel.html#after" class="tsd-kind-icon">after</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_src_kernel_index_.kernel.html#before" class="tsd-kind-icon">before</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_src_kernel_index_.kernel.html#find" class="tsd-kind-icon">find</a>

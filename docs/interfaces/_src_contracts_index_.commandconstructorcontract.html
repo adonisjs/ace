@@ -95,13 +95,21 @@
 								<li class="tsd-kind-constructor tsd-parent-kind-interface"><a href="_src_contracts_index_.commandconstructorcontract.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-inherited">
+						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_contracts_index_.commandconstructorcontract.html#args" class="tsd-kind-icon">args</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_contracts_index_.commandconstructorcontract.html#booted" class="tsd-kind-icon">booted</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_contracts_index_.commandconstructorcontract.html#commandname" class="tsd-kind-icon">command<wbr>Name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_contracts_index_.commandconstructorcontract.html#description" class="tsd-kind-icon">description</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_contracts_index_.commandconstructorcontract.html#flags" class="tsd-kind-icon">flags</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_contracts_index_.commandconstructorcontract.html#settings" class="tsd-kind-icon">settings</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_src_contracts_index_.commandconstructorcontract.html#boot" class="tsd-kind-icon">boot</a></li>
 							</ul>
 						</section>
 					</div>
@@ -119,7 +127,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/d85fbd9/src/Contracts/index.ts#L80">src/Contracts/index.ts:80</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Contracts/index.ts#L82">src/Contracts/index.ts:82</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -133,7 +141,7 @@
 					</ul>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="args" class="tsd-anchor"></a>
@@ -142,7 +150,17 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_contracts_index_.serializedcommandcontract.html">SerializedCommandContract</a>.<a href="_src_contracts_index_.serializedcommandcontract.html#args">args</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/d85fbd9/src/Contracts/index.ts#L71">src/Contracts/index.ts:71</a></li>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Contracts/index.ts#L72">src/Contracts/index.ts:72</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="booted" class="tsd-anchor"></a>
+					<h3>booted</h3>
+					<div class="tsd-signature tsd-kind-icon">booted<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Contracts/index.ts#L84">src/Contracts/index.ts:84</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -153,7 +171,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_contracts_index_.serializedcommandcontract.html">SerializedCommandContract</a>.<a href="_src_contracts_index_.serializedcommandcontract.html#commandname">commandName</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/d85fbd9/src/Contracts/index.ts#L73">src/Contracts/index.ts:73</a></li>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Contracts/index.ts#L75">src/Contracts/index.ts:75</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -164,7 +182,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_contracts_index_.serializedcommandcontract.html">SerializedCommandContract</a>.<a href="_src_contracts_index_.serializedcommandcontract.html#description">description</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/d85fbd9/src/Contracts/index.ts#L74">src/Contracts/index.ts:74</a></li>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Contracts/index.ts#L76">src/Contracts/index.ts:76</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -175,9 +193,40 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_contracts_index_.serializedcommandcontract.html">SerializedCommandContract</a>.<a href="_src_contracts_index_.serializedcommandcontract.html#flags">flags</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/d85fbd9/src/Contracts/index.ts#L72">src/Contracts/index.ts:72</a></li>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Contracts/index.ts#L74">src/Contracts/index.ts:74</a></li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="settings" class="tsd-anchor"></a>
+					<h3>settings</h3>
+					<div class="tsd-signature tsd-kind-icon">settings<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_src_contracts_index_.serializedcommandcontract.html">SerializedCommandContract</a>.<a href="_src_contracts_index_.serializedcommandcontract.html#settings">settings</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Contracts/index.ts#L73">src/Contracts/index.ts:73</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="boot" class="tsd-anchor"></a>
+					<h3>boot</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">boot<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/8b6e97e/src/Contracts/index.ts#L85">src/Contracts/index.ts:85</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -215,6 +264,9 @@
 						<a href="../modules/_src_exceptions_missingcommandargument_.html">"src/<wbr>Exceptions/<wbr>Missing<wbr>Command<wbr>Argument"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_hooks_index_.html">"src/<wbr>Hooks/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_src_kernel_index_.html">"src/<wbr>Kernel/index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -250,6 +302,9 @@
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_src_contracts_index_.commandconstructorcontract.html#args" class="tsd-kind-icon">args</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_src_contracts_index_.commandconstructorcontract.html#booted" class="tsd-kind-icon">booted</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_src_contracts_index_.commandconstructorcontract.html#commandname" class="tsd-kind-icon">command<wbr>Name</a>
 							</li>
@@ -258,6 +313,12 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_src_contracts_index_.commandconstructorcontract.html#flags" class="tsd-kind-icon">flags</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="_src_contracts_index_.commandconstructorcontract.html#settings" class="tsd-kind-icon">settings</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="_src_contracts_index_.commandconstructorcontract.html#boot" class="tsd-kind-icon">boot</a>
 							</li>
 						</ul>
 					</li>
@@ -282,19 +343,22 @@
 						<a href="../modules/_src_contracts_index_.html#commandsgroup" class="tsd-kind-icon">Commands<wbr>Group</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/_src_contracts_index_.html#findhookcallback" class="tsd-kind-icon">Find<wbr>Hook<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
 						<a href="../modules/_src_contracts_index_.html#flagtypes" class="tsd-kind-icon">Flag<wbr>Types</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
 						<a href="../modules/_src_contracts_index_.html#globalflaghandler" class="tsd-kind-icon">Global<wbr>Flag<wbr>Handler</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_src_contracts_index_.html#labelslist" class="tsd-kind-icon">Labels<wbr>List</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
 						<a href="../modules/_src_contracts_index_.html#manifestcommand" class="tsd-kind-icon">Manifest<wbr>Command</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
 						<a href="../modules/_src_contracts_index_.html#manifestnode" class="tsd-kind-icon">Manifest<wbr>Node</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/_src_contracts_index_.html#runhookcallback" class="tsd-kind-icon">Run<wbr>Hook<wbr>Callback</a>
 					</li>
 				</ul>
 			</nav>
