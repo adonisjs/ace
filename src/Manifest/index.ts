@@ -60,6 +60,7 @@ export class Manifest {
       validateCommand(command)
 
       manifest[command.commandName] = {
+        settings: command.settings || {},
         commandPath: commandPath,
         commandName: command.commandName,
         description: command.description,

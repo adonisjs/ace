@@ -46,6 +46,13 @@ export abstract class BaseCommand implements CommandContract {
   public static description: string = ''
 
   /**
+   * Any settings a command wants to have. Helpful for third party
+   * tools to read the settings in lifecycle hooks and make
+   * certain decisions
+   */
+  public static settings: any
+
+  /**
    * Parsed options on the command. They only exist when the command
    * is executed via kernel
    */

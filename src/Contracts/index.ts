@@ -70,6 +70,7 @@ export type CommandsGroup = {
  */
 export interface SerializedCommandContract {
   args: CommandArg[],
+  settings: any,
   flags: CommandFlag[],
   commandName: string,
   description: string,

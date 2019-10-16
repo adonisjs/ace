@@ -41,6 +41,7 @@ test.group('Manifest', (group) => {
     const manifestJSON = require(join(fs.basePath, 'ace-manifest.json'))
     assert.deepEqual(manifestJSON, {
       greet: {
+        settings: {},
         commandPath: 'Commands/Make.ts',
         commandName: 'greet',
         description: 'Greet a user',
@@ -106,6 +107,7 @@ test.group('Manifest', (group) => {
     const manifestJSON = await manifest.load()
     assert.deepEqual(manifestJSON, {
       greet: {
+        settings: {},
         commandPath: 'Commands/Make.ts',
         commandName: 'greet',
         description: 'Greet a user',
