@@ -148,6 +148,7 @@ test.group('Kernel | find', () => {
 
     await fs.add('Commands/Greet.ts', `export default class Greet {
       public static commandName = 'greet'
+      public static boot () {}
     }`)
 
     kernel.useManifest(manifest)
@@ -174,6 +175,7 @@ test.group('Kernel | find', () => {
 
     await fs.add('Commands/Greet.ts', `export default class Greet {
       public static commandName = 'greet'
+      public static boot () {}
     }`)
 
     kernel.useManifest(manifest)

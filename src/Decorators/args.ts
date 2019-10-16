@@ -24,10 +24,7 @@ function addArg (type: ArgTypes, options: DecoratorArg) {
       required: true,
     }, options)
 
-    if (!target.constructor.hasOwnProperty('args')) {
-      Object.defineProperty(target.constructor, 'args', { value: [] })
-    }
-
+    target.constructor.boot()
     target.constructor.args.push(arg)
   }
 }

@@ -81,6 +81,8 @@ export interface SerializedCommandContract {
  */
 export interface CommandConstructorContract extends SerializedCommandContract {
   new (rawMode?: boolean): CommandContract,
+  booted: boolean,
+  boot (): void
 }
 
 /**

@@ -23,8 +23,9 @@ test.group('Manifest', (group) => {
   test('generated manifest from command paths', async (assert) => {
     await fs.add('Commands/Make.ts', `
     import { args, flags } from '../../../index'
+    import { BaseCommand } from '../../../src/BaseCommand'
 
-    export default class Greet {
+    export default class Greet extends BaseCommand {
       public static commandName = 'greet'
       public static description = 'Greet a user'
 
@@ -33,6 +34,8 @@ test.group('Manifest', (group) => {
 
       @flags.boolean()
       public adult: boolean
+
+      public async handle () {}
     }`)
 
     const manifest = new Manifest(fs.basePath)
@@ -65,8 +68,9 @@ test.group('Manifest', (group) => {
 
     await fs.add('Commands/Make.ts', `
     import { args, flags } from '../../../index'
+    import { BaseCommand } from '../../../src/BaseCommand'
 
-    export class Greet {
+    export class Greet extends BaseCommand {
       public static commandName = 'greet'
       public static description = 'Greet a user'
 
@@ -75,6 +79,8 @@ test.group('Manifest', (group) => {
 
       @flags.boolean()
       public adult: boolean
+
+      public async handle () {}
     }`)
 
     const manifest = new Manifest(fs.basePath)
@@ -89,8 +95,9 @@ test.group('Manifest', (group) => {
   test('read manifest file', async (assert) => {
     await fs.add('Commands/Make.ts', `
     import { args, flags } from '../../../index'
+    import { BaseCommand } from '../../../src/BaseCommand'
 
-    export default class Greet {
+    export default class Greet extends BaseCommand {
       public static commandName = 'greet'
       public static description = 'Greet a user'
 
@@ -99,6 +106,8 @@ test.group('Manifest', (group) => {
 
       @flags.boolean()
       public adult: boolean
+
+      public async handle () {}
     }`)
 
     const manifest = new Manifest(fs.basePath)

@@ -24,10 +24,7 @@ function addFlag (type: FlagTypes, options: DecoratorFlag) {
       type,
     }, options)
 
-    if (!target.constructor.hasOwnProperty('flags')) {
-      Object.defineProperty(target.constructor, 'flags', { value: [] })
-    }
-
+    target.constructor.boot()
     target.constructor.flags.push(flag)
   }
 }

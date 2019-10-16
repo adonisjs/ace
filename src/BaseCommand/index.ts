@@ -27,23 +27,23 @@ export abstract class BaseCommand implements CommandContract {
   /**
    * Command arguments
    */
-  public static args: CommandArg[] = []
+  public static args: CommandArg[]
 
   /**
    * Command flags
    */
-  public static flags: CommandFlag[] = []
+  public static flags: CommandFlag[]
 
   /**
    * Command name
    */
-  public static commandName: string = ''
+  public static commandName: string
 
   /**
    * The description of the command displayed on the help screen.
    * Please do not create commands without description
    */
-  public static description: string = ''
+  public static description: string
 
   /**
    * Any settings a command wants to have. Helpful for third party
@@ -51,6 +51,36 @@ export abstract class BaseCommand implements CommandContract {
    * certain decisions
    */
   public static settings: any
+
+  /**
+   * Boots the command by defining required static properties
+   */
+  public static boot () {
+    if (this.booted) {
+      return
+    }
+
+    this.booted = true
+    Object.defineProperty(this, 'args', { value: [] })
+    Object.defineProperty(this, 'flags', { value: [] })
+
+    if (!this.hasOwnProperty('settings')) {
+      Object.defineProperty(this, 'settings', { value: {} })
+    }
+
+    if (!this.hasOwnProperty('commandName')) {
+      Object.defineProperty(this, 'commandName', { value: '' })
+    }
+
+    if (!this.hasOwnProperty('description')) {
+      Object.defineProperty(this, 'description', { value: '' })
+    }
+  }
+
+  /**
+   * Whether or not the command has been booted
+   */
+  public static booted: boolean
 
   /**
    * Parsed options on the command. They only exist when the command
