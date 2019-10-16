@@ -7,13 +7,13 @@
 * file that was distributed with this source code.
 */
 
-import { join } from 'path'
-import { esmRequire } from '@poppinss/utils'
+import { join, isAbsolute } from 'path'
 import { writeFile, readFile } from 'fs'
+import { esmRequire } from '@poppinss/utils'
 
-import { CommandValidationException } from '../Exceptions/CommandValidationException'
 import { validateCommand } from '../utils/validateCommand'
 import { ManifestNode, CommandConstructorContract } from '../Contracts'
+import { CommandValidationException } from '../Exceptions/CommandValidationException'
 
 /**
  * Manifest class drastically improves the commands performance, by generating
@@ -43,7 +43,9 @@ export class Manifest {
    * Require and return command
    */
   public loadCommand (commandPath: string): CommandConstructorContract {
-    const command = esmRequire(join(this._appRoot, commandPath))
+    commandPath = isAbsolute(commandPath) ? join(this._appRoot, commandPath) : commandPath
+
+    const command = esmRequire(commandPath)
     if (!command.name) {
       throw CommandValidationException.invalidManifestExport(commandPath)
     }
