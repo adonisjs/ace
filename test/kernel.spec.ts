@@ -142,7 +142,7 @@ test.group('Kernel | find', () => {
     await fs.add(`ace-manifest.json`, JSON.stringify({
       greet: {
         commandName: 'greet',
-        commandPath: 'Commands/Greet.ts',
+        commandPath: './Commands/Greet.ts',
       },
     }))
 
@@ -169,7 +169,7 @@ test.group('Kernel | find', () => {
     await fs.add(`ace-manifest.json`, JSON.stringify({
       greet: {
         commandName: 'greet',
-        commandPath: 'Commands/Greet.ts',
+        commandPath: './Commands/Greet.ts',
       },
     }))
 

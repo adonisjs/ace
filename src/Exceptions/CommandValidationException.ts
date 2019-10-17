@@ -15,7 +15,7 @@ import { Exception } from '@poppinss/utils'
  */
 export class CommandValidationException extends Exception {
   public static invalidManifestExport (commandPath: string) {
-    return new this(`make sure to have a default export from {${commandPath}}`)
+    return new this(`make sure to have a default export from {${commandPath}} command`)
   }
 
   public static missingCommandName (className: string) {

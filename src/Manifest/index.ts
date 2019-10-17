@@ -7,9 +7,9 @@
 * file that was distributed with this source code.
 */
 
-import { join, isAbsolute } from 'path'
 import { writeFile, readFile } from 'fs'
 import { esmRequire } from '@poppinss/utils'
+import { join, isAbsolute, extname } from 'path'
 
 import { validateCommand } from '../utils/validateCommand'
 import { ManifestNode, CommandConstructorContract } from '../Contracts'
@@ -43,9 +43,9 @@ export class Manifest {
    * Require and return command
    */
   public loadCommand (commandPath: string): CommandConstructorContract {
-    commandPath = isAbsolute(commandPath) ? join(this._appRoot, commandPath) : commandPath
+    const absPath = isAbsolute(commandPath) ? commandPath : join(this._appRoot, commandPath)
 
-    const command = esmRequire(commandPath)
+    const command = esmRequire(absPath)
     if (!command.name) {
       throw CommandValidationException.invalidManifestExport(commandPath)
     }
@@ -65,7 +65,7 @@ export class Manifest {
 
       manifest[command.commandName] = {
         settings: command.settings || {},
-        commandPath: commandPath,
+        commandPath: commandPath.replace(new RegExp(`${extname(commandPath)}$`), ''),
         commandName: command.commandName,
         description: command.description,
         args: command.args,

@@ -45,7 +45,7 @@ test.group('Manifest', (group) => {
     assert.deepEqual(manifestJSON, {
       greet: {
         settings: {},
-        commandPath: 'Commands/Make.ts',
+        commandPath: 'Commands/Make',
         commandName: 'greet',
         description: 'Greet a user',
         args: [{
@@ -88,7 +88,7 @@ test.group('Manifest', (group) => {
     try {
       await manifest.generate(['Commands/Make.ts'])
     } catch ({ message }) {
-      assert.equal(message, 'make sure to have a default export from {Commands/Make.ts}')
+      assert.equal(message, 'make sure to have a default export from {Commands/Make.ts} command')
     }
   })
 
@@ -117,7 +117,7 @@ test.group('Manifest', (group) => {
     assert.deepEqual(manifestJSON, {
       greet: {
         settings: {},
-        commandPath: 'Commands/Make.ts',
+        commandPath: 'Commands/Make',
         commandName: 'greet',
         description: 'Greet a user',
         args: [{
