@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
 */
 
-import { outputFile } from 'fs-extra'
+import { outputFile, pathExists } from 'fs-extra'
 import logger from '@poppinss/fancy-logs'
 
 import { GeneratorFile } from './File'
@@ -43,6 +43,13 @@ export class Generator implements GeneratorContract {
   public async run () {
     for (let file of this._files) {
       const fileJSON = file.toJSON()
+      const exists = await pathExists(fileJSON.filepath)
+
+      if (exists) {
+        logger.skip(`${fileJSON.relativepath} already exists`)
+        return
+      }
+
       await outputFile(fileJSON.filepath, fileJSON.contents)
       logger.create(fileJSON.relativepath)
     }
