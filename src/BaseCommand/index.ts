@@ -111,5 +111,5 @@ export abstract class BaseCommand implements CommandContract {
   /**
    * Must be defined by the parent class
    */
-  public async abstract handle (): Promise<void>
+  public async abstract handle (...args: any[]): Promise<void>
 }

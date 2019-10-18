@@ -7,9 +7,11 @@
 * file that was distributed with this source code.
 */
 
+import 'reflect-metadata'
 import test from 'japa'
 import { join } from 'path'
 import { Filesystem } from '@adonisjs/dev-utils'
+import { Ioc, inject } from '@adonisjs/fold'
 
 import { Kernel } from '../src/Kernel'
 import { Manifest } from '../src/Manifest'
@@ -1005,5 +1007,61 @@ test.group('Kernel | runCommand', () => {
 
     await kernel.runCommand(argv, commandInstance)
     assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) Yep'])
+  })
+})
+
+test.group('Kernel | IoC container', () => {
+  test('make command instance by injecting dependencies', async (assert) => {
+    assert.plan(1)
+
+    const ioc = new Ioc()
+    const kernel = new Kernel()
+    kernel.useContainer(ioc)
+
+    class Foo {}
+    ioc.bind('App/Foo', () => {
+      return new Foo()
+    })
+
+    @inject()
+    class Install extends BaseCommand {
+      public static commandName = 'install'
+
+      constructor (public rawMode: boolean, public foo: Foo) {
+        super(rawMode)
+      }
+
+      public async handle () {
+        assert.instanceOf(this.foo, Foo)
+      }
+    }
+
+    kernel.register([Install])
+    await kernel.handle(['install'])
+  })
+
+  test('inject dependencies to command methods', async (assert) => {
+    assert.plan(1)
+
+    const ioc = new Ioc()
+    const kernel = new Kernel()
+    kernel.useContainer(ioc)
+
+    class Foo {}
+    ioc.bind('App/Foo', () => {
+      return new Foo()
+    })
+
+    class Install extends BaseCommand {
+      public static commandName = 'install'
+
+      @inject()
+      public async handle (foo: Foo) {
+        assert.instanceOf(foo, Foo)
+      }
+    }
+
+    kernel.register([Install])
+    await kernel.handle(['install'])
   })
 })

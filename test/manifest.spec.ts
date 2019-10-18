@@ -7,11 +7,14 @@
 * file that was distributed with this source code.
 */
 
+import 'reflect-metadata'
 import test from 'japa'
 import { join } from 'path'
+import { Ioc } from '@adonisjs/fold'
 import { Filesystem } from '@adonisjs/dev-utils'
 
 import { Manifest } from '../src/Manifest'
+import { Kernel } from '../src/Kernel'
 
 const fs = new Filesystem(join(__dirname, '__app'))
 
@@ -133,5 +136,44 @@ test.group('Manifest', (group) => {
         }],
       },
     })
+  })
+
+  test('inject dependencies to manifest commands loaded via manifest file', async (assert) => {
+    await fs.add('Commands/Make.ts', `
+    import { inject } from '@adonisjs/fold'
+    import { BaseCommand } from '../../../src/BaseCommand'
+
+    @inject([null, 'App/Foo'])
+    export default class Greet extends BaseCommand {
+      public static commandName = 'greet'
+      public static description = 'Greet a user'
+
+      constructor (public rawMode, public foo) {
+        super(rawMode)
+      }
+
+      public async handle () {
+        global['foo'] = this.foo.constructor.name
+      }
+    }`)
+
+    const ioc = new Ioc()
+    const kernel = new Kernel()
+    const manifest = new Manifest(fs.basePath)
+
+    kernel.useContainer(ioc)
+    kernel.useManifest(manifest)
+
+    await manifest.generate(['Commands/Make.ts'])
+
+    ioc.bind('App/Foo', () => {
+      class Foo {}
+      return new Foo()
+    })
+
+    await kernel.handle(['greet'])
+    assert.equal(global['foo'], 'Foo')
+
+    delete global['foo']
   })
 })

@@ -80,7 +80,7 @@ export interface SerializedCommandContract {
  * Command constructor shape with it's static properties
  */
 export interface CommandConstructorContract extends SerializedCommandContract {
-  new (rawMode?: boolean): CommandContract,
+  new (...args: any[]): CommandContract,
   booted: boolean,
   boot (): void
 }
@@ -93,7 +93,7 @@ export interface CommandContract {
   logger: Logger,
   prompt: PromptContract,
   colors: Kleur,
-  handle (): Promise<void>,
+  handle (...args: any[]): Promise<void>,
 }
 
 /**
