@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>SerializedCommandContract | @adonisjs/ace</title>
+	<title>Generator | @adonisjs/ace</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_src_contracts_index_.html">&quot;src/Contracts/index&quot;</a>
+					<a href="../modules/_src_generator_index_.html">&quot;src/Generator/index&quot;</a>
 				</li>
 				<li>
-					<a href="_src_contracts_index_.serializedcommandcontract.html">SerializedCommandContract</a>
+					<a href="_src_generator_index_.generator.html">Generator</a>
 				</li>
 			</ul>
-			<h1>Interface SerializedCommandContract</h1>
+			<h1>Class Generator</h1>
 		</div>
 	</div>
 </header>
@@ -68,8 +68,8 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>The shared properties that exists on the command implementation
-						as well as it&#39;s serialized version</p>
+						<p>Exposes the API to generate entity files, like project
+						<code>Controllers</code>, <code>Models</code> and so on.</p>
 					</div>
 				</div>
 			</section>
@@ -77,13 +77,14 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">SerializedCommandContract</span>
-						<ul class="tsd-hierarchy">
-							<li>
-								<a href="_src_contracts_index_.commandconstructorcontract.html" class="tsd-signature-type">CommandConstructorContract</a>
-							</li>
-						</ul>
+						<span class="target">Generator</span>
 					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/_src_contracts_index_.generatorcontract.html" class="tsd-signature-type">GeneratorContract</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -91,69 +92,127 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Properties</h3>
+							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_contracts_index_.serializedcommandcontract.html#args" class="tsd-kind-icon">args</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_contracts_index_.serializedcommandcontract.html#commandname" class="tsd-kind-icon">command<wbr>Name</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_contracts_index_.serializedcommandcontract.html#description" class="tsd-kind-icon">description</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_contracts_index_.serializedcommandcontract.html#flags" class="tsd-kind-icon">flags</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_contracts_index_.serializedcommandcontract.html#settings" class="tsd-kind-icon">settings</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_src_generator_index_.generator.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_generator_index_.generator.html#addfile" class="tsd-kind-icon">add<wbr>File</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_generator_index_.generator.html#clear" class="tsd-kind-icon">clear</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_generator_index_.generator.html#run" class="tsd-kind-icon">run</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="args" class="tsd-anchor"></a>
-					<h3>args</h3>
-					<div class="tsd-signature tsd-kind-icon">args<span class="tsd-signature-symbol">:</span> <a href="../modules/_src_contracts_index_.html#commandarg" class="tsd-signature-type">CommandArg</a><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f177afa/src/Contracts/index.ts#L72">src/Contracts/index.ts:72</a></li>
-						</ul>
-					</aside>
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Generator<span class="tsd-signature-symbol">(</span>_destinationDir<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_generator_index_.generator.html" class="tsd-signature-type">Generator</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f177afa/src/Generator/index.ts#L21">src/Generator/index.ts:21</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> _destinationDir: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_src_generator_index_.generator.html" class="tsd-signature-type">Generator</a></h4>
+						</li>
+					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="commandname" class="tsd-anchor"></a>
-					<h3>command<wbr>Name</h3>
-					<div class="tsd-signature tsd-kind-icon">command<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f177afa/src/Contracts/index.ts#L75">src/Contracts/index.ts:75</a></li>
-						</ul>
-					</aside>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="addfile" class="tsd-anchor"></a>
+					<h3>add<wbr>File</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">add<wbr>File<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><a href="../modules/_src_contracts_index_.html#generatorfileoptions" class="tsd-signature-type">GeneratorFileOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_generator_file_.generatorfile.html" class="tsd-signature-type">GeneratorFile</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_src_contracts_index_.generatorcontract.html">GeneratorContract</a>.<a href="../interfaces/_src_contracts_index_.generatorcontract.html#addfile">addFile</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f177afa/src/Generator/index.ts#L29">src/Generator/index.ts:29</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Add a new file</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>name: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../modules/_src_contracts_index_.html#generatorfileoptions" class="tsd-signature-type">GeneratorFileOptions</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_src_generator_file_.generatorfile.html" class="tsd-signature-type">GeneratorFile</a></h4>
+						</li>
+					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="description" class="tsd-anchor"></a>
-					<h3>description</h3>
-					<div class="tsd-signature tsd-kind-icon">description<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f177afa/src/Contracts/index.ts#L76">src/Contracts/index.ts:76</a></li>
-						</ul>
-					</aside>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="clear" class="tsd-anchor"></a>
+					<h3>clear</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">clear<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_src_contracts_index_.generatorcontract.html">GeneratorContract</a>.<a href="../interfaces/_src_contracts_index_.generatorcontract.html#clear">clear</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f177afa/src/Generator/index.ts#L54">src/Generator/index.ts:54</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Clear tracked files</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="flags" class="tsd-anchor"></a>
-					<h3>flags</h3>
-					<div class="tsd-signature tsd-kind-icon">flags<span class="tsd-signature-symbol">:</span> <a href="../modules/_src_contracts_index_.html#commandflag" class="tsd-signature-type">CommandFlag</a><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f177afa/src/Contracts/index.ts#L74">src/Contracts/index.ts:74</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="settings" class="tsd-anchor"></a>
-					<h3>settings</h3>
-					<div class="tsd-signature tsd-kind-icon">settings<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f177afa/src/Contracts/index.ts#L73">src/Contracts/index.ts:73</a></li>
-						</ul>
-					</aside>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="run" class="tsd-anchor"></a>
+					<h3>run</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">run<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_src_contracts_index_.generatorcontract.html">GeneratorContract</a>.<a href="../interfaces/_src_contracts_index_.generatorcontract.html#run">run</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f177afa/src/Generator/index.ts#L43">src/Generator/index.ts:43</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates all collected files</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -172,7 +231,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_src_basecommand_index_.html">"src/<wbr>Base<wbr>Command/index"</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_src_contracts_index_.html">"src/<wbr>Contracts/index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -196,7 +255,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_src_generator_stringtransformer_.html">"src/<wbr>Generator/<wbr>String<wbr>Transformer"</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/_src_generator_index_.html">"src/<wbr>Generator/index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -227,75 +286,27 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_contracts_index_.commandconstructorcontract.html" class="tsd-kind-icon">Command<wbr>Constructor<wbr>Contract</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_contracts_index_.commandcontract.html" class="tsd-kind-icon">Command<wbr>Contract</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_contracts_index_.generatorcontract.html" class="tsd-kind-icon">Generator<wbr>Contract</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_contracts_index_.generatorfilecontract.html" class="tsd-kind-icon">Generator<wbr>File<wbr>Contract</a>
-					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_src_contracts_index_.serializedcommandcontract.html" class="tsd-kind-icon">Serialized<wbr>Command<wbr>Contract</a>
+					<li class="current tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_src_generator_index_.generator.html" class="tsd-kind-icon">Generator</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_contracts_index_.serializedcommandcontract.html#args" class="tsd-kind-icon">args</a>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="_src_generator_index_.generator.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_contracts_index_.serializedcommandcontract.html#commandname" class="tsd-kind-icon">command<wbr>Name</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_src_generator_index_.generator.html#addfile" class="tsd-kind-icon">add<wbr>File</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_contracts_index_.serializedcommandcontract.html#description" class="tsd-kind-icon">description</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_src_generator_index_.generator.html#clear" class="tsd-kind-icon">clear</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_contracts_index_.serializedcommandcontract.html#flags" class="tsd-kind-icon">flags</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_src_contracts_index_.serializedcommandcontract.html#settings" class="tsd-kind-icon">settings</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_src_generator_index_.generator.html#run" class="tsd-kind-icon">run</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_src_contracts_index_.html#argtypes" class="tsd-kind-icon">Arg<wbr>Types</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_src_contracts_index_.html#commandarg" class="tsd-kind-icon">Command<wbr>Arg</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_src_contracts_index_.html#commandflag" class="tsd-kind-icon">Command<wbr>Flag</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_src_contracts_index_.html#commandsgroup" class="tsd-kind-icon">Commands<wbr>Group</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_src_contracts_index_.html#findhookcallback" class="tsd-kind-icon">Find<wbr>Hook<wbr>Callback</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_src_contracts_index_.html#flagtypes" class="tsd-kind-icon">Flag<wbr>Types</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_src_contracts_index_.html#generatorfileoptions" class="tsd-kind-icon">Generator<wbr>File<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_src_contracts_index_.html#globalflaghandler" class="tsd-kind-icon">Global<wbr>Flag<wbr>Handler</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_src_contracts_index_.html#manifestcommand" class="tsd-kind-icon">Manifest<wbr>Command</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_src_contracts_index_.html#manifestnode" class="tsd-kind-icon">Manifest<wbr>Node</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_src_contracts_index_.html#runhookcallback" class="tsd-kind-icon">Run<wbr>Hook<wbr>Callback</a>
-					</li>
 				</ul>
 			</nav>
 		</div>
