@@ -19,8 +19,8 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'Bar',
       contents: '',
-      filepath: join(__dirname, 'Bar.ts'),
-      relativepath: join(__dirname, 'Bar.ts'),
+      filepath: join(__dirname, 'foo', 'Bar.ts'),
+      relativepath: join(__dirname, 'foo', 'Bar.ts'),
       extension: '.ts',
     })
   })
@@ -32,8 +32,8 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'UserController',
       contents: '',
-      filepath: join(__dirname, 'UserController.ts'),
-      relativepath: join(__dirname, 'UserController.ts'),
+      filepath: join(__dirname, 'foo', 'UserController.ts'),
+      relativepath: join(__dirname, 'foo', 'UserController.ts'),
       extension: '.ts',
     })
   })
@@ -45,8 +45,8 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'UserController',
       contents: '',
-      filepath: join(__dirname, 'UserController.ts'),
-      relativepath: join(__dirname, 'UserController.ts'),
+      filepath: join(__dirname, 'foo', 'UserController.ts'),
+      relativepath: join(__dirname, 'foo', 'UserController.ts'),
       extension: '.ts',
     })
   })
@@ -58,14 +58,14 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'UsersController',
       contents: '',
-      filepath: join(__dirname, 'UsersController.ts'),
-      relativepath: join(__dirname, 'UsersController.ts'),
+      filepath: join(__dirname, 'foo', 'UsersController.ts'),
+      relativepath: join(__dirname, 'foo', 'UsersController.ts'),
       extension: '.ts',
     })
   })
 
   test('pluralize name properly when name has suffix', (assert) => {
-    const file = new GeneratorFile('foo/usercontroller', { suffix: 'controller', form: 'plural' })
+    const file = new GeneratorFile('usercontroller', { suffix: 'controller', form: 'plural' })
     file.destinationDir(__dirname)
 
     assert.deepEqual(file.toJSON(), {
@@ -78,7 +78,7 @@ test.group('Generator File', () => {
   })
 
   test('handle case where suffix is name is added after a dash', (assert) => {
-    const file = new GeneratorFile('foo/user-controller', { suffix: 'controller', form: 'plural' })
+    const file = new GeneratorFile('user-controller', { suffix: 'controller', form: 'plural' })
     file.destinationDir(__dirname)
 
     assert.deepEqual(file.toJSON(), {
@@ -98,14 +98,14 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'UsersController',
       contents: '',
-      filepath: join(__dirname, 'foo', 'UsersController.ts'),
-      relativepath: join('foo', 'UsersController.ts'),
+      filepath: join(__dirname, 'foo', 'foo', 'UsersController.ts'),
+      relativepath: join('foo', 'foo', 'UsersController.ts'),
       extension: '.ts',
     })
   })
 
   test('do not use app root when destination path is absolute', (assert) => {
-    const file = new GeneratorFile('foo/user-controller', { suffix: 'controller', form: 'plural' })
+    const file = new GeneratorFile('user-controller', { suffix: 'controller', form: 'plural' })
     file.appRoot(__dirname)
     file.destinationDir(__dirname)
 
@@ -119,7 +119,7 @@ test.group('Generator File', () => {
   })
 
   test('do not use app root when app root is not defined', (assert) => {
-    const file = new GeneratorFile('foo/user-controller', { suffix: 'controller', form: 'plural' })
+    const file = new GeneratorFile('user-controller', { suffix: 'controller', form: 'plural' })
     file.destinationDir('foo')
 
     assert.deepEqual(file.toJSON(), {
@@ -139,8 +139,8 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'UsersController',
       contents: 'Hello virk',
-      filepath: join('foo', 'UsersController.ts'),
-      relativepath: join('foo', 'UsersController.ts'),
+      filepath: join('foo', 'foo', 'UsersController.ts'),
+      relativepath: join('foo', 'foo', 'UsersController.ts'),
       extension: '.ts',
     })
   })

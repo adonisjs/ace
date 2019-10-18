@@ -91,16 +91,26 @@ export class GeneratorFile implements GeneratorFileContract {
       .changeCase(this._options.pattern || 'pascalcase')
       .toValue()
 
+    const initialFilePath = this._name.replace(basename(this._name), filename)
+
     /**
      * Computes the file absolute path, where the file will be created
      */
     const filepath = isAbsolute(this._destinationDir)
-      ? join(this._destinationDir, filename)
+      ? join(this._destinationDir, initialFilePath)
       : (
         this._appRoot
-          ? join(this._appRoot, this._destinationDir, filename)
-          : join(this._destinationDir, filename)
+          ? join(this._appRoot, this._destinationDir, initialFilePath)
+          : join(this._destinationDir, initialFilePath)
       )
+
+    /**
+     * Passing user values + the filename and extension
+     */
+    const templateContents = Object.assign({
+      extension,
+      filename,
+    }, this._templateContents)
 
     /**
      * Contents to the template file
@@ -108,8 +118,8 @@ export class GeneratorFile implements GeneratorFileContract {
     const contents = this._stub
       ? (
         this._isStubRaw
-        ? template(this._stub, this._templateContents)
-        : templateFromFile(this._stub, this._templateContents)
+        ? template(this._stub, templateContents)
+        : templateFromFile(this._stub, templateContents)
       )
       : ''
 
