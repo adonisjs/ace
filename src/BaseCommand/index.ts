@@ -11,6 +11,8 @@ import { ParsedOptions } from 'getopts'
 import { Logger } from '@poppinss/fancy-logs'
 import { Colors, FakeColors } from '@poppinss/colors'
 import { Prompt, FakePrompt } from '@poppinss/prompts'
+
+import { Generator } from '../Generator'
 import { CommandContract, CommandArg, CommandFlag } from '../Contracts'
 
 /**
@@ -97,6 +99,11 @@ export abstract class BaseCommand implements CommandContract {
    * Returns the instance of logger to log messages
    */
   public logger = new Logger({ fake: this.rawMode })
+
+  /**
+   * Generator instance to generate entity files
+   */
+  public generator = new Generator()
 
   /**
    * Returns a new instance of colors class. if `[[this.rawMode]]`

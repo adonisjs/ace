@@ -29,13 +29,20 @@
   "license": "MIT",
   "dependencies": {
     "@poppinss/colors": "^1.0.1",
+    "@poppinss/dev-utils": "^1.0.1",
     "@poppinss/fancy-logs": "^1.2.1",
     "@poppinss/prompts": "^1.0.3",
     "@poppinss/utils": "^2.0.0",
+    "camel-case": "^3.0.0",
     "fast-levenshtein": "^2.0.6",
+    "fs-extra": "^8.1.0",
     "getopts": "^2.2.4",
     "pad-right": "^0.2.2",
-    "param-case": "^2.1.1"
+    "param-case": "^2.1.1",
+    "pascal-case": "^2.0.1",
+    "pluralize": "^8.0.0",
+    "smpltmpl": "^1.0.2",
+    "snake-case": "^2.1.0"
   },
   "nyc": {
     "exclude": [

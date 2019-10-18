@@ -85,6 +85,39 @@ export interface CommandConstructorContract extends SerializedCommandContract {
   boot (): void
 }
 
+export type GeneratorFileOptions = {
+  pattern?: 'pascalcase' | 'camelcase' | 'snakecase',
+  form?: 'singular' | 'plural',
+  suffix?: string,
+  extname?: string,
+}
+
+/**
+ * Shape of the individual generator file
+ */
+export interface GeneratorFileContract {
+  stub (fileOrContents: string, options?: { raw: boolean }): this
+  destinationDir (directory: string): this
+  appRoot (directory: string): this
+  apply (contents: any): this
+  toJSON (): {
+    filename: string,
+    filepath: string,
+    extension: string,
+    contents: string,
+    relativepath: string,
+  }
+}
+
+/**
+ * Shape of the files generator
+ */
+export interface GeneratorContract {
+  addFile (name: string, options?: GeneratorFileOptions): GeneratorFileContract
+  run (): Promise<void>
+  clear (): void
+}
+
 /**
  * The shape of command class
  */
@@ -93,6 +126,7 @@ export interface CommandContract {
   logger: Logger,
   prompt: PromptContract,
   colors: Kleur,
+  generator: GeneratorContract,
   handle (...args: any[]): Promise<void>,
 }
 
