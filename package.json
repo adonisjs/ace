@@ -60,7 +60,7 @@
     "@adonisjs/dev-utils": "^1.4.0",
     "@adonisjs/fold": "^6.2.2",
     "@adonisjs/mrm-preset": "^2.1.0",
-    "@types/node": "^12.11.1",
+    "@types/node": "^12.11.2",
     "commitizen": "^4.0.3",
     "cz-conventional-changelog": "^3.0.2",
     "del-cli": "^3.0.0",
