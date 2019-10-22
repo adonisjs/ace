@@ -7,10 +7,10 @@
 * file that was distributed with this source code.
 */
 
-import { Kleur } from 'kleur'
 import { ParsedOptions } from 'getopts'
-import { PromptContract } from '@poppinss/prompts'
+import { Colors } from '@poppinss/colors'
 import { Logger } from '@poppinss/fancy-logs'
+import { PromptContract } from '@poppinss/prompts'
 
 /**
  * The types of flags can be defined on a command.
@@ -125,7 +125,7 @@ export interface CommandContract {
   parsed?: ParsedOptions,
   logger: Logger,
   prompt: PromptContract,
-  colors: Kleur,
+  colors: Colors,
   generator: GeneratorContract,
   handle (...args: any[]): Promise<void>,
 }

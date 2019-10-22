@@ -111,8 +111,8 @@ export abstract class BaseCommand implements CommandContract {
    * which has consistent output tailored for testing, otherwise
    * an instance of [[Kleur]] is returned.
    */
-  public get colors (): Colors | FakeColors {
-    return this.rawMode ? new FakeColors() : new Colors()
+  public get colors (): Colors {
+    return (this.rawMode ? new FakeColors() : new Colors()) as Colors
   }
 
   /**
