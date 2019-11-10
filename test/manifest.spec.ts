@@ -13,12 +13,16 @@ import { join } from 'path'
 import { Ioc } from '@adonisjs/fold'
 import { Filesystem } from '@adonisjs/dev-utils'
 
-import { Manifest } from '../src/Manifest'
 import { Kernel } from '../src/Kernel'
+import { Manifest } from '../src/Manifest'
 
 const fs = new Filesystem(join(__dirname, '__app'))
 
 test.group('Manifest', (group) => {
+  group.before(async () => {
+    await fs.ensureRoot()
+  })
+
   group.afterEach(async () => {
     await fs.cleanup()
   })
@@ -42,13 +46,13 @@ test.group('Manifest', (group) => {
     }`)
 
     const manifest = new Manifest(fs.basePath)
-    await manifest.generate(['Commands/Make.ts'])
+    await manifest.generate(['./Commands/Make.ts'])
 
     const manifestJSON = require(join(fs.basePath, 'ace-manifest.json'))
     assert.deepEqual(manifestJSON, {
       greet: {
         settings: {},
-        commandPath: 'Commands/Make',
+        commandPath: './Commands/Make',
         commandName: 'greet',
         description: 'Greet a user',
         args: [{
@@ -89,14 +93,14 @@ test.group('Manifest', (group) => {
     const manifest = new Manifest(fs.basePath)
 
     try {
-      await manifest.generate(['Commands/Make.ts'])
+      await manifest.generate(['./Commands/Make.ts'])
     } catch ({ message }) {
-      assert.equal(message, 'make sure to have a default export from {Commands/Make.ts} command')
+      assert.equal(message, 'make sure to have a default export from {./Commands/Make.ts} command')
     }
   })
 
   test('read manifest file', async (assert) => {
-    await fs.add('Commands/Make.ts', `
+    await fs.add('./Commands/Make.ts', `
     import { args, flags } from '../../../index'
     import { BaseCommand } from '../../../src/BaseCommand'
 
@@ -114,13 +118,13 @@ test.group('Manifest', (group) => {
     }`)
 
     const manifest = new Manifest(fs.basePath)
-    await manifest.generate(['Commands/Make.ts'])
+    await manifest.generate(['./Commands/Make.ts'])
 
     const manifestJSON = await manifest.load()
     assert.deepEqual(manifestJSON, {
       greet: {
         settings: {},
-        commandPath: 'Commands/Make',
+        commandPath: './Commands/Make',
         commandName: 'greet',
         description: 'Greet a user',
         args: [{
@@ -164,7 +168,7 @@ test.group('Manifest', (group) => {
     kernel.useContainer(ioc)
     kernel.useManifest(manifest)
 
-    await manifest.generate(['Commands/Make.ts'])
+    await manifest.generate(['./Commands/Make.ts'])
 
     ioc.bind('App/Foo', () => {
       class Foo {}

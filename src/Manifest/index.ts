@@ -7,6 +7,7 @@
 * file that was distributed with this source code.
 */
 
+import resolveFrom from 'resolve-from'
 import { writeFile, readFile } from 'fs'
 import { esmRequire } from '@poppinss/utils'
 import { join, isAbsolute, extname } from 'path'
@@ -21,7 +22,7 @@ import { CommandValidationException } from '../Exceptions/CommandValidationExcep
  * command.
  */
 export class Manifest {
-  constructor (private _appRoot: string) {
+  constructor (private _basePath: string) {
   }
 
   /**
@@ -29,7 +30,7 @@ export class Manifest {
    */
   private _writeManifest (manifest: ManifestNode): Promise<void> {
     return new Promise((resolve, reject) => {
-      writeFile(join(this._appRoot, 'ace-manifest.json'), JSON.stringify(manifest), (error) => {
+      writeFile(join(this._basePath, 'ace-manifest.json'), JSON.stringify(manifest), (error) => {
         if (error) {
           reject(error)
         } else {
@@ -43,8 +44,11 @@ export class Manifest {
    * Require and return command
    */
   public loadCommand (commandPath: string): CommandConstructorContract {
-    const absPath = isAbsolute(commandPath) ? commandPath : join(this._appRoot, commandPath)
+    if (isAbsolute(commandPath)) {
+      throw new Error(`Absolute path to commands are not allowed, since manifest file needs to be portable`)
+    }
 
+    const absPath = resolveFrom(this._basePath, commandPath)
     const command = esmRequire(absPath)
     if (!command.name) {
       throw CommandValidationException.invalidManifestExport(commandPath)
@@ -85,7 +89,7 @@ export class Manifest {
    */
   public load (): Promise<ManifestNode> {
     return new Promise((resolve, reject) => {
-      readFile(join(this._appRoot, 'ace-manifest.json'), 'utf-8', (error, contents) => {
+      readFile(join(this._basePath, 'ace-manifest.json'), 'utf-8', (error, contents) => {
         if (error) {
           reject(error)
         } else {
