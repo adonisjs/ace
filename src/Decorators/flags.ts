@@ -17,7 +17,7 @@ type DecoratorFlag = Partial<Pick<CommandFlag, Exclude<keyof CommandFlag, 'type'
  */
 function addFlag (type: FlagTypes, options: DecoratorFlag) {
   return function flag (target: any, propertyName: string) {
-    target.constructor.boot()
+    target.constructor.$boot()
     target.constructor.$defineFlag(Object.assign({ type, propertyName }, options))
   }
 }

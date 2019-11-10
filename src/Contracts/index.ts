@@ -81,8 +81,10 @@ export interface SerializedCommandContract {
  */
 export interface CommandConstructorContract extends SerializedCommandContract {
   new (...args: any[]): CommandContract,
-  booted: boolean,
-  boot (): void
+  $booted: boolean,
+  $boot (): void
+  $defineArgument (options: Partial<CommandArg>): void
+  $defineFlag (options: Partial<CommandFlag>): void
 }
 
 export type GeneratorFileOptions = {

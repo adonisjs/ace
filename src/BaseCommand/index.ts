@@ -56,14 +56,19 @@ export abstract class BaseCommand implements CommandContract {
   public static settings: any
 
   /**
+   * Whether or not the command has been booted
+   */
+  public static $booted: boolean
+
+  /**
    * Boots the command by defining required static properties
    */
-  public static boot () {
-    if (this.booted) {
+  public static $boot () {
+    if (this.$booted) {
       return
     }
 
-    this.booted = true
+    this.$booted = true
     Object.defineProperty(this, 'args', { value: [] })
     Object.defineProperty(this, 'flags', { value: [] })
 
@@ -114,11 +119,6 @@ export abstract class BaseCommand implements CommandContract {
 
     this.flags.push(flag)
   }
-
-  /**
-   * Whether or not the command has been booted
-   */
-  public static booted: boolean
 
   /**
    * Parsed options on the command. They only exist when the command

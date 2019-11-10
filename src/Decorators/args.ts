@@ -17,7 +17,7 @@ type DecoratorArg = Partial<Pick<CommandArg, Exclude<keyof CommandArg, 'type'>>>
  */
 function addArg (type: ArgTypes, options: DecoratorArg) {
   return function arg (target: any, propertyName: string) {
-    target.constructor.boot()
+    target.constructor.$boot()
     target.constructor.$defineArgument(Object.assign({ type, propertyName }, options))
   }
 }

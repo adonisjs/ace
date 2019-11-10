@@ -50,7 +50,7 @@ export class Manifest {
       throw CommandValidationException.invalidManifestExport(commandPath)
     }
 
-    command.boot()
+    command.$boot()
     return command
   }
 
@@ -61,7 +61,7 @@ export class Manifest {
     const manifest = commandPaths.reduce((manifest: ManifestNode, commandPath) => {
       const command = this.loadCommand(commandPath)
       validateCommand(command)
-      command.boot()
+      command.$boot()
 
       manifest[command.commandName] = {
         settings: command.settings || {},

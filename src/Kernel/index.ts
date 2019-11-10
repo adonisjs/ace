@@ -128,7 +128,7 @@ export class Kernel {
    */
   public register (commands: CommandConstructorContract[]): this {
     commands.forEach((command) => {
-      command.boot()
+      command.$boot()
       validateCommand(command)
       this.commands[command.commandName] = command
     })
