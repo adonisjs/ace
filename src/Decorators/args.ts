@@ -17,15 +17,8 @@ type DecoratorArg = Partial<Pick<CommandArg, Exclude<keyof CommandArg, 'type'>>>
  */
 function addArg (type: ArgTypes, options: DecoratorArg) {
   return function arg (target: any, propertyName: string) {
-    const arg: CommandArg = Object.assign({
-      type,
-      propertyName,
-      name: propertyName,
-      required: true,
-    }, options)
-
     target.constructor.boot()
-    target.constructor.args.push(arg)
+    target.constructor.$defineArgument(Object.assign({ type, propertyName }, options))
   }
 }
 

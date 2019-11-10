@@ -7,6 +7,7 @@
 * file that was distributed with this source code.
 */
 
+import paramCase from 'param-case'
 import { ParsedOptions } from 'getopts'
 import { Logger } from '@poppinss/fancy-logs'
 import { Colors, FakeColors } from '@poppinss/colors'
@@ -77,6 +78,41 @@ export abstract class BaseCommand implements CommandContract {
     if (!this.hasOwnProperty('description')) {
       Object.defineProperty(this, 'description', { value: '' })
     }
+  }
+
+  /**
+   * Add a new argument to the list of command arguments
+   */
+  public static $defineArgument (options: Partial<CommandArg>) {
+    if (!options.propertyName) {
+      throw new Error('"propertyName" is required to register command argument')
+    }
+
+    const arg: CommandArg = Object.assign({
+      type: options.type || 'string',
+      propertyName: options.propertyName,
+      name: options.name || options.propertyName,
+      required: options.required === false ? false : true,
+    }, options)
+
+    this.args.push(arg)
+  }
+
+  /**
+   * Add a new flag to the list of command flags
+   */
+  public static $defineFlag (options: Partial<CommandFlag>) {
+    if (!options.propertyName) {
+      throw new Error('"propertyName" is required to register command flag')
+    }
+
+    const flag: CommandFlag = Object.assign({
+      name: options.name || paramCase(options.propertyName),
+      propertyName: options.propertyName,
+      type: options.type || 'boolean',
+    }, options)
+
+    this.flags.push(flag)
   }
 
   /**
