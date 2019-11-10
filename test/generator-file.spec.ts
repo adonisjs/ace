@@ -144,4 +144,30 @@ test.group('Generator File', () => {
       extension: '.ts',
     })
   })
+
+  test('add prefix when defined', (assert) => {
+    const file = new GeneratorFile('foo/user', { prefix: 'controller' })
+    file.destinationDir(__dirname)
+
+    assert.deepEqual(file.toJSON(), {
+      filename: 'ControllerUser',
+      contents: '',
+      filepath: join(__dirname, 'foo', 'ControllerUser.ts'),
+      relativepath: join(__dirname, 'foo', 'ControllerUser.ts'),
+      extension: '.ts',
+    })
+  })
+
+  test('do not add prefix when already defined in the name', (assert) => {
+    const file = new GeneratorFile('foo/controlleruser', { prefix: 'controller' })
+    file.destinationDir(__dirname)
+
+    assert.deepEqual(file.toJSON(), {
+      filename: 'ControllerUser',
+      contents: '',
+      filepath: join(__dirname, 'foo', 'ControllerUser.ts'),
+      relativepath: join(__dirname, 'foo', 'ControllerUser.ts'),
+      extension: '.ts',
+    })
+  })
 })

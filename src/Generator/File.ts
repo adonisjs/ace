@@ -86,8 +86,10 @@ export class GeneratorFile implements GeneratorFileContract {
     const filename = new StringTransformer(basename(this._name))
       .dropExtension()
       .cleanSuffix(this._options.suffix)
+      .cleanPrefix(this._options.prefix)
       .changeForm(this._options.form)
       .addSuffix(this._options.suffix)
+      .addPrefix(this._options.prefix)
       .changeCase(this._options.pattern || 'pascalcase')
       .toValue()
 

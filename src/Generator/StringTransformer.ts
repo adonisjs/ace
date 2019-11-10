@@ -33,6 +33,18 @@ export class StringTransformer {
   }
 
   /**
+   * Cleans prefix from the input.
+   */
+  public cleanPrefix (prefix?: string): this {
+    if (!prefix) {
+      return this
+    }
+
+    this._input = this._input.replace(new RegExp(`^${prefix}[-_]?`, 'i'), '')
+    return this
+  }
+
+  /**
    * Add suffix to the file name
    */
   public addSuffix (suffix?: string): this {
@@ -41,6 +53,18 @@ export class StringTransformer {
     }
 
     this._input = `${this._input}_${suffix}`
+    return this
+  }
+
+  /**
+   * Add prefix to the file name
+   */
+  public addPrefix (prefix?: string): this {
+    if (!prefix) {
+      return this
+    }
+
+    this._input = `${prefix}_${this._input}`
     return this
   }
 

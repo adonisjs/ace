@@ -89,6 +89,7 @@ export type GeneratorFileOptions = {
   pattern?: 'pascalcase' | 'camelcase' | 'snakecase',
   form?: 'singular' | 'plural',
   suffix?: string,
+  prefix?: string,
   extname?: string,
 }
 
