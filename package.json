@@ -31,7 +31,7 @@
     "@poppinss/colors": "^1.0.1",
     "@poppinss/dev-utils": "^1.0.1",
     "@poppinss/fancy-logs": "^1.2.1",
-    "@poppinss/prompts": "^1.0.3",
+    "@poppinss/prompts": "^1.0.4",
     "@poppinss/utils": "^2.0.0",
     "camel-case": "^3.0.0",
     "fast-levenshtein": "^2.0.6",
