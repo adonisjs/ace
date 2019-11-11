@@ -71,7 +71,7 @@
     "mrm": "^1.2.2",
     "np": "^5.1.3",
     "reflect-metadata": "^0.1.13",
-    "ts-node": "^8.4.1",
+    "ts-node": "^8.5.0",
     "tslint": "^5.20.1",
     "tslint-eslint-rules": "^5.4.0",
     "typedoc": "^0.15.0",
