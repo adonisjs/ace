@@ -14,19 +14,23 @@ import { Exception } from '@poppinss/utils'
  * registering it with Ace.
  */
 export class CommandValidationException extends Exception {
-  public static invalidManifestExport (commandPath: string) {
+  public static invalidManifestExport (commandPath: string): CommandValidationException {
     return new this(`make sure to have a default export from {${commandPath}} command`)
   }
 
-  public static missingCommandName (className: string) {
+  public static missingCommandName (className: string): CommandValidationException {
     return new this(`missing command name for {${className}} class`)
   }
 
-  public static invalidSpreadArgOrder (arg: string) {
+  public static invalidSpreadArgOrder (arg: string): CommandValidationException {
     return new this(`spread argument {${arg}} must be at last position`)
   }
 
-  public static invalidOptionalArgOrder (optionalArg: string, currentArg: string) {
-    return new this(`optional argument {${optionalArg}} must be after required argument {${currentArg}}`)
+  public static invalidOptionalArgOrder (
+    optionalArg: string,
+    currentArg: string,
+  ): CommandValidationException {
+    const message = `optional argument {${optionalArg}} must be after required argument {${currentArg}}`
+    return new this(message)
   }
 }

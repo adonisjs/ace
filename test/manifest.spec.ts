@@ -180,4 +180,15 @@ test.group('Manifest', (group) => {
 
     delete global['foo']
   })
+
+  test('raise exception when manifest file is missing', async (assert) => {
+    assert.plan(1)
+    const manifest = new Manifest(fs.basePath)
+
+    try {
+      await manifest.load()
+    } catch ({ message }) {
+      assert.equal(message, 'Unable to locate ace-manifest.json file')
+    }
+  })
 })
