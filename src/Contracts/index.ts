@@ -7,6 +7,7 @@
 * file that was distributed with this source code.
 */
 
+import { Dirent } from 'fs'
 import { ParsedOptions } from 'getopts'
 import { Colors } from '@poppinss/colors'
 import { Logger } from '@poppinss/fancy-logs'
@@ -150,3 +151,5 @@ export type ManifestNode = {
  */
 export type FindHookCallback = (command: SerializedCommandContract | null) => Promise<void> | void
 export type RunHookCallback = (command: CommandContract) => Promise<void> | void
+
+export type DirectoryCommandsListFilterFn = ((stat: Dirent) => boolean)

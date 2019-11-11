@@ -8,8 +8,9 @@
 */
 
 export { Kernel } from './src/Kernel'
-export { BaseCommand } from './src/BaseCommand'
+export { Manifest } from './src/Manifest'
 export { args } from './src/Decorators/args'
 export { flags } from './src/Decorators/flags'
+export { BaseCommand } from './src/BaseCommand'
 export { handleError } from './src/utils/handleError'
-export { Manifest } from './src/Manifest'
+export { listDirectoryFiles } from './src/utils/listDirectoryFiles'
