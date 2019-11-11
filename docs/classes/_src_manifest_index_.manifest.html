@@ -98,6 +98,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_manifest_index_.manifest.html#generate" class="tsd-kind-icon">generate</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_manifest_index_.manifest.html#load" class="tsd-kind-icon">load</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_manifest_index_.manifest.html#loadcommand" class="tsd-kind-icon">load<wbr>Command</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_manifest_index_.manifest.html#lookupcommands" class="tsd-kind-icon">lookup<wbr>Commands</a></li>
 							</ul>
 						</section>
 					</div>
@@ -115,7 +116,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/9f411d7/src/Manifest/index.ts#L24">src/Manifest/index.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/Manifest/index.ts#L25">src/Manifest/index.ts:25</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -141,7 +142,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/9f411d7/src/Manifest/index.ts#L64">src/Manifest/index.ts:64</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/Manifest/index.ts#L93">src/Manifest/index.ts:93</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -169,7 +170,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/9f411d7/src/Manifest/index.ts#L90">src/Manifest/index.ts:90</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/Manifest/index.ts#L121">src/Manifest/index.ts:121</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -193,12 +194,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/9f411d7/src/Manifest/index.ts#L46">src/Manifest/index.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/Manifest/index.ts#L47">src/Manifest/index.ts:47</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Require and return command</p>
+									<p>Loads a single command from the manifest commands list.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -208,6 +209,35 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_src_contracts_index_.commandconstructorcontract.html" class="tsd-signature-type">CommandConstructorContract</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="lookupcommands" class="tsd-anchor"></a>
+					<h3>lookup<wbr>Commands</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">lookup<wbr>Commands<span class="tsd-signature-symbol">(</span>commandPath<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_contracts_index_.commandconstructorcontract.html" class="tsd-signature-type">CommandConstructorContract</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/Manifest/index.ts#L63">src/Manifest/index.ts:63</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Look up commands from a given path. The modules can also return an array
+									of sub-paths from where to load additional commands.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>commandPath: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_src_contracts_index_.commandconstructorcontract.html" class="tsd-signature-type">CommandConstructorContract</a><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -247,6 +277,9 @@
 						<a href="../modules/_src_exceptions_missingcommandargument_.html">"src/<wbr>Exceptions/<wbr>Missing<wbr>Command<wbr>Argument"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_exceptions_missingmanifestfileexception_.html">"src/<wbr>Exceptions/<wbr>Missing<wbr>Manifest<wbr>File<wbr>Exception"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_src_generator_file_.html">"src/<wbr>Generator/<wbr>File"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -274,6 +307,9 @@
 						<a href="../modules/_src_utils_help_.html">"src/utils/help"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_utils_listdirectoryfiles_.html">"src/utils/list<wbr>Directory<wbr>Files"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_src_utils_sortandgroupcommands_.html">"src/utils/sort<wbr>And<wbr>Group<wbr>Commands"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -299,6 +335,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_src_manifest_index_.manifest.html#loadcommand" class="tsd-kind-icon">load<wbr>Command</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_src_manifest_index_.manifest.html#lookupcommands" class="tsd-kind-icon">lookup<wbr>Commands</a>
 							</li>
 						</ul>
 					</li>
