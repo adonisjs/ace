@@ -42,6 +42,9 @@ import {
   flags
 } from '@adonisjs/ace'
 
+import { Ioc } from '@adonisjs/fold'
+import { Application } from '@adonisjs/application/build/standalone'
+
 class Make extends BaseCommand {
   @args.string()
   public resource: string
@@ -63,7 +66,8 @@ class Make extends BaseCommand {
   }  
 }
 
-const kernel = new Kernel()
+const application = new Application(__dirname, new Ioc(), {}, {})
+const kernel = new Kernel(app)
 kernel.register([Make]) 
 
 kernel.handle(process.argv.splice(2))
@@ -75,7 +79,12 @@ Ace doesn't hijack any flags or commands to display the help. You are free to de
 ```ts
 import { Kernel, BaseCommand } from '@adonisjs/ace'
 
-const kernel = new Kernel()
+import { Ioc } from '@adonisjs/fold'
+import { Application } from '@adonisjs/application/build/standalone'
+
+const application = new Application(__dirname, new Ioc(), {}, {})
+const kernel = new Kernel(app)
+
 kernel.flag('help', (value, options, command) => {
   if (!value) {
     return
