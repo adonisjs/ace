@@ -7,5 +7,6 @@
   },
   "include": [
     "**/*"
-  ]
+  ],
+  "files": ["./node_modules/@adonisjs/application/build/adonis-typings/application.d.ts"]
 }

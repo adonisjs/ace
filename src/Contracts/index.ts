@@ -12,6 +12,7 @@ import { ParsedOptions } from 'getopts'
 import { Colors } from '@poppinss/colors'
 import { Logger } from '@poppinss/fancy-logs'
 import { PromptContract } from '@poppinss/prompts'
+import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 
 /**
  * The types of flags can be defined on a command.
@@ -81,7 +82,7 @@ export interface SerializedCommandContract {
  * Command constructor shape with it's static properties
  */
 export interface CommandConstructorContract extends SerializedCommandContract {
-  new (...args: any[]): CommandContract,
+  new (application: ApplicationContract, ...args: any[]): CommandContract,
   $booted: boolean,
   $boot (): void
   $defineArgument (options: Partial<CommandArg>): void

@@ -12,6 +12,7 @@ import test from 'japa'
 import { join } from 'path'
 import { Ioc } from '@adonisjs/fold'
 import { Filesystem } from '@adonisjs/dev-utils'
+import { Application } from '@adonisjs/application/build/standalone'
 
 import { Kernel } from '../src/Kernel'
 import { Manifest } from '../src/Manifest'
@@ -162,10 +163,10 @@ test.group('Manifest', (group) => {
     }`)
 
     const ioc = new Ioc()
-    const kernel = new Kernel()
+    const app = new Application(__dirname, ioc, {}, {})
+    const kernel = new Kernel(app)
     const manifest = new Manifest(fs.basePath)
 
-    kernel.useContainer(ioc)
     kernel.useManifest(manifest)
 
     await manifest.generate(['./Commands/Make.ts'])

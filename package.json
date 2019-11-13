@@ -58,6 +58,7 @@
     "tag": "next"
   },
   "devDependencies": {
+    "@adonisjs/application": "^1.2.1",
     "@adonisjs/dev-utils": "^1.4.0",
     "@adonisjs/fold": "^6.2.3",
     "@adonisjs/mrm-preset": "^2.1.0",

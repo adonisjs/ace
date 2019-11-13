@@ -12,6 +12,7 @@ import { ParsedOptions } from 'getopts'
 import { Logger } from '@poppinss/fancy-logs'
 import { Colors, FakeColors } from '@poppinss/colors'
 import { Prompt, FakePrompt } from '@poppinss/prompts'
+import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 
 import { Generator } from '../Generator'
 import { CommandContract, CommandArg, CommandFlag } from '../Contracts'
@@ -21,10 +22,9 @@ import { CommandContract, CommandArg, CommandFlag } from '../Contracts'
  */
 export abstract class BaseCommand implements CommandContract {
   /**
-   * When set to true, the command will collect the output of [[this.colors]]
-   * and [[this.log]] in memory, instead of printing them to the console.
+   * Accepting AdonisJs application instance.
    */
-  constructor (public rawMode: boolean = false) {
+  constructor (public application: ApplicationContract) {
   }
 
   /**
@@ -129,12 +129,14 @@ export abstract class BaseCommand implements CommandContract {
   /**
    * The prompt for the command
    */
-  public prompt: Prompt | FakePrompt = this.rawMode ? new FakePrompt() : new Prompt()
+  public prompt: Prompt | FakePrompt = this.application.environment === 'test'
+    ? new FakePrompt()
+    : new Prompt()
 
   /**
    * Returns the instance of logger to log messages
    */
-  public logger = new Logger({ fake: this.rawMode })
+  public logger = new Logger({ fake: this.application.environment === 'test' })
 
   /**
    * Generator instance to generate entity files
@@ -142,13 +144,13 @@ export abstract class BaseCommand implements CommandContract {
   public generator = new Generator()
 
   /**
-   * Returns a new instance of colors class. if `[[this.rawMode]]`
-   * is set to true, then it will return an instance of [[Stringify]]
-   * which has consistent output tailored for testing, otherwise
-   * an instance of [[Kleur]] is returned.
+   * Returns a new instance of colors class. If application is in test mode
+   * hen it will return an instance of [[Stringify]] which has consistent
+   * output tailored for testing, otherwise an instance of [[Kleur]] is
+   * returned.
    */
   public get colors (): Colors {
-    return (this.rawMode ? new FakeColors() : new Colors()) as Colors
+    return (this.application.environment === 'test' ? new FakeColors() : new Colors()) as Colors
   }
 
   /**

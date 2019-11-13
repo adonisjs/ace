@@ -8,7 +8,7 @@
 */
 
 import getopts from 'getopts'
-import { IocContract } from '@adonisjs/fold'
+import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 
 import { Hooks } from '../Hooks'
 import { Parser } from '../Parser'
@@ -61,11 +61,8 @@ export class Kernel {
    */
   private _hooks = new Hooks()
 
-  /**
-   * You can set the container on the kernel instance, if you want
-   * to make the command instances using the IoC container.
-   */
-  private _container: IocContract
+  constructor (public application: ApplicationContract) {
+  }
 
   /**
    * Executing global flag handlers. The global flag handlers are
@@ -276,10 +273,7 @@ export class Kernel {
 
     await this._hooks.excute('before', 'run', commandInstance)
 
-    const response = await this._container
-      ? this._container.call(commandInstance, 'handle', [])
-      : commandInstance.handle()
-
+    const response = await this.application.container.call(commandInstance, 'handle', [])
     await this._hooks.excute('after', 'run', commandInstance)
 
     return response
@@ -322,10 +316,7 @@ export class Kernel {
       throw new Error(`${argv[0]} is not a registered command`)
     }
 
-    const commandInstance = this._container
-      ? this._container.make(command as any, [false] as any)
-      : new command(false)
-
+    const commandInstance = this.application.container.make(command as any, [this.application as any])
     return this.runCommand(argv, commandInstance)
   }
 
@@ -334,15 +325,6 @@ export class Kernel {
    */
   public useManifest (manifest: Manifest): this {
     this._manifest = manifest
-    return this
-  }
-
-  /**
-   * Make kernel use IoC container for making command instances or invoking
-   * command handle method
-   */
-  public useContainer (container: IocContract): this {
-    this._container = container
     return this
   }
 
