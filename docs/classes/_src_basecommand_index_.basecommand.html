@@ -99,11 +99,11 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_basecommand_index_.basecommand.html#application" class="tsd-kind-icon">application</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_basecommand_index_.basecommand.html#generator" class="tsd-kind-icon">generator</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_basecommand_index_.basecommand.html#logger" class="tsd-kind-icon">logger</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_basecommand_index_.basecommand.html#parsed" class="tsd-kind-icon">parsed</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_basecommand_index_.basecommand.html#prompt" class="tsd-kind-icon">prompt</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_basecommand_index_.basecommand.html#rawmode" class="tsd-kind-icon">raw<wbr>Mode</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_src_basecommand_index_.basecommand.html#_booted" class="tsd-kind-icon">$booted</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_src_basecommand_index_.basecommand.html#args" class="tsd-kind-icon">args</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_src_basecommand_index_.basecommand.html#commandname" class="tsd-kind-icon">command<wbr>Name</a></li>
@@ -136,25 +136,24 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Base<wbr>Command<span class="tsd-signature-symbol">(</span>rawMode<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_basecommand_index_.basecommand.html" class="tsd-signature-type">BaseCommand</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Base<wbr>Command<span class="tsd-signature-symbol">(</span>application<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ApplicationContract</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_basecommand_index_.basecommand.html" class="tsd-signature-type">BaseCommand</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/BaseCommand/index.ts#L22">src/BaseCommand/index.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f240b9f/src/BaseCommand/index.ts#L23">src/BaseCommand/index.ts:23</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>When set to true, the command will collect the output of [[this.colors]]
-									and [[this.log]] in memory, instead of printing them to the console.</p>
+									<p>Accepting AdonisJs application instance.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> rawMode: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></h5>
+									<h5>application: <span class="tsd-signature-type">ApplicationContract</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_src_basecommand_index_.basecommand.html" class="tsd-signature-type">BaseCommand</a></h4>
@@ -165,13 +164,23 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="application" class="tsd-anchor"></a>
+					<h3>application</h3>
+					<div class="tsd-signature tsd-kind-icon">application<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ApplicationContract</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f240b9f/src/BaseCommand/index.ts#L27">src/BaseCommand/index.ts:27</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="generator" class="tsd-anchor"></a>
 					<h3>generator</h3>
 					<div class="tsd-signature tsd-kind-icon">generator<span class="tsd-signature-symbol">:</span> <a href="_src_generator_index_.generator.html" class="tsd-signature-type">Generator</a><span class="tsd-signature-symbol"> =&nbsp;new Generator()</span></div>
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/_src_contracts_index_.commandcontract.html">CommandContract</a>.<a href="../interfaces/_src_contracts_index_.commandcontract.html#generator">generator</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/BaseCommand/index.ts#L142">src/BaseCommand/index.ts:142</a></li>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f240b9f/src/BaseCommand/index.ts#L144">src/BaseCommand/index.ts:144</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -183,11 +192,11 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="logger" class="tsd-anchor"></a>
 					<h3>logger</h3>
-					<div class="tsd-signature tsd-kind-icon">logger<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Logger</span><span class="tsd-signature-symbol"> =&nbsp;new Logger({ fake: this.rawMode })</span></div>
+					<div class="tsd-signature tsd-kind-icon">logger<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Logger</span><span class="tsd-signature-symbol"> =&nbsp;new Logger({ fake: this.application.environment &#x3D;&#x3D;&#x3D; &#x27;test&#x27; })</span></div>
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/_src_contracts_index_.commandcontract.html">CommandContract</a>.<a href="../interfaces/_src_contracts_index_.commandcontract.html#logger">logger</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/BaseCommand/index.ts#L137">src/BaseCommand/index.ts:137</a></li>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f240b9f/src/BaseCommand/index.ts#L139">src/BaseCommand/index.ts:139</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -203,7 +212,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/_src_contracts_index_.commandcontract.html">CommandContract</a>.<a href="../interfaces/_src_contracts_index_.commandcontract.html#parsed">parsed</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/BaseCommand/index.ts#L127">src/BaseCommand/index.ts:127</a></li>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f240b9f/src/BaseCommand/index.ts#L127">src/BaseCommand/index.ts:127</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -216,11 +225,11 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="prompt" class="tsd-anchor"></a>
 					<h3>prompt</h3>
-					<div class="tsd-signature tsd-kind-icon">prompt<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Prompt</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">FakePrompt</span><span class="tsd-signature-symbol"> =&nbsp;this.rawMode ? new FakePrompt() : new Prompt()</span></div>
+					<div class="tsd-signature tsd-kind-icon">prompt<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Prompt</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">FakePrompt</span><span class="tsd-signature-symbol"> =&nbsp;this.application.environment &#x3D;&#x3D;&#x3D; &#x27;test&#x27;? new FakePrompt(): new Prompt()</span></div>
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/_src_contracts_index_.commandcontract.html">CommandContract</a>.<a href="../interfaces/_src_contracts_index_.commandcontract.html#prompt">prompt</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/BaseCommand/index.ts#L132">src/BaseCommand/index.ts:132</a></li>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f240b9f/src/BaseCommand/index.ts#L132">src/BaseCommand/index.ts:132</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -229,23 +238,13 @@
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="rawmode" class="tsd-anchor"></a>
-					<h3>raw<wbr>Mode</h3>
-					<div class="tsd-signature tsd-kind-icon">raw<wbr>Mode<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/BaseCommand/index.ts#L27">src/BaseCommand/index.ts:27</a></li>
-						</ul>
-					</aside>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 					<a name="_booted" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> $booted</h3>
 					<div class="tsd-signature tsd-kind-icon">$booted<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/BaseCommand/index.ts#L61">src/BaseCommand/index.ts:61</a></li>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f240b9f/src/BaseCommand/index.ts#L61">src/BaseCommand/index.ts:61</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -260,7 +259,7 @@
 					<div class="tsd-signature tsd-kind-icon">args<span class="tsd-signature-symbol">:</span> <a href="../modules/_src_contracts_index_.html#commandarg" class="tsd-signature-type">CommandArg</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/BaseCommand/index.ts#L33">src/BaseCommand/index.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f240b9f/src/BaseCommand/index.ts#L33">src/BaseCommand/index.ts:33</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -275,7 +274,7 @@
 					<div class="tsd-signature tsd-kind-icon">command<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/BaseCommand/index.ts#L43">src/BaseCommand/index.ts:43</a></li>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f240b9f/src/BaseCommand/index.ts#L43">src/BaseCommand/index.ts:43</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -290,7 +289,7 @@
 					<div class="tsd-signature tsd-kind-icon">description<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/BaseCommand/index.ts#L49">src/BaseCommand/index.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f240b9f/src/BaseCommand/index.ts#L49">src/BaseCommand/index.ts:49</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -306,7 +305,7 @@
 					<div class="tsd-signature tsd-kind-icon">flags<span class="tsd-signature-symbol">:</span> <a href="../modules/_src_contracts_index_.html#commandflag" class="tsd-signature-type">CommandFlag</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/BaseCommand/index.ts#L38">src/BaseCommand/index.ts:38</a></li>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f240b9f/src/BaseCommand/index.ts#L38">src/BaseCommand/index.ts:38</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -321,7 +320,7 @@
 					<div class="tsd-signature tsd-kind-icon">settings<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/BaseCommand/index.ts#L56">src/BaseCommand/index.ts:56</a></li>
+							<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f240b9f/src/BaseCommand/index.ts#L56">src/BaseCommand/index.ts:56</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -345,15 +344,15 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/BaseCommand/index.ts#L150">src/BaseCommand/index.ts:150</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f240b9f/src/BaseCommand/index.ts#L152">src/BaseCommand/index.ts:152</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Returns a new instance of colors class. if <code>[[this.rawMode]]</code>
-										is set to true, then it will return an instance of [[Stringify]]
-										which has consistent output tailored for testing, otherwise
-									an instance of [[Kleur]] is returned.</p>
+									<p>Returns a new instance of colors class. If application is in test mode
+										hen it will return an instance of [[Stringify]] which has consistent
+										output tailored for testing, otherwise an instance of [[Kleur]] is
+									returned.</p>
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Colors</span></h4>
@@ -374,7 +373,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_src_contracts_index_.commandcontract.html">CommandContract</a>.<a href="../interfaces/_src_contracts_index_.commandcontract.html#handle">handle</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/BaseCommand/index.ts#L157">src/BaseCommand/index.ts:157</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f240b9f/src/BaseCommand/index.ts#L159">src/BaseCommand/index.ts:159</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -402,7 +401,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/BaseCommand/index.ts#L66">src/BaseCommand/index.ts:66</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f240b9f/src/BaseCommand/index.ts#L66">src/BaseCommand/index.ts:66</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -424,7 +423,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/BaseCommand/index.ts#L91">src/BaseCommand/index.ts:91</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f240b9f/src/BaseCommand/index.ts#L91">src/BaseCommand/index.ts:91</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -452,7 +451,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/1793773/src/BaseCommand/index.ts#L109">src/BaseCommand/index.ts:109</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/f240b9f/src/BaseCommand/index.ts#L109">src/BaseCommand/index.ts:109</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -479,70 +478,70 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_example_index_.html">"example/index"</a>
+						<a href="../modules/_example_index_.html">&quot;example/index&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_index_.html">"index"</a>
+						<a href="../modules/_index_.html">&quot;index&quot;</a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_src_basecommand_index_.html">"src/<wbr>Base<wbr>Command/index"</a>
+						<a href="../modules/_src_basecommand_index_.html">&quot;src/<wbr>Base<wbr>Command/index&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_contracts_index_.html">"src/<wbr>Contracts/index"</a>
+						<a href="../modules/_src_contracts_index_.html">&quot;src/<wbr>Contracts/index&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_decorators_args_.html">"src/<wbr>Decorators/args"</a>
+						<a href="../modules/_src_decorators_args_.html">&quot;src/<wbr>Decorators/args&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_decorators_flags_.html">"src/<wbr>Decorators/flags"</a>
+						<a href="../modules/_src_decorators_flags_.html">&quot;src/<wbr>Decorators/flags&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_exceptions_commandvalidationexception_.html">"src/<wbr>Exceptions/<wbr>Command<wbr>Validation<wbr>Exception"</a>
+						<a href="../modules/_src_exceptions_commandvalidationexception_.html">&quot;src/<wbr>Exceptions/<wbr>Command<wbr>Validation<wbr>Exception&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_exceptions_invalidflagtype_.html">"src/<wbr>Exceptions/<wbr>Invalid<wbr>Flag<wbr>Type"</a>
+						<a href="../modules/_src_exceptions_invalidflagtype_.html">&quot;src/<wbr>Exceptions/<wbr>Invalid<wbr>Flag<wbr>Type&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_exceptions_missingcommandargument_.html">"src/<wbr>Exceptions/<wbr>Missing<wbr>Command<wbr>Argument"</a>
+						<a href="../modules/_src_exceptions_missingcommandargument_.html">&quot;src/<wbr>Exceptions/<wbr>Missing<wbr>Command<wbr>Argument&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_exceptions_missingmanifestfileexception_.html">"src/<wbr>Exceptions/<wbr>Missing<wbr>Manifest<wbr>File<wbr>Exception"</a>
+						<a href="../modules/_src_exceptions_missingmanifestfileexception_.html">&quot;src/<wbr>Exceptions/<wbr>Missing<wbr>Manifest<wbr>File<wbr>Exception&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_generator_file_.html">"src/<wbr>Generator/<wbr>File"</a>
+						<a href="../modules/_src_generator_file_.html">&quot;src/<wbr>Generator/<wbr>File&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_generator_stringtransformer_.html">"src/<wbr>Generator/<wbr>String<wbr>Transformer"</a>
+						<a href="../modules/_src_generator_stringtransformer_.html">&quot;src/<wbr>Generator/<wbr>String<wbr>Transformer&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_generator_index_.html">"src/<wbr>Generator/index"</a>
+						<a href="../modules/_src_generator_index_.html">&quot;src/<wbr>Generator/index&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_hooks_index_.html">"src/<wbr>Hooks/index"</a>
+						<a href="../modules/_src_hooks_index_.html">&quot;src/<wbr>Hooks/index&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_kernel_index_.html">"src/<wbr>Kernel/index"</a>
+						<a href="../modules/_src_kernel_index_.html">&quot;src/<wbr>Kernel/index&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_manifest_index_.html">"src/<wbr>Manifest/index"</a>
+						<a href="../modules/_src_manifest_index_.html">&quot;src/<wbr>Manifest/index&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_parser_index_.html">"src/<wbr>Parser/index"</a>
+						<a href="../modules/_src_parser_index_.html">&quot;src/<wbr>Parser/index&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_utils_handleerror_.html">"src/utils/handle<wbr>Error"</a>
+						<a href="../modules/_src_utils_handleerror_.html">&quot;src/utils/handle<wbr>Error&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_utils_help_.html">"src/utils/help"</a>
+						<a href="../modules/_src_utils_help_.html">&quot;src/utils/help&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_utils_listdirectoryfiles_.html">"src/utils/list<wbr>Directory<wbr>Files"</a>
+						<a href="../modules/_src_utils_listdirectoryfiles_.html">&quot;src/utils/list<wbr>Directory<wbr>Files&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_utils_sortandgroupcommands_.html">"src/utils/sort<wbr>And<wbr>Group<wbr>Commands"</a>
+						<a href="../modules/_src_utils_sortandgroupcommands_.html">&quot;src/utils/sort<wbr>And<wbr>Group<wbr>Commands&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_utils_validatecommand_.html">"src/utils/validate<wbr>Command"</a>
+						<a href="../modules/_src_utils_validatecommand_.html">&quot;src/utils/validate<wbr>Command&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -557,6 +556,9 @@
 								<a href="_src_basecommand_index_.basecommand.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_src_basecommand_index_.basecommand.html#application" class="tsd-kind-icon">application</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_src_basecommand_index_.basecommand.html#generator" class="tsd-kind-icon">generator</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
@@ -567,9 +569,6 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_src_basecommand_index_.basecommand.html#prompt" class="tsd-kind-icon">prompt</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_src_basecommand_index_.basecommand.html#rawmode" class="tsd-kind-icon">raw<wbr>Mode</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
 								<a href="_src_basecommand_index_.basecommand.html#_booted" class="tsd-kind-icon">$booted</a>

@@ -12,6 +12,9 @@ import { Kernel } from '../src/Kernel'
 import { args } from '../src/Decorators/args'
 import { flags } from '../src/Decorators/flags'
 
+import { Ioc } from '@adonisjs/fold'
+import { Application } from '@adonisjs/application/build/standalone'
+
 class Greet extends BaseCommand {
   public static commandName = 'greet'
   public static description = 'Greet a user with their name'
@@ -61,7 +64,8 @@ class MakeModel extends BaseCommand {
   }
 }
 
-const kernel = new Kernel()
+const app = new Application(__dirname, new Ioc(), {}, {})
+const kernel = new Kernel(app)
 kernel.register([Greet, MakeController, MakeModel])
 
 kernel.flag('env', (value) => {
