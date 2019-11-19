@@ -108,6 +108,31 @@ test.group('Kernel | register', () => {
     assert.deepEqual(kernel.getSuggestions('itall'), ['install'])
   })
 
+  test('return command name suggestions from manifest file', async (assert) => {
+    const app = new Application(__dirname, new Ioc(), {}, {})
+    const kernel = new Kernel(app)
+
+    const manifest = new Manifest(fs.basePath)
+
+    await fs.add(`ace-manifest.json`, JSON.stringify({
+      greet: {
+        commandName: 'greet',
+        commandPath: './Commands/Greet.ts',
+      },
+    }))
+
+    await fs.add('Commands/Greet.ts', `export default class Greet {
+      public static commandName = 'greet'
+      public static $boot () {}
+    }`)
+
+    kernel.useManifest(manifest)
+    kernel.manifestCommands = await manifest.load()
+    assert.deepEqual(kernel.getSuggestions('eet'), ['greet'])
+
+    await fs.cleanup()
+  })
+
   test('change camelCase alias name to dashcase', (assert) => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
@@ -167,6 +192,39 @@ test.group('Kernel | find', () => {
 
     const greet = await kernel.find(['greet'])
     assert.equal(greet!.name, 'Greet')
+
+    await fs.cleanup()
+  })
+
+  test('register commands along with manifest', async (assert) => {
+    const app = new Application(__dirname, new Ioc(), {}, {})
+    const kernel = new Kernel(app)
+    const manifest = new Manifest(fs.basePath)
+
+    await fs.add(`ace-manifest.json`, JSON.stringify({
+      greet: {
+        commandName: 'greet',
+        commandPath: './Commands/Greet.ts',
+      },
+    }))
+
+    await fs.add('Commands/Greet.ts', `export default class Greet {
+      public static commandName = 'greet'
+      public static $boot () {}
+    }`)
+
+    kernel.useManifest(manifest)
+    kernel.manifestCommands = await manifest.load()
+    kernel.register([class Help extends BaseCommand {
+      public static commandName = 'help'
+      public async handle () {}
+    }])
+
+    const greet = await kernel.find(['greet'])
+    assert.equal(greet!.commandName, 'greet')
+
+    const help = await kernel.find(['help'])
+    assert.equal(help!.commandName, 'help')
 
     await fs.cleanup()
   })

@@ -101,6 +101,28 @@ export class Kernel {
   }
 
   /**
+   * Returns an array of all registered commands
+   */
+  private _getAllCommands () {
+    let commands: (ManifestCommand | CommandConstructorContract)[] = Object
+    .keys(this.commands)
+    .map((name) => this.commands[name])
+
+    /**
+     * Using manifest commands over registered commands
+     */
+    if (this.manifestCommands) {
+      const manifestCommands = Object
+        .keys(this.manifestCommands)
+        .map((name) => this.manifestCommands![name])
+
+      commands = commands.concat(manifestCommands)
+    }
+
+    return commands
+  }
+
+  /**
    * Register a before hook
    */
   public before (action: 'run', callback: RunHookCallback): this
@@ -138,10 +160,9 @@ export class Kernel {
    */
   public getSuggestions (name: string, distance = 3): string[] {
     const levenshtein = require('fast-levenshtein')
-    const commands = this.manifestCommands ? this.manifestCommands : this.commands
-    return Object.keys(commands).filter((commandName) => {
+    return this._getAllCommands().filter(({ commandName }) => {
       return levenshtein.get(name, commandName) <= distance
-    })
+    }).map(({ commandName }) => commandName)
   }
 
   /**
@@ -335,19 +356,8 @@ export class Kernel {
     if (command) {
       printHelpFor(command)
     } else {
-      let commands: ManifestCommand[] | CommandConstructorContract[]
-
-      /**
-       * Using manifest commands over registered commands
-       */
-      if (this.manifestCommands) {
-        commands = Object.keys(this.manifestCommands).map((name) => this.manifestCommands![name])
-      } else {
-        commands = Object.keys(this.commands).map((name) => this.commands[name])
-      }
-
       const flags = Object.keys(this.flags).map((name) => this.flags[name])
-      printHelp(commands, flags)
+      printHelp(this._getAllCommands(), flags)
     }
   }
 }
