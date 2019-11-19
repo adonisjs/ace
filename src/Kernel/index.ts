@@ -301,6 +301,21 @@ export class Kernel {
   }
 
   /**
+   * Preload the manifest file. Re-running this method twice will
+   * result in a noop
+   */
+  public async preloadManifest () {
+    /**
+     * Load manifest commands when instance of manifest exists. From here the
+     * kernel will give preference to the `manifest` file vs manually
+     * registered commands.
+     */
+    if (this._manifest && !this.manifestCommands) {
+      this.manifestCommands = await this._manifest.load()
+    }
+  }
+
+  /**
    * Makes instance of a given command by processing command line arguments
    * and setting them on the command instance
    */
@@ -309,15 +324,7 @@ export class Kernel {
       return
     }
 
-    /**
-     * Load manifest commands when instance of manifest exists. From here the
-     * kernel will give preference to the `manifest` file vs manually
-     * registered commands.
-     */
-    if (this._manifest) {
-      this.manifestCommands = await this._manifest.load()
-    }
-
+    await this.preloadManifest()
     const hasMentionedCommand = !argv[0].startsWith('-')
 
     /**
