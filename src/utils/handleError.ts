@@ -8,7 +8,7 @@
 */
 
 import { Colors } from '@poppinss/colors'
-import logger from '@poppinss/fancy-logs'
+import logger, { Logger } from '@poppinss/fancy-logs'
 import { CommandConstructorContract } from '../Contracts'
 import { InvalidFlagType } from '../Exceptions/InvalidFlagType'
 import { MissingCommandArgument } from '../Exceptions/MissingCommandArgument'
@@ -31,7 +31,10 @@ function printAdditionalHelp (command?: CommandConstructorContract) {
 /**
  * Handles the command errors and prints them to the console.
  */
-export function handleError (error: any) {
+export function handleError (
+  error: any,
+  callback?: ((error: any, loggerFn: Logger) => void | Promise<void>),
+) {
   if (error instanceof MissingCommandArgument) {
     const { command, argumentName } = error
     logger.error(`Missing argument {${argumentName}}`)
@@ -47,5 +50,9 @@ export function handleError (error: any) {
     return
   }
 
-  logger.fatal(error)
+  if (typeof (callback) === 'function') {
+    callback(error, logger)
+  } else {
+    logger.fatal(error)
+  }
 }
