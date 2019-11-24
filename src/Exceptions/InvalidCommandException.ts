@@ -13,10 +13,13 @@ import { Exception } from '@poppinss/utils'
  * Raised when command is not registered with kernel
  */
 export class InvalidCommandException extends Exception {
+  public commandName: string
+
   public static invoke (commandName: string): InvalidCommandException {
     const message = `"${commandName}" is not a registered command`
+    const exception = new this(message, 500, 'E_INVALID_COMMAND')
+    exception.commandName = commandName
 
-    const exception = new this(message, 500, 'E_MISSING_ARGUMENT')
     return exception
   }
 }

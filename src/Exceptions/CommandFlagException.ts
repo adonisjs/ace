@@ -28,7 +28,7 @@ export class CommandFlagException extends Exception {
   ): CommandFlagException {
     const message = `"${prop}" must be defined as "${expected}"`
 
-    const exception = new this(message, 500, 'E_INVALID_TYPE')
+    const exception = new this(message, 500, 'E_INVALID_FLAG')
     exception.argumentName = prop
     exception.command = command
 

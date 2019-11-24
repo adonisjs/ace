@@ -20,20 +20,18 @@ export function handleError (
   callback?: ((error: any, loggerFn: Logger) => void | Promise<void>),
 ) {
   if (error instanceof CommandArgumentException) {
-    const { argumentName } = error
-    logger.error(`Missing argument "${argumentName}"`)
+    logger.error(`Missing argument "${error.argumentName}"`)
     return
   }
 
   if (error instanceof CommandFlagException) {
-    const { argumentName, exceptedType } = error
-    const message = `Expected "${argumentName}" to be a valid "${exceptedType}"`
+    const message = `Expected "${error.argumentName}" to be a valid "${error.exceptedType}"`
     logger.error(message)
     return
   }
 
   if (error instanceof InvalidCommandException) {
-    logger.error(error.message)
+    logger.error(`"${error.commandName}" is not a registered command`)
     return
   }
 
