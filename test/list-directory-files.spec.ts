@@ -15,7 +15,7 @@ import { listDirectoryFiles } from '../src/utils/listDirectoryFiles'
 const fs = new Filesystem(join(__dirname, './app'))
 
 test.group('listDirectoryFiles', (group) => {
-  group.after(async () => {
+  group.afterEach(async () => {
     await fs.cleanup()
   })
 
@@ -26,7 +26,7 @@ test.group('listDirectoryFiles', (group) => {
     await fs.add('README.md', '')
     await fs.add('.gitkeep', '')
 
-    const directories = listDirectoryFiles(fs.basePath)
+    const directories = listDirectoryFiles(fs.basePath, fs.basePath)
     assert.deepEqual(directories, ['./bar.js', './baz.js', './foo.js'])
   })
 
@@ -37,9 +37,37 @@ test.group('listDirectoryFiles', (group) => {
     await fs.add('README.md', '')
     await fs.add('.gitkeep', '')
 
-    const directories = listDirectoryFiles(fs.basePath, (stat) => {
-      return stat.name !== 'baz.js'
+    const directories = listDirectoryFiles(fs.basePath, fs.basePath, (name) => {
+      return name !== './baz.js'
     })
     assert.deepEqual(directories, ['./bar.js', './foo.js'])
+  })
+
+  test('define nested directories', async (assert) => {
+    await fs.add('commands/foo.js', '')
+    await fs.add('commands/bar.js', '')
+    await fs.add('commands/baz.js', '')
+    await fs.add('commands/README.md', '')
+    await fs.add('commands/.gitkeep', '')
+
+    const directories = listDirectoryFiles(join(fs.basePath, 'commands'), fs.basePath, (name) => {
+      return name !== './commands/baz.js'
+    })
+    assert.deepEqual(directories, ['./commands/bar.js', './commands/foo.js'])
+  })
+
+  test('ignore files by defining list of ignored files', async (assert) => {
+    await fs.add('commands/foo.js', '')
+    await fs.add('commands/bar.js', '')
+    await fs.add('commands/baz.js', '')
+    await fs.add('commands/README.md', '')
+    await fs.add('commands/.gitkeep', '')
+
+    const directories = listDirectoryFiles(
+      join(fs.basePath, 'commands'),
+      fs.basePath,
+      ['./commands/baz.js'],
+    )
+    assert.deepEqual(directories, ['./commands/bar.js', './commands/foo.js'])
   })
 })

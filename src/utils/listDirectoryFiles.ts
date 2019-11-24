@@ -7,28 +7,29 @@
  * file that was distributed with this source code.
 */
 
-import { readdirSync } from 'fs'
-import { DirectoryCommandsListFilterFn } from '../Contracts'
+import { join, relative } from 'path'
+import readdirSync from 'fs-readdir-recursive'
+import { CommandsListFilterFn } from '../Contracts'
 
+/**
+ * Returns an array of Javascript files inside the current directory in
+ * relative to the application root.
+ */
 export function listDirectoryFiles (
-  location: string,
-  filterFn?: DirectoryCommandsListFilterFn,
+  scanDirectory: string,
+  appRoot: string,
+  filterFn?: CommandsListFilterFn,
 ): string[] {
-  return readdirSync(location, { withFileTypes: true }).filter((stat) => {
-    if (stat.isDirectory()) {
-      return false
-    }
+  return readdirSync(scanDirectory, (name) => name.endsWith('.js'))
+    .map((name) => {
+      const relativePath = relative(appRoot, join(scanDirectory, name))
+      return relativePath.startsWith('../') ? relativePath : `./${relativePath}`
+    })
+    .filter((name) => {
+      if (typeof (filterFn) === 'function') {
+        return filterFn(name)
+      }
 
-    if (!stat.name.endsWith('.js')) {
-      return false
-    }
-
-    if (typeof (filterFn) === 'function') {
-      return filterFn(stat)
-    }
-
-    return true
-  }).map((stat) => {
-    return `./${stat.name}`
-  })
+      return Array.isArray(filterFn) ? !filterFn.includes(name) : true
+    })
 }
