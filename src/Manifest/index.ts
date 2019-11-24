@@ -44,7 +44,9 @@ export class Manifest {
   /**
    * Loads a single command from the manifest commands list.
    */
-  public loadCommand (commandPath: string): CommandConstructorContract {
+  public loadCommand (
+    commandPath: string,
+  ): { command: CommandConstructorContract, commandPath: string } {
     const absPath = resolveFrom(this._basePath, commandPath)
     const command = esmRequire(absPath)
 
@@ -53,14 +55,19 @@ export class Manifest {
     }
 
     command.$boot()
-    return command
+    return {
+      command,
+      commandPath,
+    }
   }
 
   /**
    * Look up commands from a given path. The modules can also return an array
    * of sub-paths from where to load additional commands.
    */
-  public lookupCommands (commandPath: string): CommandConstructorContract[] {
+  public lookupCommands (
+    commandPath: string,
+  ): { command: CommandConstructorContract, commandPath: string }[] {
     /**
      * Absolute paths are not allowed when looking up commands to be saved
      * inside the manifest file. This is required, since one can accidentally
@@ -91,10 +98,10 @@ export class Manifest {
    * Generates the manifest file for the given command paths
    */
   public async generate (commandPaths: string[]) {
-    const manifest = commandPaths.reduce((manifest: ManifestNode, commandPath) => {
-      const commands = this.lookupCommands(commandPath)
+    const manifest = commandPaths.reduce((manifest: ManifestNode, path) => {
+      const commands = this.lookupCommands(path)
 
-      commands.forEach((command) => {
+      commands.forEach(({ command, commandPath }) => {
         validateCommand(command)
 
         manifest[command.commandName] = {

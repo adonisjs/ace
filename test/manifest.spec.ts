@@ -49,7 +49,7 @@ test.group('Manifest', (group) => {
     const manifest = new Manifest(fs.basePath)
     await manifest.generate(['./Commands/Make.ts'])
 
-    const manifestJSON = require(join(fs.basePath, 'ace-manifest.json'))
+    const manifestJSON = await fs.fsExtra.readJSON(join(fs.basePath, 'ace-manifest.json'))
     assert.deepEqual(manifestJSON, {
       greet: {
         settings: {},
@@ -191,5 +191,54 @@ test.group('Manifest', (group) => {
     } catch ({ message }) {
       assert.equal(message, 'Unable to locate ace-manifest.json file')
     }
+  })
+
+  test('generated manifest from command subpaths', async (assert) => {
+    await fs.add('Commands/Make.ts', `
+    import { args, flags } from '../../../index'
+    import { BaseCommand } from '../../../src/BaseCommand'
+
+    export default class Greet extends BaseCommand {
+      public static commandName = 'greet'
+      public static description = 'Greet a user'
+
+      @args.string()
+      public name: string
+
+      @flags.boolean()
+      public adult: boolean
+
+      public async handle () {}
+    }`)
+
+    await fs.add('Commands/index.ts', `
+      export default [
+        './Commands/Make',
+      ]
+    `)
+
+    const manifest = new Manifest(fs.basePath)
+    await manifest.generate(['./Commands/index.ts'])
+
+    const manifestJSON = await fs.fsExtra.readJSON(join(fs.basePath, 'ace-manifest.json'))
+    assert.deepEqual(manifestJSON, {
+      greet: {
+        settings: {},
+        commandPath: './Commands/Make',
+        commandName: 'greet',
+        description: 'Greet a user',
+        args: [{
+          name: 'name',
+          type: 'string',
+          propertyName: 'name',
+          required: true,
+        }],
+        flags: [{
+          name: 'adult',
+          propertyName: 'adult',
+          type: 'boolean',
+        }],
+      },
+    })
   })
 })

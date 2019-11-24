@@ -153,4 +153,4 @@ export type ManifestNode = {
 export type FindHookCallback = (command: SerializedCommandContract | null) => Promise<void> | void
 export type RunHookCallback = (command: CommandContract) => Promise<void> | void
 
-export type DirectoryCommandsListFilterFn = ((stat: Dirent) => boolean)
+export type CommandsListFilterFn = ((name: string) => boolean) | string[]

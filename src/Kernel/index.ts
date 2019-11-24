@@ -217,8 +217,8 @@ export class Kernel {
       /**
        * Passing actual command constructor
        */
-      await this._hooks.excute('after', 'find', command)
-      return command
+      await this._hooks.excute('after', 'find', command.command)
+      return command.command
     }
 
     /**
