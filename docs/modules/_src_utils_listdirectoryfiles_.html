@@ -81,22 +81,31 @@
 					<a name="listdirectoryfiles" class="tsd-anchor"></a>
 					<h3>list<wbr>Directory<wbr>Files</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">list<wbr>Directory<wbr>Files<span class="tsd-signature-symbol">(</span>location<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, filterFn<span class="tsd-signature-symbol">?: </span><a href="_src_contracts_index_.html#directorycommandslistfilterfn" class="tsd-signature-type">DirectoryCommandsListFilterFn</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">list<wbr>Directory<wbr>Files<span class="tsd-signature-symbol">(</span>scanDirectory<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, appRoot<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, filterFn<span class="tsd-signature-symbol">?: </span><a href="_src_contracts_index_.html#commandslistfilterfn" class="tsd-signature-type">CommandsListFilterFn</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/bdfa4cf/src/utils/listDirectoryFiles.ts#L13">src/utils/listDirectoryFiles.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/adonisjs/ace/blob/c36520d/src/utils/listDirectoryFiles.ts#L18">src/utils/listDirectoryFiles.ts:18</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns an array of Javascript files inside the current directory in
+									relative to the application root.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>location: <span class="tsd-signature-type">string</span></h5>
+									<h5>scanDirectory: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> filterFn: <a href="_src_contracts_index_.html#directorycommandslistfilterfn" class="tsd-signature-type">DirectoryCommandsListFilterFn</a></h5>
+									<h5>appRoot: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> filterFn: <a href="_src_contracts_index_.html#commandslistfilterfn" class="tsd-signature-type">CommandsListFilterFn</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -130,13 +139,16 @@
 						<a href="_src_decorators_flags_.html">&quot;src/<wbr>Decorators/flags&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="_src_exceptions_commandargumentexception_.html">&quot;src/<wbr>Exceptions/<wbr>Command<wbr>Argument<wbr>Exception&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_src_exceptions_commandflagexception_.html">&quot;src/<wbr>Exceptions/<wbr>Command<wbr>Flag<wbr>Exception&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="_src_exceptions_commandvalidationexception_.html">&quot;src/<wbr>Exceptions/<wbr>Command<wbr>Validation<wbr>Exception&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_src_exceptions_invalidflagtype_.html">&quot;src/<wbr>Exceptions/<wbr>Invalid<wbr>Flag<wbr>Type&quot;</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_exceptions_missingcommandargument_.html">&quot;src/<wbr>Exceptions/<wbr>Missing<wbr>Command<wbr>Argument&quot;</a>
+						<a href="_src_exceptions_invalidcommandexception_.html">&quot;src/<wbr>Exceptions/<wbr>Invalid<wbr>Command<wbr>Exception&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="_src_exceptions_missingmanifestfileexception_.html">&quot;src/<wbr>Exceptions/<wbr>Missing<wbr>Manifest<wbr>File<wbr>Exception&quot;</a>

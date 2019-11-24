@@ -7,7 +7,6 @@
 * file that was distributed with this source code.
 */
 
-import { Dirent } from 'fs'
 import { ParsedOptions } from 'getopts'
 import { Colors } from '@poppinss/colors'
 import { Logger } from '@poppinss/fancy-logs'
