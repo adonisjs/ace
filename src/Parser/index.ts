@@ -16,8 +16,8 @@ import {
   CommandArg,
 } from '../Contracts'
 
-import { MissingCommandArgument } from '../Exceptions/MissingCommandArgument'
-import { InvalidFlagType } from '../Exceptions/InvalidFlagType'
+import { CommandFlagException } from '../Exceptions/CommandFlagException'
+import { CommandArgumentException } from '../Exceptions/CommandArgumentException'
 
 /**
  * The job of the parser is to parse the command line values by taking
@@ -117,11 +117,11 @@ export class Parser {
     }
 
     if (flag.type === 'string' && typeof (value) !== 'string') {
-      throw InvalidFlagType.invoke(flag.name, flag.type, command)
+      throw CommandFlagException.invoke(flag.name, flag.type, command)
     }
 
     if (flag.type === 'number' && typeof (value) !== 'number') {
-      throw InvalidFlagType.invoke(flag.name, flag.type, command)
+      throw CommandFlagException.invoke(flag.name, flag.type, command)
     }
 
     /**
@@ -131,7 +131,7 @@ export class Parser {
     if (flag.type === 'numArray' && value.findIndex((one: any) => {
       return typeof (one) !== 'number' || isNaN(one)
     }) > -1) {
-      throw InvalidFlagType.invoke(flag.name, flag.type, command)
+      throw CommandFlagException.invoke(flag.name, flag.type, command)
     }
   }
 
@@ -148,7 +148,7 @@ export class Parser {
     const value = parsed._[index]
 
     if (value === undefined && arg.required) {
-      throw MissingCommandArgument.invoke(arg.name, command)
+      throw CommandArgumentException.invoke(arg.name, command)
     }
   }
 

@@ -14,6 +14,7 @@ import { Hooks } from '../Hooks'
 import { Parser } from '../Parser'
 import { Manifest } from '../Manifest'
 import { validateCommand } from '../utils/validateCommand'
+import { InvalidCommandException } from '../Exceptions/InvalidCommandException'
 import { printHelp, printHelpFor } from '../utils/help'
 
 import {
@@ -341,7 +342,7 @@ export class Kernel {
      */
     let command = await this.find(argv)
     if (!command) {
-      throw new Error(`${argv[0]} is not a registered command`)
+      throw InvalidCommandException.invoke(argv[0])
     }
 
     const commandInstance = this.application.container.make(command as any, [this.application as any])

@@ -317,7 +317,7 @@ test.group('Kernel | handle', () => {
     try {
       await kernel.handle(argv)
     } catch ({ message, argumentName, command }) {
-      assert.equal(message, 'E_MISSING_ARGUMENT: missing required argument name')
+      assert.equal(message, 'E_MISSING_ARGUMENT: missing required argument "name"')
       assert.equal(argumentName, 'name')
       assert.deepEqual(command, Greet)
     }

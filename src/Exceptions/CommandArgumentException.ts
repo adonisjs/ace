@@ -13,17 +13,17 @@ import { CommandConstructorContract } from '../Contracts'
 /**
  * Raised when an argument is missing but excepted
  */
-export class MissingCommandArgument extends Exception {
+export class CommandArgumentException extends Exception {
   public command: CommandConstructorContract
   public argumentName: string
 
   /**
    * A required argument is missing
    */
-  public static invoke (name: string, command: CommandConstructorContract): MissingCommandArgument {
-    const message = `missing required argument ${name}`
+  public static invoke (name: string, command: CommandConstructorContract): CommandArgumentException {
+    const message = `missing required argument "${name}"`
 
-    const exception = new MissingCommandArgument(message, 500, 'E_MISSING_ARGUMENT')
+    const exception = new this(message, 500, 'E_MISSING_ARGUMENT')
     exception.argumentName = name
     exception.command = command
 

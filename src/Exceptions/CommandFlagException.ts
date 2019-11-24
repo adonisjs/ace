@@ -13,7 +13,7 @@ import { CommandConstructorContract } from '../Contracts'
 /**
  * Raised when an the type of a flag is not as one of the excepted type
  */
-export class InvalidFlagType extends Exception {
+export class CommandFlagException extends Exception {
   public command?: CommandConstructorContract
   public argumentName: string
   public exceptedType: string
@@ -25,10 +25,10 @@ export class InvalidFlagType extends Exception {
     prop: string,
     expected: string,
     command?: CommandConstructorContract,
-  ): InvalidFlagType {
-    const message = `${prop} must be defined as a ${expected}`
+  ): CommandFlagException {
+    const message = `"${prop}" must be defined as "${expected}"`
 
-    const exception = new InvalidFlagType(message, 500, 'E_INVALID_TYPE')
+    const exception = new this(message, 500, 'E_INVALID_TYPE')
     exception.argumentName = prop
     exception.command = command
 

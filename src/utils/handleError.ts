@@ -7,26 +7,10 @@
 * file that was distributed with this source code.
 */
 
-import { Colors } from '@poppinss/colors'
 import logger, { Logger } from '@poppinss/fancy-logs'
-import { CommandConstructorContract } from '../Contracts'
-import { InvalidFlagType } from '../Exceptions/InvalidFlagType'
-import { MissingCommandArgument } from '../Exceptions/MissingCommandArgument'
-
-const colors = new Colors()
-
-/**
- * Prints additional help for a given command
- */
-function printAdditionalHelp (command?: CommandConstructorContract) {
-  if (!command) {
-    return
-  }
-
-  const commandHelp = colors.yellow(`adonis ${command.commandName} --help`)
-  const message = `Consult the command help by typing ${commandHelp}`
-  console.log(`            ${message}`)
-}
+import { CommandFlagException } from '../Exceptions/CommandFlagException'
+import { InvalidCommandException } from '../Exceptions/InvalidCommandException'
+import { CommandArgumentException } from '../Exceptions/CommandArgumentException'
 
 /**
  * Handles the command errors and prints them to the console.
@@ -35,18 +19,21 @@ export function handleError (
   error: any,
   callback?: ((error: any, loggerFn: Logger) => void | Promise<void>),
 ) {
-  if (error instanceof MissingCommandArgument) {
-    const { command, argumentName } = error
-    logger.error(`Missing argument {${argumentName}}`)
-    printAdditionalHelp(command)
+  if (error instanceof CommandArgumentException) {
+    const { argumentName } = error
+    logger.error(`Missing argument "${argumentName}"`)
     return
   }
 
-  if (error instanceof InvalidFlagType) {
-    const { command, argumentName, exceptedType } = error
-    const message = `Expected {${argumentName}} to be a valid {${exceptedType}}`
+  if (error instanceof CommandFlagException) {
+    const { argumentName, exceptedType } = error
+    const message = `Expected "${argumentName}" to be a valid "${exceptedType}"`
     logger.error(message)
-    printAdditionalHelp(command)
+    return
+  }
+
+  if (error instanceof InvalidCommandException) {
+    logger.error(error.message)
     return
   }
 

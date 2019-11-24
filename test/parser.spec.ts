@@ -137,7 +137,7 @@ test.group('Parser | flags', () => {
     })
 
     const output = () => parser.parse(['--age=foo'])
-    assert.throw(output, 'E_INVALID_TYPE: age must be defined as a number')
+    assert.throw(output, 'E_INVALID_TYPE: "age" must be defined as "number"')
   })
 
   test('parse value as an array of strings', (assert) => {
@@ -207,10 +207,10 @@ test.group('Parser | flags', () => {
     })
 
     const output = () => parser.parse(['--scores=10', '--scores=foo'])
-    assert.throw(output, 'E_INVALID_TYPE: scores must be defined as a numArray')
+    assert.throw(output, 'E_INVALID_TYPE: "scores" must be defined as "numArray"')
 
     const fn = () => parser.parse(['--scores=foo'])
-    assert.throw(fn, 'E_INVALID_TYPE: scores must be defined as a numArray')
+    assert.throw(fn, 'E_INVALID_TYPE: "scores" must be defined as "numArray"')
   })
 })
 
