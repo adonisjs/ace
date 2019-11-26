@@ -53,7 +53,11 @@ test.group('listDirectoryFiles', (group) => {
     const directories = listDirectoryFiles(join(fs.basePath, 'commands'), fs.basePath, (name) => {
       return name !== './commands/baz.js'
     })
-    assert.deepEqual(directories, ['./commands/bar.js', './commands/foo.js'])
+
+    assert.deepEqual(directories, [
+      './commands/bar.js',
+      './commands/foo.js',
+    ])
   })
 
   test('ignore files by defining list of ignored files', async (assert) => {
@@ -68,6 +72,10 @@ test.group('listDirectoryFiles', (group) => {
       fs.basePath,
       ['./commands/baz.js'],
     )
-    assert.deepEqual(directories, ['./commands/bar.js', './commands/foo.js'])
+
+    assert.deepEqual(directories, [
+      './commands/bar.js',
+      './commands/foo.js',
+    ])
   })
 })

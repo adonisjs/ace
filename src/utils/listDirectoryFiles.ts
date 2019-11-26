@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
 */
 
+import slash from 'slash'
 import { join, relative } from 'path'
 import readdirSync from 'fs-readdir-recursive'
 import { CommandsListFilterFn } from '../Contracts'
@@ -23,7 +24,7 @@ export function listDirectoryFiles (
   return readdirSync(scanDirectory, (name) => name.endsWith('.js'))
     .map((name) => {
       const relativePath = relative(appRoot, join(scanDirectory, name))
-      return relativePath.startsWith('../') ? relativePath : `./${relativePath}`
+      return slash(relativePath.startsWith('../') ? relativePath : `./${relativePath}`)
     })
     .filter((name) => {
       if (typeof (filterFn) === 'function') {
