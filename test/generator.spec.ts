@@ -10,6 +10,7 @@
 import test from 'japa'
 import { join } from 'path'
 import { Filesystem } from '@poppinss/dev-utils'
+import { Logger } from '@poppinss/fancy-logs'
 import { Generator } from '../src/Generator'
 
 const fs = new Filesystem(join(__dirname, './app'))
@@ -20,7 +21,7 @@ test.group('Generator', (group) => {
   })
 
   test('generate one or more entity files', async (assert) => {
-    const generator = new Generator(fs.basePath)
+    const generator = new Generator(new Logger({ fake: true }), fs.basePath)
     generator.addFile('user', { suffix: 'controller' })
     generator.addFile('account', { suffix: 'controller' })
 
@@ -34,7 +35,7 @@ test.group('Generator', (group) => {
   })
 
   test('do not overwrite existing files', async (assert) => {
-    const generator = new Generator(fs.basePath)
+    const generator = new Generator(new Logger({ fake: true }), fs.basePath)
     await fs.add('UserController.ts', `export const greeting = 'hello world'`)
 
     generator.addFile('user', { suffix: 'controller' })

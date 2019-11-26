@@ -141,7 +141,7 @@ export abstract class BaseCommand implements CommandContract {
   /**
    * Generator instance to generate entity files
    */
-  public generator = new Generator()
+  public generator = new Generator(this.logger)
 
   /**
    * Returns a new instance of colors class. If application is in test mode
