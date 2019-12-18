@@ -134,7 +134,7 @@ test.group('Generator File', () => {
   test('substitute stub variables from raw string', (assert) => {
     const file = new GeneratorFile('foo/user-controller', { suffix: 'controller', form: 'plural' })
     file.destinationDir('foo')
-    file.stub(`Hello \${name}`, { raw: true }).apply({ name: 'virk' })
+    file.stub('Hello ${name}', { raw: true }).apply({ name: 'virk' })
 
     assert.deepEqual(file.toJSON(), {
       filename: 'UsersController',

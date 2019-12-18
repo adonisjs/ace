@@ -79,15 +79,15 @@ export class Manifest {
     }
 
     const absPath = resolveFrom(this._basePath, commandPath)
-    const commandOrCommands = esmRequire(absPath)
+    const commandOrCommandPaths = esmRequire(absPath)
 
     /**
      * The command exports an array of subpaths. Only one level
      * of subpaths are allowed.
      */
-    if (Array.isArray(commandOrCommands)) {
-      return commandOrCommands.map((commandPath) => {
-        return this.loadCommand(commandPath)
+    if (Array.isArray(commandOrCommandPaths)) {
+      return commandOrCommandPaths.map((commandOrCommandPath) => {
+        return this.loadCommand(commandOrCommandPath)
       })
     }
 
@@ -98,13 +98,13 @@ export class Manifest {
    * Generates the manifest file for the given command paths
    */
   public async generate (commandPaths: string[]) {
-    const manifest = commandPaths.reduce((manifest: ManifestNode, path) => {
+    const manifest = commandPaths.reduce((result: ManifestNode, path) => {
       const commands = this.lookupCommands(path)
 
       commands.forEach(({ command, commandPath }) => {
         validateCommand(command)
 
-        manifest[command.commandName] = {
+        result[command.commandName] = {
           settings: command.settings || {},
           commandPath: commandPath.replace(new RegExp(`${extname(commandPath)}$`), ''),
           commandName: command.commandName,
@@ -114,7 +114,7 @@ export class Manifest {
         }
       })
 
-      return manifest
+      return result
     }, {})
 
     await this._writeManifest(manifest)

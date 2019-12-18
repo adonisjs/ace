@@ -28,7 +28,7 @@ export class Parser {
     private _registeredFlags: {[name: string]: CommandFlag & { handler: GlobalFlagHandler }},
   ) {}
 
-    /**
+  /**
    * Processes ace command flag to set the options for `getopts`.
    */
   private _preProcessFlag (flag: CommandFlag, options: getopts.Options) {

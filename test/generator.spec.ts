@@ -36,12 +36,12 @@ test.group('Generator', (group) => {
 
   test('do not overwrite existing files', async (assert) => {
     const generator = new Generator(new Logger({ fake: true }), fs.basePath)
-    await fs.add('UserController.ts', `export const greeting = 'hello world'`)
+    await fs.add('UserController.ts', 'export const greeting = \'hello world\'')
 
     generator.addFile('user', { suffix: 'controller' })
     await generator.run()
 
     const user = await fs.get('UserController.ts')
-    assert.equal(user, `export const greeting = 'hello world'`)
+    assert.equal(user, 'export const greeting = \'hello world\'')
   })
 })

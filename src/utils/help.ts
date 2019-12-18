@@ -100,7 +100,7 @@ export function printHelp (commands: SerializedCommandContract[], flags: Command
    * Sort commands and group them, so that we can print them as per
    * the namespace they belongs to
    */
-  sortAndGroupCommands(commands).forEach(({ group, commands }) => {
+  sortAndGroupCommands(commands).forEach(({ group, commands: groupCommands }) => {
     console.log('')
     if (group === 'root') {
       console.log(bold(yellow('Available commands')))
@@ -108,7 +108,7 @@ export function printHelp (commands: SerializedCommandContract[], flags: Command
       console.log(bold(yellow(group)))
     }
 
-    commands.forEach(({ commandName, description }) => {
+    groupCommands.forEach(({ commandName, description }) => {
       console.log(`  ${green(padRight(commandName, maxWidth, ' '))}  ${dim(description)}`)
     })
   })

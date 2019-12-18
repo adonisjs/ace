@@ -106,8 +106,8 @@ export class Kernel {
    */
   private _getAllCommands () {
     let commands: (ManifestCommand | CommandConstructorContract)[] = Object
-    .keys(this.commands)
-    .map((name) => this.commands[name])
+      .keys(this.commands)
+      .map((name) => this.commands[name])
 
     /**
      * Using manifest commands over registered commands

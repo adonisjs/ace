@@ -114,7 +114,7 @@ test.group('Kernel | register', () => {
 
     const manifest = new Manifest(fs.basePath)
 
-    await fs.add(`ace-manifest.json`, JSON.stringify({
+    await fs.add('ace-manifest.json', JSON.stringify({
       greet: {
         commandName: 'greet',
         commandPath: './Commands/Greet.ts',
@@ -175,7 +175,7 @@ test.group('Kernel | find', () => {
     const kernel = new Kernel(app)
     const manifest = new Manifest(fs.basePath)
 
-    await fs.add(`ace-manifest.json`, JSON.stringify({
+    await fs.add('ace-manifest.json', JSON.stringify({
       greet: {
         commandName: 'greet',
         commandPath: './Commands/Greet.ts',
@@ -201,7 +201,7 @@ test.group('Kernel | find', () => {
     const kernel = new Kernel(app)
     const manifest = new Manifest(fs.basePath)
 
-    await fs.add(`ace-manifest.json`, JSON.stringify({
+    await fs.add('ace-manifest.json', JSON.stringify({
       greet: {
         commandName: 'greet',
         commandPath: './Commands/Greet.ts',
@@ -236,7 +236,7 @@ test.group('Kernel | find', () => {
     const kernel = new Kernel(app)
     const manifest = new Manifest(fs.basePath)
 
-    await fs.add(`ace-manifest.json`, JSON.stringify({
+    await fs.add('ace-manifest.json', JSON.stringify({
       greet: {
         commandName: 'greet',
         commandPath: './Commands/Greet.ts',
@@ -1144,8 +1144,8 @@ test.group('Kernel | IoC container', () => {
     class Install extends BaseCommand {
       public static commandName = 'install'
 
-      constructor (public app: Application, public foo: Foo) {
-        super(app)
+      constructor (public application: Application, public foo: Foo) {
+        super(application)
       }
 
       public async handle () {

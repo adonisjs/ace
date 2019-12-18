@@ -15,7 +15,7 @@ import { CommandValidationException } from '../Exceptions/CommandValidationExcep
  * values are correctly defined for a command to be executed.
  */
 export function validateCommand (command: CommandConstructorContract) {
-    /**
+  /**
    * Ensure command has a name
    */
   if (!command.commandName) {

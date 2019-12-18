@@ -120,8 +120,8 @@ export class GeneratorFile implements GeneratorFileContract {
     const contents = this._stub
       ? (
         this._isStubRaw
-        ? template(this._stub, templateContents)
-        : templateFromFile(this._stub, templateContents)
+          ? template(this._stub, templateContents)
+          : templateFromFile(this._stub, templateContents)
       )
       : ''
 
