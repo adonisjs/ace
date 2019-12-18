@@ -9,9 +9,9 @@
 
 import { extname } from 'path'
 import pluralize from 'pluralize'
-import snakeCase from 'snake-case'
-import camelCase from 'camel-case'
-import pascalCase from 'pascal-case'
+import { snakeCase } from 'snake-case'
+import { camelCase } from 'camel-case'
+import { pascalCase } from 'pascal-case'
 
 /**
  * Exposes the API to transform a string
@@ -72,8 +72,15 @@ export class StringTransformer {
    * Changes the name form by converting it to singular
    * or plural case
    */
-  public changeForm (form?: 'singular' | 'plural'): this {
+  public changeForm (form?: 'singular' | 'plural', ignoreList?: string[]): this {
     if (!form) {
+      return this
+    }
+
+    /**
+     * Do not change form when word is in ignore list
+     */
+    if ((ignoreList || []).find((word) => word.toLowerCase() === this._input.toLowerCase())) {
       return this
     }
 

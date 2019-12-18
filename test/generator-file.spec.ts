@@ -170,4 +170,38 @@ test.group('Generator File', () => {
       extension: '.ts',
     })
   })
+
+  test('do not pluralize when word is in ignore list', (assert) => {
+    const file = new GeneratorFile('foo/home', {
+      suffix: 'controller',
+      form: 'plural',
+      formIgnoreList: ['Home'],
+    })
+    file.destinationDir(__dirname)
+
+    assert.deepEqual(file.toJSON(), {
+      filename: 'HomeController',
+      contents: '',
+      filepath: join(__dirname, 'foo', 'HomeController.ts'),
+      relativepath: join(__dirname, 'foo', 'HomeController.ts'),
+      extension: '.ts',
+    })
+  })
+
+  test('do not pluralize when word is in ignore list and has the suffix', (assert) => {
+    const file = new GeneratorFile('homecontroller', {
+      suffix: 'controller',
+      form: 'plural',
+      formIgnoreList: ['Home'],
+    })
+    file.destinationDir(__dirname)
+
+    assert.deepEqual(file.toJSON(), {
+      filename: 'HomeController',
+      contents: '',
+      filepath: join(__dirname, 'HomeController.ts'),
+      relativepath: join(__dirname, 'HomeController.ts'),
+      extension: '.ts',
+    })
+  })
 })

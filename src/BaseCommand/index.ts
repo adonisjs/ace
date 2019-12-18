@@ -7,7 +7,7 @@
 * file that was distributed with this source code.
 */
 
-import paramCase from 'param-case'
+import { paramCase } from 'param-case'
 import { ParsedOptions } from 'getopts'
 import { Logger } from '@poppinss/fancy-logs'
 import { Colors, FakeColors } from '@poppinss/colors'

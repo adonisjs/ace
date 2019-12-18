@@ -87,7 +87,7 @@ export class GeneratorFile implements GeneratorFileContract {
       .dropExtension()
       .cleanSuffix(this._options.suffix)
       .cleanPrefix(this._options.prefix)
-      .changeForm(this._options.form)
+      .changeForm(this._options.form, this._options.formIgnoreList)
       .addSuffix(this._options.suffix)
       .addPrefix(this._options.prefix)
       .changeCase(this._options.pattern || 'pascalcase')

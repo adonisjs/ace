@@ -91,6 +91,7 @@ export interface CommandConstructorContract extends SerializedCommandContract {
 export type GeneratorFileOptions = {
   pattern?: 'pascalcase' | 'camelcase' | 'snakecase',
   form?: 'singular' | 'plural',
+  formIgnoreList?: string[],
   suffix?: string,
   prefix?: string,
   extname?: string,
