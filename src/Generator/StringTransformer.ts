@@ -17,7 +17,7 @@ import { pascalCase } from 'pascal-case'
  * Exposes the API to transform a string
  */
 export class StringTransformer {
-  constructor (private _input: string) {
+  constructor (private input: string) {
   }
 
   /**
@@ -28,7 +28,7 @@ export class StringTransformer {
       return this
     }
 
-    this._input = this._input.replace(new RegExp(`[-_]?${suffix}$`, 'i'), '')
+    this.input = this.input.replace(new RegExp(`[-_]?${suffix}$`, 'i'), '')
     return this
   }
 
@@ -40,7 +40,7 @@ export class StringTransformer {
       return this
     }
 
-    this._input = this._input.replace(new RegExp(`^${prefix}[-_]?`, 'i'), '')
+    this.input = this.input.replace(new RegExp(`^${prefix}[-_]?`, 'i'), '')
     return this
   }
 
@@ -52,7 +52,7 @@ export class StringTransformer {
       return this
     }
 
-    this._input = `${this._input}_${suffix}`
+    this.input = `${this.input}_${suffix}`
     return this
   }
 
@@ -64,7 +64,7 @@ export class StringTransformer {
       return this
     }
 
-    this._input = `${prefix}_${this._input}`
+    this.input = `${prefix}_${this.input}`
     return this
   }
 
@@ -80,11 +80,11 @@ export class StringTransformer {
     /**
      * Do not change form when word is in ignore list
      */
-    if ((ignoreList || []).find((word) => word.toLowerCase() === this._input.toLowerCase())) {
+    if ((ignoreList || []).find((word) => word.toLowerCase() === this.input.toLowerCase())) {
       return this
     }
 
-    this._input = pluralize[form](this._input)
+    this.input = pluralize[form](this.input)
     return this
   }
 
@@ -94,13 +94,13 @@ export class StringTransformer {
   public changeCase (pattern?: 'pascalcase' | 'camelcase' | 'snakecase'): this {
     switch (pattern) {
       case 'camelcase':
-        this._input = camelCase(this._input)
+        this.input = camelCase(this.input)
         return this
       case 'pascalcase':
-        this._input = pascalCase(this._input)
+        this.input = pascalCase(this.input)
         return this
       case 'snakecase':
-        this._input = snakeCase(this._input)
+        this.input = snakeCase(this.input)
         return this
       default:
         return this
@@ -111,7 +111,7 @@ export class StringTransformer {
    * Drops the extension from the input
    */
   public dropExtension (): this {
-    this._input = this._input.replace(new RegExp(`${extname(this._input)}$`), '')
+    this.input = this.input.replace(new RegExp(`${extname(this.input)}$`), '')
     return this
   }
 
@@ -119,6 +119,6 @@ export class StringTransformer {
    * Returns the transformed value
    */
   public toValue () {
-    return this._input
+    return this.input
   }
 }

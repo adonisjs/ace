@@ -25,13 +25,13 @@ import { CommandArgumentException } from '../Exceptions/CommandArgumentException
 */
 export class Parser {
   constructor (
-    private _registeredFlags: {[name: string]: CommandFlag & { handler: GlobalFlagHandler }},
+    private registeredFlags: {[name: string]: CommandFlag & { handler: GlobalFlagHandler }},
   ) {}
 
   /**
    * Processes ace command flag to set the options for `getopts`.
    */
-  private _preProcessFlag (flag: CommandFlag, options: getopts.Options) {
+  private preProcessFlag (flag: CommandFlag, options: getopts.Options) {
     /**
      * Register alias (when exists)
      */
@@ -157,18 +157,18 @@ export class Parser {
    */
   public parse (argv: string[], command?: CommandConstructorContract): getopts.ParsedOptions {
     let options = { alias: {}, boolean: [], default: {}, string: [] }
-    const globalFlags = Object.keys(this._registeredFlags).map((name) => this._registeredFlags[name])
+    const globalFlags = Object.keys(this.registeredFlags).map((name) => this.registeredFlags[name])
 
     /**
      * Build options from global flags
      */
-    globalFlags.forEach((flag) => this._preProcessFlag(flag, options))
+    globalFlags.forEach((flag) => this.preProcessFlag(flag, options))
 
     /**
      * Build options from command flags
      */
     if (command) {
-      command.flags.forEach((flag) => this._preProcessFlag(flag, options))
+      command.flags.forEach((flag) => this.preProcessFlag(flag, options))
     }
 
     /**

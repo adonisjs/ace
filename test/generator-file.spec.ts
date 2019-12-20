@@ -118,15 +118,15 @@ test.group('Generator File', () => {
     })
   })
 
-  test('do not use app root when app root is not defined', (assert) => {
+  test('use process.cwd() when app root is not defined', (assert) => {
     const file = new GeneratorFile('user-controller', { suffix: 'controller', form: 'plural' })
     file.destinationDir('foo')
 
     assert.deepEqual(file.toJSON(), {
       filename: 'UsersController',
       contents: '',
-      filepath: join('foo', 'UsersController.ts'),
-      relativepath: join('foo', 'UsersController.ts'),
+      filepath: join(process.cwd(), 'foo', 'UsersController.ts'),
+      relativepath: join(process.cwd(), 'foo', 'UsersController.ts'),
       extension: '.ts',
     })
   })
@@ -139,8 +139,8 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'UsersController',
       contents: 'Hello virk',
-      filepath: join('foo', 'foo', 'UsersController.ts'),
-      relativepath: join('foo', 'foo', 'UsersController.ts'),
+      filepath: join(process.cwd(), 'foo', 'foo', 'UsersController.ts'),
+      relativepath: join(process.cwd(), 'foo', 'foo', 'UsersController.ts'),
       extension: '.ts',
     })
   })

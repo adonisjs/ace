@@ -23,15 +23,15 @@ import { MissingManifestFileException } from '../Exceptions/MissingManifestFileE
  * command.
  */
 export class Manifest {
-  constructor (private _basePath: string) {
+  constructor (private basePath: string) {
   }
 
   /**
    * Write file to the disk
    */
-  private _writeManifest (manifest: ManifestNode): Promise<void> {
+  private writeManifest (manifest: ManifestNode): Promise<void> {
     return new Promise((resolve, reject) => {
-      writeFile(join(this._basePath, 'ace-manifest.json'), JSON.stringify(manifest), (error) => {
+      writeFile(join(this.basePath, 'ace-manifest.json'), JSON.stringify(manifest), (error) => {
         if (error) {
           reject(error)
         } else {
@@ -47,7 +47,7 @@ export class Manifest {
   public loadCommand (
     commandPath: string,
   ): { command: CommandConstructorContract, commandPath: string } {
-    const absPath = resolveFrom(this._basePath, commandPath)
+    const absPath = resolveFrom(this.basePath, commandPath)
     const command = esmRequire(absPath)
 
     if (!command.name) {
@@ -78,7 +78,7 @@ export class Manifest {
       throw new Error('Absolute path to commands are not allowed, since manifest file needs to be portable')
     }
 
-    const absPath = resolveFrom(this._basePath, commandPath)
+    const absPath = resolveFrom(this.basePath, commandPath)
     const commandOrCommandPaths = esmRequire(absPath)
 
     /**
@@ -117,7 +117,7 @@ export class Manifest {
       return result
     }, {})
 
-    await this._writeManifest(manifest)
+    await this.writeManifest(manifest)
   }
 
   /**
@@ -127,7 +127,7 @@ export class Manifest {
    */
   public load (): Promise<ManifestNode> {
     return new Promise((resolve, reject) => {
-      readFile(join(this._basePath, 'ace-manifest.json'), 'utf-8', (error, contents) => {
+      readFile(join(this.basePath, 'ace-manifest.json'), 'utf-8', (error, contents) => {
         if (error) {
           if (error.code === 'ENOENT') {
             reject(MissingManifestFileException.invoke())

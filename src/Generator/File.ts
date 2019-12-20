@@ -17,15 +17,15 @@ import { GeneratorFileOptions, GeneratorFileContract } from '../Contracts'
  * and template source.
  */
 export class GeneratorFile implements GeneratorFileContract {
-  private _stub: string
-  private _isStubRaw: boolean
-  private _destinationDir: string
-  private _appRoot?: string
-  private _templateContents: any = {}
+  private stubContents: string
+  private isStubRaw: boolean
+  private templateData: any = {}
+  private customDestinationPath?: string
+  private customAppRoot?: string
 
   constructor (
-    private _name: string,
-    private _options: GeneratorFileOptions = {},
+    private name: string,
+    private options: GeneratorFileOptions = {},
   ) {
   }
 
@@ -33,9 +33,9 @@ export class GeneratorFile implements GeneratorFileContract {
    * Returns relative path for the file. Useful for
    * printing log info
    */
-  private _getFileRelativePath (filepath: string) {
-    if (this._appRoot) {
-      return filepath.replace(`${this._appRoot}${sep}`, '')
+  private getFileRelativePath (filepath: string) {
+    if (this.customAppRoot) {
+      return filepath.replace(`${this.customAppRoot}${sep}`, '')
     }
 
     return filepath
@@ -46,8 +46,8 @@ export class GeneratorFile implements GeneratorFileContract {
    * is considered as the raw content and not the file path.
    */
   public stub (fileOrContents: string, options?: { raw: boolean }): this {
-    this._stub = fileOrContents
-    this._isStubRaw = !!(options && options.raw)
+    this.stubContents = fileOrContents
+    this.isStubRaw = !!(options && options.raw)
     return this
   }
 
@@ -55,7 +55,7 @@ export class GeneratorFile implements GeneratorFileContract {
    * Optionally define  destination directory from the project root.
    */
   public destinationDir (directory: string): this {
-    this._destinationDir = directory
+    this.customDestinationPath = directory
     return this
   }
 
@@ -64,7 +64,7 @@ export class GeneratorFile implements GeneratorFileContract {
    * file names. For example:
    */
   public appRoot (directory: string): this {
-    this._appRoot = directory
+    this.customAppRoot = directory
     return this
   }
 
@@ -72,7 +72,7 @@ export class GeneratorFile implements GeneratorFileContract {
    * Variables for stub subsitution
    */
   public apply (contents: any): this {
-    this._templateContents = contents
+    this.templateData = contents
     return this
   }
 
@@ -80,54 +80,61 @@ export class GeneratorFile implements GeneratorFileContract {
    * Returns the file json
    */
   public toJSON () {
-    const extension = this._options.extname || '.ts'
+    const extension = this.options.extname || '.ts'
 
-    const filename = new StringTransformer(basename(this._name))
+    const filename = new StringTransformer(basename(this.name))
       .dropExtension()
-      .cleanSuffix(this._options.suffix)
-      .cleanPrefix(this._options.prefix)
-      .changeForm(this._options.form, this._options.formIgnoreList)
-      .addSuffix(this._options.suffix)
-      .addPrefix(this._options.prefix)
-      .changeCase(this._options.pattern || 'pascalcase')
+      .cleanSuffix(this.options.suffix)
+      .cleanPrefix(this.options.prefix)
+      .changeForm(this.options.form, this.options.formIgnoreList)
+      .addSuffix(this.options.suffix)
+      .addPrefix(this.options.prefix)
+      .changeCase(this.options.pattern || 'pascalcase')
       .toValue()
 
-    const initialFilePath = this._name.replace(basename(this._name), filename)
+    const initialFilePath = this.name.replace(basename(this.name), filename)
+
+    const appRoot = this.customAppRoot || process.cwd()
 
     /**
-     * Computes the file absolute path, where the file will be created
+     * Computes the file absolute path, where the file will be created.
+     *
+     * 1. If `customDestinationPath` is not defined, we will merge the
+     *    `appRoot` + `initialFilePath`.
+     *
+     * 2. If `customDestinationPath` is absolute, then we ignore the appRoot
+     *    and merge `customDestinationPath` + `initialFilePath`
+     *
+     * 3. Otherwise we merge `appRoot` + `customDestinationPath` + `initialFilePath`.
      */
-    const filepath = isAbsolute(this._destinationDir)
-      ? join(this._destinationDir, initialFilePath)
-      : (
-        this._appRoot
-          ? join(this._appRoot, this._destinationDir, initialFilePath)
-          : join(this._destinationDir, initialFilePath)
+    const filepath = this.customDestinationPath
+      ? (
+        isAbsolute(this.customDestinationPath)
+          ? join(this.customDestinationPath, initialFilePath)
+          : join(appRoot, this.customDestinationPath, initialFilePath)
       )
+      : join(appRoot, initialFilePath)
 
     /**
      * Passing user values + the filename and extension
      */
-    const templateContents = Object.assign({
-      extension,
-      filename,
-    }, this._templateContents)
+    const templateContents = Object.assign({ extension, filename }, this.templateData)
 
     /**
-     * Contents to the template file
+     * Contents of the template file
      */
-    const contents = this._stub
+    const contents = this.stubContents
       ? (
-        this._isStubRaw
-          ? template(this._stub, templateContents)
-          : templateFromFile(this._stub, templateContents)
+        this.isStubRaw
+          ? template(this.stubContents, templateContents)
+          : templateFromFile(this.stubContents, templateContents)
       )
       : ''
 
     return {
       filename,
       filepath: `${filepath}${extension}`,
-      relativepath: this._getFileRelativePath(`${filepath}${extension}`),
+      relativepath: this.getFileRelativePath(`${filepath}${extension}`),
       extension,
       contents,
     }

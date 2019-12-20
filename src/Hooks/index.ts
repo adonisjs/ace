@@ -11,7 +11,7 @@
  * Exposes the API to register and execute async hooks
  */
 export class Hooks {
-  private _hooks: {
+  private hooks: {
     before: Map<string, ((...args: any[]) => void | Promise<void>)[]>,
     after: Map<string, ((...args: any[]) => void | Promise<void>)[]>,
   } = {
@@ -27,11 +27,11 @@ export class Hooks {
     action: string,
     handler: (...args: any[]) => void | Promise<void>,
   ): this {
-    const handlers = this._hooks[lifecycle].get(action)
+    const handlers = this.hooks[lifecycle].get(action)
     if (handlers) {
       handlers.push(handler)
     } else {
-      this._hooks[lifecycle].set(action, [handler])
+      this.hooks[lifecycle].set(action, [handler])
     }
 
     return this
@@ -41,7 +41,7 @@ export class Hooks {
    * Execute hooks for a given action and lifecycle
    */
   public async excute (lifecycle: 'before' | 'after', action: string, data: any): Promise<void> {
-    const handlers = this._hooks[lifecycle].get(action)
+    const handlers = this.hooks[lifecycle].get(action)
     if (!handlers) {
       return
     }

@@ -18,11 +18,11 @@ import { GeneratorFileOptions, GeneratorContract } from '../Contracts'
  * `Controllers`, `Models` and so on.
  */
 export class Generator implements GeneratorContract {
-  private _files: GeneratorFile[] = []
+  private files: GeneratorFile[] = []
 
   constructor (
-    private _logger: Logger,
-    private _destinationDir?: string,
+    private logger: Logger,
+    private destinationDir?: string,
   ) {
   }
 
@@ -33,11 +33,11 @@ export class Generator implements GeneratorContract {
   public addFile (name: string, options?: GeneratorFileOptions) {
     const file = new GeneratorFile(name, options)
 
-    if (this._destinationDir) {
-      file.destinationDir(this._destinationDir)
+    if (this.destinationDir) {
+      file.destinationDir(this.destinationDir)
     }
 
-    this._files.push(file)
+    this.files.push(file)
     return file
   }
 
@@ -45,17 +45,17 @@ export class Generator implements GeneratorContract {
    * Run the generator and create all files registered using `addFiles`
    */
   public async run () {
-    for (let file of this._files) {
+    for (let file of this.files) {
       const fileJSON = file.toJSON()
       const exists = await pathExists(fileJSON.filepath)
 
       if (exists) {
-        this._logger.skip(`${fileJSON.relativepath} already exists`)
+        this.logger.skip(`${fileJSON.relativepath} already exists`)
         return
       }
 
       await outputFile(fileJSON.filepath, fileJSON.contents)
-      this._logger.create(fileJSON.relativepath)
+      this.logger.create(fileJSON.relativepath)
     }
   }
 
@@ -63,6 +63,6 @@ export class Generator implements GeneratorContract {
    * Clear the registered files from the generator
    */
   public clear () {
-    this._files = []
+    this.files = []
   }
 }

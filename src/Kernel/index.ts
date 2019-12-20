@@ -54,13 +54,13 @@ export class Kernel {
    * will give prefrence to the manifest file over the registered
    * commands
    */
-  private _manifest?: Manifest
+  private manifest?: Manifest
 
   /**
    * Reference to hooks class to execute lifecycle
    * hooks
    */
-  private _hooks = new Hooks()
+  private hooks = new Hooks()
 
   constructor (public application: ApplicationContract) {
   }
@@ -70,7 +70,7 @@ export class Kernel {
    * not async as of now, but later we can look into making them
    * async.
    */
-  private _executeGlobalFlagsHandlers (
+  private executeGlobalFlagsHandlers (
     options: getopts.ParsedOptions,
     command?: CommandConstructorContract,
   ) {
@@ -104,7 +104,7 @@ export class Kernel {
   /**
    * Returns an array of all registered commands
    */
-  private _getAllCommands () {
+  private getAllCommands () {
     let commands: (ManifestCommand | CommandConstructorContract)[] = Object
       .keys(this.commands)
       .map((name) => this.commands[name])
@@ -129,7 +129,7 @@ export class Kernel {
   public before (action: 'run', callback: RunHookCallback): this
   public before (action: 'find', callback: FindHookCallback): this
   public before (action: 'run' | 'find', callback: RunHookCallback | FindHookCallback): this {
-    this._hooks.add('before', action, callback)
+    this.hooks.add('before', action, callback)
     return this
   }
 
@@ -139,7 +139,7 @@ export class Kernel {
   public after (action: 'run', callback: RunHookCallback): this
   public after (action: 'find', callback: FindHookCallback): this
   public after (action: 'run' | 'find', callback: RunHookCallback | FindHookCallback): this {
-    this._hooks.add('after', action, callback)
+    this.hooks.add('after', action, callback)
     return this
   }
 
@@ -161,7 +161,7 @@ export class Kernel {
    */
   public getSuggestions (name: string, distance = 3): string[] {
     const levenshtein = require('fast-levenshtein')
-    return this._getAllCommands().filter(({ commandName }) => {
+    return this.getAllCommands().filter(({ commandName }) => {
       return levenshtein.get(name, commandName) <= distance
     }).map(({ commandName }) => commandName)
   }
@@ -212,13 +212,13 @@ export class Kernel {
       /**
        * Passing manifest node to the command
        */
-      await this._hooks.excute('before', 'find', this.manifestCommands[argv[0]])
-      const command = this._manifest!.loadCommand(this.manifestCommands[argv[0]].commandPath)
+      await this.hooks.excute('before', 'find', this.manifestCommands[argv[0]])
+      const command = this.manifest!.loadCommand(this.manifestCommands[argv[0]].commandPath)
 
       /**
        * Passing actual command constructor
        */
-      await this._hooks.excute('after', 'find', command.command)
+      await this.hooks.excute('after', 'find', command.command)
       return command.command
     }
 
@@ -232,8 +232,8 @@ export class Kernel {
      * Executing before and after together to be compatible
      * with the manifest find before and after hooks
      */
-    await this._hooks.excute('before', 'find', command)
-    await this._hooks.excute('after', 'find', command)
+    await this.hooks.excute('before', 'find', command)
+    await this.hooks.excute('after', 'find', command)
 
     return command
   }
@@ -255,7 +255,7 @@ export class Kernel {
      * Parse argv and execute the `handle` method.
      */
     const parsedOptions = parser.parse(argv, command)
-    this._executeGlobalFlagsHandlers(parsedOptions, command)
+    this.executeGlobalFlagsHandlers(parsedOptions, command)
 
     /**
      * We validate the command arguments after the global flags have been
@@ -293,10 +293,10 @@ export class Kernel {
       commandInstance[flag.propertyName] = parsedOptions[flag.name]
     })
 
-    await this._hooks.excute('before', 'run', commandInstance)
+    await this.hooks.excute('before', 'run', commandInstance)
 
     const response = await this.application.container.call(commandInstance, 'handle', [])
-    await this._hooks.excute('after', 'run', commandInstance)
+    await this.hooks.excute('after', 'run', commandInstance)
 
     return response
   }
@@ -311,8 +311,8 @@ export class Kernel {
      * kernel will give preference to the `manifest` file vs manually
      * registered commands.
      */
-    if (this._manifest && !this.manifestCommands) {
-      this.manifestCommands = await this._manifest.load()
+    if (this.manifest && !this.manifestCommands) {
+      this.manifestCommands = await this.manifest.load()
     }
   }
 
@@ -333,7 +333,7 @@ export class Kernel {
      */
     if (!hasMentionedCommand) {
       const parsedOptions = new Parser(this.flags).parse(argv)
-      this._executeGlobalFlagsHandlers(parsedOptions)
+      this.executeGlobalFlagsHandlers(parsedOptions)
       return
     }
 
@@ -353,7 +353,7 @@ export class Kernel {
    * Use manifest instance to lazy load commands
    */
   public useManifest (manifest: Manifest): this {
-    this._manifest = manifest
+    this.manifest = manifest
     return this
   }
 
@@ -365,7 +365,7 @@ export class Kernel {
       printHelpFor(command)
     } else {
       const flags = Object.keys(this.flags).map((name) => this.flags[name])
-      printHelp(this._getAllCommands(), flags)
+      printHelp(this.getAllCommands(), flags)
     }
   }
 }
