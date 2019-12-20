@@ -82,45 +82,28 @@ export interface SerializedCommandContract {
  */
 export interface CommandConstructorContract extends SerializedCommandContract {
   new (application: ApplicationContract, ...args: any[]): CommandContract,
+
+  /**
+   * A boolean to know if the command has been booted or not. We initialize some
+   * static properties to the class during the boot process.
+   */
   $booted: boolean,
+
+  /**
+   * Boot the command. You won't have to run this method by yourself. Ace will internally
+   * boot the commands by itself.
+   */
   $boot (): void
+
+  /**
+   * Define an argument directly on the command without using the decorator
+   */
   $defineArgument (options: Partial<CommandArg>): void
+
+  /**
+   * Define a flag directly on the command without using the decorator
+   */
   $defineFlag (options: Partial<CommandFlag>): void
-}
-
-export type GeneratorFileOptions = {
-  pattern?: 'pascalcase' | 'camelcase' | 'snakecase',
-  form?: 'singular' | 'plural',
-  formIgnoreList?: string[],
-  suffix?: string,
-  prefix?: string,
-  extname?: string,
-}
-
-/**
- * Shape of the individual generator file
- */
-export interface GeneratorFileContract {
-  stub (fileOrContents: string, options?: { raw: boolean }): this
-  destinationDir (directory: string): this
-  appRoot (directory: string): this
-  apply (contents: any): this
-  toJSON (): {
-    filename: string,
-    filepath: string,
-    extension: string,
-    contents: string,
-    relativepath: string,
-  }
-}
-
-/**
- * Shape of the files generator
- */
-export interface GeneratorContract {
-  addFile (name: string, options?: GeneratorFileOptions): GeneratorFileContract
-  run (): Promise<void>
-  clear (): void
 }
 
 /**
@@ -141,7 +124,7 @@ export interface CommandContract {
 export type ManifestCommand = SerializedCommandContract & { commandPath: string }
 
 /**
- * Shape of manifest JSON file
+ * Shape of the manifest JSON file
  */
 export type ManifestNode = {
   [command: string]: ManifestCommand,
@@ -153,4 +136,73 @@ export type ManifestNode = {
 export type FindHookCallback = (command: SerializedCommandContract | null) => Promise<void> | void
 export type RunHookCallback = (command: CommandContract) => Promise<void> | void
 
-export type CommandsListFilterFn = ((name: string) => boolean) | string[]
+/**
+ * Template generator options
+ */
+export type GeneratorFileOptions = {
+  pattern?: 'pascalcase' | 'camelcase' | 'snakecase',
+  form?: 'singular' | 'plural',
+  formIgnoreList?: string[],
+  suffix?: string,
+  prefix?: string,
+  extname?: string,
+}
+
+/**
+ * Shape of the individual generator file
+ */
+export interface GeneratorFileContract {
+  /**
+   * Define path to the stub template. You can also define inline text instead
+   * of relying on a template file, but do make sure to set `raw=true` inside
+   * the options when using inline text.
+   */
+  stub (fileOrContents: string, options?: { raw: boolean }): this
+
+  /**
+   * The relative path to the destination directory.
+   */
+  destinationDir (directory: string): this
+
+  /**
+   * Define a custom application root. Otherwise `process.cwd()` is used.
+   */
+  appRoot (directory: string): this
+
+  /**
+   * Apply data to the stub
+   */
+  apply (contents: any): this
+
+  /**
+   * Get file properties as a JSON object
+   */
+  toJSON (): {
+    filename: string,
+    filepath: string,
+    extension: string,
+    contents: string,
+    relativepath: string,
+  }
+}
+
+/**
+ * Shape of the files generator
+ */
+export interface GeneratorContract {
+  /**
+   * Add a new file to the files generator. You can add multiple files
+   * together and they will be created when `run` is invoked.
+   */
+  addFile (name: string, options?: GeneratorFileOptions): GeneratorFileContract
+
+  /**
+   * Run the generator and create all files registered using `addFiles`
+   */
+  run (): Promise<void>
+
+  /**
+   * Clear the registered files from the generator
+   */
+  clear (): void
+}

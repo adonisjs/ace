@@ -38,13 +38,14 @@ export abstract class BaseCommand implements CommandContract {
   public static flags: CommandFlag[]
 
   /**
-   * Command name
+   * Command name. The command will be registered using this name only. Make
+   * sure their aren't any spaces inside the command name.
    */
   public static commandName: string
 
   /**
    * The description of the command displayed on the help screen.
-   * Please do not create commands without description
+   * A good command will always have some description.
    */
   public static description: string
 
@@ -86,7 +87,7 @@ export abstract class BaseCommand implements CommandContract {
   }
 
   /**
-   * Add a new argument to the list of command arguments
+   * Define an argument directly on the command without using the decorator
    */
   public static $defineArgument (options: Partial<CommandArg>) {
     if (!options.propertyName) {
@@ -104,7 +105,7 @@ export abstract class BaseCommand implements CommandContract {
   }
 
   /**
-   * Add a new flag to the list of command flags
+   * Define a flag directly on the command without using the decorator
    */
   public static $defineFlag (options: Partial<CommandFlag>) {
     if (!options.propertyName) {
@@ -122,7 +123,7 @@ export abstract class BaseCommand implements CommandContract {
 
   /**
    * Parsed options on the command. They only exist when the command
-   * is executed via kernel
+   * is executed via kernel.
    */
   public parsed?: ParsedOptions
 

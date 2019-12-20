@@ -27,7 +27,8 @@ export class Generator implements GeneratorContract {
   }
 
   /**
-   * Add a new file
+   * Add a new file to the files generator. You can add multiple files
+   * together and they will be created when `run` is invoked.
    */
   public addFile (name: string, options?: GeneratorFileOptions) {
     const file = new GeneratorFile(name, options)
@@ -41,7 +42,7 @@ export class Generator implements GeneratorContract {
   }
 
   /**
-   * Creates all collected files
+   * Run the generator and create all files registered using `addFiles`
    */
   public async run () {
     for (let file of this._files) {
@@ -59,7 +60,7 @@ export class Generator implements GeneratorContract {
   }
 
   /**
-   * Clear tracked files
+   * Clear the registered files from the generator
    */
   public clear () {
     this._files = []

@@ -52,8 +52,7 @@ export class GeneratorFile implements GeneratorFileContract {
   }
 
   /**
-   * Define the destination directory for creating the
-   * file.
+   * Optionally define  destination directory from the project root.
    */
   public destinationDir (directory: string): this {
     this._destinationDir = directory
