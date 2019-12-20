@@ -13,13 +13,15 @@ import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 import { Hooks } from '../Hooks'
 import { Parser } from '../Parser'
 import { Manifest } from '../Manifest'
+import { HelpCommand } from '../HelpCommand'
+import { printHelp, printHelpFor } from '../utils/help'
 import { validateCommand } from '../utils/validateCommand'
 import { InvalidCommandException } from '../Exceptions/InvalidCommandException'
-import { printHelp, printHelpFor } from '../utils/help'
 
 import {
   CommandFlag,
   ManifestNode,
+  KernelContract,
   CommandContract,
   ManifestCommand,
   RunHookCallback,
@@ -32,7 +34,7 @@ import {
  * Ace kernel class is used to register, find and invoke commands by
  * parsing `process.argv.splice(2)` value.
  */
-export class Kernel {
+export class Kernel implements KernelContract {
   /**
    * List of registered commands
    */
@@ -62,7 +64,11 @@ export class Kernel {
    */
   private hooks = new Hooks()
 
-  // private defaultCommand: CommandConstructorContract
+  /**
+   * The default command that will be invoked when no defined is
+   * defined
+   */
+  public defaultCommand: CommandConstructorContract = HelpCommand
 
   constructor (public application: ApplicationContract) {
   }
@@ -323,8 +329,18 @@ export class Kernel {
    * and setting them on the command instance
    */
   public async handle (argv: string[]) {
+    /**
+     * Execute the default command when no command is mentioned
+     */
     if (!argv.length) {
-      return
+      this.defaultCommand.$boot()
+      validateCommand(this.defaultCommand)
+
+      const commandInstance = this.application.container.make(
+        this.defaultCommand as any,
+        [this.application as any, this as any],
+      )
+      return this.runCommand([], commandInstance)
     }
 
     await this.preloadManifest()
@@ -359,7 +375,10 @@ export class Kernel {
       throw InvalidCommandException.invoke(commandName)
     }
 
-    const commandInstance = this.application.container.make(command as any, [this.application as any])
+    const commandInstance = this.application.container.make(
+      command as any,
+      [this.application as any, this as any],
+    )
     return this.runCommand([commandName].concat(args), commandInstance)
   }
 

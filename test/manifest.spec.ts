@@ -148,13 +148,13 @@ test.group('Manifest', (group) => {
     import { inject } from '@adonisjs/fold'
     import { BaseCommand } from '../../../src/BaseCommand'
 
-    @inject([null, 'App/Foo'])
+    @inject([null, null, 'App/Foo'])
     export default class Greet extends BaseCommand {
       public static commandName = 'greet'
       public static description = 'Greet a user'
 
-      constructor (public rawMode, public foo) {
-        super(rawMode)
+      constructor (public app, public kernel, public foo) {
+        super(app, kernel)
       }
 
       public async handle () {

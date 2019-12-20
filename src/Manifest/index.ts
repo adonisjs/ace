@@ -13,16 +13,16 @@ import { esmRequire } from '@poppinss/utils'
 import { join, isAbsolute, extname } from 'path'
 
 import { validateCommand } from '../utils/validateCommand'
-import { ManifestNode, CommandConstructorContract } from '../Contracts'
 import { CommandValidationException } from '../Exceptions/CommandValidationException'
 import { MissingManifestFileException } from '../Exceptions/MissingManifestFileException'
+import { ManifestNode, CommandConstructorContract, ManifestContract } from '../Contracts'
 
 /**
  * Manifest class drastically improves the commands performance, by generating
  * a manifest file for all the commands and lazy load only the executed
  * command.
  */
-export class Manifest {
+export class Manifest implements ManifestContract {
   constructor (private basePath: string) {
   }
 

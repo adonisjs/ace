@@ -15,16 +15,19 @@ import { Prompt, FakePrompt } from '@poppinss/prompts'
 import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 
 import { Generator } from '../Generator'
-import { CommandContract, CommandArg, CommandFlag } from '../Contracts'
+import { CommandContract, CommandArg, CommandFlag, KernelContract } from '../Contracts'
 
 /**
  * Abstract base class other classes must extend
  */
 export abstract class BaseCommand implements CommandContract {
   /**
-   * Accepting AdonisJs application instance.
+   * Accepting AdonisJs application instance and kernel instance
    */
-  constructor (public application: ApplicationContract) {
+  constructor (
+    public application: ApplicationContract,
+    public kernel: KernelContract,
+  ) {
   }
 
   /**

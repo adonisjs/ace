@@ -1144,8 +1144,8 @@ test.group('Kernel | IoC container', () => {
     class Install extends BaseCommand {
       public static commandName = 'install'
 
-      constructor (public application: Application, public foo: Foo) {
-        super(application)
+      constructor (public application: Application, public _kernel, public foo: Foo) {
+        super(application, _kernel)
       }
 
       public async handle () {
@@ -1180,5 +1180,125 @@ test.group('Kernel | IoC container', () => {
 
     kernel.register([Install])
     await kernel.handle(['install'])
+  })
+})
+
+test.group('Kernel | defaultCommand', () => {
+  test('set custom default command', async (assert) => {
+    assert.plan(1)
+
+    class Help extends BaseCommand {
+      public static commandName = 'help'
+      public async handle () {
+        assert.isTrue(true)
+      }
+    }
+
+    const app = new Application(__dirname, new Ioc(), {}, {})
+    const kernel = new Kernel(app)
+    kernel.defaultCommand = Help
+    await kernel.handle([])
+  })
+
+  test('execute before after hooks for the default command', async (assert) => {
+    assert.plan(3)
+
+    class Help extends BaseCommand {
+      public static commandName = 'help'
+      public async handle () {
+        assert.isTrue(true)
+      }
+    }
+
+    const app = new Application(__dirname, new Ioc(), {}, {})
+    const kernel = new Kernel(app)
+
+    kernel.before('run', () => {
+      assert.isTrue(true)
+    })
+
+    kernel.after('run', () => {
+      assert.isTrue(true)
+    })
+
+    kernel.defaultCommand = Help
+    await kernel.handle([])
+  })
+})
+
+test.group('Kernel | exec', () => {
+  test('exec command by name', async (assert) => {
+    assert.plan(1)
+
+    class Foo extends BaseCommand {
+      public static commandName = 'foo'
+      public async handle () {
+        assert.isTrue(true)
+      }
+    }
+
+    const app = new Application(__dirname, new Ioc(), {}, {})
+    const kernel = new Kernel(app)
+    kernel.register([Foo])
+
+    await kernel.exec('foo', [])
+  })
+
+  test('pass arguments and flags to command using exec', async (assert) => {
+    assert.plan(2)
+
+    class Foo extends BaseCommand {
+      public static commandName = 'foo'
+
+      @args.string()
+      public name: string
+
+      @flags.boolean()
+      public isAdmin: boolean
+
+      public async handle () {
+        assert.isTrue(this.isAdmin)
+        assert.equal(this.name, 'virk')
+      }
+    }
+
+    const app = new Application(__dirname, new Ioc(), {}, {})
+    const kernel = new Kernel(app)
+    kernel.register([Foo])
+
+    await kernel.exec('foo', ['virk', '--is-admin=true'])
+  })
+
+  test('exec find and run hooks for the command using exec', async (assert) => {
+    assert.plan(5)
+
+    class Foo extends BaseCommand {
+      public static commandName = 'foo'
+      public async handle () {
+        assert.isTrue(true)
+      }
+    }
+
+    const app = new Application(__dirname, new Ioc(), {}, {})
+    const kernel = new Kernel(app)
+    kernel.register([Foo])
+
+    kernel.before('run', () => {
+      assert.isTrue(true)
+    })
+
+    kernel.after('run', () => {
+      assert.isTrue(true)
+    })
+
+    kernel.before('find', () => {
+      assert.isTrue(true)
+    })
+
+    kernel.after('find', () => {
+      assert.isTrue(true)
+    })
+
+    await kernel.exec('foo', [])
   })
 })

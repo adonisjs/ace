@@ -115,6 +115,7 @@ export interface CommandContract {
   prompt: PromptContract,
   colors: Colors,
   generator: GeneratorContract,
+  kernel: KernelContract,
   handle (...args: any[]): Promise<void>,
 }
 
@@ -131,10 +132,57 @@ export type ManifestNode = {
 }
 
 /**
+ * Manifest interface
+ */
+export interface ManifestContract {
+  loadCommand (commandPath: string): { command: CommandConstructorContract, commandPath: string }
+  lookupCommands (commandPath: string)
+  generate (commandPaths: string[]): Promise<void>
+  load (): Promise<ManifestNode>
+}
+
+/**
  * Callbacks for different style of hooks
  */
 export type FindHookCallback = (command: SerializedCommandContract | null) => Promise<void> | void
 export type RunHookCallback = (command: CommandContract) => Promise<void> | void
+
+/**
+ * Shape of ace kernel
+ */
+export interface KernelContract {
+  manifestCommands?: ManifestNode
+  defaultCommand: CommandConstructorContract
+  commands: { [name: string]: CommandConstructorContract }
+  flags: { [name: string]: CommandFlag & { handler: GlobalFlagHandler } }
+
+  before (action: 'run', callback: RunHookCallback): this
+  before (action: 'find', callback: FindHookCallback): this
+  before (action: 'run' | 'find', callback: RunHookCallback | FindHookCallback)
+
+  after (action: 'run', callback: RunHookCallback): this
+  after (action: 'find', callback: FindHookCallback): this
+  after (action: 'run' | 'find', callback: RunHookCallback | FindHookCallback): this
+
+  register (commands: CommandConstructorContract[]): this
+  getSuggestions (name: string, distance?: number): string[]
+
+  flag (
+    name: string,
+    handler: GlobalFlagHandler,
+    options: Partial<Exclude<CommandFlag, 'name' | 'propertyName'>>,
+  ): this
+
+  find (argv: string[]): Promise<CommandConstructorContract | null>
+  runCommand (argv: string[], commandInstance: CommandContract): Promise<any>
+  handle (argv: string[]): Promise<any>
+  exec (commandName: string, args: string[]): Promise<any>
+
+  preloadManifest (): void
+  useManifest (manifest: ManifestContract): this
+
+  printHelp (command?: CommandConstructorContract): void
+}
 
 /**
  * Template generator options
