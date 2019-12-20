@@ -206,3 +206,8 @@ export interface GeneratorContract {
    */
   clear (): void
 }
+
+/**
+ * Filter function for filtering files during the `readdir` scan
+ */
+export type CommandsListFilterFn = ((name: string) => boolean) | string[]

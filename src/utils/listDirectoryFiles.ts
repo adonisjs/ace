@@ -9,7 +9,7 @@
 
 import slash from 'slash'
 import { join, relative } from 'path'
-import readdirSync from 'fs-readdir-recursive'
+import { fsReadAll } from '@poppinss/utils'
 import { CommandsListFilterFn } from '../Contracts'
 
 /**
@@ -21,7 +21,8 @@ export function listDirectoryFiles (
   appRoot: string,
   filterFn?: CommandsListFilterFn,
 ): string[] {
-  return readdirSync(scanDirectory, (name) => name.endsWith('.js'))
+  return fsReadAll(scanDirectory)
+    .filter((name) => name.endsWith('.js')) // remove .ts and .json files
     .map((name) => {
       const relativePath = relative(appRoot, join(scanDirectory, name))
       return slash(relativePath.startsWith('../') ? relativePath : `./${relativePath}`)
