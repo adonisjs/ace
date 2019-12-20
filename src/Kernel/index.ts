@@ -62,6 +62,8 @@ export class Kernel {
    */
   private hooks = new Hooks()
 
+  // private defaultCommand: CommandConstructorContract
+
   constructor (public application: ApplicationContract) {
   }
 
@@ -338,15 +340,27 @@ export class Kernel {
     }
 
     /**
-     * If command doesn't exists, then raise an error for same
+     * Execute command
      */
-    let command = await this.find(argv)
+    return this.exec(argv[0], argv.slice(1, argv.length))
+  }
+
+  /**
+   * Execute a given command. The `args` must be an array of arguments including
+   * flags to be parsed and passed to the command. For exmaple:
+   *
+   * ```js
+   * kernel.exec('make:controller', ['User', '--resource=true'])
+   * ```
+   */
+  public async exec (commandName: string, args: string[]) {
+    let command = await this.find([commandName])
     if (!command) {
-      throw InvalidCommandException.invoke(argv[0])
+      throw InvalidCommandException.invoke(commandName)
     }
 
     const commandInstance = this.application.container.make(command as any, [this.application as any])
-    return this.runCommand(argv, commandInstance)
+    return this.runCommand([commandName].concat(args), commandInstance)
   }
 
   /**
