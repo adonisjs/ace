@@ -22,7 +22,7 @@ export function listDirectoryFiles (
   filterFn?: CommandsListFilterFn,
 ): string[] {
   return fsReadAll(scanDirectory)
-    .filter((name) => name.endsWith('.js')) // remove .ts and .json files
+    .filter((name) => !name.endsWith('.json')) // remove .json files
     .map((name) => {
       const relativePath = relative(appRoot, join(scanDirectory, name))
       return slash(relativePath.startsWith('../') ? relativePath : `./${relativePath}`)
