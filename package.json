@@ -15,7 +15,7 @@
     "lint": "eslint . --ext=.ts",
     "clean": "del build",
     "compile": "npm run lint && npm run clean && tsc",
-    "build": "npm run compile && typedoc --excludePrivate && git add docs",
+    "build": "npm run compile",
     "commit": "git-cz",
     "release": "np",
     "version": "npm run build"
@@ -75,8 +75,6 @@
     "np": "^5.2.1",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^8.5.4",
-    "typedoc": "^0.15.5",
-    "typedoc-plugin-external-module-name": "^2.1.0",
     "typescript": "^3.7.3"
   },
   "husky": {
