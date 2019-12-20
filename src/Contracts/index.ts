@@ -174,7 +174,7 @@ export interface KernelContract {
   ): this
 
   find (argv: string[]): Promise<CommandConstructorContract | null>
-  runCommand (argv: string[], commandInstance: CommandContract): Promise<any>
+  runCommand (commandInstance: CommandContract, argv: string[]): Promise<any>
   handle (argv: string[]): Promise<any>
   exec (commandName: string, args: string[]): Promise<any>
 

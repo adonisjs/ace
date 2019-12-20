@@ -840,7 +840,7 @@ test.group('Kernel | runCommand', () => {
     const argv = ['greet', 'virk']
     const command = await kernel.find(argv)
     const commandInstance = new command!(app)
-    await kernel.runCommand(argv, commandInstance)
+    await kernel.runCommand(commandInstance, argv)
 
     assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) Hello virk'])
   })
@@ -879,7 +879,7 @@ test.group('Kernel | runCommand', () => {
       prompt.answer('virk')
     })
 
-    await kernel.runCommand(argv, commandInstance)
+    await kernel.runCommand(commandInstance, argv)
     assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) virk'])
   })
 
@@ -925,7 +925,7 @@ test.group('Kernel | runCommand', () => {
       assert.equal(message, 'Enter the value')
     })
 
-    await kernel.runCommand(argv, commandInstance)
+    await kernel.runCommand(commandInstance, argv)
     assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) '])
   })
 
@@ -961,7 +961,7 @@ test.group('Kernel | runCommand', () => {
       prompt.select(0)
     })
 
-    await kernel.runCommand(argv, commandInstance)
+    await kernel.runCommand(commandInstance, argv)
     assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) npm'])
   })
 
@@ -1005,7 +1005,7 @@ test.group('Kernel | runCommand', () => {
       assert.equal(message, 'Enter the value')
     })
 
-    await kernel.runCommand(argv, commandInstance)
+    await kernel.runCommand(commandInstance, argv)
     assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) '])
   })
 
@@ -1041,7 +1041,7 @@ test.group('Kernel | runCommand', () => {
       prompt.select(0)
     })
 
-    await kernel.runCommand(argv, commandInstance)
+    await kernel.runCommand(commandInstance, argv)
     assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) npm'])
   })
 
@@ -1086,7 +1086,7 @@ test.group('Kernel | runCommand', () => {
       assert.equal(message, 'Enter the value')
     })
 
-    await kernel.runCommand(argv, commandInstance)
+    await kernel.runCommand(commandInstance, argv)
     assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) '])
   })
 
@@ -1122,7 +1122,7 @@ test.group('Kernel | runCommand', () => {
       prompt.accept()
     })
 
-    await kernel.runCommand(argv, commandInstance)
+    await kernel.runCommand(commandInstance, argv)
     assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) Yep'])
   })
 })

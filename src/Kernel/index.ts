@@ -249,7 +249,7 @@ export class Kernel implements KernelContract {
   /**
    * Run a given command by parsing the command line arguments
    */
-  public async runCommand (argv: string[], commandInstance: CommandContract) {
+  public async runCommand (commandInstance: CommandContract, argv: string[]) {
     /**
      * The first value in the `argv` array is the command name. Now since
      * we know the command already, we remove the first value.
@@ -340,7 +340,7 @@ export class Kernel implements KernelContract {
         this.defaultCommand as any,
         [this.application as any, this as any],
       )
-      return this.runCommand([], commandInstance)
+      return this.runCommand(commandInstance, [])
     }
 
     await this.preloadManifest()
@@ -379,7 +379,7 @@ export class Kernel implements KernelContract {
       command as any,
       [this.application as any, this as any],
     )
-    return this.runCommand([commandName].concat(args), commandInstance)
+    return this.runCommand(commandInstance, [commandName].concat(args))
   }
 
   /**
