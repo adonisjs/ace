@@ -310,6 +310,21 @@ export class Kernel implements KernelContract {
   }
 
   /**
+   * Running default command
+   */
+  public async runDefaultCommand () {
+    this.defaultCommand.$boot()
+    validateCommand(this.defaultCommand)
+
+    const commandInstance = this.application.container.make(
+      this.defaultCommand as any,
+      [this.application as any, this as any],
+    )
+
+    return this.runCommand(commandInstance, [])
+  }
+
+  /**
    * Preload the manifest file. Re-running this method twice will
    * result in a noop
    */
@@ -329,21 +344,15 @@ export class Kernel implements KernelContract {
    * and setting them on the command instance
    */
   public async handle (argv: string[]) {
+    await this.preloadManifest()
+
     /**
      * Execute the default command when no command is mentioned
      */
     if (!argv.length) {
-      this.defaultCommand.$boot()
-      validateCommand(this.defaultCommand)
-
-      const commandInstance = this.application.container.make(
-        this.defaultCommand as any,
-        [this.application as any, this as any],
-      )
-      return this.runCommand(commandInstance, [])
+      return this.runDefaultCommand()
     }
 
-    await this.preloadManifest()
     const hasMentionedCommand = !argv[0].startsWith('-')
 
     /**

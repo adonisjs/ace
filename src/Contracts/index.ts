@@ -158,7 +158,7 @@ export interface KernelContract {
 
   before (action: 'run', callback: RunHookCallback): this
   before (action: 'find', callback: FindHookCallback): this
-  before (action: 'run' | 'find', callback: RunHookCallback | FindHookCallback)
+  before (action: 'run' | 'find', callback: RunHookCallback | FindHookCallback): this
 
   after (action: 'run', callback: RunHookCallback): this
   after (action: 'find', callback: FindHookCallback): this
@@ -175,6 +175,7 @@ export interface KernelContract {
 
   find (argv: string[]): Promise<CommandConstructorContract | null>
   runCommand (commandInstance: CommandContract, argv: string[]): Promise<any>
+  runDefaultCommand (): Promise<any>
   handle (argv: string[]): Promise<any>
   exec (commandName: string, args: string[]): Promise<any>
 
