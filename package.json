@@ -36,7 +36,6 @@
     "fast-levenshtein": "^2.0.6",
     "fs-extra": "^8.1.0",
     "getopts": "^2.2.4",
-    "pad-right": "^0.2.2",
     "param-case": "^3.0.3",
     "pascal-case": "^3.1.1",
     "pluralize": "^8.0.0",
