@@ -7,7 +7,6 @@
 * file that was distributed with this source code.
 */
 
-import padRight from 'pad-right'
 import { green, bold, yellow, dim } from 'kleur'
 import { sortAndGroupCommands } from './sortAndGroupCommands'
 import { CommandArg, CommandFlag, SerializedCommandContract } from '../Contracts'
@@ -109,7 +108,7 @@ export function printHelp (commands: SerializedCommandContract[], flags: Command
     }
 
     groupCommands.forEach(({ commandName, description }) => {
-      console.log(`  ${green(padRight(commandName, maxWidth, ' '))}  ${dim(description)}`)
+      console.log(`  ${green(commandName.padEnd(maxWidth, ' '))}  ${dim(description)}`)
     })
   })
 
@@ -118,7 +117,7 @@ export function printHelp (commands: SerializedCommandContract[], flags: Command
     console.log(bold(yellow('Global Flags')))
 
     flagsList.forEach(({ displayName, displayType, description = '', width }) => {
-      const whiteSpace = padRight('', maxWidth - width, ' ')
+      const whiteSpace = ''.padEnd(maxWidth - width, ' ')
       console.log(`  ${green(displayName)} ${dim(displayType)} ${whiteSpace}  ${dim(description)}`)
     })
   }
@@ -149,7 +148,7 @@ export function printHelpFor (command: SerializedCommandContract): void {
     console.log(bold(yellow('Arguments')))
 
     args.forEach(({ displayName, description = '', width }) => {
-      const whiteSpace = padRight('', maxWidth - width, ' ')
+      const whiteSpace = ''.padEnd(maxWidth - width, ' ')
       console.log(`  ${green(displayName)} ${whiteSpace}   ${dim(description)}`)
     })
   }
@@ -159,7 +158,7 @@ export function printHelpFor (command: SerializedCommandContract): void {
     console.log(bold(yellow('Flags')))
 
     flags.forEach(({ displayName, displayType, description = '', width }) => {
-      const whiteSpace = padRight('', maxWidth - width, ' ')
+      const whiteSpace = ''.padEnd(maxWidth - width, ' ')
       console.log(`  ${green(displayName)} ${dim(displayType)} ${whiteSpace}  ${dim(description)}`)
     })
   }
