@@ -611,6 +611,33 @@ test.group('Kernel | handle', () => {
     await kernel.handle(argv)
   })
 
+  test('do not overwrite default value defined on the instance property', async (assert) => {
+    assert.plan(3)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.string()
+      public name: string
+
+      @flags.string()
+      public connection: string = 'foo'
+
+      public async handle () {
+        assert.deepEqual(this.parsed, { _: ['virk'], connection: '' })
+        assert.equal(this.name, 'virk')
+        assert.equal(this.connection, 'foo')
+      }
+    }
+
+    const app = new Application(__dirname, new Ioc(), {}, {})
+    const kernel = new Kernel(app)
+    kernel.register([Greet])
+
+    const argv = ['greet', 'virk']
+    await kernel.handle(argv)
+  })
+
   test('parse flags as array when type is set to array', async (assert) => {
     assert.plan(3)
 
@@ -839,7 +866,7 @@ test.group('Kernel | runCommand', () => {
 
     const argv = ['greet', 'virk']
     const command = await kernel.find(argv)
-    const commandInstance = new command!(app)
+    const commandInstance = new command!(app, kernel)
     await kernel.runCommand(commandInstance, argv)
 
     assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) Hello virk'])
@@ -870,7 +897,7 @@ test.group('Kernel | runCommand', () => {
 
     const argv = ['greet', 'virk']
     const command = await kernel.find(argv)
-    const commandInstance = new command!(app)
+    const commandInstance = new command!(app, kernel)
 
     /**
      * Responding to prompt programatically
@@ -912,7 +939,7 @@ test.group('Kernel | runCommand', () => {
 
     const argv = ['greet', 'virk']
     const command = await kernel.find(argv)
-    const commandInstance = new command!(app)
+    const commandInstance = new command!(app, kernel)
 
     /**
      * Responding to prompt programatically
@@ -952,7 +979,7 @@ test.group('Kernel | runCommand', () => {
 
     const argv = ['greet', 'virk']
     const command = await kernel.find(argv)
-    const commandInstance = new command!(app)
+    const commandInstance = new command!(app, kernel)
 
     /**
      * Responding to prompt programatically
@@ -992,7 +1019,7 @@ test.group('Kernel | runCommand', () => {
 
     const argv = ['greet', 'virk']
     const command = await kernel.find(argv)
-    const commandInstance = new command!(app)
+    const commandInstance = new command!(app, kernel)
 
     /**
      * Responding to prompt programatically
@@ -1032,7 +1059,7 @@ test.group('Kernel | runCommand', () => {
 
     const argv = ['greet', 'virk']
     const command = await kernel.find(argv)
-    const commandInstance = new command!(app)
+    const commandInstance = new command!(app, kernel)
 
     /**
      * Responding to prompt programatically
@@ -1073,7 +1100,7 @@ test.group('Kernel | runCommand', () => {
 
     const argv = ['greet', 'virk']
     const command = await kernel.find(argv)
-    const commandInstance = new command!(app)
+    const commandInstance = new command!(app, kernel)
 
     /**
      * Responding to prompt programatically
@@ -1113,7 +1140,7 @@ test.group('Kernel | runCommand', () => {
 
     const argv = ['greet', 'virk']
     const command = await kernel.find(argv)
-    const commandInstance = new command!(app)
+    const commandInstance = new command!(app, kernel)
 
     /**
      * Responding to prompt programatically

@@ -81,7 +81,7 @@ export interface SerializedCommandContract {
  * Command constructor shape with it's static properties
  */
 export interface CommandConstructorContract extends SerializedCommandContract {
-  new (application: ApplicationContract, ...args: any[]): CommandContract,
+  new (application: ApplicationContract, kernel: KernelContract, ...args: any[]): CommandContract,
 
   /**
    * A boolean to know if the command has been booted or not. We initialize some

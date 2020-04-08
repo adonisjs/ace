@@ -298,7 +298,18 @@ export class Kernel implements KernelContract {
      * Set flag value on the command instance
      */
     command.flags.forEach((flag) => {
-      commandInstance[flag.propertyName] = parsedOptions[flag.name]
+      const defaultValue = commandInstance[flag.propertyName]
+
+      /*
+       * For non-boolean values, we allow setting a default value on the instance property. This is
+       * helpful when someone wants to use a dynamic property that shows up on the command
+       * instance after instantiating the class.
+       */
+      if (flag.type !== 'boolean' && defaultValue !== undefined) {
+        commandInstance[flag.propertyName] = parsedOptions[flag.name] || defaultValue
+      } else {
+        commandInstance[flag.propertyName] = parsedOptions[flag.name]
+      }
     })
 
     await this.hooks.excute('before', 'run', commandInstance)
