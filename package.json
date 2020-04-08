@@ -40,7 +40,6 @@
     "pascal-case": "^3.1.1",
     "pluralize": "^8.0.0",
     "slash": "^3.0.0",
-    "smpltmpl": "^1.0.2",
     "snake-case": "^3.0.3"
   },
   "nyc": {

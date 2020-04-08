@@ -8,9 +8,9 @@
 */
 
 import { basename, join, isAbsolute, sep } from 'path'
-import { template, templateFromFile } from 'smpltmpl'
 import { StringTransformer } from './StringTransformer'
 import { GeneratorFileOptions, GeneratorFileContract } from '../Contracts'
+import { template, templateFromFile } from '../utils/template'
 
 /**
  * Exposes the API to construct the output file content, path
