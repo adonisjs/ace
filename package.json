@@ -39,6 +39,9 @@
     "pluralize": "^8.0.0",
     "slash": "^3.0.0"
   },
+  "peerDependencies": {
+    "@adonisjs/fold": "^6.0.0"
+  },
   "nyc": {
     "exclude": [
       "test"
