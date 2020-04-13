@@ -7,7 +7,7 @@
 * file that was distributed with this source code.
 */
 
-import { paramCase } from 'param-case'
+import { lodash } from '@poppinss/utils'
 import { ParsedOptions } from 'getopts'
 import { Logger } from '@poppinss/fancy-logs'
 import { Colors, FakeColors } from '@poppinss/colors'
@@ -116,7 +116,7 @@ export abstract class BaseCommand implements CommandContract {
     }
 
     const flag: CommandFlag = Object.assign({
-      name: options.name || paramCase(options.propertyName),
+      name: options.name || lodash.snakeCase(options.propertyName).replace(/_/g, '-'),
       propertyName: options.propertyName,
       type: options.type || 'boolean',
     }, options)

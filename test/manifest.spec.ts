@@ -11,7 +11,7 @@ import 'reflect-metadata'
 import test from 'japa'
 import { join } from 'path'
 import { Ioc } from '@adonisjs/fold'
-import { Filesystem } from '@adonisjs/dev-utils'
+import { Filesystem } from '@poppinss/dev-utils'
 import { Application } from '@adonisjs/application/build/standalone'
 
 import { Kernel } from '../src/Kernel'

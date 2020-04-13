@@ -9,9 +9,7 @@
 
 import { extname } from 'path'
 import pluralize from 'pluralize'
-import { snakeCase } from 'snake-case'
-import { camelCase } from 'camel-case'
-import { pascalCase } from 'pascal-case'
+import { lodash } from '@poppinss/utils'
 
 /**
  * Exposes the API to transform a string
@@ -94,13 +92,14 @@ export class StringTransformer {
   public changeCase (pattern?: 'pascalcase' | 'camelcase' | 'snakecase'): this {
     switch (pattern) {
       case 'camelcase':
-        this.input = camelCase(this.input)
+        this.input = lodash.camelCase(this.input)
         return this
       case 'pascalcase':
-        this.input = pascalCase(this.input)
+        const camelCase = lodash.camelCase(this.input)
+        this.input = `${camelCase.charAt(0).toUpperCase()}${camelCase.slice(1)}`
         return this
       case 'snakecase':
-        this.input = snakeCase(this.input)
+        this.input = lodash.snakeCase(this.input)
         return this
       default:
         return this
