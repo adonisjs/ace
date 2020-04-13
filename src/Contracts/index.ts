@@ -209,6 +209,11 @@ export interface GeneratorFileContract {
   stub (fileOrContents: string, options?: { raw: boolean }): this
 
   /**
+   * Instruct to use mustache templating syntax, instead of template literals
+   */
+  useMustache (): this
+
+  /**
    * The relative path to the destination directory.
    */
   destinationDir (directory: string): this

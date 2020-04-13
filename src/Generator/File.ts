@@ -23,6 +23,7 @@ export class GeneratorFile implements GeneratorFileContract {
   private templateData: any = {}
   private customDestinationPath?: string
   private customAppRoot?: string
+  private mustache: boolean = false
 
   constructor (
     private name: string,
@@ -66,6 +67,14 @@ export class GeneratorFile implements GeneratorFileContract {
    */
   public appRoot (directory: string): this {
     this.customAppRoot = directory
+    return this
+  }
+
+  /**
+   * Instruct to use mustache
+   */
+  public useMustache () {
+    this.mustache = true
     return this
   }
 
@@ -127,8 +136,8 @@ export class GeneratorFile implements GeneratorFileContract {
     const contents = this.stubContents
       ? (
         this.isStubRaw
-          ? template(this.stubContents, templateContents)
-          : templateFromFile(this.stubContents, templateContents)
+          ? template(this.stubContents, templateContents, this.mustache)
+          : templateFromFile(this.stubContents, templateContents, this.mustache)
       )
       : ''
 
