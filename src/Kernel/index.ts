@@ -27,6 +27,7 @@ import {
   RunHookCallback,
   FindHookCallback,
   GlobalFlagHandler,
+  SerializedCommand,
   CommandConstructorContract,
 } from '../Contracts'
 
@@ -65,7 +66,7 @@ export class Kernel implements KernelContract {
   private hooks = new Hooks()
 
   /**
-   * The default command that will be invoked when no defined is
+   * The default command that will be invoked when no command is
    * defined
    */
   public defaultCommand: CommandConstructorContract = HelpCommand
@@ -118,7 +119,7 @@ export class Kernel implements KernelContract {
       .map((name) => this.commands[name])
 
     /**
-     * Using manifest commands over registered commands
+     * Concat manifest commands when they exists
      */
     if (this.manifestCommands) {
       const manifestCommands = Object
@@ -156,7 +157,7 @@ export class Kernel implements KernelContract {
    */
   public register (commands: CommandConstructorContract[]): this {
     commands.forEach((command) => {
-      command.$boot()
+      command.boot()
       validateCommand(command)
       this.commands[command.commandName] = command
     })
@@ -167,16 +168,16 @@ export class Kernel implements KernelContract {
   /**
    * Returns an array of command names suggestions for a given name.
    */
-  public getSuggestions (name: string, distance = 3): string[] {
+  public getSuggestions (name: string, distance = 3): SerializedCommand[] {
     const levenshtein = require('fast-levenshtein')
     return this.getAllCommands().filter(({ commandName }) => {
       return levenshtein.get(name, commandName) <= distance
-    }).map(({ commandName }) => commandName)
+    })
   }
 
   /**
-   * Register a global flag to be set on any command. The flag callback is
-   * executed before executing the registered command.
+   * Register a global flag. It can be defined in combination with
+   * any command.
    */
   public flag (
     name: string,
@@ -212,16 +213,17 @@ export class Kernel implements KernelContract {
      *    - node ace foo make:controller
      * ----------------------------------------------------------------------------
      */
+    const [commandName] = argv
 
     /**
      * Manifest commands gets preference over manually registered commands.
      */
-    if (this.manifestCommands && this.manifestCommands[argv[0]]) {
+    if (this.manifestCommands && this.manifestCommands[commandName]) {
       /**
        * Passing manifest node to the command
        */
-      await this.hooks.excute('before', 'find', this.manifestCommands[argv[0]])
-      const command = this.manifest!.loadCommand(this.manifestCommands[argv[0]].commandPath)
+      await this.hooks.excute('before', 'find', this.manifestCommands[commandName])
+      const command = this.manifest!.loadCommand(this.manifestCommands[commandName].commandPath)
 
       /**
        * Passing actual command constructor
@@ -234,7 +236,7 @@ export class Kernel implements KernelContract {
      * Try to find command inside manually registered command or fallback
      * to null
      */
-    const command = this.commands[argv[0]] || null
+    const command = this.commands[commandName] || null
 
     /**
      * Executing before and after together to be compatible
@@ -324,7 +326,7 @@ export class Kernel implements KernelContract {
    * Running default command
    */
   public async runDefaultCommand () {
-    this.defaultCommand.$boot()
+    this.defaultCommand.boot()
     validateCommand(this.defaultCommand)
 
     const commandInstance = this.application.container.make(
@@ -392,7 +394,7 @@ export class Kernel implements KernelContract {
   public async exec (commandName: string, args: string[]) {
     let command = await this.find([commandName])
     if (!command) {
-      throw InvalidCommandException.invoke(commandName)
+      throw InvalidCommandException.invoke(commandName, this.getSuggestions(commandName))
     }
 
     const commandInstance = this.application.container.make(

@@ -15,7 +15,12 @@ import { Prompt, FakePrompt } from '@poppinss/prompts'
 import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 
 import { Generator } from '../Generator'
-import { CommandContract, CommandArg, CommandFlag, KernelContract } from '../Contracts'
+import {
+  CommandArg,
+  CommandFlag,
+  KernelContract,
+  CommandContract,
+} from '../Contracts'
 
 /**
  * Abstract base class other classes must extend
@@ -62,17 +67,17 @@ export abstract class BaseCommand implements CommandContract {
   /**
    * Whether or not the command has been booted
    */
-  public static $booted: boolean
+  public static booted: boolean
 
   /**
    * Boots the command by defining required static properties
    */
-  public static $boot () {
-    if (this.$booted) {
+  public static boot () {
+    if (this.booted) {
       return
     }
 
-    this.$booted = true
+    this.booted = true
     Object.defineProperty(this, 'args', { value: [] })
     Object.defineProperty(this, 'flags', { value: [] })
 
@@ -92,7 +97,7 @@ export abstract class BaseCommand implements CommandContract {
   /**
    * Define an argument directly on the command without using the decorator
    */
-  public static $defineArgument (options: Partial<CommandArg>) {
+  public static $addArgument (options: Partial<CommandArg>) {
     if (!options.propertyName) {
       throw new Error('"propertyName" is required to register command argument')
     }
@@ -110,7 +115,7 @@ export abstract class BaseCommand implements CommandContract {
   /**
    * Define a flag directly on the command without using the decorator
    */
-  public static $defineFlag (options: Partial<CommandFlag>) {
+  public static $addFlag (options: Partial<CommandFlag>) {
     if (!options.propertyName) {
       throw new Error('"propertyName" is required to register command flag')
     }

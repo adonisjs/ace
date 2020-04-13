@@ -7,14 +7,14 @@
 * file that was distributed with this source code.
 */
 
-import { CommandsGroup, SerializedCommandContract } from '../Contracts'
+import { CommandsGroup, SerializedCommand } from '../Contracts'
 
 /**
  * Loops over the commands and converts them to an array of sorted groups with
  * nested commands inside them. The grouping is done using the command
  * namespace seperated with `:`. Example: `make:controller`
  */
-export function sortAndGroupCommands (commands: SerializedCommandContract[]): CommandsGroup {
+export function sortAndGroupCommands (commands: SerializedCommand[]): CommandsGroup {
   /**
    * Create a group of commands using it's namespace
    */
@@ -31,7 +31,7 @@ export function sortAndGroupCommands (commands: SerializedCommandContract[]): Co
     result[group].push(command)
 
     return result
-  }, {} as { [key: string]: SerializedCommandContract[] })
+  }, {} as { [key: string]: SerializedCommand[] })
 
   /**
    * Convert the object literal groups and it's command to an

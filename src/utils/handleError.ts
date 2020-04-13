@@ -7,6 +7,7 @@
 * file that was distributed with this source code.
 */
 
+import { green, dim } from 'kleur'
 import logger, { Logger } from '@poppinss/fancy-logs'
 import { CommandFlagException } from '../Exceptions/CommandFlagException'
 import { InvalidCommandException } from '../Exceptions/InvalidCommandException'
@@ -31,7 +32,12 @@ export function handleError (
   }
 
   if (error instanceof InvalidCommandException) {
-    logger.error(`"${error.commandName}" is not a registered command`)
+    const hasSuggestions = error.suggestions && error.suggestions.length
+    logger.error(`"${error.commandName}" command not found${hasSuggestions ? ', did you mean' : ''}`)
+
+    error.suggestions.forEach(({ commandName, description }) => {
+      console.log(`${green(commandName)}   ${dim(description)}`)
+    })
     return
   }
 

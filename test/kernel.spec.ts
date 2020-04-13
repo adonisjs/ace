@@ -105,7 +105,7 @@ test.group('Kernel | register', () => {
     }
 
     kernel.register([Install, Greet])
-    assert.deepEqual(kernel.getSuggestions('itall'), ['install'])
+    assert.deepEqual(kernel.getSuggestions('itall').map(({ commandName }) => commandName), ['install'])
   })
 
   test('return command name suggestions from manifest file', async (assert) => {
@@ -123,12 +123,12 @@ test.group('Kernel | register', () => {
 
     await fs.add('Commands/Greet.ts', `export default class Greet {
       public static commandName = 'greet'
-      public static $boot () {}
+      public static boot () {}
     }`)
 
     kernel.useManifest(manifest)
     kernel.manifestCommands = await manifest.load()
-    assert.deepEqual(kernel.getSuggestions('eet'), ['greet'])
+    assert.deepEqual(kernel.getSuggestions('eet').map(({ commandName }) => commandName), ['greet'])
 
     await fs.cleanup()
   })
@@ -184,7 +184,7 @@ test.group('Kernel | find', () => {
 
     await fs.add('Commands/Greet.ts', `export default class Greet {
       public static commandName = 'greet'
-      public static $boot () {}
+      public static boot () {}
     }`)
 
     kernel.useManifest(manifest)
@@ -210,7 +210,7 @@ test.group('Kernel | find', () => {
 
     await fs.add('Commands/Greet.ts', `export default class Greet {
       public static commandName = 'greet'
-      public static $boot () {}
+      public static boot () {}
     }`)
 
     kernel.useManifest(manifest)
@@ -245,7 +245,7 @@ test.group('Kernel | find', () => {
 
     await fs.add('Commands/Greet.ts', `export default class Greet {
       public static commandName = 'greet'
-      public static $boot () {}
+      public static boot () {}
     }`)
 
     kernel.useManifest(manifest)

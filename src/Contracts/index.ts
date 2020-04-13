@@ -62,14 +62,14 @@ export type GlobalFlagHandler = (
  */
 export type CommandsGroup = {
   group: string,
-  commands: SerializedCommandContract[],
+  commands: SerializedCommand[],
 }[]
 
 /**
  * The shared properties that exists on the command implementation
  * as well as it's serialized version
  */
-export interface SerializedCommandContract {
+export type SerializedCommand = {
   args: CommandArg[],
   settings: any,
   flags: CommandFlag[],
@@ -80,30 +80,30 @@ export interface SerializedCommandContract {
 /**
  * Command constructor shape with it's static properties
  */
-export interface CommandConstructorContract extends SerializedCommandContract {
+export interface CommandConstructorContract extends SerializedCommand {
   new (application: ApplicationContract, kernel: KernelContract, ...args: any[]): CommandContract,
 
   /**
    * A boolean to know if the command has been booted or not. We initialize some
    * static properties to the class during the boot process.
    */
-  $booted: boolean,
+  booted: boolean,
 
   /**
    * Boot the command. You won't have to run this method by yourself. Ace will internally
    * boot the commands by itself.
    */
-  $boot (): void
+  boot (): void
 
   /**
-   * Define an argument directly on the command without using the decorator
+   * Add an argument directly on the command without using the decorator
    */
-  $defineArgument (options: Partial<CommandArg>): void
+  $addArgument (options: Partial<CommandArg>): void
 
   /**
-   * Define a flag directly on the command without using the decorator
+   * Add a flag directly on the command without using the decorator
    */
-  $defineFlag (options: Partial<CommandFlag>): void
+  $addFlag (options: Partial<CommandFlag>): void
 }
 
 /**
@@ -122,7 +122,7 @@ export interface CommandContract {
 /**
  * Shape of the serialized command inside the manifest JSON file.
  */
-export type ManifestCommand = SerializedCommandContract & { commandPath: string }
+export type ManifestCommand = SerializedCommand & { commandPath: string }
 
 /**
  * Shape of the manifest JSON file
@@ -136,7 +136,7 @@ export type ManifestNode = {
  */
 export interface ManifestContract {
   loadCommand (commandPath: string): { command: CommandConstructorContract, commandPath: string }
-  lookupCommands (commandPath: string)
+  lookupCommands (commandPath: string): { command: CommandConstructorContract, commandPath: string }[]
   generate (commandPaths: string[]): Promise<void>
   load (): Promise<ManifestNode>
 }
@@ -144,7 +144,7 @@ export interface ManifestContract {
 /**
  * Callbacks for different style of hooks
  */
-export type FindHookCallback = (command: SerializedCommandContract | null) => Promise<void> | void
+export type FindHookCallback = (command: SerializedCommand | null) => Promise<void> | void
 export type RunHookCallback = (command: CommandContract) => Promise<void> | void
 
 /**
@@ -165,7 +165,7 @@ export interface KernelContract {
   after (action: 'run' | 'find', callback: RunHookCallback | FindHookCallback): this
 
   register (commands: CommandConstructorContract[]): this
-  getSuggestions (name: string, distance?: number): string[]
+  getSuggestions (name: string, distance?: number): SerializedCommand[]
 
   flag (
     name: string,

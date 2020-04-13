@@ -9,7 +9,7 @@
 
 import { green, bold, yellow, dim } from 'kleur'
 import { sortAndGroupCommands } from './sortAndGroupCommands'
-import { CommandArg, CommandFlag, SerializedCommandContract } from '../Contracts'
+import { CommandArg, CommandFlag, SerializedCommand } from '../Contracts'
 
 /**
  * Wraps the command arg inside `<>` or `[]` brackets based upon if it's
@@ -76,7 +76,7 @@ function getArgsForDisplay (args: CommandArg[]) {
   })
 }
 
-function getCommandsForDisplay (commands: SerializedCommandContract[]) {
+function getCommandsForDisplay (commands: SerializedCommand[]) {
   return commands.map(({ commandName, description }) => {
     return { displayName: commandName, description, width: commandName.length }
   })
@@ -86,7 +86,7 @@ function getCommandsForDisplay (commands: SerializedCommandContract[]) {
  * Prints help for all the commands by sorting them in alphabetical order
  * and grouping them as per their namespace.
  */
-export function printHelp (commands: SerializedCommandContract[], flags: CommandFlag[]): void {
+export function printHelp (commands: SerializedCommand[], flags: CommandFlag[]): void {
   const flagsList = getFlagsForDisplay(flags)
   const commandsList = getCommandsForDisplay(commands)
 
@@ -126,7 +126,7 @@ export function printHelp (commands: SerializedCommandContract[], flags: Command
 /**
  * Prints help for a single command
  */
-export function printHelpFor (command: SerializedCommandContract): void {
+export function printHelpFor (command: SerializedCommand): void {
   if (command.description) {
     console.log('')
     console.log(command.description)

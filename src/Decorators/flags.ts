@@ -7,7 +7,7 @@
 * file that was distributed with this source code.
 */
 
-import { CommandFlag, FlagTypes } from '../Contracts'
+import { CommandFlag, FlagTypes, CommandConstructorContract } from '../Contracts'
 
 type DecoratorFlag = Partial<Pick<CommandFlag, Exclude<keyof CommandFlag, 'type'>>>
 
@@ -17,8 +17,9 @@ type DecoratorFlag = Partial<Pick<CommandFlag, Exclude<keyof CommandFlag, 'type'
  */
 function addFlag (type: FlagTypes, options: DecoratorFlag) {
   return function flag (target: any, propertyName: string) {
-    target.constructor.$boot()
-    target.constructor.$defineFlag(Object.assign({ type, propertyName }, options))
+    const Command = target.constructor as CommandConstructorContract
+    Command.boot()
+    Command.$addFlag(Object.assign({ type, propertyName }, options))
   }
 }
 

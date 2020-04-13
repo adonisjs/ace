@@ -7,7 +7,7 @@
 * file that was distributed with this source code.
 */
 
-import { CommandArg, ArgTypes } from '../Contracts'
+import { CommandArg, ArgTypes, CommandConstructorContract } from '../Contracts'
 
 type DecoratorArg = Partial<Pick<CommandArg, Exclude<keyof CommandArg, 'type'>>>
 
@@ -17,8 +17,9 @@ type DecoratorArg = Partial<Pick<CommandArg, Exclude<keyof CommandArg, 'type'>>>
  */
 function addArg (type: ArgTypes, options: DecoratorArg) {
   return function arg (target: any, propertyName: string) {
-    target.constructor.$boot()
-    target.constructor.$defineArgument(Object.assign({ type, propertyName }, options))
+    const Command = target.constructor as CommandConstructorContract
+    Command.boot()
+    Command.$addArgument(Object.assign({ type, propertyName }, options))
   }
 }
 

@@ -48,13 +48,13 @@ export class Manifest implements ManifestContract {
     commandPath: string,
   ): { command: CommandConstructorContract, commandPath: string } {
     const absPath = resolveFrom(this.basePath, commandPath)
-    const command = esmRequire(absPath)
+    const command = esmRequire(absPath) as CommandConstructorContract
 
     if (!command.name) {
       throw CommandValidationException.invalidManifestExport(commandPath)
     }
 
-    command.$boot()
+    command.boot()
     return {
       command,
       commandPath,
