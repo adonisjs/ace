@@ -34,12 +34,15 @@ export function handleError (
   }
 
   if (error instanceof InvalidCommandException) {
-    const hasSuggestions = error.suggestions && error.suggestions.length
-    logger.error(`"${error.commandName}" command not found${hasSuggestions ? ', did you mean' : ''}`)
+    logger.error(`"${error.commandName}" command not found`)
 
-    error.suggestions.forEach(({ commandName, description }) => {
-      console.log(`${colors.green(commandName)}   ${colors.dim(description)}`)
-    })
+    if (error.suggestions && error.suggestions.length) {
+      console.log('\n  Did you mean one of these?\n')
+      error.suggestions.forEach(({ commandName }) => {
+        console.log(`  ${colors.yellow(commandName)}`)
+      })
+      console.log('')
+    }
     return
   }
 

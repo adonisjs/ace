@@ -11,6 +11,7 @@ import { BaseCommand } from '../src/BaseCommand'
 import { Kernel } from '../src/Kernel'
 import { args } from '../src/Decorators/args'
 import { flags } from '../src/Decorators/flags'
+import { handleError } from '../src/utils/handleError'
 
 import { Ioc } from '@adonisjs/fold'
 import { Application } from '@adonisjs/application/build/standalone'
@@ -72,5 +73,5 @@ kernel.flag('env', (value) => {
   process.env.NODE_ENV = value
 }, { type: 'string' })
 
-kernel.handle(process.argv.splice(2))
 kernel.printHelp(Greet)
+kernel.handle(process.argv.splice(2)).catch(handleError)

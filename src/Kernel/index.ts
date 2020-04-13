@@ -169,9 +169,9 @@ export class Kernel implements KernelContract {
    * Returns an array of command names suggestions for a given name.
    */
   public getSuggestions (name: string, distance = 3): SerializedCommand[] {
-    const levenshtein = require('fast-levenshtein')
+    const leven = require('leven')
     return this.getAllCommands().filter(({ commandName }) => {
-      return levenshtein.get(name, commandName) <= distance
+      return leven(name, commandName) <= distance
     })
   }
 
