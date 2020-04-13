@@ -7,10 +7,9 @@
 * file that was distributed with this source code.
 */
 
-import resolveFrom from 'resolve-from'
 import { writeFile, readFile } from 'fs'
-import { esmRequire } from '@poppinss/utils'
 import { join, isAbsolute, extname } from 'path'
+import { esmRequire, resolveFrom } from '@poppinss/utils'
 
 import { validateCommand } from '../utils/validateCommand'
 import { CommandValidationException } from '../Exceptions/CommandValidationException'

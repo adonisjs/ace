@@ -7,9 +7,11 @@
 * file that was distributed with this source code.
 */
 
-import { green, bold, yellow, dim } from 'kleur'
+import { Colors } from '@poppinss/colors'
 import { sortAndGroupCommands } from './sortAndGroupCommands'
 import { CommandArg, CommandFlag, SerializedCommand } from '../Contracts'
+
+const colors = new Colors()
 
 /**
  * Wraps the command arg inside `<>` or `[]` brackets based upon if it's
@@ -102,23 +104,23 @@ export function printHelp (commands: SerializedCommand[], flags: CommandFlag[]):
   sortAndGroupCommands(commands).forEach(({ group, commands: groupCommands }) => {
     console.log('')
     if (group === 'root') {
-      console.log(bold(yellow('Available commands')))
+      console.log(colors.bold(colors.yellow('Available commands')))
     } else {
-      console.log(bold(yellow(group)))
+      console.log(colors.bold(colors.yellow(group)))
     }
 
     groupCommands.forEach(({ commandName, description }) => {
-      console.log(`  ${green(commandName.padEnd(maxWidth, ' '))}  ${dim(description)}`)
+      console.log(`  ${colors.green(commandName.padEnd(maxWidth, ' '))}  ${colors.dim(description)}`)
     })
   })
 
   if (flagsList.length) {
     console.log('')
-    console.log(bold(yellow('Global Flags')))
+    console.log(colors.bold(colors.yellow('Global Flags')))
 
     flagsList.forEach(({ displayName, displayType, description = '', width }) => {
       const whiteSpace = ''.padEnd(maxWidth - width, ' ')
-      console.log(`  ${green(displayName)} ${dim(displayType)} ${whiteSpace}  ${dim(description)}`)
+      console.log(`  ${colors.green(displayName)} ${colors.dim(displayType)} ${whiteSpace}  ${colors.dim(description)}`)
     })
   }
 }
@@ -133,7 +135,7 @@ export function printHelpFor (command: SerializedCommand): void {
   }
 
   console.log('')
-  console.log(`${yellow('Usage:')} ${command.commandName} ${dim(command.args.map(wrapArg).join(' '))}`)
+  console.log(`${colors.yellow('Usage:')} ${command.commandName} ${colors.dim(command.args.map(wrapArg).join(' '))}`)
 
   const flags = getFlagsForDisplay(command.flags)
   const args = getArgsForDisplay(command.args)
@@ -145,21 +147,21 @@ export function printHelpFor (command: SerializedCommand): void {
 
   if (args.length) {
     console.log('')
-    console.log(bold(yellow('Arguments')))
+    console.log(colors.bold(colors.yellow('Arguments')))
 
     args.forEach(({ displayName, description = '', width }) => {
       const whiteSpace = ''.padEnd(maxWidth - width, ' ')
-      console.log(`  ${green(displayName)} ${whiteSpace}   ${dim(description)}`)
+      console.log(`  ${colors.green(displayName)} ${whiteSpace}   ${colors.dim(description)}`)
     })
   }
 
   if (flags.length) {
     console.log('')
-    console.log(bold(yellow('Flags')))
+    console.log(colors.bold(colors.yellow('Flags')))
 
     flags.forEach(({ displayName, displayType, description = '', width }) => {
       const whiteSpace = ''.padEnd(maxWidth - width, ' ')
-      console.log(`  ${green(displayName)} ${dim(displayType)} ${whiteSpace}  ${dim(description)}`)
+      console.log(`  ${colors.green(displayName)} ${colors.dim(displayType)} ${whiteSpace}  ${colors.dim(description)}`)
     })
   }
 }

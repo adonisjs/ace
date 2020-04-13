@@ -7,11 +7,13 @@
 * file that was distributed with this source code.
 */
 
-import { green, dim } from 'kleur'
+import { Colors } from '@poppinss/colors'
 import logger, { Logger } from '@poppinss/fancy-logs'
 import { CommandFlagException } from '../Exceptions/CommandFlagException'
 import { InvalidCommandException } from '../Exceptions/InvalidCommandException'
 import { CommandArgumentException } from '../Exceptions/CommandArgumentException'
+
+const colors = new Colors()
 
 /**
  * Handles the command errors and prints them to the console.
@@ -36,7 +38,7 @@ export function handleError (
     logger.error(`"${error.commandName}" command not found${hasSuggestions ? ', did you mean' : ''}`)
 
     error.suggestions.forEach(({ commandName, description }) => {
-      console.log(`${green(commandName)}   ${dim(description)}`)
+      console.log(`${colors.green(commandName)}   ${colors.dim(description)}`)
     })
     return
   }
