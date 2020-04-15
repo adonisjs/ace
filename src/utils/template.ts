@@ -7,24 +7,41 @@
  * file that was distributed with this source code.
 */
 
+import { runInNewContext } from 'vm'
 import Mustache from 'mustache'
 import { readFileSync } from 'fs'
+
+const STACK_REGEXP = /evalmachine\.<anonymous>:(\d+)(?::(\d+))?\n/
+const STACK_REGEXP_ALL = new RegExp(STACK_REGEXP.source, 'g')
 
 /**
  * Process string as a template literal string and processes
  * data
  */
-export function template (tpl: string, data: Object, isMustache: boolean) {
+export function template (tpl: string, data: Object, filename: string = 'eval', isMustache: boolean = false) {
   if (isMustache) {
     return Mustache.render(tpl, data)
   }
 
-  return tpl.replace(/\$\{([a-zA-Z0-9_-]*)}/g, (_, p1: string) => {
-    if (!(p1 in data)) {
-      return ''
+  try {
+    return runInNewContext('`' + tpl + '`', data)
+  } catch (error) {
+    const positions = error.stack.match(STACK_REGEXP_ALL)
+    if (!positions) {
+      throw error
     }
-    return String(data[p1])
-  })
+
+    const position: string[] = [filename]
+    const tokens = positions.pop().match(STACK_REGEXP)
+    if (tokens[1]) {
+      position.push(tokens[1])
+    }
+
+    if (tokens[2]) {
+      position.push(tokens[2])
+    }
+    throw new Error(`Error in template ${position.join(':')}\n${error.message}`)
+  }
 }
 
 /**
@@ -33,5 +50,5 @@ export function template (tpl: string, data: Object, isMustache: boolean) {
  */
 export function templateFromFile (file: string, data: object, isMustache: boolean): string {
   const contents = readFileSync(file, 'utf8')
-  return template(contents, data, isMustache)
+  return template(contents, data, file, isMustache)
 }
