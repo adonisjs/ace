@@ -13,7 +13,7 @@ import { GeneratorFile } from '../src/Generator/File'
 
 test.group('Generator File', () => {
   test('use the base name for computing the filename', (assert) => {
-    const file = new GeneratorFile('foo/bar')
+    const file = new GeneratorFile('foo/bar', { pattern: 'pascalcase' })
     file.destinationDir(__dirname)
 
     assert.deepEqual(file.toJSON(), {
@@ -26,7 +26,10 @@ test.group('Generator File', () => {
   })
 
   test('add suffix when defined', (assert) => {
-    const file = new GeneratorFile('foo/user', { suffix: 'controller' })
+    const file = new GeneratorFile('foo/user', {
+      suffix: 'controller',
+      pattern: 'pascalcase',
+    })
     file.destinationDir(__dirname)
 
     assert.deepEqual(file.toJSON(), {
@@ -39,7 +42,10 @@ test.group('Generator File', () => {
   })
 
   test('do not add suffix when already defined in the name', (assert) => {
-    const file = new GeneratorFile('foo/userController', { suffix: 'controller' })
+    const file = new GeneratorFile('foo/userController', {
+      suffix: 'controller',
+      pattern: 'pascalcase',
+    })
     file.destinationDir(__dirname)
 
     assert.deepEqual(file.toJSON(), {
@@ -52,7 +58,11 @@ test.group('Generator File', () => {
   })
 
   test('pluralize name when form is plural', (assert) => {
-    const file = new GeneratorFile('foo/user', { suffix: 'controller', form: 'plural' })
+    const file = new GeneratorFile('foo/user', {
+      suffix: 'controller',
+      form: 'plural',
+      pattern: 'pascalcase',
+    })
     file.destinationDir(__dirname)
 
     assert.deepEqual(file.toJSON(), {
@@ -65,7 +75,11 @@ test.group('Generator File', () => {
   })
 
   test('pluralize name properly when name has suffix', (assert) => {
-    const file = new GeneratorFile('usercontroller', { suffix: 'controller', form: 'plural' })
+    const file = new GeneratorFile('usercontroller', {
+      suffix: 'controller',
+      form: 'plural',
+      pattern: 'pascalcase',
+    })
     file.destinationDir(__dirname)
 
     assert.deepEqual(file.toJSON(), {
@@ -78,7 +92,11 @@ test.group('Generator File', () => {
   })
 
   test('handle case where suffix is name is added after a dash', (assert) => {
-    const file = new GeneratorFile('user-controller', { suffix: 'controller', form: 'plural' })
+    const file = new GeneratorFile('user-controller', {
+      suffix: 'controller',
+      form: 'plural',
+      pattern: 'pascalcase',
+    })
     file.destinationDir(__dirname)
 
     assert.deepEqual(file.toJSON(), {
@@ -91,7 +109,12 @@ test.group('Generator File', () => {
   })
 
   test('use app root when destination path is not absolute', (assert) => {
-    const file = new GeneratorFile('foo/user-controller', { suffix: 'controller', form: 'plural' })
+    const file = new GeneratorFile('foo/user-controller', {
+      suffix: 'controller',
+      form: 'plural',
+      pattern: 'pascalcase',
+    })
+
     file.appRoot(__dirname)
     file.destinationDir('foo')
 
@@ -105,7 +128,12 @@ test.group('Generator File', () => {
   })
 
   test('do not use app root when destination path is absolute', (assert) => {
-    const file = new GeneratorFile('user-controller', { suffix: 'controller', form: 'plural' })
+    const file = new GeneratorFile('user-controller', {
+      suffix: 'controller',
+      form: 'plural',
+      pattern: 'pascalcase',
+    })
+
     file.appRoot(__dirname)
     file.destinationDir(__dirname)
 
@@ -119,7 +147,11 @@ test.group('Generator File', () => {
   })
 
   test('use process.cwd() when app root is not defined', (assert) => {
-    const file = new GeneratorFile('user-controller', { suffix: 'controller', form: 'plural' })
+    const file = new GeneratorFile('user-controller', {
+      suffix: 'controller',
+      form: 'plural',
+      pattern: 'pascalcase',
+    })
     file.destinationDir('foo')
 
     assert.deepEqual(file.toJSON(), {
@@ -132,7 +164,11 @@ test.group('Generator File', () => {
   })
 
   test('substitute stub variables from raw string', (assert) => {
-    const file = new GeneratorFile('foo/user-controller', { suffix: 'controller', form: 'plural' })
+    const file = new GeneratorFile('foo/user-controller', {
+      suffix: 'controller',
+      form: 'plural',
+      pattern: 'pascalcase',
+    })
     file.destinationDir('foo')
     file.stub('Hello ${name}', { raw: true }).apply({ name: 'virk' })
 
@@ -146,7 +182,10 @@ test.group('Generator File', () => {
   })
 
   test('add prefix when defined', (assert) => {
-    const file = new GeneratorFile('foo/user', { prefix: 'controller' })
+    const file = new GeneratorFile('foo/user', {
+      prefix: 'controller',
+      pattern: 'pascalcase',
+    })
     file.destinationDir(__dirname)
 
     assert.deepEqual(file.toJSON(), {
@@ -159,7 +198,10 @@ test.group('Generator File', () => {
   })
 
   test('do not add prefix when already defined in the name', (assert) => {
-    const file = new GeneratorFile('foo/controlleruser', { prefix: 'controller' })
+    const file = new GeneratorFile('foo/controlleruser', {
+      prefix: 'controller',
+      pattern: 'pascalcase',
+    })
     file.destinationDir(__dirname)
 
     assert.deepEqual(file.toJSON(), {
@@ -175,6 +217,7 @@ test.group('Generator File', () => {
     const file = new GeneratorFile('foo/home', {
       suffix: 'controller',
       form: 'plural',
+      pattern: 'pascalcase',
       formIgnoreList: ['Home'],
     })
     file.destinationDir(__dirname)
@@ -192,6 +235,7 @@ test.group('Generator File', () => {
     const file = new GeneratorFile('homecontroller', {
       suffix: 'controller',
       form: 'plural',
+      pattern: 'pascalcase',
       formIgnoreList: ['Home'],
     })
     file.destinationDir(__dirname)

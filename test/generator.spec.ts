@@ -22,8 +22,8 @@ test.group('Generator', (group) => {
 
   test('generate one or more entity files', async (assert) => {
     const generator = new Generator(new Logger({ fake: true }), fs.basePath)
-    generator.addFile('user', { suffix: 'controller' })
-    generator.addFile('account', { suffix: 'controller' })
+    generator.addFile('user', { suffix: 'controller', pattern: 'pascalcase' })
+    generator.addFile('account', { suffix: 'controller', pattern: 'pascalcase' })
 
     await generator.run()
 

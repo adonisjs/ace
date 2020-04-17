@@ -99,7 +99,7 @@ export class GeneratorFile implements GeneratorFileContract {
       .changeForm(this.options.form, this.options.formIgnoreList)
       .addSuffix(this.options.suffix)
       .addPrefix(this.options.prefix)
-      .changeCase(this.options.pattern || 'pascalcase')
+      .changeCase(this.options.pattern)
       .toValue()
 
     const initialFilePath = this.name.replace(basename(this.name), filename)
