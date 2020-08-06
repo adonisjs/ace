@@ -1,11 +1,11 @@
 /*
-* @adonisjs/ace
-*
-* (c) Harminder Virk <virk@adonisjs.com>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * @adonisjs/ace
+ *
+ * (c) Harminder Virk <virk@adonisjs.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 import 'reflect-metadata'
 import test from 'japa'
@@ -20,16 +20,18 @@ import { Manifest } from '../src/Manifest'
 const fs = new Filesystem(join(__dirname, '__app'))
 
 test.group('Manifest', (group) => {
-  group.before(async () => {
-    await fs.ensureRoot()
-  })
+	group.before(async () => {
+		await fs.ensureRoot()
+	})
 
-  group.afterEach(async () => {
-    await fs.cleanup()
-  })
+	group.afterEach(async () => {
+		await fs.cleanup()
+	})
 
-  test('generated manifest from command paths', async (assert) => {
-    await fs.add('Commands/Make.ts', `
+	test('generated manifest from command paths', async (assert) => {
+		await fs.add(
+			'Commands/Make.ts',
+			`
     import { args, flags } from '../../../index'
     import { BaseCommand } from '../../../src/BaseCommand'
 
@@ -44,37 +46,44 @@ test.group('Manifest', (group) => {
       public adult: boolean
 
       public async handle () {}
-    }`)
+    }`
+		)
 
-    const manifest = new Manifest(fs.basePath)
-    await manifest.generate(['./Commands/Make.ts'])
+		const manifest = new Manifest(fs.basePath)
+		await manifest.generate(['./Commands/Make.ts'])
 
-    const manifestJSON = await fs.fsExtra.readJSON(join(fs.basePath, 'ace-manifest.json'))
-    assert.deepEqual(manifestJSON, {
-      greet: {
-        settings: {},
-        commandPath: './Commands/Make',
-        commandName: 'greet',
-        description: 'Greet a user',
-        args: [{
-          name: 'name',
-          type: 'string',
-          propertyName: 'name',
-          required: true,
-        }],
-        flags: [{
-          name: 'adult',
-          propertyName: 'adult',
-          type: 'boolean',
-        }],
-      },
-    })
-  })
+		const manifestJSON = await fs.fsExtra.readJSON(join(fs.basePath, 'ace-manifest.json'))
+		assert.deepEqual(manifestJSON, {
+			greet: {
+				settings: {},
+				commandPath: './Commands/Make',
+				commandName: 'greet',
+				description: 'Greet a user',
+				args: [
+					{
+						name: 'name',
+						type: 'string',
+						propertyName: 'name',
+						required: true,
+					},
+				],
+				flags: [
+					{
+						name: 'adult',
+						propertyName: 'adult',
+						type: 'boolean',
+					},
+				],
+			},
+		})
+	})
 
-  test('raise exception when commandPath doesnt exports a command', async (assert) => {
-    assert.plan(1)
+	test('raise exception when commandPath doesnt exports a command', async (assert) => {
+		assert.plan(1)
 
-    await fs.add('Commands/Make.ts', `
+		await fs.add(
+			'Commands/Make.ts',
+			`
     import { args, flags } from '../../../index'
     import { BaseCommand } from '../../../src/BaseCommand'
 
@@ -89,19 +98,22 @@ test.group('Manifest', (group) => {
       public adult: boolean
 
       public async handle () {}
-    }`)
+    }`
+		)
 
-    const manifest = new Manifest(fs.basePath)
+		const manifest = new Manifest(fs.basePath)
 
-    try {
-      await manifest.generate(['./Commands/Make.ts'])
-    } catch ({ message }) {
-      assert.equal(message, 'make sure to have a default export from {./Commands/Make.ts} command')
-    }
-  })
+		try {
+			await manifest.generate(['./Commands/Make.ts'])
+		} catch ({ message }) {
+			assert.equal(message, 'make sure to have a default export from {./Commands/Make.ts} command')
+		}
+	})
 
-  test('read manifest file', async (assert) => {
-    await fs.add('./Commands/Make.ts', `
+	test('read manifest file', async (assert) => {
+		await fs.add(
+			'./Commands/Make.ts',
+			`
     import { args, flags } from '../../../index'
     import { BaseCommand } from '../../../src/BaseCommand'
 
@@ -116,35 +128,42 @@ test.group('Manifest', (group) => {
       public adult: boolean
 
       public async handle () {}
-    }`)
+    }`
+		)
 
-    const manifest = new Manifest(fs.basePath)
-    await manifest.generate(['./Commands/Make.ts'])
+		const manifest = new Manifest(fs.basePath)
+		await manifest.generate(['./Commands/Make.ts'])
 
-    const manifestJSON = await manifest.load()
-    assert.deepEqual(manifestJSON, {
-      greet: {
-        settings: {},
-        commandPath: './Commands/Make',
-        commandName: 'greet',
-        description: 'Greet a user',
-        args: [{
-          name: 'name',
-          propertyName: 'name',
-          type: 'string',
-          required: true,
-        }],
-        flags: [{
-          name: 'adult',
-          type: 'boolean',
-          propertyName: 'adult',
-        }],
-      },
-    })
-  })
+		const manifestJSON = await manifest.load()
+		assert.deepEqual(manifestJSON, {
+			greet: {
+				settings: {},
+				commandPath: './Commands/Make',
+				commandName: 'greet',
+				description: 'Greet a user',
+				args: [
+					{
+						name: 'name',
+						propertyName: 'name',
+						type: 'string',
+						required: true,
+					},
+				],
+				flags: [
+					{
+						name: 'adult',
+						type: 'boolean',
+						propertyName: 'adult',
+					},
+				],
+			},
+		})
+	})
 
-  test('inject dependencies to manifest commands loaded via manifest file', async (assert) => {
-    await fs.add('Commands/Make.ts', `
+	test('inject dependencies to manifest commands loaded via manifest file', async (assert) => {
+		await fs.add(
+			'Commands/Make.ts',
+			`
     import { inject } from '@adonisjs/fold'
     import { BaseCommand } from '../../../src/BaseCommand'
 
@@ -160,41 +179,44 @@ test.group('Manifest', (group) => {
       public async handle () {
         global['foo'] = this.foo.constructor.name
       }
-    }`)
+    }`
+		)
 
-    const ioc = new Ioc()
-    const app = new Application(__dirname, ioc, {}, {})
-    const kernel = new Kernel(app)
-    const manifest = new Manifest(fs.basePath)
+		const ioc = new Ioc()
+		const app = new Application(__dirname, ioc, {}, {})
+		const kernel = new Kernel(app)
+		const manifest = new Manifest(fs.basePath)
 
-    kernel.useManifest(manifest)
+		kernel.useManifest(manifest)
 
-    await manifest.generate(['./Commands/Make.ts'])
+		await manifest.generate(['./Commands/Make.ts'])
 
-    ioc.bind('App/Foo', () => {
-      class Foo {}
-      return new Foo()
-    })
+		ioc.bind('App/Foo', () => {
+			class Foo {}
+			return new Foo()
+		})
 
-    await kernel.handle(['greet'])
-    assert.equal(global['foo'], 'Foo')
+		await kernel.handle(['greet'])
+		assert.equal(global['foo'], 'Foo')
 
-    delete global['foo']
-  })
+		delete global['foo']
+	})
 
-  test('raise exception when manifest file is missing', async (assert) => {
-    assert.plan(1)
-    const manifest = new Manifest(fs.basePath)
+	test('raise exception when manifest file is missing', async (assert) => {
+		assert.plan(1)
+		const manifest = new Manifest(fs.basePath)
 
-    try {
-      await manifest.load()
-    } catch ({ message }) {
-      assert.equal(message, 'Unable to locate ace-manifest.json file')
-    }
-  })
+		try {
+			await manifest.load()
+		} catch ({ message }) {
+			assert.equal(message, 'Unable to locate ace-manifest.json file')
+		}
+	})
 
-  test('generated manifest from command subpaths', async (assert) => {
-    await fs.add('Commands/Make.ts', `
+	test('generated manifest from command subpaths', async (assert) => {
+		await fs.add(
+			'Commands/Make.ts',
+			`
     import { args, flags } from '../../../index'
     import { BaseCommand } from '../../../src/BaseCommand'
 
@@ -209,36 +231,44 @@ test.group('Manifest', (group) => {
       public adult: boolean
 
       public async handle () {}
-    }`)
+    }`
+		)
 
-    await fs.add('Commands/index.ts', `
+		await fs.add(
+			'Commands/index.ts',
+			`
       export default [
         './Commands/Make',
       ]
-    `)
+    `
+		)
 
-    const manifest = new Manifest(fs.basePath)
-    await manifest.generate(['./Commands/index.ts'])
+		const manifest = new Manifest(fs.basePath)
+		await manifest.generate(['./Commands/index.ts'])
 
-    const manifestJSON = await fs.fsExtra.readJSON(join(fs.basePath, 'ace-manifest.json'))
-    assert.deepEqual(manifestJSON, {
-      greet: {
-        settings: {},
-        commandPath: './Commands/Make',
-        commandName: 'greet',
-        description: 'Greet a user',
-        args: [{
-          name: 'name',
-          type: 'string',
-          propertyName: 'name',
-          required: true,
-        }],
-        flags: [{
-          name: 'adult',
-          propertyName: 'adult',
-          type: 'boolean',
-        }],
-      },
-    })
-  })
+		const manifestJSON = await fs.fsExtra.readJSON(join(fs.basePath, 'ace-manifest.json'))
+		assert.deepEqual(manifestJSON, {
+			greet: {
+				settings: {},
+				commandPath: './Commands/Make',
+				commandName: 'greet',
+				description: 'Greet a user',
+				args: [
+					{
+						name: 'name',
+						type: 'string',
+						propertyName: 'name',
+						required: true,
+					},
+				],
+				flags: [
+					{
+						name: 'adult',
+						propertyName: 'adult',
+						type: 'boolean',
+					},
+				],
+			},
+		})
+	})
 })
