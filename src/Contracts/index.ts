@@ -82,12 +82,16 @@ export type SerializedCommand = {
  */
 export interface CommandConstructorContract extends SerializedCommand {
 	new (application: ApplicationContract, kernel: KernelContract, ...args: any[]): CommandContract
-
 	/**
 	 * A boolean to know if the command has been booted or not. We initialize some
 	 * static properties to the class during the boot process.
 	 */
 	booted: boolean
+
+	/**
+	 * Defines if the command should never end by itself.
+	 */
+	stayAlive: boolean
 
 	/**
 	 * Boot the command. You won't have to run this method by yourself. Ace will internally
