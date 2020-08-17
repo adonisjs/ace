@@ -89,11 +89,6 @@ export interface CommandConstructorContract extends SerializedCommand {
 	booted: boolean
 
 	/**
-	 * Defines if the command should never end by itself.
-	 */
-	stayAlive: boolean
-
-	/**
 	 * Boot the command. You won't have to run this method by yourself. Ace will internally
 	 * boot the commands by itself.
 	 */

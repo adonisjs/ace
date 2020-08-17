@@ -61,11 +61,6 @@ export abstract class BaseCommand implements CommandContract {
 	public static booted: boolean
 
 	/**
-	 * Defines if the command should never end by itself.
-	 */
-	public static stayAlive: boolean
-
-	/**
 	 * Boots the command by defining required static properties
 	 */
 	public static boot() {
@@ -87,10 +82,6 @@ export abstract class BaseCommand implements CommandContract {
 
 		if (!this.hasOwnProperty('description')) {
 			Object.defineProperty(this, 'description', { value: '' })
-		}
-
-		if (!this.hasOwnProperty('stayAlive')) {
-			Object.defineProperty(this, 'stayAlive', { value: false })
 		}
 	}
 

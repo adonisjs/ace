@@ -1429,7 +1429,11 @@ test.group('Kernel | exec', () => {
 
 		class Foo extends BaseCommand {
 			public static commandName = 'foo'
-			public static stayAlive = true
+			public static get settings() {
+				return {
+					stayAlive: true,
+				}
+			}
 
 			public async handle() {}
 		}

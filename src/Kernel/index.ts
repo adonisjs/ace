@@ -321,7 +321,7 @@ export class Kernel implements KernelContract {
 		const response = await this.application.container.call(commandInstance, 'handle', [])
 		await this.hooks.excute('after', 'run', commandInstance)
 
-		if (!command.stayAlive) {
+		if (!command.settings.stayAlive) {
 			process.exit(0)
 		}
 
