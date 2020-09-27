@@ -22,6 +22,9 @@ import { BaseCommand } from '../src/BaseCommand'
 
 const fs = new Filesystem(join(__dirname, '__app'))
 
+// @ts-expect-error
+process.exit = function () {}
+
 test.group('Kernel | register', () => {
 	test('raise error when required argument comes after optional argument', (assert) => {
 		class Greet extends BaseCommand {
@@ -1392,5 +1395,58 @@ test.group('Kernel | exec', () => {
 		})
 
 		await kernel.exec('foo', [])
+	})
+	test('exit the process by default', async (assert) => {
+		assert.plan(1)
+
+		// @ts-expect-error
+		process.exit = (code) => {
+			assert.equal(code, 0)
+		}
+
+		class Foo extends BaseCommand {
+			public static commandName = 'foo'
+
+			public async handle() {}
+		}
+
+		const app = new Application(__dirname, new Ioc(), {}, {})
+		const kernel = new Kernel(app)
+		kernel.register([Foo])
+
+		try {
+			await kernel.exec('foo', [])
+		} finally {
+			// @ts-expect-error
+			process.exit = function () {}
+		}
+	})
+
+	test('keep the command alive when having a long running process', async () => {
+		process.exit = () => {
+			throw new Error('Should never be reached')
+		}
+
+		class Foo extends BaseCommand {
+			public static commandName = 'foo'
+			public static get settings() {
+				return {
+					stayAlive: true,
+				}
+			}
+
+			public async handle() {}
+		}
+
+		const app = new Application(__dirname, new Ioc(), {}, {})
+		const kernel = new Kernel(app)
+		kernel.register([Foo])
+
+		try {
+			await kernel.exec('foo', [])
+		} finally {
+			// @ts-expect-error
+			process.exit = function () {}
+		}
 	})
 })
