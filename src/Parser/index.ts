@@ -10,10 +10,10 @@
 import getopts from 'getopts'
 
 import {
+	CommandArg,
 	CommandFlag,
 	GlobalFlagHandler,
 	CommandConstructorContract,
-	CommandArg,
 } from '../Contracts'
 
 import { CommandFlagException } from '../Exceptions/CommandFlagException'

@@ -8,10 +8,10 @@
  */
 
 import { ParsedOptions } from 'getopts'
-import { lodash } from '@poppinss/utils'
 import { Prompt, FakePrompt } from '@poppinss/prompts'
 import { instantiate } from '@poppinss/cliui/build/api'
 import { ApplicationContract } from '@ioc:Adonis/Core/Application'
+import { lodash, defineStaticProperty, Exception } from '@poppinss/utils'
 
 import { Generator } from '../Generator'
 import { CommandArg, CommandFlag, KernelContract, CommandContract } from '../Contracts'
@@ -68,20 +68,36 @@ export abstract class BaseCommand implements CommandContract {
 		}
 
 		this.booted = true
-		Object.defineProperty(this, 'args', { value: [] })
-		Object.defineProperty(this, 'flags', { value: [] })
 
-		if (!this.hasOwnProperty('settings')) {
-			Object.defineProperty(this, 'settings', { value: {} })
-		}
+		defineStaticProperty(this, BaseCommand, {
+			propertyName: 'args',
+			defaultValue: [],
+			strategy: 'inherit',
+		})
 
-		if (!this.hasOwnProperty('commandName')) {
-			Object.defineProperty(this, 'commandName', { value: '' })
-		}
+		defineStaticProperty(this, BaseCommand, {
+			propertyName: 'flags',
+			defaultValue: [],
+			strategy: 'inherit',
+		})
 
-		if (!this.hasOwnProperty('description')) {
-			Object.defineProperty(this, 'description', { value: '' })
-		}
+		defineStaticProperty(this, BaseCommand, {
+			propertyName: 'settings',
+			defaultValue: {},
+			strategy: 'inherit',
+		})
+
+		defineStaticProperty(this, BaseCommand, {
+			propertyName: 'commandName',
+			defaultValue: '',
+			strategy: 'define',
+		})
+
+		defineStaticProperty(this, BaseCommand, {
+			propertyName: 'description',
+			defaultValue: '',
+			strategy: 'define',
+		})
 	}
 
 	/**
@@ -89,7 +105,11 @@ export abstract class BaseCommand implements CommandContract {
 	 */
 	public static $addArgument(options: Partial<CommandArg>) {
 		if (!options.propertyName) {
-			throw new Error('"propertyName" is required to register command argument')
+			throw new Exception(
+				'"propertyName" is required to register a command argument',
+				500,
+				'E_MISSING_ARGUMENT_NAME'
+			)
 		}
 
 		const arg: CommandArg = Object.assign(
@@ -110,7 +130,11 @@ export abstract class BaseCommand implements CommandContract {
 	 */
 	public static $addFlag(options: Partial<CommandFlag>) {
 		if (!options.propertyName) {
-			throw new Error('"propertyName" is required to register command flag')
+			throw new Exception(
+				'"propertyName" is required to register command flag',
+				500,
+				'E_MISSING_FLAG_NAME'
+			)
 		}
 
 		const flag: CommandFlag = Object.assign(
