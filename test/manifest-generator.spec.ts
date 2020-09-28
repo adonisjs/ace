@@ -40,7 +40,7 @@ test.group('Manifest Generator', (group) => {
       @flags.boolean()
       public adult: boolean
 
-      public async handle () {}
+      public async run () {}
     }`
 		)
 
@@ -93,7 +93,7 @@ test.group('Manifest Generator', (group) => {
       @flags.boolean()
       public adult: boolean
 
-      public async handle () {}
+      public async run () {}
     }`
 		)
 
@@ -126,7 +126,7 @@ test.group('Manifest Generator', (group) => {
       @flags.boolean()
       public adult: boolean
 
-      public async handle () {}
+      public async run () {}
     }`
 		)
 

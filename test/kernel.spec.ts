@@ -17,15 +17,16 @@ import { flags } from '../src/Decorators/flags'
 import { BaseCommand } from '../src/BaseCommand'
 import { Application } from '@adonisjs/application'
 import { ManifestLoader } from '../src/Manifest/Loader'
-import { join, win32 } from 'path'
+import { join } from 'path'
 
-const icons = win32
-	? {
-			info: 'i',
-	  }
-	: {
-			info: '${icons.info}',
-	  }
+const icons =
+	process.platform === 'win32'
+		? {
+				info: 'i',
+		  }
+		: {
+				info: 'ℹ',
+		  }
 
 test.group('Kernel | register', () => {
 	test('raise error when required argument comes after optional argument', (assert) => {
@@ -1497,11 +1498,11 @@ test.group('Kernel | IoC container', () => {
 
 			public static get inject() {
 				return {
-					handle: [Foo],
+					run: [Foo],
 				}
 			}
 
-			public async handle(foo: Foo) {
+			public async run(foo: Foo) {
 				assert.instanceOf(foo, Foo)
 			}
 		}
