@@ -7,14 +7,13 @@
  * file that was distributed with this source code.
  */
 
+import { Application } from '@adonisjs/application'
+
 import { BaseCommand } from '../src/BaseCommand'
 import { Kernel } from '../src/Kernel'
 import { args } from '../src/Decorators/args'
 import { flags } from '../src/Decorators/flags'
 import { handleError } from '../src/utils/handleError'
-
-import { Ioc } from '@adonisjs/fold'
-import { Application } from '@adonisjs/application/build/standalone'
 
 class Greet extends BaseCommand {
 	public static commandName = 'greet'
@@ -42,8 +41,8 @@ class Greet extends BaseCommand {
 		this.logger.success('Operation successful')
 		this.logger.error('Unable to acquire lock')
 		this.logger.info('Hello')
-		this.logger.pending('Write release notes for')
-		this.logger.complete('That is done')
+		this.logger.action('write').succeeded('Release notes')
+		this.logger.action('write').skipped('Release notes')
 		this.logger.info('Please get it done')
 	}
 }
@@ -64,7 +63,7 @@ class MakeModel extends BaseCommand {
 	}
 }
 
-const app = new Application(__dirname, new Ioc(), {}, {})
+const app = new Application(__dirname, 'test', {})
 const kernel = new Kernel(app)
 kernel.register([Greet, MakeController, MakeModel])
 
