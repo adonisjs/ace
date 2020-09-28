@@ -109,13 +109,18 @@ export interface CommandConstructorContract extends SerializedCommand {
  */
 export interface CommandContract {
 	parsed?: ParsedOptions
+	error?: any
 	logger: typeof ui.logger
 	prompt: PromptContract
 	colors: typeof ui.logger.colors
 	ui: typeof ui
 	generator: GeneratorContract
 	kernel: KernelContract
-	handle(...args: any[]): Promise<void>
+	exec(): Promise<any>
+	handle?(...args: any[]): Promise<any>
+	run?(...args: any[]): Promise<any>
+	prepare?(...args: any[]): Promise<any>
+	completed?(...args: any[]): Promise<any>
 }
 
 /**

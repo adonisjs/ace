@@ -182,7 +182,68 @@ export abstract class BaseCommand implements CommandContract {
 	public generator = new Generator(this)
 
 	/**
+	 * Error raised by the command
+	 */
+	public error?: any
+
+	public async run?(...args: any[]): Promise<any>
+	public async prepare?(...args: any[]): Promise<any>
+	public async completed?(...args: any[]): Promise<any>
+
+	/**
+	 * Execute the command
+	 */
+	public async exec() {
+		const hasRun = typeof this.run === 'function'
+		const hasHandle = typeof this.handle === 'function'
+		let commandResult: any
+
+		/**
+		 * Print depreciation warning
+		 */
+		if (hasHandle) {
+			process.emitWarning(
+				'DeprecationWarning',
+				`${this.constructor.name}.handle() is deprecated. Define run() method instead`
+			)
+		}
+
+		/**
+		 * Run command and catch any raised exceptions
+		 */
+		try {
+			/**
+			 * Run prepare method when exists on the command instance
+			 */
+			if (typeof this.prepare === 'function') {
+				await this.application.container.call(this, 'prepare' as any, [])
+			}
+
+			/**
+			 * Execute the command handle or run method
+			 */
+			commandResult = await this.application.container.call(
+				this,
+				hasRun ? 'run' : ('handle' as any),
+				[]
+			)
+		} catch (error) {
+			this.error = error
+		}
+
+		/**
+		 * Run completed method when exists
+		 */
+		if (typeof this.completed === 'function') {
+			await this.application.container.call(this, 'completed' as any, [])
+		}
+
+		return commandResult
+	}
+
+	/**
 	 * Must be defined by the parent class
 	 */
-	public abstract async handle(...args: any[]): Promise<void>
+	// @depreciated
+	public async handle?(...args: any[]): Promise<any>
 }

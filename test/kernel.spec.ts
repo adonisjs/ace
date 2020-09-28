@@ -18,9 +18,6 @@ import { BaseCommand } from '../src/BaseCommand'
 import { setupApp, fs } from '../test-helpers'
 import { Application } from '@adonisjs/application'
 
-// @ts-expect-error
-process.exit = function () {}
-
 test.group('Kernel | register', () => {
 	test('raise error when required argument comes after optional argument', (assert) => {
 		class Greet extends BaseCommand {
@@ -32,7 +29,7 @@ test.group('Kernel | register', () => {
 			@args.string()
 			public age: string
 
-			public async handle() {}
+			public async run() {}
 		}
 
 		const app = setupApp()
@@ -43,7 +40,7 @@ test.group('Kernel | register', () => {
 
 	test('raise error when command name is missing', (assert) => {
 		class Greet extends BaseCommand {
-			public async handle() {}
+			public async run() {}
 		}
 
 		const app = setupApp()
@@ -62,7 +59,7 @@ test.group('Kernel | register', () => {
 			@args.string()
 			public name: string
 
-			public async handle() {}
+			public async run() {}
 		}
 
 		const app = setupApp()
@@ -77,12 +74,12 @@ test.group('Kernel | register', () => {
 
 		class Install extends BaseCommand {
 			public static commandName = 'install'
-			public async handle() {}
+			public async run() {}
 		}
 
 		class Greet extends BaseCommand {
 			public static commandName = 'greet'
-			public async handle() {}
+			public async run() {}
 		}
 
 		kernel.register([Install, Greet])
@@ -95,12 +92,12 @@ test.group('Kernel | register', () => {
 
 		class Install extends BaseCommand {
 			public static commandName = 'install'
-			public async handle() {}
+			public async run() {}
 		}
 
 		class Greet extends BaseCommand {
 			public static commandName = 'greet'
-			public async handle() {}
+			public async run() {}
 		}
 
 		kernel.register([Install, Greet])
@@ -151,7 +148,7 @@ test.group('Kernel | register', () => {
 			@flags.boolean()
 			public isAdmin: boolean
 
-			public async handle() {}
+			public async run() {}
 		}
 
 		assert.deepEqual(Greet.flags[0].name, 'is-admin')
@@ -162,7 +159,7 @@ test.group('Kernel | find', () => {
 	test('find relevant command from the commands list', async (assert) => {
 		class Greet extends BaseCommand {
 			public static commandName = 'greet'
-			public async handle() {}
+			public async run() {}
 		}
 
 		const app = setupApp()
@@ -241,7 +238,7 @@ test.group('Kernel | find', () => {
 		kernel.register([
 			class Help extends BaseCommand {
 				public static commandName = 'help'
-				public async handle() {}
+				public async run() {}
 			},
 		])
 
@@ -312,7 +309,7 @@ test.group('Kernel | find', () => {
 		assert.plan(3)
 		class Greet extends BaseCommand {
 			public static commandName = 'greet'
-			public async handle() {}
+			public async run() {}
 		}
 
 		const app = setupApp()
@@ -327,7 +324,7 @@ test.group('Kernel | find', () => {
 	})
 })
 
-test.group('Kernel | handle', () => {
+test.group('Kernel | exec', () => {
 	test('raise exception when required argument is missing', async (assert) => {
 		assert.plan(3)
 
@@ -337,7 +334,7 @@ test.group('Kernel | handle', () => {
 			@args.string()
 			public name: string
 
-			public async handle() {}
+			public async run() {}
 		}
 
 		const app = setupApp()
@@ -363,7 +360,7 @@ test.group('Kernel | handle', () => {
 			@args.string({ required: false })
 			public name: string
 
-			public async handle() {
+			public async run() {
 				assert.deepEqual(this.parsed, { _: [] })
 			}
 		}
@@ -385,7 +382,7 @@ test.group('Kernel | handle', () => {
 			@args.string()
 			public name: string
 
-			public async handle() {
+			public async run() {
 				assert.deepEqual(this.parsed, { _: ['virk'] })
 				assert.equal(this.name, 'virk')
 			}
@@ -408,7 +405,7 @@ test.group('Kernel | handle', () => {
 			@args.spread()
 			public files: string[]
 
-			public async handle() {
+			public async run() {
 				assert.deepEqual(this.parsed, { _: ['foo.js', 'bar.js'] })
 				assert.deepEqual(this.files, ['foo.js', 'bar.js'])
 			}
@@ -437,7 +434,7 @@ test.group('Kernel | handle', () => {
 			@args.spread()
 			public files: string[]
 
-			public async handle() {
+			public async run() {
 				assert.deepEqual(this.parsed, { _: ['virk', '22', 'foo.js', 'bar.js'] })
 				assert.equal(this.name, 'virk')
 				assert.equal(this.age, '22')
@@ -465,7 +462,7 @@ test.group('Kernel | handle', () => {
 			@flags.boolean()
 			public admin: boolean
 
-			public async handle() {
+			public async run() {
 				assert.deepEqual(this.parsed, { _: ['virk'], admin: true })
 				assert.equal(this.name, 'virk')
 				assert.isTrue(this.admin)
@@ -492,7 +489,7 @@ test.group('Kernel | handle', () => {
 			@flags.boolean()
 			public admin: boolean
 
-			public async handle() {
+			public async run() {
 				assert.deepEqual(this.parsed, { _: ['virk'], admin: true })
 				assert.equal(this.name, 'virk')
 				assert.isTrue(this.admin)
@@ -519,7 +516,7 @@ test.group('Kernel | handle', () => {
 			@flags.boolean({ alias: 'a' })
 			public admin: boolean
 
-			public async handle() {
+			public async run() {
 				assert.deepEqual(this.parsed, { _: ['virk'], admin: true, a: true })
 				assert.equal(this.name, 'virk')
 				assert.isTrue(this.admin)
@@ -546,7 +543,7 @@ test.group('Kernel | handle', () => {
 			@flags.boolean({ name: 'admin', alias: 'a' })
 			public isAdmin: boolean
 
-			public async handle() {
+			public async run() {
 				assert.deepEqual(this.parsed, { _: ['virk'], admin: true, a: true })
 				assert.equal(this.name, 'virk')
 				assert.isTrue(this.isAdmin)
@@ -573,7 +570,7 @@ test.group('Kernel | handle', () => {
 			@flags.boolean()
 			public admin: boolean
 
-			public async handle() {
+			public async run() {
 				assert.deepEqual(this.parsed, { _: ['virk'], admin: true })
 				assert.equal(this.name, 'virk')
 				assert.isTrue(this.admin)
@@ -600,7 +597,7 @@ test.group('Kernel | handle', () => {
 			@flags.boolean({ alias: 'a' })
 			public admin: boolean
 
-			public async handle() {
+			public async run() {
 				assert.deepEqual(this.parsed, { _: ['virk'], admin: true, a: true })
 				assert.equal(this.name, 'virk')
 				assert.isTrue(this.admin)
@@ -627,7 +624,7 @@ test.group('Kernel | handle', () => {
 			@flags.boolean({ default: true, alias: 'a' })
 			public admin: boolean
 
-			public async handle() {
+			public async run() {
 				assert.deepEqual(this.parsed, { _: ['virk'], admin: true, a: true })
 				assert.equal(this.name, 'virk')
 				assert.isTrue(this.admin)
@@ -654,7 +651,7 @@ test.group('Kernel | handle', () => {
 			@flags.string()
 			public connection: string = 'foo'
 
-			public async handle() {
+			public async run() {
 				assert.deepEqual(this.parsed, { _: ['virk'], connection: '' })
 				assert.equal(this.name, 'virk')
 				assert.equal(this.connection, 'foo')
@@ -681,7 +678,7 @@ test.group('Kernel | handle', () => {
 			@flags.array()
 			public files: string[]
 
-			public async handle() {
+			public async run() {
 				assert.deepEqual(this.parsed, { _: ['virk'], files: ['foo.js'] })
 				assert.equal(this.name, 'virk')
 				assert.deepEqual(this.files, ['foo.js'])
@@ -806,7 +803,7 @@ test.group('Kernel | handle', () => {
 			@args.string()
 			public name: string
 
-			public async handle() {}
+			public async run() {}
 		}
 
 		kernel.register([Greet])
@@ -834,7 +831,7 @@ test.group('Kernel | handle', () => {
 			@args.string({ name: 'theName' })
 			public name: string
 
-			public async handle() {
+			public async run() {
 				assert.deepEqual(this.parsed, { _: ['virk'] })
 				assert.equal(this.name, 'virk')
 			}
@@ -857,7 +854,7 @@ test.group('Kernel | handle', () => {
 			@flags.boolean({ name: 'isAdmin' })
 			public admin: boolean
 
-			public async handle() {
+			public async run() {
 				assert.deepEqual(this.parsed, { _: [], isAdmin: true })
 				assert.isTrue(this.admin)
 			}
@@ -880,7 +877,7 @@ test.group('Kernel | handle', () => {
 			@flags.boolean({ name: 'isAdmin' })
 			public admin: boolean
 
-			public async handle() {}
+			public async run() {}
 		}
 
 		const app = setupApp()
@@ -910,7 +907,7 @@ test.group('Kernel | runCommand', () => {
 			@args.string()
 			public name: string
 
-			public async handle() {
+			public async run() {
 				this.logger.info(`Hello ${this.name}`)
 			}
 		}
@@ -941,7 +938,7 @@ test.group('Kernel | runCommand', () => {
 			@args.string()
 			public name: string
 
-			public async handle() {
+			public async run() {
 				const username = await this.prompt.ask("What's your username?", {
 					name: 'username',
 				})
@@ -983,7 +980,7 @@ test.group('Kernel | runCommand', () => {
 			@args.string()
 			public name: string
 
-			public async handle() {
+			public async run() {
 				const username = await this.prompt.ask("What's your username?", {
 					name: 'username',
 					validate(value) {
@@ -1033,7 +1030,7 @@ test.group('Kernel | runCommand', () => {
 			@args.string()
 			public name: string
 
-			public async handle() {
+			public async run() {
 				const client = await this.prompt.choice('Select the installation client', ['npm', 'yarn'])
 				this.logger.info(client)
 			}
@@ -1073,7 +1070,7 @@ test.group('Kernel | runCommand', () => {
 			@args.string()
 			public name: string
 
-			public async handle() {
+			public async run() {
 				const client = await this.prompt.choice('Select the installation client', ['npm', 'yarn'], {
 					validate(answer) {
 						return !!answer
@@ -1122,7 +1119,7 @@ test.group('Kernel | runCommand', () => {
 			@args.string()
 			public name: string
 
-			public async handle() {
+			public async run() {
 				const clients = await this.prompt.multiple('Select the installation client', [
 					'npm',
 					'yarn',
@@ -1165,7 +1162,7 @@ test.group('Kernel | runCommand', () => {
 			@args.string()
 			public name: string
 
-			public async handle() {
+			public async run() {
 				const client = await this.prompt.multiple(
 					'Select the installation client',
 					['npm', 'yarn'],
@@ -1219,7 +1216,7 @@ test.group('Kernel | runCommand', () => {
 			@args.string()
 			public name: string
 
-			public async handle() {
+			public async run() {
 				const deleteFile = await this.prompt.toggle('Delete the file?', ['Yep', 'Nope'])
 				this.logger.info(deleteFile ? 'Yep' : 'Nope')
 			}
@@ -1249,6 +1246,142 @@ test.group('Kernel | runCommand', () => {
 			},
 		])
 	})
+
+	test('exec command by name', async (assert) => {
+		assert.plan(1)
+
+		class Foo extends BaseCommand {
+			public static commandName = 'foo'
+			public async run() {
+				assert.isTrue(true)
+			}
+		}
+
+		const app = setupApp()
+		const kernel = new Kernel(app)
+		kernel.register([Foo])
+
+		await kernel.exec('foo', [])
+	})
+
+	test('pass arguments and flags to command using exec', async (assert) => {
+		assert.plan(2)
+
+		class Foo extends BaseCommand {
+			public static commandName = 'foo'
+
+			@args.string()
+			public name: string
+
+			@flags.boolean()
+			public isAdmin: boolean
+
+			public async run() {
+				assert.isTrue(this.isAdmin)
+				assert.equal(this.name, 'virk')
+			}
+		}
+
+		const app = setupApp()
+		const kernel = new Kernel(app)
+		kernel.register([Foo])
+
+		await kernel.exec('foo', ['virk', '--is-admin=true'])
+	})
+
+	test('exec find and run hooks for the command using exec', async (assert) => {
+		assert.plan(5)
+
+		class Foo extends BaseCommand {
+			public static commandName = 'foo'
+			public async run() {
+				assert.isTrue(true)
+			}
+		}
+
+		const app = setupApp()
+		const kernel = new Kernel(app)
+		kernel.register([Foo])
+
+		kernel.before('run', () => {
+			assert.isTrue(true)
+		})
+
+		kernel.after('run', () => {
+			assert.isTrue(true)
+		})
+
+		kernel.before('find', () => {
+			assert.isTrue(true)
+		})
+
+		kernel.after('find', () => {
+			assert.isTrue(true)
+		})
+
+		await kernel.exec('foo', [])
+	})
+
+	test('exec command prepare method', async (assert) => {
+		assert.plan(2)
+
+		class Foo extends BaseCommand {
+			public static commandName = 'foo'
+			public async prepare() {
+				assert.isTrue(true)
+			}
+
+			public async run() {
+				assert.isTrue(true)
+			}
+		}
+
+		const app = setupApp()
+		const kernel = new Kernel(app)
+		kernel.register([Foo])
+		await kernel.exec('foo', [])
+	})
+
+	test('exec command completed method', async (assert) => {
+		assert.plan(2)
+
+		class Foo extends BaseCommand {
+			public static commandName = 'foo'
+			public async completed() {
+				assert.isUndefined(this.error)
+			}
+
+			public async run() {
+				assert.isTrue(true)
+			}
+		}
+
+		const app = setupApp()
+		const kernel = new Kernel(app)
+		kernel.register([Foo])
+		await kernel.exec('foo', [])
+	})
+
+	test('exec command completed method, when command fails', async (assert) => {
+		assert.plan(2)
+
+		class Foo extends BaseCommand {
+			public static commandName = 'foo'
+			public async completed() {
+				assert.equal(this.error!.message, 'Boom')
+			}
+
+			public async run() {
+				assert.isTrue(true)
+				throw new Error('Boom')
+			}
+		}
+
+		const app = setupApp()
+		const kernel = new Kernel(app)
+		kernel.register([Foo])
+		await kernel.exec('foo', [])
+	})
 })
 
 test.group('Kernel | IoC container', () => {
@@ -1276,7 +1409,7 @@ test.group('Kernel | IoC container', () => {
 				super(application, _kernel)
 			}
 
-			public async handle() {
+			public async run() {
 				assert.instanceOf(this.foo, Foo)
 			}
 		}
@@ -1321,7 +1454,7 @@ test.group('Kernel | defaultCommand', () => {
 
 		class Help extends BaseCommand {
 			public static commandName = 'help'
-			public async handle() {
+			public async run() {
 				assert.isTrue(true)
 			}
 		}
@@ -1337,7 +1470,7 @@ test.group('Kernel | defaultCommand', () => {
 
 		class Help extends BaseCommand {
 			public static commandName = 'help'
-			public async handle() {
+			public async run() {
 				assert.isTrue(true)
 			}
 		}
@@ -1355,135 +1488,5 @@ test.group('Kernel | defaultCommand', () => {
 
 		kernel.defaultCommand = Help
 		await kernel.handle([])
-	})
-})
-
-test.group('Kernel | exec', () => {
-	test('exec command by name', async (assert) => {
-		assert.plan(1)
-
-		class Foo extends BaseCommand {
-			public static commandName = 'foo'
-			public async handle() {
-				assert.isTrue(true)
-			}
-		}
-
-		const app = setupApp()
-		const kernel = new Kernel(app)
-		kernel.register([Foo])
-
-		await kernel.exec('foo', [])
-	})
-
-	test('pass arguments and flags to command using exec', async (assert) => {
-		assert.plan(2)
-
-		class Foo extends BaseCommand {
-			public static commandName = 'foo'
-
-			@args.string()
-			public name: string
-
-			@flags.boolean()
-			public isAdmin: boolean
-
-			public async handle() {
-				assert.isTrue(this.isAdmin)
-				assert.equal(this.name, 'virk')
-			}
-		}
-
-		const app = setupApp()
-		const kernel = new Kernel(app)
-		kernel.register([Foo])
-
-		await kernel.exec('foo', ['virk', '--is-admin=true'])
-	})
-
-	test('exec find and run hooks for the command using exec', async (assert) => {
-		assert.plan(5)
-
-		class Foo extends BaseCommand {
-			public static commandName = 'foo'
-			public async handle() {
-				assert.isTrue(true)
-			}
-		}
-
-		const app = setupApp()
-		const kernel = new Kernel(app)
-		kernel.register([Foo])
-
-		kernel.before('run', () => {
-			assert.isTrue(true)
-		})
-
-		kernel.after('run', () => {
-			assert.isTrue(true)
-		})
-
-		kernel.before('find', () => {
-			assert.isTrue(true)
-		})
-
-		kernel.after('find', () => {
-			assert.isTrue(true)
-		})
-
-		await kernel.exec('foo', [])
-	})
-	test('exit the process by default', async (assert) => {
-		assert.plan(1)
-
-		// @ts-expect-error
-		process.exit = (code) => {
-			assert.equal(code, 0)
-		}
-
-		class Foo extends BaseCommand {
-			public static commandName = 'foo'
-
-			public async handle() {}
-		}
-
-		const app = setupApp()
-		const kernel = new Kernel(app)
-		kernel.register([Foo])
-
-		try {
-			await kernel.exec('foo', [])
-		} finally {
-			// @ts-expect-error
-			process.exit = function () {}
-		}
-	})
-
-	test('keep the command alive when having a long running process', async () => {
-		process.exit = () => {
-			throw new Error('Should never be reached')
-		}
-
-		class Foo extends BaseCommand {
-			public static commandName = 'foo'
-			public static get settings() {
-				return {
-					stayAlive: true,
-				}
-			}
-
-			public async handle() {}
-		}
-
-		const app = setupApp()
-		const kernel = new Kernel(app)
-		kernel.register([Foo])
-
-		try {
-			await kernel.exec('foo', [])
-		} finally {
-			// @ts-expect-error
-			process.exit = function () {}
-		}
 	})
 })

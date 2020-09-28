@@ -318,13 +318,8 @@ export class Kernel implements KernelContract {
 
 		await this.hooks.excute('before', 'run', commandInstance)
 
-		const response = await this.application.container.call(commandInstance, 'handle', [])
+		const response = await commandInstance.exec()
 		await this.hooks.excute('after', 'run', commandInstance)
-
-		if (!command.settings.stayAlive) {
-			process.exit(0)
-		}
-
 		return response
 	}
 
@@ -407,6 +402,7 @@ export class Kernel implements KernelContract {
 			this.application as any,
 			this as any,
 		])
+
 		return this.runCommand(commandInstance, [commandName].concat(args))
 	}
 
