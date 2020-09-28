@@ -17,7 +17,7 @@ export class HelpCommand extends BaseCommand implements CommandContract {
 	public static commandName = 'help'
 	public static description = 'See help for all the commands'
 
-	public async handle() {
+	public async run() {
 		this.kernel.printHelp()
 	}
 }

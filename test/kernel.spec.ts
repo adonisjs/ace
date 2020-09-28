@@ -11,12 +11,13 @@ import test from 'japa'
 import 'reflect-metadata'
 
 import { Kernel } from '../src/Kernel'
-import { Manifest } from '../src/Manifest'
 import { args } from '../src/Decorators/args'
+import { setupApp, fs } from '../test-helpers'
 import { flags } from '../src/Decorators/flags'
 import { BaseCommand } from '../src/BaseCommand'
-import { setupApp, fs } from '../test-helpers'
 import { Application } from '@adonisjs/application'
+import { ManifestLoader } from '../src/Manifest/Loader'
+import { join } from 'path'
 
 test.group('Kernel | register', () => {
 	test('raise error when required argument comes after optional argument', (assert) => {
@@ -35,7 +36,7 @@ test.group('Kernel | register', () => {
 		const app = setupApp()
 		const kernel = new Kernel(app)
 		const fn = () => kernel.register([Greet])
-		assert.throw(fn, 'optional argument {name} must be after required argument {age}')
+		assert.throw(fn, 'Optional argument "name" must be after the required argument "age"')
 	})
 
 	test('raise error when command name is missing', (assert) => {
@@ -46,7 +47,7 @@ test.group('Kernel | register', () => {
 		const app = setupApp()
 		const kernel = new Kernel(app)
 		const fn = () => kernel.register([Greet])
-		assert.throw(fn, 'missing command name for {Greet} class')
+		assert.throw(fn, 'Invalid command "Greet". Make sure to defined the command name')
 	})
 
 	test("raise error when spread argument isn't the last one", (assert) => {
@@ -65,7 +66,7 @@ test.group('Kernel | register', () => {
 		const app = setupApp()
 		const kernel = new Kernel(app)
 		const fn = () => kernel.register([Greet])
-		assert.throw(fn, 'spread argument {files} must be at last position')
+		assert.throw(fn, 'Spread argument "files" must be at last position')
 	})
 
 	test('register command', (assert) => {
@@ -111,7 +112,12 @@ test.group('Kernel | register', () => {
 		const app = setupApp()
 		const kernel = new Kernel(app)
 
-		const manifest = new Manifest(fs.basePath)
+		const manifestLoader = new ManifestLoader([
+			{
+				basePath: fs.basePath,
+				manifestAbsPath: join(fs.basePath, 'ace-manifest.json'),
+			},
+		])
 
 		await fs.add(
 			'ace-manifest.json',
@@ -131,8 +137,9 @@ test.group('Kernel | register', () => {
     }`
 		)
 
-		kernel.useManifest(manifest)
-		kernel.manifestCommands = await manifest.load()
+		kernel.useManifest(manifestLoader)
+		await kernel.preloadManifest()
+
 		assert.deepEqual(
 			kernel.getSuggestions('eet').map(({ commandName }) => commandName),
 			['greet']
@@ -181,7 +188,12 @@ test.group('Kernel | find', () => {
 	test('find command from manifest when manifestCommands exists', async (assert) => {
 		const app = setupApp()
 		const kernel = new Kernel(app)
-		const manifest = new Manifest(fs.basePath)
+		const manifestLoader = new ManifestLoader([
+			{
+				basePath: fs.basePath,
+				manifestAbsPath: join(fs.basePath, 'ace-manifest.json'),
+			},
+		])
 
 		await fs.add(
 			'ace-manifest.json',
@@ -196,13 +208,15 @@ test.group('Kernel | find', () => {
 		await fs.add(
 			'Commands/Greet.ts',
 			`export default class Greet {
-      public static commandName = 'greet'
-      public static boot () {}
+			public static commandName = 'greet'
+			public static args = []
+			public static flags = []
+			public static boot() {}
     }`
 		)
 
-		kernel.useManifest(manifest)
-		kernel.manifestCommands = await manifest.load()
+		kernel.useManifest(manifestLoader)
+		await kernel.preloadManifest()
 
 		const greet = await kernel.find(['greet'])
 		assert.equal(greet!.name, 'Greet')
@@ -213,7 +227,12 @@ test.group('Kernel | find', () => {
 	test('register commands along with manifest', async (assert) => {
 		const app = setupApp()
 		const kernel = new Kernel(app)
-		const manifest = new Manifest(fs.basePath)
+		const manifestLoader = new ManifestLoader([
+			{
+				basePath: fs.basePath,
+				manifestAbsPath: join(fs.basePath, 'ace-manifest.json'),
+			},
+		])
 
 		await fs.add(
 			'ace-manifest.json',
@@ -229,12 +248,15 @@ test.group('Kernel | find', () => {
 			'Commands/Greet.ts',
 			`export default class Greet {
       public static commandName = 'greet'
-      public static boot () {}
+			public static args = []
+			public static flags = []
+			public static boot() {}
     }`
 		)
 
-		kernel.useManifest(manifest)
-		kernel.manifestCommands = await manifest.load()
+		kernel.useManifest(manifestLoader)
+		await kernel.preloadManifest()
+
 		kernel.register([
 			class Help extends BaseCommand {
 				public static commandName = 'help'
@@ -256,7 +278,12 @@ test.group('Kernel | find', () => {
 
 		const app = setupApp()
 		const kernel = new Kernel(app)
-		const manifest = new Manifest(fs.basePath)
+		const manifestLoader = new ManifestLoader([
+			{
+				basePath: fs.basePath,
+				manifestAbsPath: join(fs.basePath, 'ace-manifest.json'),
+			},
+		])
 
 		await fs.add(
 			'ace-manifest.json',
@@ -272,11 +299,14 @@ test.group('Kernel | find', () => {
 			'Commands/Greet.ts',
 			`export default class Greet {
       public static commandName = 'greet'
-      public static boot () {}
+			public static args = []
+			public static flags = []
+			public static boot() {}
     }`
 		)
 
-		kernel.useManifest(manifest)
+		kernel.useManifest(manifestLoader)
+
 		kernel.before('find', (command) => {
 			assert.equal(command!.commandName, 'greet')
 		})
@@ -286,8 +316,7 @@ test.group('Kernel | find', () => {
 			assert.equal(command!['name'], 'Greet') // It is command constructor
 		})
 
-		kernel.manifestCommands = await manifest.load()
-
+		await kernel.preloadManifest()
 		await kernel.find(['greet'])
 		await fs.cleanup()
 	})

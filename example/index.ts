@@ -28,7 +28,10 @@ class Greet extends BaseCommand {
 	@args.spread()
 	public files: string[]
 
-	@flags.string({ description: 'The environment to use to specialize certain commands' })
+	@flags.string({
+		description: 'The environment to use to specialize certain commands',
+		alias: 'e',
+	})
 	public env: string
 
 	@flags.string({ description: 'The main HTML file that will be requested' })
@@ -37,7 +40,7 @@ class Greet extends BaseCommand {
 	@flags.numArray({ description: 'HTML fragments loaded on demand', alias: 'f' })
 	public fragment: string
 
-	public async handle() {
+	public async run() {
 		this.logger.success('Operation successful')
 		this.logger.error('Unable to acquire lock')
 		this.logger.info('Hello')
@@ -51,19 +54,19 @@ class MakeController extends BaseCommand {
 	public static commandName = 'make:controller'
 	public static description = 'Create a HTTP controller'
 
-	public async handle() {}
+	public async run() {}
 }
 
 class MakeModel extends BaseCommand {
 	public static commandName = 'make:model'
 	public static description = 'Create database model'
 
-	public async handle() {
+	public async run() {
 		console.log(process.env.NODE_ENV)
 	}
 }
 
-const app = new Application(__dirname, 'test', {})
+const app = new Application(__dirname, 'web', {})
 const kernel = new Kernel(app)
 kernel.register([Greet, MakeController, MakeModel])
 

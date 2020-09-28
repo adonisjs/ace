@@ -16,8 +16,7 @@ import {
 	CommandConstructorContract,
 } from '../Contracts'
 
-import { CommandFlagException } from '../Exceptions/CommandFlagException'
-import { CommandArgumentException } from '../Exceptions/CommandArgumentException'
+import { InvalidFlagException, MissingArgumentException } from '../Exceptions'
 
 /**
  * The job of the parser is to parse the command line values by taking
@@ -119,11 +118,11 @@ export class Parser {
 		}
 
 		if (flag.type === 'string' && typeof value !== 'string') {
-			throw CommandFlagException.invoke(flag.name, flag.type, command)
+			throw InvalidFlagException.invoke(flag.name, flag.type, command)
 		}
 
 		if (flag.type === 'number' && typeof value !== 'number') {
-			throw CommandFlagException.invoke(flag.name, flag.type, command)
+			throw InvalidFlagException.invoke(flag.name, flag.type, command)
 		}
 
 		/**
@@ -136,7 +135,7 @@ export class Parser {
 				return typeof one !== 'number' || isNaN(one)
 			}) > -1
 		) {
-			throw CommandFlagException.invoke(flag.name, flag.type, command)
+			throw InvalidFlagException.invoke(flag.name, flag.type, command)
 		}
 	}
 
@@ -153,7 +152,7 @@ export class Parser {
 		const value = parsed._[index]
 
 		if (value === undefined && arg.required) {
-			throw CommandArgumentException.invoke(arg.name, command)
+			throw MissingArgumentException.invoke(arg.name, command)
 		}
 	}
 

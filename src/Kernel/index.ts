@@ -12,15 +12,14 @@ import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 
 import { Hooks } from '../Hooks'
 import { Parser } from '../Parser'
-import { Manifest } from '../Manifest'
 import { HelpCommand } from '../HelpCommand'
+import { ManifestLoader } from '../Manifest/Loader'
+import { InvalidCommandException } from '../Exceptions'
 import { printHelp, printHelpFor } from '../utils/help'
 import { validateCommand } from '../utils/validateCommand'
-import { InvalidCommandException } from '../Exceptions/InvalidCommandException'
 
 import {
 	CommandFlag,
-	ManifestNode,
 	KernelContract,
 	CommandContract,
 	ManifestCommand,
@@ -42,28 +41,21 @@ export class Kernel implements KernelContract {
 	public commands: { [name: string]: CommandConstructorContract } = {}
 
 	/**
-	 * Reference to commands defined inside the manifest file. This only exists
-	 * when you call [[Kernel.useManifest]].
-	 */
-	public manifestCommands?: ManifestNode
-
-	/**
 	 * List of registered flags
 	 */
 	public flags: { [name: string]: CommandFlag & { handler: GlobalFlagHandler } } = {}
-
-	/**
-	 * Reference to the manifest instance. When this exists, the kernel
-	 * will give prefrence to the manifest file over the registered
-	 * commands
-	 */
-	private manifest?: Manifest
 
 	/**
 	 * Reference to hooks class to execute lifecycle
 	 * hooks
 	 */
 	private hooks = new Hooks()
+
+	/**
+	 * Reference to the manifest loader. If defined, we will give preference
+	 * to the manifest files.
+	 */
+	private manifestLoader: ManifestLoader
 
 	/**
 	 * The default command that will be invoked when no command is
@@ -120,12 +112,8 @@ export class Kernel implements KernelContract {
 		/**
 		 * Concat manifest commands when they exists
 		 */
-		if (this.manifestCommands) {
-			const manifestCommands = Object.keys(this.manifestCommands).map(
-				(name) => this.manifestCommands![name]
-			)
-
-			commands = commands.concat(manifestCommands)
+		if (this.manifestLoader && this.manifestLoader.booted) {
+			commands = commands.concat(this.manifestLoader.getCommands())
 		}
 
 		return commands
@@ -152,7 +140,7 @@ export class Kernel implements KernelContract {
 	}
 
 	/**
-	 * Register an array of commands
+	 * Register an array of command constructors
 	 */
 	public register(commands: CommandConstructorContract[]): this {
 		commands.forEach((command) => {
@@ -220,18 +208,12 @@ export class Kernel implements KernelContract {
 		/**
 		 * Manifest commands gets preference over manually registered commands.
 		 */
-		if (this.manifestCommands && this.manifestCommands[commandName]) {
-			/**
-			 * Passing manifest node to the command
-			 */
-			await this.hooks.excute('before', 'find', this.manifestCommands[commandName])
-			const command = this.manifest!.loadCommand(this.manifestCommands[commandName].commandPath)
-
-			/**
-			 * Passing actual command constructor
-			 */
-			await this.hooks.excute('after', 'find', command.command)
-			return command.command
+		if (this.manifestLoader && this.manifestLoader.hasCommand(commandName)) {
+			const commandNode = this.manifestLoader.getCommand(commandName)!
+			await this.hooks.excute('before', 'find', commandNode.command)
+			const command = this.manifestLoader.loadCommand(commandName)
+			await this.hooks.excute('after', 'find', command)
+			return command
 		}
 
 		/**
@@ -348,8 +330,8 @@ export class Kernel implements KernelContract {
 		 * kernel will give preference to the `manifest` file vs manually
 		 * registered commands.
 		 */
-		if (this.manifest && !this.manifestCommands) {
-			this.manifestCommands = await this.manifest.load()
+		if (this.manifestLoader) {
+			await this.manifestLoader.boot()
 		}
 	}
 
@@ -398,19 +380,15 @@ export class Kernel implements KernelContract {
 			throw InvalidCommandException.invoke(commandName, this.getSuggestions(commandName))
 		}
 
-		const commandInstance = this.application.container.make(command as any, [
-			this.application as any,
-			this as any,
-		])
-
+		const commandInstance = this.application.container.make(command, [this.application, this])
 		return this.runCommand(commandInstance, [commandName].concat(args))
 	}
 
 	/**
 	 * Use manifest instance to lazy load commands
 	 */
-	public useManifest(manifest: Manifest): this {
-		this.manifest = manifest
+	public useManifest(manifestLoader: ManifestLoader): this {
+		this.manifestLoader = manifestLoader
 		return this
 	}
 

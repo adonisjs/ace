@@ -7,37 +7,65 @@
  * file that was distributed with this source code.
  */
 
+import { Exception } from '@poppinss/utils'
 import { CommandConstructorContract, CommandArg } from '../Contracts'
-import { CommandValidationException } from '../Exceptions/CommandValidationException'
 
 /**
  * Validates the command static properties to ensure that all the
  * values are correctly defined for a command to be executed.
  */
-export function validateCommand(command: CommandConstructorContract) {
+export function validateCommand(
+	command: any,
+	commandPath?: string
+): asserts command is CommandConstructorContract {
+	if (!command.name) {
+		throw new Exception(
+			`Invalid command"${
+				commandPath ? ` ${commandPath}` : ''
+			}". Make sure the command is exported using the default export`
+		)
+	}
+
 	/**
-	 * Ensure command has a name
+	 * Ensure command has a name, a boot method and args property
 	 */
-	if (!command.commandName) {
-		throw CommandValidationException.missingCommandName(command.name)
+	if (!command.commandName || typeof command.boot !== 'function') {
+		throw new Exception(`Invalid command "${command.name}". Make sure to defined the command name`)
+	}
+
+	/**
+	 * Boot command
+	 */
+	command.boot()
+
+	/**
+	 * Ensure command has args and flags after the boot method
+	 */
+	if (!Array.isArray(command.args) || !Array.isArray(command.flags)) {
+		throw new Exception(`Invalid command "${command.name}". Make sure to defined the command name`)
 	}
 
 	let optionalArg: CommandArg
 
-	command.args.forEach((arg, index) => {
+	/**
+	 * Validate for optional args and spread args
+	 */
+	command.args.forEach((arg: CommandArg, index: number) => {
 		/**
 		 * Ensure optional arguments comes after required
 		 * arguments
 		 */
 		if (optionalArg && arg.required) {
-			throw CommandValidationException.invalidOptionalArgOrder(optionalArg.name, arg.name)
+			throw new Exception(
+				`Optional argument "${optionalArg.name}" must be after the required argument "${arg.name}"`
+			)
 		}
 
 		/**
 		 * Ensure spread arg is the last arg
 		 */
 		if (arg.type === 'spread' && command.args.length > index + 1) {
-			throw CommandValidationException.invalidSpreadArgOrder(arg.name)
+			throw new Exception(`Spread argument "${arg.name}" must be at last position`)
 		}
 
 		if (!arg.required) {

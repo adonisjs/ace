@@ -136,15 +136,34 @@ export type ManifestNode = {
 }
 
 /**
- * Manifest interface
+ * Manifest loader interface
  */
-export interface ManifestContract {
-	loadCommand(commandPath: string): { command: CommandConstructorContract; commandPath: string }
-	lookupCommands(
-		commandPath: string
-	): { command: CommandConstructorContract; commandPath: string }[]
-	generate(commandPaths: string[]): Promise<void>
-	load(): Promise<ManifestNode>
+export interface ManifestLoaderContract {
+	booted: boolean
+	boot(): Promise<void>
+	getCommandBasePath(commandName: string): string | undefined
+
+	/**
+	 * Returns manifest command node. One must load the command
+	 * in order to use it
+	 */
+	getCommand(commandName: string): { basePath: string; command: ManifestCommand } | undefined
+
+	/**
+	 * Find if a command exists or not
+	 */
+	hasCommand(commandName: string): boolean
+
+	/**
+	 * Load command from the disk. Make sure to use [[hasCommand]] before
+	 * calling this method
+	 */
+	loadCommand(commandName: string): CommandConstructorContract
+
+	/**
+	 * Returns an array of manifest commands
+	 */
+	getCommands(): ManifestCommand[]
 }
 
 /**
@@ -157,7 +176,9 @@ export type RunHookCallback = (command: CommandContract) => Promise<void> | void
  * Shape of ace kernel
  */
 export interface KernelContract {
-	manifestCommands?: ManifestNode
+	manifestCommands?: {
+		[basePath: string]: ManifestNode
+	}
 	defaultCommand: CommandConstructorContract
 	commands: { [name: string]: CommandConstructorContract }
 	flags: { [name: string]: CommandFlag & { handler: GlobalFlagHandler } }
@@ -186,8 +207,7 @@ export interface KernelContract {
 	exec(commandName: string, args: string[]): Promise<any>
 
 	preloadManifest(): void
-	useManifest(manifest: ManifestContract): this
-
+	useManifest(manifestLoacder: ManifestLoaderContract): this
 	printHelp(command?: CommandConstructorContract): void
 }
 
