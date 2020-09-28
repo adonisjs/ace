@@ -7,11 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import { lodash } from '@poppinss/utils'
 import { ParsedOptions } from 'getopts'
-import { Logger } from '@poppinss/fancy-logs'
-import { Colors, FakeColors } from '@poppinss/colors'
+import { lodash } from '@poppinss/utils'
 import { Prompt, FakePrompt } from '@poppinss/prompts'
+import { instantiate } from '@poppinss/cliui/build/api'
 import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 
 import { Generator } from '../Generator'
@@ -127,6 +126,11 @@ export abstract class BaseCommand implements CommandContract {
 	}
 
 	/**
+	 * Reference to cli ui
+	 */
+	public ui = instantiate(this.application.environment === 'test')
+
+	/**
 	 * Parsed options on the command. They only exist when the command
 	 * is executed via kernel.
 	 */
@@ -141,22 +145,17 @@ export abstract class BaseCommand implements CommandContract {
 	/**
 	 * Returns the instance of logger to log messages
 	 */
-	public logger = new Logger({ fake: this.application.environment === 'test' })
+	public logger = this.ui.logger
+
+	/**
+	 * Reference to the colors
+	 */
+	public colors = this.logger.colors
 
 	/**
 	 * Generator instance to generate entity files
 	 */
-	public generator = new Generator(this.logger)
-
-	/**
-	 * Returns a new instance of colors class. If application is in test mode
-	 * hen it will return an instance of [[Stringify]] which has consistent
-	 * output tailored for testing, otherwise an instance of [[Kleur]] is
-	 * returned.
-	 */
-	public get colors(): Colors {
-		return (this.application.environment === 'test' ? new FakeColors() : new Colors()) as Colors
-	}
+	public generator = new Generator(this)
 
 	/**
 	 * Must be defined by the parent class

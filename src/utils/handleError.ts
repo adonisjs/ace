@@ -7,20 +7,17 @@
  * file that was distributed with this source code.
  */
 
-import { Colors } from '@poppinss/colors'
-import logger, { Logger } from '@poppinss/fancy-logs'
+import { logger } from '@poppinss/cliui'
 import { CommandFlagException } from '../Exceptions/CommandFlagException'
 import { InvalidCommandException } from '../Exceptions/InvalidCommandException'
 import { CommandArgumentException } from '../Exceptions/CommandArgumentException'
-
-const colors = new Colors()
 
 /**
  * Handles the command errors and prints them to the console.
  */
 export function handleError(
 	error: any,
-	callback?: (error: any, loggerFn: Logger) => void | Promise<void>
+	callback?: (error: any, loggerFn: typeof logger) => void | Promise<void>
 ) {
 	if (error instanceof CommandArgumentException) {
 		logger.error(`Missing argument "${error.argumentName}"`)
@@ -39,7 +36,7 @@ export function handleError(
 		if (error.suggestions && error.suggestions.length) {
 			console.log('\n  Did you mean one of these?\n')
 			error.suggestions.forEach(({ commandName }) => {
-				console.log(`  ${colors.yellow(commandName)}`)
+				console.log(`  ${logger.colors.yellow(commandName)}`)
 			})
 			console.log('')
 		}

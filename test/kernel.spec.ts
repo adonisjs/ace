@@ -9,18 +9,14 @@
 
 import test from 'japa'
 import 'reflect-metadata'
-import { join } from 'path'
-import { Ioc, inject } from '@adonisjs/fold'
-import { Filesystem } from '@poppinss/dev-utils'
-import { Application } from '@adonisjs/application/build/standalone'
 
 import { Kernel } from '../src/Kernel'
 import { Manifest } from '../src/Manifest'
 import { args } from '../src/Decorators/args'
 import { flags } from '../src/Decorators/flags'
 import { BaseCommand } from '../src/BaseCommand'
-
-const fs = new Filesystem(join(__dirname, '__app'))
+import { setupApp, fs } from '../test-helpers'
+import { Application } from '@adonisjs/application'
 
 // @ts-expect-error
 process.exit = function () {}
@@ -39,7 +35,7 @@ test.group('Kernel | register', () => {
 			public async handle() {}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		const fn = () => kernel.register([Greet])
 		assert.throw(fn, 'optional argument {name} must be after required argument {age}')
@@ -50,7 +46,7 @@ test.group('Kernel | register', () => {
 			public async handle() {}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		const fn = () => kernel.register([Greet])
 		assert.throw(fn, 'missing command name for {Greet} class')
@@ -69,14 +65,14 @@ test.group('Kernel | register', () => {
 			public async handle() {}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		const fn = () => kernel.register([Greet])
 		assert.throw(fn, 'spread argument {files} must be at last position')
 	})
 
 	test('register command', (assert) => {
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 
 		class Install extends BaseCommand {
@@ -94,7 +90,7 @@ test.group('Kernel | register', () => {
 	})
 
 	test('return command name suggestions for a given string', (assert) => {
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 
 		class Install extends BaseCommand {
@@ -115,7 +111,7 @@ test.group('Kernel | register', () => {
 	})
 
 	test('return command name suggestions from manifest file', async (assert) => {
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 
 		const manifest = new Manifest(fs.basePath)
@@ -169,7 +165,7 @@ test.group('Kernel | find', () => {
 			public async handle() {}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -178,7 +174,7 @@ test.group('Kernel | find', () => {
 	})
 
 	test('return null when unable to find command', async (assert) => {
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		const greet = await kernel.find(['greet'])
 
@@ -186,7 +182,7 @@ test.group('Kernel | find', () => {
 	})
 
 	test('find command from manifest when manifestCommands exists', async (assert) => {
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		const manifest = new Manifest(fs.basePath)
 
@@ -218,7 +214,7 @@ test.group('Kernel | find', () => {
 	})
 
 	test('register commands along with manifest', async (assert) => {
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		const manifest = new Manifest(fs.basePath)
 
@@ -261,7 +257,7 @@ test.group('Kernel | find', () => {
 	test('execute before and after hook when finding command from manifest', async (assert) => {
 		assert.plan(3)
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		const manifest = new Manifest(fs.basePath)
 
@@ -302,7 +298,7 @@ test.group('Kernel | find', () => {
 	test('pass null to before and after hook when unable to find command', async (assert) => {
 		assert.plan(3)
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.before('find', (command) => assert.isNull(command))
 		kernel.after('find', (command) => assert.isNull(command))
@@ -319,7 +315,7 @@ test.group('Kernel | find', () => {
 			public async handle() {}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -344,7 +340,7 @@ test.group('Kernel | handle', () => {
 			public async handle() {}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -372,7 +368,7 @@ test.group('Kernel | handle', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -395,7 +391,7 @@ test.group('Kernel | handle', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -418,7 +414,7 @@ test.group('Kernel | handle', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -449,7 +445,7 @@ test.group('Kernel | handle', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -476,7 +472,7 @@ test.group('Kernel | handle', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -503,7 +499,7 @@ test.group('Kernel | handle', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -530,7 +526,7 @@ test.group('Kernel | handle', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -557,7 +553,7 @@ test.group('Kernel | handle', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -584,7 +580,7 @@ test.group('Kernel | handle', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -611,7 +607,7 @@ test.group('Kernel | handle', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -638,7 +634,7 @@ test.group('Kernel | handle', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -665,7 +661,7 @@ test.group('Kernel | handle', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -692,7 +688,7 @@ test.group('Kernel | handle', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -703,7 +699,7 @@ test.group('Kernel | handle', () => {
 	test('register global flags', async (assert) => {
 		assert.plan(2)
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.flag(
 			'env',
@@ -721,7 +717,7 @@ test.group('Kernel | handle', () => {
 	test('register global boolean flags', async (assert) => {
 		assert.plan(2)
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.flag(
 			'ansi',
@@ -739,7 +735,7 @@ test.group('Kernel | handle', () => {
 	test('register global reverse boolean flags', async (assert) => {
 		assert.plan(2)
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.flag(
 			'ansi',
@@ -755,7 +751,7 @@ test.group('Kernel | handle', () => {
 	})
 
 	test('do not execute string global flag when flag is not defined', async () => {
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.flag(
 			'env',
@@ -770,7 +766,7 @@ test.group('Kernel | handle', () => {
 	})
 
 	test('do not execute array global flag when flag is not defined', async () => {
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.flag(
 			'env',
@@ -785,7 +781,7 @@ test.group('Kernel | handle', () => {
 	})
 
 	test('do not execute num array type global flag when flag is not defined', async () => {
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.flag(
 			'env',
@@ -801,7 +797,7 @@ test.group('Kernel | handle', () => {
 
 	test('pass command instance to the global flag, when flag is defined on a command', async (assert) => {
 		assert.plan(3)
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 
 		class Greet extends BaseCommand {
@@ -844,7 +840,7 @@ test.group('Kernel | handle', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -867,7 +863,7 @@ test.group('Kernel | handle', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -887,7 +883,7 @@ test.group('Kernel | handle', () => {
 			public async handle() {}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.before('run', (command) => {
 			assert.instanceOf(command, Greet)
@@ -919,9 +915,7 @@ test.group('Kernel | runCommand', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
-		app.environment = 'test'
-
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
 
@@ -930,7 +924,12 @@ test.group('Kernel | runCommand', () => {
 		const commandInstance = new command!(app, kernel)
 		await kernel.runCommand(commandInstance, argv)
 
-		assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) Hello virk'])
+		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
+			{
+				message: 'blue(ℹ)  Hello virk',
+				stream: 'stdout',
+			},
+		])
 	})
 
 	test('test input prompt in raw mode', async (assert) => {
@@ -950,8 +949,7 @@ test.group('Kernel | runCommand', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
-		app.environment = 'test'
+		const app = setupApp()
 
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
@@ -968,7 +966,12 @@ test.group('Kernel | runCommand', () => {
 		})
 
 		await kernel.runCommand(commandInstance, argv)
-		assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) virk'])
+		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
+			{
+				message: 'blue(ℹ)  virk',
+				stream: 'stdout',
+			},
+		])
 	})
 
 	test('test input prompt validation in raw mode', async (assert) => {
@@ -992,8 +995,7 @@ test.group('Kernel | runCommand', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
-		app.environment = 'test'
+		const app = setupApp()
 
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
@@ -1014,7 +1016,12 @@ test.group('Kernel | runCommand', () => {
 		})
 
 		await kernel.runCommand(commandInstance, argv)
-		assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) '])
+		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
+			{
+				message: 'blue(ℹ)  ',
+				stream: 'stdout',
+			},
+		])
 	})
 
 	test('test choice prompt in raw mode', async (assert) => {
@@ -1032,8 +1039,7 @@ test.group('Kernel | runCommand', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
-		app.environment = 'test'
+		const app = setupApp()
 
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
@@ -1050,7 +1056,12 @@ test.group('Kernel | runCommand', () => {
 		})
 
 		await kernel.runCommand(commandInstance, argv)
-		assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) npm'])
+		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
+			{
+				message: 'blue(ℹ)  npm',
+				stream: 'stdout',
+			},
+		])
 	})
 
 	test('test choice prompt validation in raw mode', async (assert) => {
@@ -1072,8 +1083,7 @@ test.group('Kernel | runCommand', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
-		app.environment = 'test'
+		const app = setupApp()
 
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
@@ -1094,11 +1104,17 @@ test.group('Kernel | runCommand', () => {
 		})
 
 		await kernel.runCommand(commandInstance, argv)
-		assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) '])
+		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
+			{
+				message: 'blue(ℹ)  ',
+				stream: 'stdout',
+			},
+		])
 	})
 
 	test('test multiple prompt in raw mode', async (assert) => {
 		assert.plan(1)
+		process.env.CLI_UI_IS_TESTING = 'true'
 
 		class Greet extends BaseCommand {
 			public static commandName = 'greet'
@@ -1115,8 +1131,7 @@ test.group('Kernel | runCommand', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
-		app.environment = 'test'
+		const app = setupApp()
 
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
@@ -1133,7 +1148,12 @@ test.group('Kernel | runCommand', () => {
 		})
 
 		await kernel.runCommand(commandInstance, argv)
-		assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) npm'])
+		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
+			{
+				message: 'blue(ℹ)  npm',
+				stream: 'stdout',
+			},
+		])
 	})
 
 	test('test multiple prompt validation in raw mode', async (assert) => {
@@ -1160,8 +1180,7 @@ test.group('Kernel | runCommand', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
-		app.environment = 'test'
+		const app = setupApp()
 
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
@@ -1182,11 +1201,17 @@ test.group('Kernel | runCommand', () => {
 		})
 
 		await kernel.runCommand(commandInstance, argv)
-		assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) '])
+		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
+			{
+				message: 'blue(ℹ)  ',
+				stream: 'stdout',
+			},
+		])
 	})
 
 	test('test toggle prompt in raw mode', async (assert) => {
 		assert.plan(1)
+		process.env.CLI_UI_IS_TESTING = 'true'
 
 		class Greet extends BaseCommand {
 			public static commandName = 'greet'
@@ -1200,8 +1225,7 @@ test.group('Kernel | runCommand', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
-		app.environment = 'test'
+		const app = setupApp()
 
 		const kernel = new Kernel(app)
 		kernel.register([Greet])
@@ -1218,7 +1242,12 @@ test.group('Kernel | runCommand', () => {
 		})
 
 		await kernel.runCommand(commandInstance, argv)
-		assert.deepEqual(commandInstance.logger.logs, ['underline(blue(info)) Yep'])
+		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
+			{
+				message: 'blue(ℹ)  Yep',
+				stream: 'stdout',
+			},
+		])
 	})
 })
 
@@ -1226,18 +1255,22 @@ test.group('Kernel | IoC container', () => {
 	test('make command instance by injecting dependencies', async (assert) => {
 		assert.plan(1)
 
-		const ioc = new Ioc()
-		const app = new Application(__dirname, ioc, {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 
 		class Foo {}
-		ioc.bind('App/Foo', () => {
+		app.container.bind('App/Foo', () => {
 			return new Foo()
 		})
 
-		@inject()
 		class Install extends BaseCommand {
 			public static commandName = 'install'
+
+			public static get inject() {
+				return {
+					instance: [null, null, Foo],
+				}
+			}
 
 			constructor(public application: Application, public _kernel, public foo: Foo) {
 				super(application, _kernel)
@@ -1255,19 +1288,23 @@ test.group('Kernel | IoC container', () => {
 	test('inject dependencies to command methods', async (assert) => {
 		assert.plan(1)
 
-		const ioc = new Ioc()
-		const app = new Application(__dirname, ioc, {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 
 		class Foo {}
-		ioc.bind('App/Foo', () => {
+		app.container.bind('App/Foo', () => {
 			return new Foo()
 		})
 
 		class Install extends BaseCommand {
 			public static commandName = 'install'
 
-			@inject()
+			public static get inject() {
+				return {
+					handle: [Foo],
+				}
+			}
+
 			public async handle(foo: Foo) {
 				assert.instanceOf(foo, Foo)
 			}
@@ -1289,7 +1326,7 @@ test.group('Kernel | defaultCommand', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.defaultCommand = Help
 		await kernel.handle([])
@@ -1305,7 +1342,7 @@ test.group('Kernel | defaultCommand', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 
 		kernel.before('run', () => {
@@ -1332,7 +1369,7 @@ test.group('Kernel | exec', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Foo])
 
@@ -1357,7 +1394,7 @@ test.group('Kernel | exec', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Foo])
 
@@ -1374,7 +1411,7 @@ test.group('Kernel | exec', () => {
 			}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Foo])
 
@@ -1410,7 +1447,7 @@ test.group('Kernel | exec', () => {
 			public async handle() {}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Foo])
 
@@ -1438,7 +1475,7 @@ test.group('Kernel | exec', () => {
 			public async handle() {}
 		}
 
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		kernel.register([Foo])
 

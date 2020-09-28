@@ -10,14 +10,10 @@
 import 'reflect-metadata'
 import test from 'japa'
 import { join } from 'path'
-import { Ioc } from '@adonisjs/fold'
-import { Filesystem } from '@poppinss/dev-utils'
-import { Application } from '@adonisjs/application/build/standalone'
 
 import { Kernel } from '../src/Kernel'
 import { Manifest } from '../src/Manifest'
-
-const fs = new Filesystem(join(__dirname, '__app'))
+import { fs, setupApp } from '../test-helpers'
 
 test.group('Manifest', (group) => {
 	group.before(async () => {
@@ -182,8 +178,7 @@ test.group('Manifest', (group) => {
     }`
 		)
 
-		const ioc = new Ioc()
-		const app = new Application(__dirname, ioc, {}, {})
+		const app = setupApp()
 		const kernel = new Kernel(app)
 		const manifest = new Manifest(fs.basePath)
 
@@ -191,7 +186,7 @@ test.group('Manifest', (group) => {
 
 		await manifest.generate(['./Commands/Make.ts'])
 
-		ioc.bind('App/Foo', () => {
+		app.container.bind('App/Foo', () => {
 			class Foo {}
 			return new Foo()
 		})

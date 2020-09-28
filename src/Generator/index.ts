@@ -7,11 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import { Logger } from '@poppinss/fancy-logs'
 import { outputFile, pathExists } from 'fs-extra'
 
 import { GeneratorFile } from './File'
-import { GeneratorFileOptions, GeneratorContract } from '../Contracts'
+import { GeneratorFileOptions, GeneratorContract, CommandContract } from '../Contracts'
 
 /**
  * Exposes the API to generate entity files, like project
@@ -20,7 +19,7 @@ import { GeneratorFileOptions, GeneratorContract } from '../Contracts'
 export class Generator implements GeneratorContract {
 	private files: GeneratorFile[] = []
 
-	constructor(private logger: Logger, private destinationDir?: string) {}
+	constructor(private command: CommandContract, private destinationDir?: string) {}
 
 	/**
 	 * Add a new file to the files generator. You can add multiple files
@@ -46,12 +45,12 @@ export class Generator implements GeneratorContract {
 			const exists = await pathExists(fileJSON.filepath)
 
 			if (exists) {
-				this.logger.skip(`${fileJSON.relativepath} already exists`)
+				this.command.logger.action('create').skipped(fileJSON.relativepath, 'File already exists')
 				return
 			}
 
 			await outputFile(fileJSON.filepath, fileJSON.contents)
-			this.logger.create(fileJSON.relativepath)
+			this.command.logger.action('create').succeeded(fileJSON.relativepath)
 		}
 	}
 

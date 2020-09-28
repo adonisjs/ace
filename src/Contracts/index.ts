@@ -7,9 +7,8 @@
  * file that was distributed with this source code.
  */
 
+import * as ui from '@poppinss/cliui'
 import { ParsedOptions } from 'getopts'
-import { Colors } from '@poppinss/colors'
-import { Logger } from '@poppinss/fancy-logs'
 import { PromptContract } from '@poppinss/prompts'
 import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 
@@ -110,9 +109,10 @@ export interface CommandConstructorContract extends SerializedCommand {
  */
 export interface CommandContract {
 	parsed?: ParsedOptions
-	logger: Logger
+	logger: typeof ui.logger
 	prompt: PromptContract
-	colors: Colors
+	colors: typeof ui.logger.colors
+	ui: typeof ui
 	generator: GeneratorContract
 	kernel: KernelContract
 	handle(...args: any[]): Promise<void>

@@ -9,11 +9,14 @@
 
 import test from 'japa'
 import { join } from 'path'
-import { Filesystem } from '@poppinss/dev-utils'
-import { Logger } from '@poppinss/fancy-logs'
-import { Generator } from '../src/Generator'
 
-const fs = new Filesystem(join(__dirname, './app'))
+import { Generator } from '../src/Generator'
+import { BaseCommand } from '../src/BaseCommand'
+import { setupApp, fs, getKernel } from '../test-helpers'
+
+class GeneratorCommand extends BaseCommand {
+	public async handle() {}
+}
 
 test.group('Generator', (group) => {
 	group.after(async () => {
@@ -21,7 +24,10 @@ test.group('Generator', (group) => {
 	})
 
 	test('generate one or more entity files', async (assert) => {
-		const generator = new Generator(new Logger({ fake: true }), fs.basePath)
+		const app = setupApp()
+		const kernel = getKernel(app)
+
+		const generator = new Generator(new GeneratorCommand(app, kernel), fs.basePath)
 		generator.addFile('user', { suffix: 'controller', pattern: 'pascalcase' })
 		generator.addFile('account', { suffix: 'controller', pattern: 'pascalcase' })
 
@@ -35,7 +41,10 @@ test.group('Generator', (group) => {
 	})
 
 	test('do not overwrite existing files', async (assert) => {
-		const generator = new Generator(new Logger({ fake: true }), fs.basePath)
+		const app = setupApp()
+		const kernel = getKernel(app)
+
+		const generator = new Generator(new GeneratorCommand(app, kernel), fs.basePath)
 		await fs.add('UserController.ts', "export const greeting = 'hello world'")
 
 		generator.addFile('user', { suffix: 'controller' })
