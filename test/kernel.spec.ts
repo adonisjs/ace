@@ -17,7 +17,15 @@ import { flags } from '../src/Decorators/flags'
 import { BaseCommand } from '../src/BaseCommand'
 import { Application } from '@adonisjs/application'
 import { ManifestLoader } from '../src/Manifest/Loader'
-import { join } from 'path'
+import { join, win32 } from 'path'
+
+const icons = win32
+	? {
+			info: 'i',
+	  }
+	: {
+			info: '${icons.info}',
+	  }
 
 test.group('Kernel | register', () => {
 	test('raise error when required argument comes after optional argument', (assert) => {
@@ -952,7 +960,7 @@ test.group('Kernel | runCommand', () => {
 
 		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
 			{
-				message: 'ℹ  Hello virk',
+				message: `${icons.info}  Hello virk`,
 				stream: 'stdout',
 			},
 		])
@@ -994,7 +1002,7 @@ test.group('Kernel | runCommand', () => {
 		await kernel.runCommand(commandInstance, argv)
 		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
 			{
-				message: 'ℹ  virk',
+				message: `${icons.info}  virk`,
 				stream: 'stdout',
 			},
 		])
@@ -1044,7 +1052,7 @@ test.group('Kernel | runCommand', () => {
 		await kernel.runCommand(commandInstance, argv)
 		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
 			{
-				message: 'ℹ  ',
+				message: `${icons.info}  `,
 				stream: 'stdout',
 			},
 		])
@@ -1084,7 +1092,7 @@ test.group('Kernel | runCommand', () => {
 		await kernel.runCommand(commandInstance, argv)
 		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
 			{
-				message: 'ℹ  npm',
+				message: `${icons.info}  npm`,
 				stream: 'stdout',
 			},
 		])
@@ -1132,7 +1140,7 @@ test.group('Kernel | runCommand', () => {
 		await kernel.runCommand(commandInstance, argv)
 		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
 			{
-				message: 'ℹ  ',
+				message: `${icons.info}  `,
 				stream: 'stdout',
 			},
 		])
@@ -1176,7 +1184,7 @@ test.group('Kernel | runCommand', () => {
 		await kernel.runCommand(commandInstance, argv)
 		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
 			{
-				message: 'ℹ  npm',
+				message: `${icons.info}  npm`,
 				stream: 'stdout',
 			},
 		])
@@ -1229,7 +1237,7 @@ test.group('Kernel | runCommand', () => {
 		await kernel.runCommand(commandInstance, argv)
 		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
 			{
-				message: 'ℹ  ',
+				message: `${icons.info}  `,
 				stream: 'stdout',
 			},
 		])
@@ -1270,7 +1278,7 @@ test.group('Kernel | runCommand', () => {
 		await kernel.runCommand(commandInstance, argv)
 		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
 			{
-				message: 'ℹ  Yep',
+				message: `${icons.info}  Yep`,
 				stream: 'stdout',
 			},
 		])
