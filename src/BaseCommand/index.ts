@@ -231,11 +231,21 @@ export abstract class BaseCommand implements CommandContract {
 			this.error = error
 		}
 
+		let errorHandled = false
+
 		/**
 		 * Run completed method when exists
 		 */
 		if (typeof this.completed === 'function') {
-			await this.application.container.call(this, 'completed' as any, [])
+			errorHandled = await this.application.container.call(this, 'completed' as any, [])
+		}
+
+		/**
+		 * Throw error when error exists and the completed method didn't
+		 * handled it
+		 */
+		if (this.error && !errorHandled) {
+			throw this.error
 		}
 
 		return commandResult

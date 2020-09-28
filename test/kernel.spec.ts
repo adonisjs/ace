@@ -1398,6 +1398,7 @@ test.group('Kernel | runCommand', () => {
 			public static commandName = 'foo'
 			public async completed() {
 				assert.equal(this.error!.message, 'Boom')
+				return true
 			}
 
 			public async run() {
@@ -1410,6 +1411,31 @@ test.group('Kernel | runCommand', () => {
 		const kernel = new Kernel(app)
 		kernel.register([Foo])
 		await kernel.exec('foo', [])
+	})
+
+	test("raise exception when completed method doesn't handle it", async (assert) => {
+		assert.plan(3)
+
+		class Foo extends BaseCommand {
+			public static commandName = 'foo'
+			public async completed() {
+				assert.equal(this.error!.message, 'Boom')
+			}
+
+			public async run() {
+				assert.isTrue(true)
+				throw new Error('Boom')
+			}
+		}
+
+		const app = setupApp()
+		const kernel = new Kernel(app)
+		kernel.register([Foo])
+		try {
+			await kernel.exec('foo', [])
+		} catch (error) {
+			assert.equal(error.message, 'Boom')
+		}
 	})
 })
 
