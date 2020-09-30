@@ -1481,6 +1481,22 @@ test.group('Kernel | runCommand', () => {
 			assert.equal(error.message, 'Boom')
 		}
 	})
+
+	test('return command response', async (assert) => {
+		class Foo extends BaseCommand {
+			public static commandName = 'foo'
+			public async run() {
+				return 'foo'
+			}
+		}
+
+		const app = setupApp()
+		const kernel = new Kernel(app)
+		kernel.register([Foo])
+
+		const response = await kernel.exec('foo', [])
+		assert.equal(response, 'foo')
+	})
 })
 
 test.group('Kernel | IoC container', () => {

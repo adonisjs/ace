@@ -311,7 +311,7 @@ export class Kernel implements KernelContract {
 		 * the after run hook
 		 */
 		try {
-			commandError = await commandInstance.exec()
+			commandResponse = await commandInstance.exec()
 		} catch (error) {
 			commandError = error
 		}
