@@ -300,9 +300,32 @@ export class Kernel implements KernelContract {
 
 		await this.hooks.excute('before', 'run', commandInstance)
 
-		const response = await commandInstance.exec()
+		/**
+		 * Command response/error
+		 */
+		let commandResponse: any
+		let commandError: any
+
+		/**
+		 * Wrap command inside try/catch so that we always run
+		 * the after run hook
+		 */
+		try {
+			commandError = await commandInstance.exec()
+		} catch (error) {
+			commandError = error
+		}
+
 		await this.hooks.excute('after', 'run', commandInstance)
-		return response
+
+		/**
+		 * Re-throw exception after running the after run hook
+		 */
+		if (commandError) {
+			throw commandError
+		}
+
+		return commandResponse
 	}
 
 	/**

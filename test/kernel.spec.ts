@@ -933,6 +933,41 @@ test.group('Kernel | exec', () => {
 		const argv = ['greet']
 		await kernel.handle(argv)
 	})
+
+	test('execute before and after run hooks even when command raises an exception', async (assert) => {
+		assert.plan(4)
+
+		class Greet extends BaseCommand {
+			public static commandName = 'greet'
+
+			@flags.boolean({ name: 'isAdmin' })
+			public admin: boolean
+
+			public async run() {
+				throw new Error('Boom')
+			}
+		}
+
+		const app = setupApp()
+		const kernel = new Kernel(app)
+		kernel.before('run', (command) => {
+			assert.instanceOf(command, Greet)
+		})
+
+		kernel.after('run', (command) => {
+			assert.instanceOf(command, Greet)
+			assert.equal(command.error!.message, 'Boom')
+		})
+
+		kernel.register([Greet])
+
+		const argv = ['greet']
+		try {
+			await kernel.handle(argv)
+		} catch (error) {
+			assert.equal(error.message, 'Boom')
+		}
+	})
 })
 
 test.group('Kernel | runCommand', () => {
