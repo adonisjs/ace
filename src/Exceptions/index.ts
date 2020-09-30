@@ -102,7 +102,7 @@ export class InvalidCommandException extends Exception {
 	public handle(error: InvalidCommandException) {
 		logger.error(`"${error.commandName}" command not found`)
 
-		if (error.suggestions.length) {
+		if (!error.suggestions.length) {
 			return
 		}
 
