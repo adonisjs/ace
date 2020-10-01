@@ -22,7 +22,7 @@ export function validateCommand(
 		throw new Exception(
 			`Invalid command"${
 				commandPath ? ` ${commandPath}` : ''
-			}". Make sure the command is exported using the default export`
+			}". Make sure the command is exported using the "export default"`
 		)
 	}
 
@@ -30,7 +30,9 @@ export function validateCommand(
 	 * Ensure command has a name, a boot method and args property
 	 */
 	if (!command.commandName || typeof command.boot !== 'function') {
-		throw new Exception(`Invalid command "${command.name}". Make sure to defined the command name`)
+		throw new Exception(
+			`Invalid command "${command.name}". Make sure to define the static property "commandName"`
+		)
 	}
 
 	/**
@@ -42,7 +44,7 @@ export function validateCommand(
 	 * Ensure command has args and flags after the boot method
 	 */
 	if (!Array.isArray(command.args) || !Array.isArray(command.flags)) {
-		throw new Exception(`Invalid command "${command.name}". Make sure to defined the command name`)
+		throw new Exception(`Invalid command "${command.name}". Make sure it extends the BaseCommand`)
 	}
 
 	let optionalArg: CommandArg

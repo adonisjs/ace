@@ -104,7 +104,7 @@ test.group('Manifest Generator', (group) => {
 		} catch ({ message }) {
 			assert.equal(
 				message,
-				'Invalid command" ./Commands/Make.ts". Make sure the command is exported using the default export'
+				'Invalid command" ./Commands/Make.ts". Make sure the command is exported using the "export default"'
 			)
 		}
 	})

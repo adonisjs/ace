@@ -25,7 +25,7 @@ export class MissingArgumentException extends Exception {
 		name: string,
 		command: CommandConstructorContract
 	): MissingArgumentException {
-		const exception = new this(`missing required argument "${name}"`, 500, 'E_MISSING_ARGUMENT')
+		const exception = new this(`Missing required argument "${name}"`, 500, 'E_MISSING_ARGUMENT')
 
 		exception.argumentName = name
 		exception.command = command
@@ -106,6 +106,7 @@ export class InvalidCommandException extends Exception {
 			return
 		}
 
+		logger.log('')
 		const suggestionLog = sticker().heading('Did you mean one of these?')
 		error.suggestions.forEach(({ commandName }) => {
 			suggestionLog.add(logger.colors.yellow(commandName))

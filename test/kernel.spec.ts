@@ -56,7 +56,10 @@ test.group('Kernel | register', () => {
 		const app = setupApp()
 		const kernel = new Kernel(app)
 		const fn = () => kernel.register([Greet])
-		assert.throw(fn, 'Invalid command "Greet". Make sure to defined the command name')
+		assert.throw(
+			fn,
+			'Invalid command "Greet". Make sure to define the static property "commandName"'
+		)
 	})
 
 	test("raise error when spread argument isn't the last one", (assert) => {
@@ -383,7 +386,7 @@ test.group('Kernel | exec', () => {
 		try {
 			await kernel.handle(argv)
 		} catch ({ message, argumentName, command }) {
-			assert.equal(message, 'E_MISSING_ARGUMENT: missing required argument "name"')
+			assert.equal(message, 'E_MISSING_ARGUMENT: Missing required argument "name"')
 			assert.equal(argumentName, 'name')
 			assert.deepEqual(command, Greet)
 		}
