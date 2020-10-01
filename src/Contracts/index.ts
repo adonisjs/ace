@@ -36,10 +36,11 @@ export type CommandArg = {
 /**
  * The shape of a command flag
  */
-export type CommandFlag = {
+export type CommandFlag<ReturnType extends any> = {
 	propertyName: string
 	name: string
 	type: FlagTypes
+	defaultValue?: (command: CommandContract) => ReturnType | Promise<ReturnType>
 	description?: string
 	alias?: string
 	default?: any
@@ -71,7 +72,7 @@ export type CommandsGroup = {
 export type SerializedCommand = {
 	args: CommandArg[]
 	settings: any
-	flags: CommandFlag[]
+	flags: CommandFlag<any>[]
 	commandName: string
 	description: string
 }
@@ -101,7 +102,7 @@ export interface CommandConstructorContract extends SerializedCommand {
 	/**
 	 * Add a flag directly on the command without using the decorator
 	 */
-	$addFlag(options: Partial<CommandFlag>): void
+	$addFlag(options: Partial<CommandFlag<any>>): void
 }
 
 /**
@@ -181,7 +182,7 @@ export interface KernelContract {
 	}
 	defaultCommand: CommandConstructorContract
 	commands: { [name: string]: CommandConstructorContract }
-	flags: { [name: string]: CommandFlag & { handler: GlobalFlagHandler } }
+	flags: { [name: string]: CommandFlag<any> & { handler: GlobalFlagHandler } }
 
 	before(action: 'run', callback: RunHookCallback): this
 	before(action: 'find', callback: FindHookCallback): this
@@ -197,7 +198,7 @@ export interface KernelContract {
 	flag(
 		name: string,
 		handler: GlobalFlagHandler,
-		options: Partial<Exclude<CommandFlag, 'name' | 'propertyName'>>
+		options: Partial<Exclude<CommandFlag<any>, 'name' | 'propertyName'>>
 	): this
 
 	find(argv: string[]): Promise<CommandConstructorContract | null>

@@ -43,7 +43,7 @@ export class Kernel implements KernelContract {
 	/**
 	 * List of registered flags
 	 */
-	public flags: { [name: string]: CommandFlag & { handler: GlobalFlagHandler } } = {}
+	public flags: { [name: string]: CommandFlag<any> & { handler: GlobalFlagHandler } } = {}
 
 	/**
 	 * Reference to hooks class to execute lifecycle
@@ -169,7 +169,7 @@ export class Kernel implements KernelContract {
 	public flag(
 		name: string,
 		handler: GlobalFlagHandler,
-		options: Partial<Exclude<CommandFlag, 'name' | 'propertyName'>>
+		options: Partial<Exclude<CommandFlag<any>, 'name' | 'propertyName'>>
 	): this {
 		this.flags[name] = Object.assign(
 			{
@@ -251,6 +251,8 @@ export class Kernel implements KernelContract {
 		const parsedOptions = parser.parse(argv, command)
 		this.executeGlobalFlagsHandlers(parsedOptions, command)
 
+		await this.hooks.excute('before', 'run', commandInstance)
+
 		/**
 		 * We validate the command arguments after the global flags have been
 		 * executed. It is required, since flags may have nothing to do
@@ -283,22 +285,17 @@ export class Kernel implements KernelContract {
 		/**
 		 * Set flag value on the command instance
 		 */
-		command.flags.forEach((flag) => {
-			const defaultValue = commandInstance[flag.propertyName]
+		for (let flag of command.flags) {
+			const flagValue = parsedOptions[flag.name]
 
-			/*
-			 * For non-boolean values, we allow setting a default value on the instance property. This is
-			 * helpful when someone wants to use a dynamic property that shows up on the command
-			 * instance after instantiating the class.
-			 */
-			if (flag.type !== 'boolean' && defaultValue !== undefined) {
-				commandInstance[flag.propertyName] = parsedOptions[flag.name] || defaultValue
-			} else {
-				commandInstance[flag.propertyName] = parsedOptions[flag.name]
+			if (flag.type === 'boolean') {
+				commandInstance[flag.propertyName] = flagValue
+			} else if (!flagValue && typeof flag.defaultValue === 'function') {
+				commandInstance[flag.propertyName] = await flag.defaultValue(commandInstance)
+			} else if (flagValue || commandInstance[flag.propertyName] === undefined) {
+				commandInstance[flag.propertyName] = flagValue
 			}
-		})
-
-		await this.hooks.excute('before', 'run', commandInstance)
+		}
 
 		/**
 		 * Command response/error

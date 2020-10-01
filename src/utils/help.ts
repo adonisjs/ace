@@ -16,14 +16,14 @@ import { CommandArg, CommandFlag, SerializedCommand } from '../Contracts'
  * required or not.
  */
 function wrapArg(arg: CommandArg): string {
-	const displayName = arg.type === 'spread' ? `${arg.name}...` : arg.name
+	const displayName = arg.type === 'spread' ? `...${arg.name}` : arg.name
 	return arg.required ? `<${displayName}>` : `[${displayName}]`
 }
 
 /**
  * Returns an array of flags for displaying the help screen
  */
-function getFlagsForDisplay(flags: CommandFlag[]) {
+function getFlagsForDisplay(flags: CommandFlag<any>[]) {
 	return flags.map(({ name, type, alias, description }) => {
 		/**
 		 * Display name is the way we want to display a single flag in the
@@ -86,7 +86,7 @@ function getCommandsForDisplay(commands: SerializedCommand[]) {
  * Prints help for all the commands by sorting them in alphabetical order
  * and grouping them as per their namespace.
  */
-export function printHelp(commands: SerializedCommand[], flags: CommandFlag[]): void {
+export function printHelp(commands: SerializedCommand[], flags: CommandFlag<any>[]): void {
 	const flagsList = getFlagsForDisplay(flags)
 	const commandsList = getCommandsForDisplay(commands)
 

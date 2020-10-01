@@ -9,14 +9,17 @@
 
 import { CommandFlag, FlagTypes, CommandConstructorContract } from '../Contracts'
 
-type DecoratorFlag = Partial<Pick<CommandFlag, Exclude<keyof CommandFlag, 'type'>>>
+type DecoratorFlag<ReturnType extends any> = Partial<Omit<CommandFlag<ReturnType>, 'type'>>
 
 /**
  * Pushes flag to the list of command flags with predefined
  * types.
  */
-function addFlag(type: FlagTypes, options: DecoratorFlag) {
-	return function flag(target: any, propertyName: string) {
+function addFlag<T extends any>(type: FlagTypes, options: DecoratorFlag<T>) {
+	return function flag<TKey extends string, TTarget extends { [K in TKey]: T }>(
+		target: TTarget,
+		propertyName: TKey
+	) {
 		const Command = target.constructor as CommandConstructorContract
 		Command.boot()
 		Command.$addFlag(Object.assign({ type, propertyName }, options))
@@ -27,35 +30,35 @@ export const flags = {
 	/**
 	 * Create a flag that excepts string values
 	 */
-	string(options?: DecoratorFlag) {
-		return addFlag('string', options || {})
+	string<T extends any>(options?: DecoratorFlag<T>) {
+		return addFlag<T>('string', options || {})
 	},
 
 	/**
 	 * Create a flag that excepts numeric values
 	 */
-	number(options?: DecoratorFlag) {
-		return addFlag('number', options || {})
+	number<T extends any>(options?: DecoratorFlag<T>) {
+		return addFlag<T>('number', options || {})
 	},
 
 	/**
 	 * Create a flag that excepts boolean values
 	 */
-	boolean(options?: DecoratorFlag) {
-		return addFlag('boolean', options || {})
+	boolean<T extends any>(options?: DecoratorFlag<T>) {
+		return addFlag<T>('boolean', options || {})
 	},
 
 	/**
 	 * Create a flag that excepts array of string values
 	 */
-	array(options?: DecoratorFlag) {
-		return addFlag('array', options || {})
+	array<T extends any>(options?: DecoratorFlag<T>) {
+		return addFlag<T>('array', options || {})
 	},
 
 	/**
 	 * Create a flag that excepts array of numeric values
 	 */
-	numArray(options?: DecoratorFlag) {
-		return addFlag('numArray', options || {})
+	numArray<T extends any>(options?: DecoratorFlag<T>) {
+		return addFlag<T>('numArray', options || {})
 	},
 }

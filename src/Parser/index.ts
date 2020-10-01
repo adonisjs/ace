@@ -24,13 +24,15 @@ import { InvalidFlagException, MissingArgumentException } from '../Exceptions'
  */
 export class Parser {
 	constructor(
-		private registeredFlags: { [name: string]: CommandFlag & { handler: GlobalFlagHandler } }
+		private registeredFlags: {
+			[name: string]: CommandFlag<any> & { handler: GlobalFlagHandler }
+		}
 	) {}
 
 	/**
 	 * Processes ace command flag to set the options for `getopts`.
 	 */
-	private preProcessFlag(flag: CommandFlag, options: getopts.Options) {
+	private preProcessFlag(flag: CommandFlag<any>, options: getopts.Options) {
 		/**
 		 * Register alias (when exists)
 		 */
@@ -64,7 +66,7 @@ export class Parser {
 	 * Casts value of a flag to it's expected data type. These values
 	 * are then later validated to ensure that casting was successful.
 	 */
-	public castFlag(flag: CommandFlag, parsed: getopts.ParsedOptions) {
+	public castFlag(flag: CommandFlag<any>, parsed: getopts.ParsedOptions) {
 		const value = parsed[flag.name]
 
 		/**
@@ -108,7 +110,7 @@ export class Parser {
 	 * desired data type.
 	 */
 	public validateFlag(
-		flag: CommandFlag,
+		flag: CommandFlag<any>,
 		parsed: getopts.ParsedOptions,
 		command?: CommandConstructorContract
 	) {

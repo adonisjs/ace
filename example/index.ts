@@ -9,10 +9,10 @@
 
 import { Application } from '@adonisjs/application'
 
-import { BaseCommand } from '../src/BaseCommand'
 import { Kernel } from '../src/Kernel'
 import { args } from '../src/Decorators/args'
 import { flags } from '../src/Decorators/flags'
+import { BaseCommand } from '../src/BaseCommand'
 import { handleError } from '../src/utils/handleError'
 
 class Greet extends BaseCommand {
@@ -31,10 +31,21 @@ class Greet extends BaseCommand {
 	@flags.string({
 		description: 'The environment to use to specialize certain commands',
 		alias: 'e',
+		async defaultValue(command: Greet) {
+			return await command.prompt.choice('Select one of the given environments', [
+				'development',
+				'production',
+			])
+		},
 	})
-	public env: string
+	public env: 'development' | 'production'
 
-	@flags.string({ description: 'The main HTML file that will be requested' })
+	@flags.string({
+		description: 'The main HTML file that will be requested',
+		async defaultValue(command: Greet) {
+			return await command.prompt.ask('Define entrypoint as we detected multiple?')
+		},
+	})
 	public entrypoint: string
 
 	@flags.numArray({ description: 'HTML fragments loaded on demand', alias: 'f' })
@@ -71,6 +82,19 @@ const kernel = new Kernel(app)
 kernel.register([Greet, MakeController, MakeModel])
 
 kernel.flag(
+	'help',
+	(value, _, command) => {
+		if (!value) {
+			return
+		}
+
+		kernel.printHelp(command)
+		process.exit(0)
+	},
+	{ type: 'boolean' }
+)
+
+kernel.flag(
 	'env',
 	(value) => {
 		process.env.NODE_ENV = value
@@ -78,5 +102,5 @@ kernel.flag(
 	{ type: 'string' }
 )
 
-kernel.printHelp(Greet)
+// kernel.printHelp(Greet)
 kernel.handle(process.argv.splice(2)).catch(handleError)
