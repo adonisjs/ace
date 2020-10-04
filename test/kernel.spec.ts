@@ -9,24 +9,15 @@
 
 import test from 'japa'
 import 'reflect-metadata'
+import { join } from 'path'
 
 import { Kernel } from '../src/Kernel'
 import { args } from '../src/Decorators/args'
-import { setupApp, fs } from '../test-helpers'
 import { flags } from '../src/Decorators/flags'
 import { BaseCommand } from '../src/BaseCommand'
 import { Application } from '@adonisjs/application'
 import { ManifestLoader } from '../src/Manifest/Loader'
-import { join } from 'path'
-
-const icons =
-	process.platform === 'win32'
-		? {
-				info: 'i',
-		  }
-		: {
-				info: 'ℹ',
-		  }
+import { setupApp, fs, info } from '../test-helpers'
 
 test.group('Kernel | register', () => {
 	test('raise error when required argument comes after optional argument', (assert) => {
@@ -1005,7 +996,7 @@ test.group('Kernel | exec', () => {
 })
 
 test.group('Kernel | runCommand', () => {
-	test.runInCI('test logs in test mode', async (assert) => {
+	test('test logs in test mode', async (assert) => {
 		assert.plan(1)
 
 		class Greet extends BaseCommand {
@@ -1030,13 +1021,13 @@ test.group('Kernel | runCommand', () => {
 
 		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
 			{
-				message: `${icons.info}  Hello virk`,
+				message: `${info}  Hello virk`,
 				stream: 'stdout',
 			},
 		])
 	})
 
-	test.runInCI('test input prompt in raw mode', async (assert) => {
+	test('test input prompt in raw mode', async (assert) => {
 		assert.plan(1)
 
 		class Greet extends BaseCommand {
@@ -1072,13 +1063,13 @@ test.group('Kernel | runCommand', () => {
 		await kernel.runCommand(commandInstance, argv)
 		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
 			{
-				message: `${icons.info}  virk`,
+				message: `${info}  virk`,
 				stream: 'stdout',
 			},
 		])
 	})
 
-	test.runInCI('test input prompt validation in raw mode', async (assert) => {
+	test('test input prompt validation in raw mode', async (assert) => {
 		assert.plan(2)
 
 		class Greet extends BaseCommand {
@@ -1122,13 +1113,13 @@ test.group('Kernel | runCommand', () => {
 		await kernel.runCommand(commandInstance, argv)
 		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
 			{
-				message: `${icons.info}  `,
+				message: `${info}  `,
 				stream: 'stdout',
 			},
 		])
 	})
 
-	test.runInCI('test choice prompt in raw mode', async (assert) => {
+	test('test choice prompt in raw mode', async (assert) => {
 		assert.plan(1)
 
 		class Greet extends BaseCommand {
@@ -1162,13 +1153,13 @@ test.group('Kernel | runCommand', () => {
 		await kernel.runCommand(commandInstance, argv)
 		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
 			{
-				message: `${icons.info}  npm`,
+				message: `${info}  npm`,
 				stream: 'stdout',
 			},
 		])
 	})
 
-	test.runInCI('test choice prompt validation in raw mode', async (assert) => {
+	test('test choice prompt validation in raw mode', async (assert) => {
 		assert.plan(2)
 
 		class Greet extends BaseCommand {
@@ -1210,13 +1201,13 @@ test.group('Kernel | runCommand', () => {
 		await kernel.runCommand(commandInstance, argv)
 		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
 			{
-				message: `${icons.info}  `,
+				message: `${info}  `,
 				stream: 'stdout',
 			},
 		])
 	})
 
-	test.runInCI('test multiple prompt in raw mode', async (assert) => {
+	test('test multiple prompt in raw mode', async (assert) => {
 		assert.plan(1)
 		process.env.CLI_UI_IS_TESTING = 'true'
 
@@ -1254,13 +1245,13 @@ test.group('Kernel | runCommand', () => {
 		await kernel.runCommand(commandInstance, argv)
 		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
 			{
-				message: `${icons.info}  npm`,
+				message: `${info}  npm`,
 				stream: 'stdout',
 			},
 		])
 	})
 
-	test.runInCI('test multiple prompt validation in raw mode', async (assert) => {
+	test('test multiple prompt validation in raw mode', async (assert) => {
 		assert.plan(2)
 
 		class Greet extends BaseCommand {
@@ -1307,13 +1298,13 @@ test.group('Kernel | runCommand', () => {
 		await kernel.runCommand(commandInstance, argv)
 		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
 			{
-				message: `${icons.info}  `,
+				message: `${info}  `,
 				stream: 'stdout',
 			},
 		])
 	})
 
-	test.runInCI('test toggle prompt in raw mode', async (assert) => {
+	test('test toggle prompt in raw mode', async (assert) => {
 		assert.plan(1)
 		process.env.CLI_UI_IS_TESTING = 'true'
 
@@ -1348,7 +1339,7 @@ test.group('Kernel | runCommand', () => {
 		await kernel.runCommand(commandInstance, argv)
 		assert.deepEqual(commandInstance.ui.testingRenderer.logs, [
 			{
-				message: `${icons.info}  Yep`,
+				message: `${info}  Yep`,
 				stream: 'stdout',
 			},
 		])
