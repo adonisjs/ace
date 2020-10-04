@@ -14,7 +14,13 @@ import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 import { lodash, defineStaticProperty, Exception } from '@poppinss/utils'
 
 import { Generator } from '../Generator'
-import { CommandArg, CommandFlag, KernelContract, CommandContract } from '../Contracts'
+import {
+	CommandArg,
+	CommandFlag,
+	KernelContract,
+	CommandContract,
+	GeneratorContract,
+} from '../Contracts'
 
 /**
  * Abstract base class other classes must extend
@@ -179,7 +185,7 @@ export abstract class BaseCommand implements CommandContract {
 	/**
 	 * Generator instance to generate entity files
 	 */
-	public generator = new Generator(this)
+	public generator: GeneratorContract = new Generator(this)
 
 	/**
 	 * Error raised by the command
