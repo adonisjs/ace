@@ -18,6 +18,7 @@ import {
 	CommandArg,
 	CommandFlag,
 	KernelContract,
+	CommandSettings,
 	CommandContract,
 	GeneratorContract,
 } from '../Contracts'
@@ -58,7 +59,7 @@ export abstract class BaseCommand implements CommandContract {
 	 * tools to read the settings in lifecycle hooks and make
 	 * certain decisions
 	 */
-	public static settings: any
+	public static settings: CommandSettings
 
 	/**
 	 * Whether or not the command has been booted

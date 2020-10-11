@@ -10,7 +10,16 @@
 import * as ui from '@poppinss/cliui'
 import { ParsedOptions } from 'getopts'
 import { PromptContract } from '@poppinss/prompts'
-import { ApplicationContract } from '@ioc:Adonis/Core/Application'
+import { ApplicationContract, AppEnvironments } from '@ioc:Adonis/Core/Application'
+
+/**
+ * Settings excepted by the command
+ */
+export type CommandSettings = {
+	loadApp?: boolean
+	stayAlive?: boolean
+	environment?: AppEnvironments
+} & { [key: string]: any }
 
 /**
  * The types of flags can be defined on a command.
@@ -71,7 +80,7 @@ export type CommandsGroup = {
  */
 export type SerializedCommand = {
 	args: CommandArg[]
-	settings: any
+	settings: CommandSettings
 	flags: CommandFlag<any>[]
 	commandName: string
 	description: string
