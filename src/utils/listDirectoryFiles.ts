@@ -8,9 +8,23 @@
  */
 
 import slash from 'slash'
-import { join, relative } from 'path'
 import { fsReadAll } from '@poppinss/utils'
+import { join, relative, extname } from 'path'
 import { CommandsListFilterFn } from '../Contracts'
+
+/**
+ * Checks if the file exists inside the array. Also an extension
+ * agnostic check is performed to handle `.ts` and `.js` files
+ * both
+ */
+function filesFilter(fileName: string, filesToIgnore: string[]) {
+	if (filesToIgnore.includes(fileName)) {
+		return true
+	}
+
+	fileName = fileName.replace(extname(fileName), '')
+	return filesToIgnore.includes(fileName)
+}
 
 /**
  * Returns an array of Javascript files inside the current directory in
@@ -19,7 +33,7 @@ import { CommandsListFilterFn } from '../Contracts'
 export function listDirectoryFiles(
 	scanDirectory: string,
 	appRoot: string,
-	filterFn?: CommandsListFilterFn
+	filesToIgnore?: CommandsListFilterFn
 ): string[] {
 	return fsReadAll(scanDirectory)
 		.filter((name) => !name.endsWith('.json')) // remove .json files
@@ -28,10 +42,10 @@ export function listDirectoryFiles(
 			return slash(relativePath.startsWith('../') ? relativePath : `./${relativePath}`)
 		})
 		.filter((name) => {
-			if (typeof filterFn === 'function') {
-				return filterFn(name)
+			if (typeof filesToIgnore === 'function') {
+				return filesToIgnore(name)
 			}
 
-			return Array.isArray(filterFn) ? !filterFn.includes(name) : true
+			return Array.isArray(filesToIgnore) ? !filesFilter(name, filesToIgnore) : true
 		})
 }

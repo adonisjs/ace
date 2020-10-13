@@ -70,4 +70,18 @@ test.group('listDirectoryFiles', (group) => {
 
 		assert.deepEqual(directories, ['./commands/bar.js', './commands/foo.js'])
 	})
+
+	test('ignore files by defining list of ignored extension agnostic files', async (assert) => {
+		await fs.add('commands/foo.js', '')
+		await fs.add('commands/bar.js', '')
+		await fs.add('commands/baz.js', '')
+		await fs.add('commands/README.md', '')
+		await fs.add('commands/.gitkeep', '')
+
+		const directories = listDirectoryFiles(join(fs.basePath, 'commands'), fs.basePath, [
+			'./commands/baz',
+		])
+
+		assert.deepEqual(directories, ['./commands/bar.js', './commands/foo.js'])
+	})
 })
