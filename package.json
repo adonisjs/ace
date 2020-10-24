@@ -53,7 +53,7 @@
   },
   "publishConfig": {
     "access": "public",
-    "tag": "next"
+    "tag": "alpha"
   },
   "devDependencies": {
     "@adonisjs/application": "^3.0.20",
