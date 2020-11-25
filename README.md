@@ -30,6 +30,10 @@
     <a href="CONTRIBUTING.md">
       Contributing
     </a>
+		<span> | </span>
+		<a href="flow-chart.png">
+			Flow chart
+		</a>
   </h3>
 </div>
 

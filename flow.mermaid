@@ -1,0 +1,41 @@
+graph TD
+	A{Kernel.handle}
+	A --> B(Zero args)
+	A --> C(Only flags defined)
+	A --> D(Args defined)
+	B --> E(Execute before find hook)
+	E --> E1(Execute after find hook)
+	E1 --> E2(Execute before run hook)
+	E2 --> E3(Run default command)
+	E3 --> E4(Execute after run hook)
+	E4 --> Q1
+	C --> F(Iterate through global flags)
+	F --> Q1
+	Q1{End}
+	Q1 --> Q2(Has errors)
+	Q2 --> Q3(Exit with code 1)
+	Q1 --> Q4(No errors)
+	Q4 --> Q5(Exit with code 0)
+	D --> G(Run before find hook)
+	G --> H{Find command}
+	H --> H1(Command not found)
+	H1 --> H2(Execute after find hook)
+	H2 --> H3(Iterate through global flags)
+	H3 --> Q1
+	H --> I(Command found)
+	I --> I1(Execute after find hook)
+	I1 --> I2(Iterate through global flags)
+	I2 --> I3{Validate command}
+	I3 --> J(Validation failed)
+	J --> J1(Exit with code 1)
+	I3 --> K(Validation passed)
+	K --> K1(Execute before run hook)
+	K1 --> K2(Run command)
+	K2 --> K3{Command type}
+	K3 --> L(Long lived)
+	L --> L1(Wait for explicit called to kernel.exit)
+	L1 --> L2(Execute after run hook)
+	L2 --> Q1
+	K3 --> M(Short lived)
+	M --> M1(Execute after run hook)
+	M1 --> Q1
