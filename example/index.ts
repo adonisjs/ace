@@ -102,5 +102,11 @@ kernel.flag(
 	{ type: 'string' }
 )
 
-// kernel.printHelp(Greet)
-kernel.handle(process.argv.splice(2)).catch(handleError)
+kernel.onExit(() => {
+	if (kernel.error) {
+		handleError(kernel.error)
+	}
+	process.exit(kernel.exitCode)
+})
+
+kernel.handle(process.argv.splice(2))
