@@ -40,7 +40,7 @@ export class Hooks {
 	/**
 	 * Execute hooks for a given action and lifecycle
 	 */
-	public async excute(lifecycle: 'before' | 'after', action: string, data: any): Promise<void> {
+	public async execute(lifecycle: 'before' | 'after', action: string, data: any): Promise<void> {
 		const handlers = this.hooks[lifecycle].get(action)
 		if (!handlers) {
 			return

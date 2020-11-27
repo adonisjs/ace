@@ -28,6 +28,11 @@ import {
  */
 export abstract class BaseCommand implements CommandContract {
 	/**
+	 * Reference to the exit handler
+	 */
+	protected exitHandler?: () => void | Promise<void>
+
+	/**
 	 * Accepting AdonisJs application instance and kernel instance
 	 */
 	constructor(public application: ApplicationContract, public kernel: KernelContract) {}
@@ -193,6 +198,11 @@ export abstract class BaseCommand implements CommandContract {
 	 */
 	public error?: any
 
+	/**
+	 * Command exit code
+	 */
+	public exitCode?: number
+
 	public async run?(...args: any[]): Promise<any>
 	public async prepare?(...args: any[]): Promise<any>
 	public async completed?(...args: any[]): Promise<any>
@@ -256,6 +266,25 @@ export abstract class BaseCommand implements CommandContract {
 		}
 
 		return commandResult
+	}
+
+	/**
+	 * Register an onExit handler
+	 */
+	public onExit(handler: () => void | Promise<void>) {
+		this.exitHandler = handler
+		return this
+	}
+
+	/**
+	 * Trigger exit
+	 */
+	public async exit() {
+		if (typeof this.exitHandler === 'function') {
+			await this.exitHandler()
+		}
+
+		await this.kernel.exit(this)
 	}
 
 	/**

@@ -7,7 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import getopts from 'getopts'
 import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 
 import { Hooks } from '../Hooks'
@@ -29,22 +28,13 @@ import {
 	SerializedCommand,
 	CommandConstructorContract,
 } from '../Contracts'
+import { logger } from '@poppinss/cliui'
 
 /**
  * Ace kernel class is used to register, find and invoke commands by
  * parsing `process.argv.splice(2)` value.
  */
 export class Kernel implements KernelContract {
-	/**
-	 * List of registered commands
-	 */
-	public commands: { [name: string]: CommandConstructorContract } = {}
-
-	/**
-	 * List of registered flags
-	 */
-	public flags: { [name: string]: CommandFlag<any> & { handler: GlobalFlagHandler } } = {}
-
 	/**
 	 * Reference to hooks class to execute lifecycle
 	 * hooks
@@ -58,10 +48,54 @@ export class Kernel implements KernelContract {
 	private manifestLoader: ManifestLoader
 
 	/**
+	 * The command that started the process
+	 */
+	private entryCommand?: CommandContract
+
+	/**
+	 * The state of the kernel
+	 */
+	private state: 'idle' | 'running' | 'completed' = 'idle'
+
+	/**
+	 * Exit handler for gracefully exiting the process
+	 */
+	private exitHandler: (callback: this) => void | Promise<void> = (kernel) => {
+		if (kernel.error && typeof kernel.error.handle === 'function') {
+			kernel.error.handle(kernel.error)
+		} else if (kernel.error) {
+			logger.fatal(kernel.error)
+		}
+
+		process.exit(kernel.exitCode === undefined ? 0 : kernel.exitCode)
+	}
+
+	/**
 	 * The default command that will be invoked when no command is
 	 * defined
 	 */
 	public defaultCommand: CommandConstructorContract = HelpCommand
+
+	/**
+	 * List of registered commands
+	 */
+	public commands: { [name: string]: CommandConstructorContract } = {}
+
+	/**
+	 * List of registered flags
+	 */
+	public flags: { [name: string]: CommandFlag<any> & { handler: GlobalFlagHandler } } = {}
+
+	/**
+	 * The exit code for the process
+	 */
+	public exitCode?: number
+
+	/**
+	 * The error collected as part of the running commands or executing
+	 * flags
+	 */
+	public error?: any
 
 	constructor(public application: ApplicationContract) {}
 
@@ -70,19 +104,17 @@ export class Kernel implements KernelContract {
 	 * not async as of now, but later we can look into making them
 	 * async.
 	 */
-	private executeGlobalFlagsHandlers(
-		options: getopts.ParsedOptions,
-		command?: CommandConstructorContract
-	) {
+	private executeGlobalFlagsHandlers(argv: string[], command?: CommandConstructorContract) {
 		const globalFlags = Object.keys(this.flags)
+		const parsedOptions = new Parser(this.flags).parse(argv)
 
 		globalFlags.forEach((name) => {
-			const value = options[name]
+			const value = parsedOptions[name]
 
 			/**
 			 * Flag was not specified
 			 */
-			if (value === undefined) {
+			if (value === undefined || value === false) {
 				return
 			}
 
@@ -97,7 +129,7 @@ export class Kernel implements KernelContract {
 			/**
 			 * Calling the handler
 			 */
-			this.flags[name].handler(options[name], options, command)
+			this.flags[name].handler(parsedOptions[name], parsedOptions, command)
 		})
 	}
 
@@ -120,138 +152,17 @@ export class Kernel implements KernelContract {
 	}
 
 	/**
-	 * Register a before hook
+	 * Processes the args and sets values on the command instance
 	 */
-	public before(action: 'run', callback: RunHookCallback): this
-	public before(action: 'find', callback: FindHookCallback): this
-	public before(action: 'run' | 'find', callback: RunHookCallback | FindHookCallback): this {
-		this.hooks.add('before', action, callback)
-		return this
-	}
-
-	/**
-	 * Register an after hook
-	 */
-	public after(action: 'run', callback: RunHookCallback): this
-	public after(action: 'find', callback: FindHookCallback): this
-	public after(action: 'run' | 'find', callback: RunHookCallback | FindHookCallback): this {
-		this.hooks.add('after', action, callback)
-		return this
-	}
-
-	/**
-	 * Register an array of command constructors
-	 */
-	public register(commands: CommandConstructorContract[]): this {
-		commands.forEach((command) => {
-			command.boot()
-			validateCommand(command)
-			this.commands[command.commandName] = command
-		})
-
-		return this
-	}
-
-	/**
-	 * Returns an array of command names suggestions for a given name.
-	 */
-	public getSuggestions(name: string, distance = 3): SerializedCommand[] {
-		const leven = require('leven')
-		return this.getAllCommands().filter(({ commandName }) => {
-			return leven(name, commandName) <= distance
-		})
-	}
-
-	/**
-	 * Register a global flag. It can be defined in combination with
-	 * any command.
-	 */
-	public flag(
-		name: string,
-		handler: GlobalFlagHandler,
-		options: Partial<Exclude<CommandFlag<any>, 'name' | 'propertyName'>>
-	): this {
-		this.flags[name] = Object.assign(
-			{
-				name,
-				propertyName: name,
-				handler,
-				type: 'boolean',
-			},
-			options
-		)
-
-		return this
-	}
-
-	/**
-	 * Finds the command from the command line argv array. If command for
-	 * the given name doesn't exists, then it will return `null`.
-	 */
-	public async find(argv: string[]): Promise<CommandConstructorContract | null> {
-		/**
-		 * ----------------------------------------------------------------------------
-		 * Even though in `Unix` the command name may appear in between or at last, with
-		 * ace we always want the command name to be the first argument. However, the
-		 * arguments to the command itself can appear in any sequence. For example:
-		 *
-		 * Works
-		 *    - node ace make:controller foo
-		 *    - node ace make:controller --http foo
-		 *
-		 * Doesn't work
-		 *    - node ace foo make:controller
-		 * ----------------------------------------------------------------------------
-		 */
-		const [commandName] = argv
-
-		/**
-		 * Manifest commands gets preference over manually registered commands.
-		 */
-		if (this.manifestLoader && this.manifestLoader.hasCommand(commandName)) {
-			const commandNode = this.manifestLoader.getCommand(commandName)!
-			await this.hooks.excute('before', 'find', commandNode.command)
-			const command = this.manifestLoader.loadCommand(commandName)
-			await this.hooks.excute('after', 'find', command)
-			return command
-		}
-
-		/**
-		 * Try to find command inside manually registered command or fallback
-		 * to null
-		 */
-		const command = this.commands[commandName] || null
-
-		/**
-		 * Executing before and after together to be compatible
-		 * with the manifest find before and after hooks
-		 */
-		await this.hooks.excute('before', 'find', command)
-		await this.hooks.excute('after', 'find', command)
-
-		return command
-	}
-
-	/**
-	 * Run a given command by parsing the command line arguments
-	 */
-	public async runCommand(commandInstance: CommandContract, argv: string[]) {
-		/**
-		 * The first value in the `argv` array is the command name. Now since
-		 * we know the command already, we remove the first value.
-		 */
-		argv = argv.splice(1)
-
+	private async processCommandArgsAndFlags(commandInstance: CommandContract, args: string[]) {
 		const parser = new Parser(this.flags)
 		const command = commandInstance.constructor as CommandConstructorContract
 
 		/**
-		 * Parse argv and execute the `handle` method.
+		 * Parse the command arguments. The `parse` method will raise exception if flag
+		 * or arg is not
 		 */
-		const parsedOptions = parser.parse(argv, command)
-		this.executeGlobalFlagsHandlers(parsedOptions, command)
-
-		await this.hooks.excute('before', 'run', commandInstance)
+		const parsedOptions = parser.parse(args, command)
 
 		/**
 		 * We validate the command arguments after the global flags have been
@@ -296,27 +207,341 @@ export class Kernel implements KernelContract {
 				commandInstance[flag.propertyName] = flagValue
 			}
 		}
+	}
+
+	/**
+	 * Execute the main command. For calling commands within commands,
+	 * one must call "kernel.exec".
+	 */
+	private async execMain(commandName: string, args: string[]) {
+		const command = await this.find([commandName])
 
 		/**
-		 * Command response/error
+		 * Command not found. So execute global flags handlers and
+		 * raise an exception
 		 */
-		let commandResponse: any
-		let commandError: any
+		if (!command) {
+			this.executeGlobalFlagsHandlers(args)
+			throw InvalidCommandException.invoke(commandName, this.getSuggestions(commandName))
+		}
 
 		/**
-		 * Wrap command inside try/catch so that we always run
-		 * the after run hook
+		 * Make an instance of the command
+		 */
+		const commandInstance = this.application.container.make(command, [this.application, this])
+
+		/**
+		 * Execute global flags
+		 */
+		this.executeGlobalFlagsHandlers(args, command)
+
+		/**
+		 * Process the arguments and flags for the command
+		 */
+		await this.processCommandArgsAndFlags(commandInstance, args)
+
+		/**
+		 * Keep a reference to the entry command. So that we know if we
+		 * want to entertain `.exit` or not
+		 */
+		this.entryCommand = commandInstance
+
+		/**
+		 * Execute before run hooks
+		 */
+		await this.hooks.execute('before', 'run', commandInstance)
+
+		/**
+		 * Execute command
+		 */
+		return commandInstance.exec()
+	}
+
+	/**
+	 * Handles exiting the process
+	 */
+	private async exitProcess(error?: any) {
+		/**
+		 * Check for state to avoid exiting the process multiple times
+		 */
+		if (this.state === 'completed') {
+			return
+		}
+
+		this.state = 'completed'
+
+		/**
+		 * Re-assign error if entry command exists and has error
+		 */
+		if (!error && this.entryCommand && this.entryCommand.error) {
+			error = this.entryCommand.error
+		}
+
+		/**
+		 * Execute the after run hooks. Wrapping inside try/catch since this is the
+		 * cleanup handler for the process and must handle all exceptions
 		 */
 		try {
+			if (this.entryCommand) {
+				await this.hooks.execute('after', 'run', this.entryCommand)
+			}
+		} catch (hookError) {
+			error = hookError
+		}
+
+		/**
+		 * Assign error to the kernel instance
+		 */
+		if (error) {
+			this.error = error
+		}
+
+		/**
+		 * Figure out the exit code for the process
+		 */
+		const exitCode = error ? 1 : 0
+		const commandExitCode = this.entryCommand && this.entryCommand.exitCode
+
+		this.exitCode = commandExitCode === undefined ? exitCode : commandExitCode
+
+		try {
+			await this.exitHandler(this)
+		} catch (exitHandlerError) {
+			logger.warning('Expected exit handler to exit the process. Instead it raised an exception')
+			logger.fatal(exitHandlerError)
+		}
+	}
+
+	/**
+	 * Register a before hook
+	 */
+	public before(action: 'run', callback: RunHookCallback): this
+	public before(action: 'find', callback: FindHookCallback): this
+	public before(action: 'run' | 'find', callback: RunHookCallback | FindHookCallback): this {
+		this.hooks.add('before', action, callback)
+		return this
+	}
+
+	/**
+	 * Register an after hook
+	 */
+	public after(action: 'run', callback: RunHookCallback): this
+	public after(action: 'find', callback: FindHookCallback): this
+	public after(action: 'run' | 'find', callback: RunHookCallback | FindHookCallback): this {
+		this.hooks.add('after', action, callback)
+		return this
+	}
+
+	/**
+	 * Register an array of command constructors
+	 */
+	public register(commands: CommandConstructorContract[]): this {
+		commands.forEach((command) => {
+			command.boot()
+			validateCommand(command)
+			this.commands[command.commandName] = command
+		})
+
+		return this
+	}
+
+	/**
+	 * Register a global flag. It can be defined in combination with
+	 * any command.
+	 */
+	public flag(
+		name: string,
+		handler: GlobalFlagHandler,
+		options: Partial<Exclude<CommandFlag<any>, 'name' | 'propertyName'>>
+	): this {
+		this.flags[name] = Object.assign(
+			{
+				name,
+				propertyName: name,
+				handler,
+				type: 'boolean',
+			},
+			options
+		)
+
+		return this
+	}
+
+	/**
+	 * Use manifest instance to lazy load commands
+	 */
+	public useManifest(manifestLoader: ManifestLoader): this {
+		this.manifestLoader = manifestLoader
+		return this
+	}
+
+	/**
+	 * Register an exit handler
+	 */
+	public onExit(callback: (kernel: this) => void | Promise<void>): this {
+		this.exitHandler = callback
+		return this
+	}
+
+	/**
+	 * Returns an array of command names suggestions for a given name.
+	 */
+	public getSuggestions(name: string, distance = 3): SerializedCommand[] {
+		const leven = require('leven')
+		return this.getAllCommands().filter(({ commandName }) => {
+			return leven(name, commandName) <= distance
+		})
+	}
+
+	/**
+	 * Preload the manifest file. Re-running this method twice will
+	 * result in a noop
+	 */
+	public async preloadManifest() {
+		/**
+		 * Load manifest commands when instance of manifest loader exists.
+		 */
+		if (this.manifestLoader) {
+			await this.manifestLoader.boot()
+		}
+	}
+
+	/**
+	 * Finds the command from the command line argv array. If command for
+	 * the given name doesn't exists, then it will return `null`.
+	 *
+	 * Does executes the before and after hooks regardless of whether the
+	 * command has been found or not
+	 */
+	public async find(argv: string[]): Promise<CommandConstructorContract | null> {
+		/**
+		 * ----------------------------------------------------------------------------
+		 * Even though in `Unix` the command name may appear in between or at last, with
+		 * ace we always want the command name to be the first argument. However, the
+		 * arguments to the command itself can appear in any sequence. For example:
+		 *
+		 * Works
+		 *    - node ace make:controller foo
+		 *    - node ace make:controller --http foo
+		 *
+		 * Doesn't work
+		 *    - node ace foo make:controller
+		 * ----------------------------------------------------------------------------
+		 */
+		const [commandName] = argv
+
+		/**
+		 * Manifest commands gets preference over manually registered commands.
+		 */
+		if (this.manifestLoader && this.manifestLoader.hasCommand(commandName)) {
+			const commandNode = this.manifestLoader.getCommand(commandName)!
+			await this.hooks.execute('before', 'find', commandNode.command)
+			const command = this.manifestLoader.loadCommand(commandName)
+			await this.hooks.execute('after', 'find', command)
+			return command
+		}
+
+		/**
+		 * Try to find command inside manually registered command or fallback
+		 * to null
+		 */
+		const command = this.commands[commandName] || null
+
+		/**
+		 * Executing before and after together to be compatible
+		 * with the manifest find before and after hooks
+		 */
+		await this.hooks.execute('before', 'find', command)
+		await this.hooks.execute('after', 'find', command)
+
+		return command
+	}
+
+	/**
+	 * Run the default command. The default command doesn't accept
+	 * and args or flags.
+	 */
+	public async runDefaultCommand() {
+		this.defaultCommand.boot()
+		validateCommand(this.defaultCommand)
+
+		/**
+		 * Execute before/after find hooks
+		 */
+		await this.hooks.execute('before', 'find', this.defaultCommand)
+		await this.hooks.execute('after', 'find', this.defaultCommand)
+
+		/**
+		 * Make the command instance using the container
+		 */
+		const commandInstance = this.application.container.make(this.defaultCommand, [
+			this.application,
+			this,
+		])
+
+		/**
+		 * Execute before run hook
+		 */
+		await this.hooks.execute('before', 'run', commandInstance)
+
+		/**
+		 * Keep a reference to the entry command
+		 */
+		this.entryCommand = commandInstance
+
+		/**
+		 * Execute the command
+		 */
+		return commandInstance.exec()
+	}
+
+	/**
+	 * Execute a command as a sub-command. Do not call "handle" and
+	 * always use this method to invoke command programatically
+	 */
+	public async exec(commandName: string, args: string[]) {
+		const command = await this.find([commandName])
+
+		/**
+		 * Command not found. So execute global flags handlers and
+		 * raise an exception
+		 */
+		if (!command) {
+			throw InvalidCommandException.invoke(commandName, this.getSuggestions(commandName))
+		}
+
+		/**
+		 * Make an instance of command and keep a reference of it as `this.entryCommand`
+		 */
+		const commandInstance = this.application.container.make(command, [this.application, this])
+
+		/**
+		 * Process args and flags for the command
+		 */
+		await this.processCommandArgsAndFlags(commandInstance, args)
+
+		let commandError: any
+		let commandResponse: any
+
+		/**
+		 * Wrapping the command execution inside a try/catch, so that
+		 * we can run the after hooks regardless of success or
+		 * failure
+		 */
+		try {
+			await this.hooks.execute('before', 'run', commandInstance)
 			commandResponse = await commandInstance.exec()
 		} catch (error) {
 			commandError = error
 		}
 
-		await this.hooks.excute('after', 'run', commandInstance)
+		/**
+		 * Execute after hooks
+		 */
+		await this.hooks.execute('after', 'run', commandInstance)
 
 		/**
-		 * Re-throw exception after running the after run hook
+		 * Re-throw error (if any)
 		 */
 		if (commandError) {
 			throw commandError
@@ -326,90 +551,71 @@ export class Kernel implements KernelContract {
 	}
 
 	/**
-	 * Running default command
-	 */
-	public async runDefaultCommand() {
-		this.defaultCommand.boot()
-		validateCommand(this.defaultCommand)
-
-		const commandInstance = this.application.container.make(this.defaultCommand as any, [
-			this.application as any,
-			this as any,
-		])
-
-		return this.runCommand(commandInstance, [])
-	}
-
-	/**
-	 * Preload the manifest file. Re-running this method twice will
-	 * result in a noop
-	 */
-	public async preloadManifest() {
-		/**
-		 * Load manifest commands when instance of manifest exists. From here the
-		 * kernel will give preference to the `manifest` file vs manually
-		 * registered commands.
-		 */
-		if (this.manifestLoader) {
-			await this.manifestLoader.boot()
-		}
-	}
-
-	/**
 	 * Makes instance of a given command by processing command line arguments
 	 * and setting them on the command instance
 	 */
 	public async handle(argv: string[]) {
-		await this.preloadManifest()
-
-		/**
-		 * Execute the default command when no command is mentioned
-		 */
-		if (!argv.length) {
-			return this.runDefaultCommand()
-		}
-
-		const hasMentionedCommand = !argv[0].startsWith('-')
-
-		/**
-		 * Parse flags when no command is defined
-		 */
-		if (!hasMentionedCommand) {
-			const parsedOptions = new Parser(this.flags).parse(argv)
-			this.executeGlobalFlagsHandlers(parsedOptions)
+		if (this.state !== 'idle') {
 			return
 		}
 
-		/**
-		 * Execute command
-		 */
-		return this.exec(argv[0], argv.slice(1, argv.length))
-	}
+		this.state = 'running'
 
-	/**
-	 * Execute a given command. The `args` must be an array of arguments including
-	 * flags to be parsed and passed to the command. For exmaple:
-	 *
-	 * ```js
-	 * kernel.exec('make:controller', ['User', '--resource=true'])
-	 * ```
-	 */
-	public async exec(commandName: string, args: string[]) {
-		let command = await this.find([commandName])
-		if (!command) {
-			throw InvalidCommandException.invoke(commandName, this.getSuggestions(commandName))
+		try {
+			/**
+			 * Preload the manifest file to load the manifest files
+			 */
+			this.preloadManifest()
+
+			/**
+			 * Branch 1
+			 * Run default command and invoke the exit handler
+			 */
+			if (!argv.length) {
+				await this.runDefaultCommand()
+				await this.exitProcess()
+				return
+			}
+
+			/**
+			 * Branch 2
+			 * No command has been mentioned and hence execute all the global flags
+			 * invoke the exit handler
+			 */
+			const hasMentionedCommand = !argv[0].startsWith('-')
+			if (!hasMentionedCommand) {
+				this.executeGlobalFlagsHandlers(argv)
+				await this.exitProcess()
+				return
+			}
+
+			/**
+			 * Branch 3
+			 * Execute the given command as the main command
+			 */
+			const [commandName, ...args] = argv
+			await this.execMain(commandName, args)
+
+			/**
+			 * Exit the process if there isn't any entry command
+			 */
+			if (!this.entryCommand) {
+				await this.exitProcess()
+				return
+			}
+
+			const entryCommandConstructor = this.entryCommand.constructor as CommandConstructorContract
+
+			/**
+			 * Exit the process if entry command isn't a stayalive command. Stayalive
+			 * commands should call `this.exit` to exit the process.
+			 */
+			if (!entryCommandConstructor.settings.stayAlive) {
+				await this.exitProcess()
+			}
+		} catch (error) {
+			await this.exitProcess(error)
 		}
-
-		const commandInstance = this.application.container.make(command, [this.application, this])
-		return this.runCommand(commandInstance, [commandName].concat(args))
-	}
-
-	/**
-	 * Use manifest instance to lazy load commands
-	 */
-	public useManifest(manifestLoader: ManifestLoader): this {
-		this.manifestLoader = manifestLoader
-		return this
 	}
 
 	/**
@@ -422,5 +628,19 @@ export class Kernel implements KernelContract {
 			const flags = Object.keys(this.flags).map((name) => this.flags[name])
 			printHelp(this.getAllCommands(), flags)
 		}
+	}
+
+	/**
+	 * Trigger kernel to exit the process. The call to this method
+	 * is ignored when command is not same the `entryCommand`.
+	 *
+	 * In other words, subcommands cannot trigger exit
+	 */
+	public async exit(command: CommandContract, error?: any) {
+		if (command !== this.entryCommand) {
+			return
+		}
+
+		await this.exitProcess(error)
 	}
 }

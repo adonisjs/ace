@@ -63,7 +63,7 @@ export type GlobalFlagHandler = (
 	value: any,
 	parsed: ParsedOptions,
 	command?: CommandConstructorContract
-) => void
+) => any
 
 /**
  * Shape of grouped commands. Required when displaying
@@ -120,12 +120,17 @@ export interface CommandConstructorContract extends SerializedCommand {
 export interface CommandContract {
 	parsed?: ParsedOptions
 	error?: any
+	exitCode?: number
 	logger: typeof ui.logger
 	prompt: PromptContract
 	colors: typeof ui.logger.colors
 	ui: typeof ui
 	generator: GeneratorContract
 	kernel: KernelContract
+
+	onExit(callback: () => Promise<void> | void): this
+	exit(): Promise<void>
+
 	exec(): Promise<any>
 	handle?(...args: any[]): Promise<any>
 	run?(...args: any[]): Promise<any>
@@ -179,46 +184,125 @@ export interface ManifestLoaderContract {
 /**
  * Callbacks for different style of hooks
  */
-export type FindHookCallback = (command: SerializedCommand | null) => Promise<void> | void
-export type RunHookCallback = (command: CommandContract) => Promise<void> | void
+export type FindHookCallback = (command: SerializedCommand | null) => Promise<any> | any
+export type RunHookCallback = (command: CommandContract) => Promise<any> | any
 
 /**
  * Shape of ace kernel
  */
 export interface KernelContract {
+	/**
+	 * A map of command read from the manifest file
+	 */
 	manifestCommands?: {
 		[basePath: string]: ManifestNode
 	}
+
+	/**
+	 * The exit code to be used for exiting the process. One should use
+	 * this to exit the process
+	 */
+	exitCode?: number
+
+	/**
+	 * Reference to the process error. It can come from the command, flags
+	 * or any other intermediate code.
+	 */
+	error?: Error
+
+	/**
+	 * Reference to the default command. Feel free to overwrite it
+	 */
 	defaultCommand: CommandConstructorContract
+
+	/**
+	 * A map of locally registered commands
+	 */
 	commands: { [name: string]: CommandConstructorContract }
+
+	/**
+	 * A map of global flags
+	 */
 	flags: { [name: string]: CommandFlag<any> & { handler: GlobalFlagHandler } }
 
+	/**
+	 * Register before hooks
+	 */
 	before(action: 'run', callback: RunHookCallback): this
 	before(action: 'find', callback: FindHookCallback): this
 	before(action: 'run' | 'find', callback: RunHookCallback | FindHookCallback): this
 
+	/**
+	 * Register after hooks
+	 */
 	after(action: 'run', callback: RunHookCallback): this
 	after(action: 'find', callback: FindHookCallback): this
 	after(action: 'run' | 'find', callback: RunHookCallback | FindHookCallback): this
 
+	/**
+	 * Register a command directly via class
+	 */
 	register(commands: CommandConstructorContract[]): this
-	getSuggestions(name: string, distance?: number): SerializedCommand[]
 
+	/**
+	 * Register a global flag
+	 */
 	flag(
 		name: string,
 		handler: GlobalFlagHandler,
 		options: Partial<Exclude<CommandFlag<any>, 'name' | 'propertyName'>>
 	): this
 
+	/**
+	 * Register the manifest loader
+	 */
+	useManifest(manifestLoacder: ManifestLoaderContract): this
+
+	/**
+	 * Register an on exit callback listener. It should always
+	 * exit the process
+	 */
+	onExit(callback: (kernel: this) => void | Promise<void>): this
+
+	/**
+	 * Preload the manifest file
+	 */
+	preloadManifest(): void
+
+	/**
+	 * Get command suggestions
+	 */
+	getSuggestions(name: string, distance?: number): SerializedCommand[]
+
+	/**
+	 * Find a command using the command line `argv`
+	 */
 	find(argv: string[]): Promise<CommandConstructorContract | null>
-	runCommand(commandInstance: CommandContract, argv: string[]): Promise<any>
+
+	/**
+	 * Run the default command
+	 */
 	runDefaultCommand(): Promise<any>
+
+	/**
+	 * Handle the command line argv to execute commands
+	 */
 	handle(argv: string[]): Promise<any>
+
+	/**
+	 * Execute a command by its name and args
+	 */
 	exec(commandName: string, args: string[]): Promise<any>
 
-	preloadManifest(): void
-	useManifest(manifestLoacder: ManifestLoaderContract): this
+	/**
+	 * Print help for all commands or a given command
+	 */
 	printHelp(command?: CommandConstructorContract): void
+
+	/**
+	 * Trigger exit flow
+	 */
+	exit(command: CommandContract, error?: any): Promise<void>
 }
 
 /**
