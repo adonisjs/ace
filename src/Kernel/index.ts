@@ -436,7 +436,7 @@ export class Kernel implements KernelContract {
 		if (this.manifestLoader && this.manifestLoader.hasCommand(commandName)) {
 			const commandNode = this.manifestLoader.getCommand(commandName)!
 			await this.hooks.execute('before', 'find', commandNode.command)
-			const command = this.manifestLoader.loadCommand(commandName)
+			const command = await this.manifestLoader.loadCommand(commandName)
 			await this.hooks.execute('after', 'find', command)
 			return command
 		}

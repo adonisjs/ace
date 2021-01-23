@@ -16,6 +16,15 @@ import {
 	CommandConstructorContract,
 } from '../Contracts'
 import { validateCommand } from '../utils/validateCommand'
+import { pathToFileURL } from 'url'
+
+async function esmImport(path: string) {
+	const module = await import(pathToFileURL(path).href)
+	if (module.__esModule) {
+		return module.default.default
+	}
+	return module.default
+}
 
 /**
  * The manifest loader exposes the API to load ace commands from one
@@ -34,7 +43,10 @@ export class ManifestLoader implements ManifestLoaderContract {
 		return { basePath: file.basePath, commands: manifestCommands }
 	}
 
-	constructor(private files: { basePath: string; manifestAbsPath: string }[]) {}
+	constructor(
+		private files: { basePath: string; manifestAbsPath: string }[],
+		private isESM = false
+	) {}
 
 	/**
 	 * Boot manifest loader to read all manifest files from the disk
@@ -89,9 +101,10 @@ export class ManifestLoader implements ManifestLoaderContract {
 	 * Load command from the disk. Make sure to use [[hasCommand]] before
 	 * calling this method
 	 */
-	public loadCommand(commandName: string): CommandConstructorContract {
+	public async loadCommand(commandName: string): Promise<CommandConstructorContract> {
 		const { basePath, command } = this.getCommand(commandName)!
-		const commandConstructor = esmRequire(resolveFrom(basePath, command.commandPath))
+		const resolved = resolveFrom(basePath, command.commandPath)
+		const commandConstructor = this.isESM ? await esmImport(resolved) : esmRequire(resolved)
 		validateCommand(commandConstructor)
 		return commandConstructor
 	}

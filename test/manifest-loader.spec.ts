@@ -385,7 +385,7 @@ test.group('Manifest Generator', (group) => {
 		])
 
 		await manifestLoader.boot()
-		assert.deepEqual(manifestLoader.loadCommand('greet').commandName, 'greet')
-		assert.isTrue(manifestLoader.loadCommand('greet').booted)
+		assert.deepEqual((await manifestLoader.loadCommand('greet')).commandName, 'greet')
+		assert.isTrue((await manifestLoader.loadCommand('greet')).booted)
 	})
 })
