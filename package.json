@@ -32,7 +32,7 @@
   "dependencies": {
     "@poppinss/cliui": "^2.0.2",
     "@poppinss/prompts": "^1.1.7",
-    "@poppinss/utils": "^2.5.9",
+    "@poppinss/utils": "^2.5.10",
     "fs-extra": "^9.0.1",
     "getopts": "^2.2.4",
     "leven": "^3.1.0",
