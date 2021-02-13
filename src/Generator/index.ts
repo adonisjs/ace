@@ -17,47 +17,47 @@ import { GeneratorFileOptions, GeneratorContract, CommandContract } from '../Con
  * `Controllers`, `Models` and so on.
  */
 export class Generator implements GeneratorContract {
-	private files: GeneratorFile[] = []
+  private files: GeneratorFile[] = []
 
-	constructor(private command: CommandContract, private destinationDir?: string) {}
+  constructor(private command: CommandContract, private destinationDir?: string) {}
 
-	/**
-	 * Add a new file to the files generator. You can add multiple files
-	 * together and they will be created when `run` is invoked.
-	 */
-	public addFile(name: string, options?: GeneratorFileOptions) {
-		const file = new GeneratorFile(name, options)
+  /**
+   * Add a new file to the files generator. You can add multiple files
+   * together and they will be created when `run` is invoked.
+   */
+  public addFile(name: string, options?: GeneratorFileOptions) {
+    const file = new GeneratorFile(name, options)
 
-		if (this.destinationDir) {
-			file.destinationDir(this.destinationDir)
-		}
+    if (this.destinationDir) {
+      file.destinationDir(this.destinationDir)
+    }
 
-		this.files.push(file)
-		return file
-	}
+    this.files.push(file)
+    return file
+  }
 
-	/**
-	 * Run the generator and create all files registered using `addFiles`
-	 */
-	public async run() {
-		for (let file of this.files) {
-			const fileJSON = file.toJSON()
-			const exists = await pathExists(fileJSON.filepath)
+  /**
+   * Run the generator and create all files registered using `addFiles`
+   */
+  public async run() {
+    for (let file of this.files) {
+      const fileJSON = file.toJSON()
+      const exists = await pathExists(fileJSON.filepath)
 
-			if (exists) {
-				this.command.logger.action('create').skipped(fileJSON.relativepath, 'File already exists')
-				return
-			}
+      if (exists) {
+        this.command.logger.action('create').skipped(fileJSON.relativepath, 'File already exists')
+        return
+      }
 
-			await outputFile(fileJSON.filepath, fileJSON.contents)
-			this.command.logger.action('create').succeeded(fileJSON.relativepath)
-		}
-	}
+      await outputFile(fileJSON.filepath, fileJSON.contents)
+      this.command.logger.action('create').succeeded(fileJSON.relativepath)
+    }
+  }
 
-	/**
-	 * Clear the registered files from the generator
-	 */
-	public clear() {
-		this.files = []
-	}
+  /**
+   * Clear the registered files from the generator
+   */
+  public clear() {
+    this.files = []
+  }
 }

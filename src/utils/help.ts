@@ -16,70 +16,70 @@ import { CommandArg, CommandFlag, SerializedCommand } from '../Contracts'
  * required or not.
  */
 function wrapArg(arg: CommandArg): string {
-	const displayName = arg.type === 'spread' ? `...${arg.name}` : arg.name
-	return arg.required ? `<${displayName}>` : `[${displayName}]`
+  const displayName = arg.type === 'spread' ? `...${arg.name}` : arg.name
+  return arg.required ? `<${displayName}>` : `[${displayName}]`
 }
 
 /**
  * Returns an array of flags for displaying the help screen
  */
 function getFlagsForDisplay(flags: CommandFlag<any>[]) {
-	return flags.map(({ name, type, alias, description }) => {
-		/**
-		 * Display name is the way we want to display a single flag in the
-		 * list of flags
-		 */
-		const displayName = alias ? `-${alias}, --${name}` : `--${name}`
+  return flags.map(({ name, type, alias, description }) => {
+    /**
+     * Display name is the way we want to display a single flag in the
+     * list of flags
+     */
+    const displayName = alias ? `-${alias}, --${name}` : `--${name}`
 
-		/**
-		 * The type hints the user about the expectation on the flag type. We only
-		 * print the type, when flag is not a boolean.
-		 */
-		let displayType = ''
-		switch (type) {
-			case 'array':
-				displayType = 'string[]'
-				break
-			case 'numArray':
-				displayType = 'number[]'
-				break
-			case 'string':
-				displayType = 'string'
-				break
-			case 'boolean':
-				displayType = 'boolean'
-				break
-			case 'number':
-				displayType = 'number'
-				break
-		}
+    /**
+     * The type hints the user about the expectation on the flag type. We only
+     * print the type, when flag is not a boolean.
+     */
+    let displayType = ''
+    switch (type) {
+      case 'array':
+        displayType = 'string[]'
+        break
+      case 'numArray':
+        displayType = 'number[]'
+        break
+      case 'string':
+        displayType = 'string'
+        break
+      case 'boolean':
+        displayType = 'boolean'
+        break
+      case 'number':
+        displayType = 'number'
+        break
+    }
 
-		return {
-			displayName,
-			displayType,
-			description,
-			width: displayName.length + displayType.length,
-		}
-	})
+    return {
+      displayName,
+      displayType,
+      description,
+      width: displayName.length + displayType.length,
+    }
+  })
 }
 
 /**
  * Returns an array of args for displaying the help screen
  */
 function getArgsForDisplay(args: CommandArg[]) {
-	return args.map(({ name, description }) => {
-		return {
-			displayName: name,
-			description: description,
-			width: name.length,
-		}
-	})
+  return args.map(({ name, description }) => {
+    return {
+      displayName: name,
+      description: description,
+      width: name.length,
+    }
+  })
 }
 
 function getCommandsForDisplay(commands: SerializedCommand[]) {
-	return commands.map(({ commandName, description }) => {
-		return { displayName: commandName, description, width: commandName.length }
-	})
+  return commands.map(({ commandName, description }) => {
+    return { displayName: commandName, description, width: commandName.length }
+  })
 }
 
 /**
@@ -87,103 +87,103 @@ function getCommandsForDisplay(commands: SerializedCommand[]) {
  * and grouping them as per their namespace.
  */
 export function printHelp(commands: SerializedCommand[], flags: CommandFlag<any>[]): void {
-	const flagsList = getFlagsForDisplay(flags)
-	const commandsList = getCommandsForDisplay(commands)
+  const flagsList = getFlagsForDisplay(flags)
+  const commandsList = getCommandsForDisplay(commands)
 
-	/**
-	 * Get width of longest command name.
-	 */
-	const maxWidth = Math.max.apply(
-		Math,
-		flagsList.concat(commandsList as any).map(({ width }) => width)
-	)
+  /**
+   * Get width of longest command name.
+   */
+  const maxWidth = Math.max.apply(
+    Math,
+    flagsList.concat(commandsList as any).map(({ width }) => width)
+  )
 
-	/**
-	 * Sort commands and group them, so that we can print them as per
-	 * the namespace they belongs to
-	 */
-	sortAndGroupCommands(commands).forEach(({ group, commands: groupCommands }) => {
-		console.log('')
-		if (group === 'root') {
-			console.log(logger.colors.bold(logger.colors.yellow('Available commands')))
-		} else {
-			console.log(logger.colors.bold(logger.colors.yellow(group)))
-		}
+  /**
+   * Sort commands and group them, so that we can print them as per
+   * the namespace they belongs to
+   */
+  sortAndGroupCommands(commands).forEach(({ group, commands: groupCommands }) => {
+    console.log('')
+    if (group === 'root') {
+      console.log(logger.colors.bold(logger.colors.yellow('Available commands')))
+    } else {
+      console.log(logger.colors.bold(logger.colors.yellow(group)))
+    }
 
-		groupCommands.forEach(({ commandName, description }) => {
-			console.log(
-				`  ${logger.colors.green(commandName.padEnd(maxWidth, ' '))}  ${logger.colors.dim(
-					description
-				)}`
-			)
-		})
-	})
+    groupCommands.forEach(({ commandName, description }) => {
+      console.log(
+        `  ${logger.colors.green(commandName.padEnd(maxWidth, ' '))}  ${logger.colors.dim(
+          description
+        )}`
+      )
+    })
+  })
 
-	if (flagsList.length) {
-		console.log('')
-		console.log(logger.colors.bold(logger.colors.yellow('Global Flags')))
+  if (flagsList.length) {
+    console.log('')
+    console.log(logger.colors.bold(logger.colors.yellow('Global Flags')))
 
-		flagsList.forEach(({ displayName, displayType, description = '', width }) => {
-			const whiteSpace = ''.padEnd(maxWidth - width, ' ')
-			console.log(
-				`  ${logger.colors.green(displayName)} ${logger.colors.dim(
-					displayType
-				)} ${whiteSpace}  ${logger.colors.dim(description)}`
-			)
-		})
-	}
+    flagsList.forEach(({ displayName, displayType, description = '', width }) => {
+      const whiteSpace = ''.padEnd(maxWidth - width, ' ')
+      console.log(
+        `  ${logger.colors.green(displayName)} ${logger.colors.dim(
+          displayType
+        )} ${whiteSpace}  ${logger.colors.dim(description)}`
+      )
+    })
+  }
 }
 
 /**
  * Prints help for a single command
  */
 export function printHelpFor(command: SerializedCommand): void {
-	if (command.description) {
-		console.log('')
-		console.log(command.description)
-	}
+  if (command.description) {
+    console.log('')
+    console.log(command.description)
+  }
 
-	console.log('')
-	console.log(
-		`${logger.colors.yellow('Usage:')} ${command.commandName} ${logger.colors.dim(
-			command.args.map(wrapArg).join(' ')
-		)}`
-	)
+  console.log('')
+  console.log(
+    `${logger.colors.yellow('Usage:')} ${command.commandName} ${logger.colors.dim(
+      command.args.map(wrapArg).join(' ')
+    )}`
+  )
 
-	const flags = getFlagsForDisplay(command.flags)
-	const args = getArgsForDisplay(command.args)
+  const flags = getFlagsForDisplay(command.flags)
+  const args = getArgsForDisplay(command.args)
 
-	/**
-	 * Getting max width to keep flags and args symmetric
-	 */
-	const maxWidth = Math.max.apply(
-		Math,
-		flags.concat(args as any).map(({ width }) => width)
-	)
+  /**
+   * Getting max width to keep flags and args symmetric
+   */
+  const maxWidth = Math.max.apply(
+    Math,
+    flags.concat(args as any).map(({ width }) => width)
+  )
 
-	if (args.length) {
-		console.log('')
-		console.log(logger.colors.bold(logger.colors.yellow('Arguments')))
+  if (args.length) {
+    console.log('')
+    console.log(logger.colors.bold(logger.colors.yellow('Arguments')))
 
-		args.forEach(({ displayName, description = '', width }) => {
-			const whiteSpace = ''.padEnd(maxWidth - width, ' ')
-			console.log(
-				`  ${logger.colors.green(displayName)} ${whiteSpace}   ${logger.colors.dim(description)}`
-			)
-		})
-	}
+    args.forEach(({ displayName, description = '', width }) => {
+      const whiteSpace = ''.padEnd(maxWidth - width, ' ')
+      console.log(
+        `  ${logger.colors.green(displayName)} ${whiteSpace}   ${logger.colors.dim(description)}`
+      )
+    })
+  }
 
-	if (flags.length) {
-		console.log('')
-		console.log(logger.colors.bold(logger.colors.yellow('Flags')))
+  if (flags.length) {
+    console.log('')
+    console.log(logger.colors.bold(logger.colors.yellow('Flags')))
 
-		flags.forEach(({ displayName, displayType, description = '', width }) => {
-			const whiteSpace = ''.padEnd(maxWidth - width, ' ')
-			console.log(
-				`  ${logger.colors.green(displayName)} ${logger.colors.dim(
-					displayType
-				)} ${whiteSpace}  ${logger.colors.dim(description)}`
-			)
-		})
-	}
+    flags.forEach(({ displayName, displayType, description = '', width }) => {
+      const whiteSpace = ''.padEnd(maxWidth - width, ' ')
+      console.log(
+        `  ${logger.colors.green(displayName)} ${logger.colors.dim(
+          displayType
+        )} ${whiteSpace}  ${logger.colors.dim(description)}`
+      )
+    })
+  }
 }

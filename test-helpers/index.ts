@@ -15,12 +15,12 @@ import { Kernel } from '../src/Kernel'
 export const fs = new Filesystem(join(__dirname, 'app'))
 
 export function setupApp() {
-	const app = new Application(fs.basePath, 'test', {})
-	return app
+  const app = new Application(fs.basePath, 'test', {})
+  return app
 }
 
 export function getKernel(app: Application) {
-	return new Kernel(app)
+  return new Kernel(app)
 }
 
 export const info = process.env.CI ? '[ info ]' : '[ blue(info) ]'

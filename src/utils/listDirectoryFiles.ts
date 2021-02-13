@@ -19,12 +19,12 @@ import { CommandsListFilterFn } from '../Contracts'
  * both
  */
 function filesFilter(fileName: string, filesToIgnore: string[]) {
-	if (filesToIgnore.includes(fileName)) {
-		return true
-	}
+  if (filesToIgnore.includes(fileName)) {
+    return true
+  }
 
-	fileName = fileName.replace(extname(fileName), '')
-	return filesToIgnore.includes(fileName)
+  fileName = fileName.replace(extname(fileName), '')
+  return filesToIgnore.includes(fileName)
 }
 
 /**
@@ -32,21 +32,21 @@ function filesFilter(fileName: string, filesToIgnore: string[]) {
  * relative to the application root.
  */
 export function listDirectoryFiles(
-	scanDirectory: string,
-	appRoot: string,
-	filesToIgnore?: CommandsListFilterFn
+  scanDirectory: string,
+  appRoot: string,
+  filesToIgnore?: CommandsListFilterFn
 ): string[] {
-	return fsReadAll(scanDirectory)
-		.filter((name) => !name.endsWith('.json')) // remove .json files
-		.map((name) => {
-			const relativePath = relative(appRoot, join(scanDirectory, name))
-			return slash(relativePath.startsWith('../') ? relativePath : `./${relativePath}`)
-		})
-		.filter((name) => {
-			if (typeof filesToIgnore === 'function') {
-				return filesToIgnore(name)
-			}
+  return fsReadAll(scanDirectory)
+    .filter((name) => !name.endsWith('.json')) // remove .json files
+    .map((name) => {
+      const relativePath = relative(appRoot, join(scanDirectory, name))
+      return slash(relativePath.startsWith('../') ? relativePath : `./${relativePath}`)
+    })
+    .filter((name) => {
+      if (typeof filesToIgnore === 'function') {
+        return filesToIgnore(name)
+      }
 
-			return Array.isArray(filesToIgnore) ? !filesFilter(name, filesToIgnore) : true
-		})
+      return Array.isArray(filesToIgnore) ? !filesFilter(name, filesToIgnore) : true
+    })
 }

@@ -15,62 +15,62 @@ import { CommandsGroup, SerializedCommand } from '../Contracts'
  * namespace seperated with `:`. Example: `make:controller`
  */
 export function sortAndGroupCommands(commands: SerializedCommand[]): CommandsGroup {
-	/**
-	 * Create a group of commands using it's namespace
-	 */
-	const groupsLiteral = commands.reduce((result, command) => {
-		const tokens = command.commandName.split(':')
+  /**
+   * Create a group of commands using it's namespace
+   */
+  const groupsLiteral = commands.reduce((result, command) => {
+    const tokens = command.commandName.split(':')
 
-		/**
-		 * Use the command namespace or move it inside the `root` group when
-		 * it is not namespaced.
-		 */
-		const group = tokens.length > 1 ? tokens.shift()! : 'root'
+    /**
+     * Use the command namespace or move it inside the `root` group when
+     * it is not namespaced.
+     */
+    const group = tokens.length > 1 ? tokens.shift()! : 'root'
 
-		result[group] = result[group] || []
-		result[group].push(command)
+    result[group] = result[group] || []
+    result[group].push(command)
 
-		return result
-	}, {} as { [key: string]: SerializedCommand[] })
+    return result
+  }, {} as { [key: string]: SerializedCommand[] })
 
-	/**
-	 * Convert the object literal groups and it's command to an
-	 * array of sorted groups and commands
-	 */
-	return Object.keys(groupsLiteral)
-		.sort((prev, curr) => {
-			if (prev === 'root') {
-				return -1
-			}
+  /**
+   * Convert the object literal groups and it's command to an
+   * array of sorted groups and commands
+   */
+  return Object.keys(groupsLiteral)
+    .sort((prev, curr) => {
+      if (prev === 'root') {
+        return -1
+      }
 
-			if (curr === 'root') {
-				return 1
-			}
+      if (curr === 'root') {
+        return 1
+      }
 
-			if (curr > prev) {
-				return -1
-			}
+      if (curr > prev) {
+        return -1
+      }
 
-			if (curr < prev) {
-				return 1
-			}
+      if (curr < prev) {
+        return 1
+      }
 
-			return 0
-		})
-		.map((name) => {
-			return {
-				group: name,
-				commands: groupsLiteral[name].sort((prev, curr) => {
-					if (curr.commandName > prev.commandName) {
-						return -1
-					}
+      return 0
+    })
+    .map((name) => {
+      return {
+        group: name,
+        commands: groupsLiteral[name].sort((prev, curr) => {
+          if (curr.commandName > prev.commandName) {
+            return -1
+          }
 
-					if (curr.commandName < prev.commandName) {
-						return 1
-					}
+          if (curr.commandName < prev.commandName) {
+            return 1
+          }
 
-					return 0
-				}),
-			}
-		})
+          return 0
+        }),
+      }
+    })
 }

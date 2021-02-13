@@ -1,10 +1,10 @@
 {
-	"extends": "./node_modules/@adonisjs/mrm-preset/_tsconfig",
-	"compilerOptions": {
-		"outDir": "./build",
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true
-	},
-	"include": ["**/*"],
-	"files": ["./node_modules/@adonisjs/application/build/adonis-typings/application.d.ts"]
+  "extends": "./node_modules/@adonisjs/mrm-preset/_tsconfig",
+  "compilerOptions": {
+    "outDir": "./build",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
+  },
+  "include": ["**/*"],
+  "files": ["./node_modules/@adonisjs/application/build/adonis-typings/application.d.ts"]
 }

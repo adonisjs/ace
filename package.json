@@ -17,10 +17,11 @@
     "compile": "npm run lint && npm run clean && tsc",
     "build": "npm run compile",
     "commit": "git-cz",
-    "release": "FORCE_COLOR=true np",
+    "release": "np",
     "version": "npm run build",
     "sync-labels": "github-label-sync --labels ./node_modules/@adonisjs/mrm-preset/gh-labels.json adonisjs/ace",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "adonisjs",
@@ -63,7 +64,6 @@
     "commitizen": "^4.2.3",
     "cz-conventional-changelog": "^3.3.0",
     "del-cli": "^3.0.1",
-    "doctoc": "^2.0.0",
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-adonis": "^1.2.0",
