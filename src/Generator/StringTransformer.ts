@@ -8,8 +8,7 @@
  */
 
 import { extname } from 'path'
-import pluralize from 'pluralize'
-import { lodash } from '@poppinss/utils'
+import { string } from '@poppinss/utils/build/helpers'
 
 /**
  * Exposes the API to transform a string
@@ -81,7 +80,7 @@ export class StringTransformer {
 			return this
 		}
 
-		this.input = pluralize[form](this.input)
+		this.input = form === 'singular' ? string.singularize(this.input) : string.pluralize(this.input)
 		return this
 	}
 
@@ -91,14 +90,14 @@ export class StringTransformer {
 	public changeCase(pattern?: 'pascalcase' | 'camelcase' | 'snakecase'): this {
 		switch (pattern) {
 			case 'camelcase':
-				this.input = lodash.camelCase(this.input)
+				this.input = string.camelCase(this.input)
 				return this
 			case 'pascalcase':
-				const camelCase = lodash.camelCase(this.input)
+				const camelCase = string.camelCase(this.input)
 				this.input = `${camelCase.charAt(0).toUpperCase()}${camelCase.slice(1)}`
 				return this
 			case 'snakecase':
-				this.input = lodash.snakeCase(this.input)
+				this.input = string.snakeCase(this.input)
 				return this
 			default:
 				return this

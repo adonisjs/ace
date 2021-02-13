@@ -9,7 +9,8 @@
 
 import { outputJSON } from 'fs-extra'
 import { isAbsolute, extname, join } from 'path'
-import { esmRequire, Exception, resolveFrom } from '@poppinss/utils'
+import { esmRequire, Exception } from '@poppinss/utils'
+import { resolveFrom } from '@poppinss/utils/build/helpers'
 
 import { validateCommand } from '../utils/validateCommand'
 import { CommandConstructorContract, ManifestNode } from '../Contracts'

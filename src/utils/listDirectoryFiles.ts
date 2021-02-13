@@ -8,8 +8,9 @@
  */
 
 import slash from 'slash'
-import { fsReadAll } from '@poppinss/utils'
 import { join, relative, extname } from 'path'
+import { fsReadAll } from '@poppinss/utils/build/helpers'
+
 import { CommandsListFilterFn } from '../Contracts'
 
 /**

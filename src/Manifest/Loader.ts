@@ -8,13 +8,16 @@
  */
 
 import { readJSON } from 'fs-extra'
-import { esmRequire, resolveFrom } from '@poppinss/utils'
+import { esmRequire } from '@poppinss/utils'
+import { resolveFrom } from '@poppinss/utils/build/helpers'
+
 import {
 	ManifestNode,
 	ManifestCommand,
 	ManifestLoaderContract,
 	CommandConstructorContract,
 } from '../Contracts'
+
 import { validateCommand } from '../utils/validateCommand'
 
 /**

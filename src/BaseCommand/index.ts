@@ -9,9 +9,10 @@
 
 import { ParsedOptions } from 'getopts'
 import { Prompt, FakePrompt } from '@poppinss/prompts'
+import { string } from '@poppinss/utils/build/helpers'
 import { instantiate } from '@poppinss/cliui/build/api'
 import { ApplicationContract } from '@ioc:Adonis/Core/Application'
-import { lodash, defineStaticProperty, Exception } from '@poppinss/utils'
+import { defineStaticProperty, Exception } from '@poppinss/utils'
 
 import { Generator } from '../Generator'
 import {
@@ -151,7 +152,7 @@ export abstract class BaseCommand implements CommandContract {
 
 		const flag: CommandFlag<any> = Object.assign(
 			{
-				name: options.name || lodash.snakeCase(options.propertyName).replace(/_/g, '-'),
+				name: options.name || string.snakeCase(options.propertyName).replace(/_/g, '-'),
 				propertyName: options.propertyName,
 				type: options.type || 'boolean',
 			},
