@@ -31,7 +31,7 @@
   "homepage": "https://adonisjs.com",
   "license": "MIT",
   "dependencies": {
-    "@poppinss/cliui": "^2.1.1",
+    "@poppinss/cliui": "^2.2.0",
     "@poppinss/prompts": "^1.2.0",
     "@poppinss/utils": "^3.0.3",
     "fs-extra": "^9.1.0",
