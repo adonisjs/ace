@@ -25,7 +25,6 @@ import {
   RunHookCallback,
   FindHookCallback,
   GlobalFlagHandler,
-  SerializedCommand,
   CommandConstructorContract,
 } from '../Contracts'
 import { logger } from '@poppinss/cliui'
