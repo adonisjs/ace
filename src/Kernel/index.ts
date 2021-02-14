@@ -340,6 +340,13 @@ export class Kernel implements KernelContract {
       command.boot()
       validateCommand(command)
       this.commands[command.commandName] = command
+
+      /**
+       * Registering command aliaes
+       */
+      command.aliases.forEach((alias) => {
+        this.commands[alias] = command
+      })
     })
 
     return this

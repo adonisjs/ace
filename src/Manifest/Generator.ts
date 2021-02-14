@@ -76,7 +76,7 @@ export class ManifestGenerator {
     const commands = await this.loadCommands(this.commands)
 
     const manifest = commands.reduce<ManifestNode>((result, { command, commandPath }) => {
-      result[command.commandName] = {
+      const manifestNode = {
         settings: command.settings || {},
         commandPath: commandPath.replace(new RegExp(`${extname(commandPath)}$`), ''),
         commandName: command.commandName,
@@ -84,6 +84,12 @@ export class ManifestGenerator {
         args: command.args,
         flags: command.flags,
       }
+
+      result[command.commandName] = manifestNode
+      command.aliases.forEach((alias) => {
+        result[alias] = manifestNode
+      })
+
       return result
     }, {})
 

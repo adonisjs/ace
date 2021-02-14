@@ -90,6 +90,25 @@ test.group('Kernel | register', () => {
     assert.deepEqual(kernel.commands, { install: Install, greet: Greet })
   })
 
+  test('register command with aliases', (assert) => {
+    const app = setupApp()
+    const kernel = new Kernel(app)
+
+    class Install extends BaseCommand {
+      public static commandName = 'install'
+      public async run() {}
+    }
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+      public async run() {}
+      public static aliases = ['g', 'gr']
+    }
+
+    kernel.register([Install, Greet])
+    assert.deepEqual(kernel.commands, { install: Install, greet: Greet, g: Greet, gr: Greet })
+  })
+
   test('return command name suggestions for a given string', (assert) => {
     const app = setupApp()
     const kernel = new Kernel(app)

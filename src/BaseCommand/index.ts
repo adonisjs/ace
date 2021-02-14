@@ -44,6 +44,11 @@ export abstract class BaseCommand implements CommandContract {
   public static args: CommandArg[]
 
   /**
+   * Command aliases
+   */
+  public static aliases: string[]
+
+  /**
    * Command flags
    */
   public static flags: CommandFlag<any>[]
@@ -84,6 +89,12 @@ export abstract class BaseCommand implements CommandContract {
 
     defineStaticProperty(this, BaseCommand, {
       propertyName: 'args',
+      defaultValue: [],
+      strategy: 'inherit',
+    })
+
+    defineStaticProperty(this, BaseCommand, {
+      propertyName: 'aliases',
       defaultValue: [],
       strategy: 'inherit',
     })

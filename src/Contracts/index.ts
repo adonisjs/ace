@@ -104,6 +104,11 @@ export interface CommandConstructorContract extends SerializedCommand {
   boot(): void
 
   /**
+   * Command aliases
+   */
+  aliases: string[]
+
+  /**
    * Add an argument directly on the command without using the decorator
    */
   $addArgument(options: Partial<CommandArg>): void
