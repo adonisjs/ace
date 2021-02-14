@@ -13,7 +13,7 @@ import { esmRequire, Exception } from '@poppinss/utils'
 import { resolveFrom } from '@poppinss/utils/build/helpers'
 
 import { validateCommand } from '../utils/validateCommand'
-import { CommandConstructorContract, ManifestNode, Aliases } from '../Contracts'
+import { CommandConstructorContract, ManifestNode } from '../Contracts'
 
 /**
  * Exposes the API to generate the ace manifest file. The manifest file
@@ -75,7 +75,7 @@ export class ManifestGenerator {
   public async generate() {
     const commands = await this.loadCommands(this.commands)
 
-    const manifest = commands.reduce<{ commands: ManifestNode; aliases: Aliases }>(
+    const manifest = commands.reduce<ManifestNode>(
       (result, { command, commandPath }) => {
         const manifestNode = {
           settings: command.settings || {},

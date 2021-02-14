@@ -140,6 +140,7 @@ export class Kernel implements KernelContract {
     let commands: (ManifestCommand | CommandConstructorContract)[] = Object.keys(this.commands).map(
       (name) => this.commands[name]
     )
+
     let aliases = Object.assign({}, this.aliases)
 
     /**
@@ -150,6 +151,7 @@ export class Kernel implements KernelContract {
         commands: manifestCommands,
         aliases: manifestAliases,
       } = this.manifestLoader.getCommands()
+
       commands = commands.concat(manifestCommands)
       aliases = Object.assign(aliases, manifestAliases)
     }

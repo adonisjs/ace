@@ -153,7 +153,8 @@ export type Aliases = { [key: string]: string }
  * Shape of the manifest JSON file
  */
 export type ManifestNode = {
-  [command: string]: ManifestCommand
+  commands: { [command: string]: ManifestCommand }
+  aliases: Aliases
 }
 
 /**
@@ -187,7 +188,8 @@ export interface ManifestLoaderContract {
   loadCommand(commandName: string): Promise<CommandConstructorContract>
 
   /**
-   * Returns an array of manifest commands
+   * Returns an array of manifest commands by concatenating the
+   * commands and aliases from all the manifest files
    */
   getCommands(): { commands: ManifestCommand[]; aliases: Aliases }
 }
@@ -202,13 +204,6 @@ export type RunHookCallback = (command: CommandContract) => Promise<any> | any
  * Shape of ace kernel
  */
 export interface KernelContract {
-  /**
-   * A map of command read from the manifest file
-   */
-  manifestCommands?: {
-    [basePath: string]: ManifestNode
-  }
-
   /**
    * The exit code to be used for exiting the process. One should use
    * this to exit the process

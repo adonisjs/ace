@@ -26,11 +26,12 @@ import { validateCommand } from '../utils/validateCommand'
  * or more manifest files.
  */
 export class ManifestLoader implements ManifestLoaderContract {
-  private manifestFiles: {
-    commands: ManifestNode
+  /**
+   * An array of defined manifest files
+   */
+  private manifestFiles: (ManifestNode & {
     basePath: string
-    aliases: { [key: string]: string }
-  }[] = []
+  })[] = []
 
   public booted: boolean = false
 
@@ -39,7 +40,14 @@ export class ManifestLoader implements ManifestLoaderContract {
   /**
    * Loads the manifest file from the disk
    */
-  private async loadManifestFile(file: { basePath: string; manifestAbsPath: string }) {
+  private async loadManifestFile(file: {
+    basePath: string
+    manifestAbsPath: string
+  }): Promise<
+    ManifestNode & {
+      basePath: string
+    }
+  > {
     const manifestCommands = await readJSON(file.manifestAbsPath)
 
     /**
