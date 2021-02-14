@@ -18,6 +18,7 @@ import { handleError } from '../src/utils/handleError'
 class Greet extends BaseCommand {
   public static commandName = 'greet'
   public static description = 'Greet a user with their name'
+  public static aliases = ['gr', 'sayhi']
 
   @args.string({ description: 'The name of the person you want to greet' })
   public name: string

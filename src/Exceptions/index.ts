@@ -9,7 +9,7 @@
 
 import { logger, sticker } from '@poppinss/cliui'
 import { Exception } from '@poppinss/utils'
-import { CommandConstructorContract, SerializedCommand } from '../Contracts'
+import { CommandConstructorContract } from '../Contracts'
 
 /**
  * Raised when a required argument is missing
@@ -79,12 +79,9 @@ export class InvalidFlagException extends Exception {
  */
 export class InvalidCommandException extends Exception {
   public commandName: string
-  public suggestions: SerializedCommand[] = []
+  public suggestions: string[] = []
 
-  public static invoke(
-    commandName: string,
-    suggestions: SerializedCommand[]
-  ): InvalidCommandException {
+  public static invoke(commandName: string, suggestions: string[]): InvalidCommandException {
     const exception = new this(
       `"${commandName}" is not a registered command`,
       500,
@@ -108,7 +105,7 @@ export class InvalidCommandException extends Exception {
 
     logger.log('')
     const suggestionLog = sticker().heading('Did you mean one of these?')
-    error.suggestions.forEach(({ commandName }) => {
+    error.suggestions.forEach((commandName) => {
       suggestionLog.add(logger.colors.yellow(commandName))
     })
 

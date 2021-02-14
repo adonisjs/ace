@@ -80,6 +80,7 @@ export class Kernel implements KernelContract {
    * List of registered commands
    */
   public commands: { [name: string]: CommandConstructorContract } = {}
+  public aliases: { [alias: string]: string } = {}
 
   /**
    * List of registered flags
@@ -136,19 +137,28 @@ export class Kernel implements KernelContract {
   /**
    * Returns an array of all registered commands
    */
-  private getAllCommands() {
+  private getAllCommandsAndAliases() {
     let commands: (ManifestCommand | CommandConstructorContract)[] = Object.keys(this.commands).map(
       (name) => this.commands[name]
     )
+    let aliases = Object.assign({}, this.aliases)
 
     /**
      * Concat manifest commands when they exists
      */
     if (this.manifestLoader && this.manifestLoader.booted) {
-      commands = commands.concat(this.manifestLoader.getCommands())
+      const {
+        commands: manifestCommands,
+        aliases: manifestAliases,
+      } = this.manifestLoader.getCommands()
+      commands = commands.concat(manifestCommands)
+      aliases = Object.assign(aliases, manifestAliases)
     }
 
-    return commands
+    return {
+      commands,
+      aliases,
+    }
   }
 
   /**
@@ -344,9 +354,7 @@ export class Kernel implements KernelContract {
       /**
        * Registering command aliaes
        */
-      command.aliases.forEach((alias) => {
-        this.commands[alias] = command
-      })
+      command.aliases.forEach((alias) => (this.aliases[alias] = command.commandName))
     })
 
     return this
@@ -393,11 +401,17 @@ export class Kernel implements KernelContract {
   /**
    * Returns an array of command names suggestions for a given name.
    */
-  public getSuggestions(name: string, distance = 3): SerializedCommand[] {
+  public getSuggestions(name: string, distance = 3): string[] {
     const leven = require('leven')
-    return this.getAllCommands().filter(({ commandName }) => {
-      return leven(name, commandName) <= distance
-    })
+    const { commands, aliases } = this.getAllCommandsAndAliases()
+
+    const suggestions = commands
+      .filter(({ commandName }) => leven(name, commandName) <= distance)
+      .map(({ commandName }) => commandName)
+
+    return suggestions.concat(
+      Object.keys(aliases).filter((alias) => leven(name, alias) <= distance)
+    )
   }
 
   /**
@@ -449,10 +463,15 @@ export class Kernel implements KernelContract {
     }
 
     /**
+     * Command name from the registered aliases
+     */
+    const aliasCommandName = this.aliases[commandName]
+
+    /**
      * Try to find command inside manually registered command or fallback
      * to null
      */
-    const command = this.commands[commandName] || null
+    const command = this.commands[commandName] || this.commands[aliasCommandName] || null
 
     /**
      * Executing before and after together to be compatible
@@ -629,11 +648,13 @@ export class Kernel implements KernelContract {
    * Print the help screen for a given command or all commands/flags
    */
   public printHelp(command?: CommandConstructorContract) {
+    const { commands, aliases } = this.getAllCommandsAndAliases()
+
     if (command) {
-      printHelpFor(command)
+      printHelpFor(command, aliases)
     } else {
       const flags = Object.keys(this.flags).map((name) => this.flags[name])
-      printHelp(this.getAllCommands(), flags)
+      printHelp(commands, flags, aliases)
     }
   }
 

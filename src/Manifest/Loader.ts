@@ -12,6 +12,7 @@ import { esmRequire } from '@poppinss/utils'
 import { resolveFrom } from '@poppinss/utils/build/helpers'
 
 import {
+  Aliases,
   ManifestNode,
   ManifestCommand,
   ManifestLoaderContract,
@@ -25,19 +26,42 @@ import { validateCommand } from '../utils/validateCommand'
  * or more manifest files.
  */
 export class ManifestLoader implements ManifestLoaderContract {
-  private manifestFiles: { commands: ManifestNode; basePath: string }[] = []
+  private manifestFiles: {
+    commands: ManifestNode
+    basePath: string
+    aliases: { [key: string]: string }
+  }[] = []
 
   public booted: boolean = false
+
+  constructor(private files: { basePath: string; manifestAbsPath: string }[]) {}
 
   /**
    * Loads the manifest file from the disk
    */
   private async loadManifestFile(file: { basePath: string; manifestAbsPath: string }) {
     const manifestCommands = await readJSON(file.manifestAbsPath)
-    return { basePath: file.basePath, commands: manifestCommands }
+
+    /**
+     * Find if we are dealing with an old or the new manifest file
+     */
+    const isNewManifestFile = manifestCommands['commands'] && manifestCommands['aliases']
+
+    const commands = isNewManifestFile ? manifestCommands['commands'] : manifestCommands
+    const aliases = isNewManifestFile ? manifestCommands['aliases'] : {}
+
+    return { basePath: file.basePath, commands, aliases }
   }
 
-  constructor(private files: { basePath: string; manifestAbsPath: string }[]) {}
+  /**
+   * Returns the command manifest node for a give command
+   */
+  private getCommandManifest(commandName: string) {
+    return this.manifestFiles.find(({ commands, aliases }) => {
+      const aliasCommandName = aliases[commandName]
+      return commands[commandName] || commands[aliasCommandName]
+    })
+  }
 
   /**
    * Boot manifest loader to read all manifest files from the disk
@@ -55,9 +79,7 @@ export class ManifestLoader implements ManifestLoaderContract {
    * Returns base path for a given command
    */
   public getCommandBasePath(commandName: string): string | undefined {
-    return this.manifestFiles.find(({ commands }) => {
-      return commands[commandName]
-    })?.basePath
+    return this.getCommandManifest(commandName)?.basePath
   }
 
   /**
@@ -67,17 +89,16 @@ export class ManifestLoader implements ManifestLoaderContract {
   public getCommand(
     commandName: string
   ): { basePath: string; command: ManifestCommand } | undefined {
-    const manifestCommands = this.manifestFiles.find(({ commands }) => {
-      return commands[commandName]
-    })
-
+    const manifestCommands = this.getCommandManifest(commandName)
     if (!manifestCommands) {
       return
     }
 
+    const aliasCommandName = manifestCommands.aliases[commandName]
     return {
       basePath: manifestCommands.basePath,
-      command: manifestCommands.commands[commandName],
+      command:
+        manifestCommands.commands[commandName] || manifestCommands.commands[aliasCommandName],
     }
   }
 
@@ -102,13 +123,20 @@ export class ManifestLoader implements ManifestLoaderContract {
   /**
    * Returns an array of manifest commands
    */
-  public getCommands(): ManifestCommand[] {
-    return this.manifestFiles.reduce<ManifestCommand[]>((result, { commands }) => {
-      Object.keys(commands).forEach((commandName) => {
-        result = result.concat(commands[commandName])
-      })
+  public getCommands() {
+    return this.manifestFiles.reduce<{
+      commands: ManifestCommand[]
+      aliases: Aliases
+    }>(
+      (result, { commands, aliases }) => {
+        Object.keys(commands).forEach((commandName) => {
+          result.commands = result.commands.concat(commands[commandName])
+        })
 
-      return result
-    }, [])
+        Object.assign(result.aliases, aliases)
+        return result
+      },
+      { commands: [], aliases: {} }
+    )
   }
 }

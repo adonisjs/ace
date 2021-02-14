@@ -9,7 +9,7 @@
 
 import { logger } from '@poppinss/cliui'
 import { sortAndGroupCommands } from './sortAndGroupCommands'
-import { CommandArg, CommandFlag, SerializedCommand } from '../Contracts'
+import { Aliases, CommandArg, CommandFlag, SerializedCommand } from '../Contracts'
 
 /**
  * Wraps the command arg inside `<>` or `[]` brackets based upon if it's
@@ -76,19 +76,44 @@ function getArgsForDisplay(args: CommandArg[]) {
   })
 }
 
-function getCommandsForDisplay(commands: SerializedCommand[]) {
+/**
+ * Returns an array of commands for display
+ */
+function getCommandsForDisplay(commands: SerializedCommand[], aliases: Aliases) {
   return commands.map(({ commandName, description }) => {
-    return { displayName: commandName, description, width: commandName.length }
+    const commandAliases = getCommandAliases(commandName, aliases)
+    const aliasesString = commandAliases.length ? ` [${commandAliases.join(', ')}]` : ''
+    return {
+      displayName: `${commandName}${aliasesString}`,
+      description,
+      width: commandName.length + aliasesString.length,
+    }
   })
+}
+
+/**
+ * Returns the aliases for a given command
+ */
+function getCommandAliases(commandName: string, aliases: Aliases) {
+  return Object.keys(aliases).reduce<string[]>((commandAliases, alias) => {
+    if (aliases[alias] === commandName) {
+      commandAliases.push(alias)
+    }
+    return commandAliases
+  }, [])
 }
 
 /**
  * Prints help for all the commands by sorting them in alphabetical order
  * and grouping them as per their namespace.
  */
-export function printHelp(commands: SerializedCommand[], flags: CommandFlag<any>[]): void {
+export function printHelp(
+  commands: SerializedCommand[],
+  flags: CommandFlag<any>[],
+  aliases: Aliases
+): void {
   const flagsList = getFlagsForDisplay(flags)
-  const commandsList = getCommandsForDisplay(commands)
+  const commandsList = getCommandsForDisplay(commands, aliases)
 
   /**
    * Get width of longest command name.
@@ -104,6 +129,7 @@ export function printHelp(commands: SerializedCommand[], flags: CommandFlag<any>
    */
   sortAndGroupCommands(commands).forEach(({ group, commands: groupCommands }) => {
     console.log('')
+
     if (group === 'root') {
       console.log(logger.colors.bold(logger.colors.yellow('Available commands')))
     } else {
@@ -111,8 +137,12 @@ export function printHelp(commands: SerializedCommand[], flags: CommandFlag<any>
     }
 
     groupCommands.forEach(({ commandName, description }) => {
+      const commandAliases = getCommandAliases(commandName, aliases)
+      const aliasesString = commandAliases.length ? ` [${commandAliases.join(', ')}]` : ''
+      const displayName = `${commandName}${aliasesString}`
+
       console.log(
-        `  ${logger.colors.green(commandName.padEnd(maxWidth, ' '))}  ${logger.colors.dim(
+        `  ${logger.colors.green(displayName.padEnd(maxWidth, ' '))}  ${logger.colors.dim(
           description
         )}`
       )
@@ -137,7 +167,7 @@ export function printHelp(commands: SerializedCommand[], flags: CommandFlag<any>
 /**
  * Prints help for a single command
  */
-export function printHelpFor(command: SerializedCommand): void {
+export function printHelpFor(command: SerializedCommand, aliases: Aliases): void {
   if (command.description) {
     console.log('')
     console.log(command.description)
@@ -160,6 +190,14 @@ export function printHelpFor(command: SerializedCommand): void {
     Math,
     flags.concat(args as any).map(({ width }) => width)
   )
+
+  const commandAliases = getCommandAliases(command.commandName, aliases)
+  if (commandAliases.length) {
+    console.log('')
+    console.log(
+      `${logger.colors.yellow('Aliases:')} ${logger.colors.green(commandAliases.join(', '))}`
+    )
+  }
 
   if (args.length) {
     console.log('')

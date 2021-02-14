@@ -106,7 +106,8 @@ test.group('Kernel | register', () => {
     }
 
     kernel.register([Install, Greet])
-    assert.deepEqual(kernel.commands, { install: Install, greet: Greet, g: Greet, gr: Greet })
+    assert.deepEqual(kernel.commands, { install: Install, greet: Greet })
+    assert.deepEqual(kernel.aliases, { g: 'greet', gr: 'greet' })
   })
 
   test('return command name suggestions for a given string', (assert) => {
@@ -124,10 +125,26 @@ test.group('Kernel | register', () => {
     }
 
     kernel.register([Install, Greet])
-    assert.deepEqual(
-      kernel.getSuggestions('itall').map(({ commandName }) => commandName),
-      ['install']
-    )
+    assert.deepEqual(kernel.getSuggestions('itall'), ['install'])
+  })
+
+  test('return command alias suggestions for a given string', (assert) => {
+    const app = setupApp()
+    const kernel = new Kernel(app)
+
+    class Install extends BaseCommand {
+      public static commandName = 'install'
+      public async run() {}
+    }
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+      public static aliases = ['sayhi']
+      public async run() {}
+    }
+
+    kernel.register([Install, Greet])
+    assert.deepEqual(kernel.getSuggestions('hi'), ['sayhi'])
   })
 
   test('return command name suggestions from manifest file', async (assert) => {
@@ -162,10 +179,7 @@ test.group('Kernel | register', () => {
     kernel.useManifest(manifestLoader)
     await kernel.preloadManifest()
 
-    assert.deepEqual(
-      kernel.getSuggestions('eet').map(({ commandName }) => commandName),
-      ['greet']
-    )
+    assert.deepEqual(kernel.getSuggestions('eet'), ['greet'])
 
     await fs.cleanup()
   })
@@ -196,6 +210,21 @@ test.group('Kernel | find', () => {
     kernel.register([Greet])
 
     const greet = await kernel.find(['greet'])
+    assert.deepEqual(greet, Greet)
+  })
+
+  test('find relevant command from the commands aliases', async (assert) => {
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+      public static aliases = ['sayhi']
+      public async run() {}
+    }
+
+    const app = setupApp()
+    const kernel = new Kernel(app)
+    kernel.register([Greet])
+
+    const greet = await kernel.find(['sayhi'])
     assert.deepEqual(greet, Greet)
   })
 
@@ -246,6 +275,50 @@ test.group('Kernel | find', () => {
     await fs.cleanup()
   })
 
+  test('find command from manifest aliases', async (assert) => {
+    const app = setupApp()
+    const kernel = new Kernel(app)
+    const manifestLoader = new ManifestLoader([
+      {
+        basePath: fs.basePath,
+        manifestAbsPath: join(fs.basePath, 'ace-manifest.json'),
+      },
+    ])
+
+    await fs.add(
+      'ace-manifest.json',
+      JSON.stringify({
+        commands: {
+          greet: {
+            commandName: 'greet',
+            commandPath: './Commands/Greet.ts',
+          },
+        },
+        aliases: {
+          sayhi: 'greet',
+        },
+      })
+    )
+
+    await fs.add(
+      'Commands/Greet.ts',
+      `export default class Greet {
+			public static commandName = 'greet'
+			public static args = []
+			public static flags = []
+			public static boot() {}
+    }`
+    )
+
+    kernel.useManifest(manifestLoader)
+    await kernel.preloadManifest()
+
+    const greet = await kernel.find(['sayhi'])
+    assert.equal(greet!.name, 'Greet')
+
+    await fs.cleanup()
+  })
+
   test('register commands along with manifest', async (assert) => {
     const app = setupApp()
     const kernel = new Kernel(app)
@@ -259,10 +332,13 @@ test.group('Kernel | find', () => {
     await fs.add(
       'ace-manifest.json',
       JSON.stringify({
-        greet: {
-          commandName: 'greet',
-          commandPath: './Commands/Greet.ts',
+        commands: {
+          greet: {
+            commandName: 'greet',
+            commandPath: './Commands/Greet.ts',
+          },
         },
+        aliases: {},
       })
     )
 
@@ -343,6 +419,59 @@ test.group('Kernel | find', () => {
     await fs.cleanup()
   })
 
+  test('execute before and after hook when finding command from manifest aliases', async (assert) => {
+    assert.plan(3)
+
+    const app = setupApp()
+    const kernel = new Kernel(app)
+    const manifestLoader = new ManifestLoader([
+      {
+        basePath: fs.basePath,
+        manifestAbsPath: join(fs.basePath, 'ace-manifest.json'),
+      },
+    ])
+
+    await fs.add(
+      'ace-manifest.json',
+      JSON.stringify({
+        commands: {
+          greet: {
+            commandName: 'greet',
+            commandPath: './Commands/Greet.ts',
+          },
+        },
+        aliases: {
+          sayhi: 'greet',
+        },
+      })
+    )
+
+    await fs.add(
+      'Commands/Greet.ts',
+      `export default class Greet {
+      public static commandName = 'greet'
+			public static args = []
+			public static flags = []
+			public static boot() {}
+    }`
+    )
+
+    kernel.useManifest(manifestLoader)
+
+    kernel.before('find', (command) => {
+      assert.equal(command!.commandName, 'greet')
+    })
+
+    kernel.after('find', (command) => {
+      assert.equal(command!.commandName, 'greet')
+      assert.equal(command!['name'], 'Greet') // It is command constructor
+    })
+
+    await kernel.preloadManifest()
+    await kernel.find(['sayhi'])
+    await fs.cleanup()
+  })
+
   test('pass null to before and after hook when unable to find command', async (assert) => {
     assert.plan(3)
 
@@ -371,6 +500,25 @@ test.group('Kernel | find', () => {
     kernel.after('find', (command) => assert.deepEqual(command, Greet))
 
     const greet = await kernel.find(['greet'])
+    assert.deepEqual(greet, Greet)
+  })
+
+  test('pass command constructor to before and after hook found command from local aliases', async (assert) => {
+    assert.plan(3)
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+      public static aliases = ['sayhi']
+      public async run() {}
+    }
+
+    const app = setupApp()
+    const kernel = new Kernel(app)
+    kernel.register([Greet])
+
+    kernel.before('find', (command) => assert.deepEqual(command, Greet))
+    kernel.after('find', (command) => assert.deepEqual(command, Greet))
+
+    const greet = await kernel.find(['sayhi'])
     assert.deepEqual(greet, Greet)
   })
 })
@@ -1411,6 +1559,24 @@ test.group('Kernel | exec', () => {
     kernel.register([Foo])
 
     await kernel.exec('foo', [])
+  })
+
+  test('exec command by alias', async (assert) => {
+    assert.plan(1)
+
+    class Foo extends BaseCommand {
+      public static commandName = 'foo'
+      public static aliases = ['bar']
+      public async run() {
+        assert.isTrue(true)
+      }
+    }
+
+    const app = setupApp()
+    const kernel = new Kernel(app)
+    kernel.register([Foo])
+
+    await kernel.exec('bar', [])
   })
 
   test('pass arguments and flags to command using exec', async (assert) => {

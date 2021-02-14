@@ -50,31 +50,35 @@ test.group('Manifest Generator', (group) => {
     const manifestJSON = await fs.fsExtra.readJSON(join(fs.basePath, 'ace-manifest.json'))
 
     assert.deepEqual(manifestJSON, {
-      greet: {
-        settings: {},
-        commandPath: './Commands/Make',
-        commandName: 'greet',
-        description: 'Greet a user',
-        args: [
-          {
-            name: 'name',
-            type: 'string',
-            propertyName: 'name',
-            required: true,
-          },
-        ],
-        flags: [
-          {
-            name: 'adult',
-            propertyName: 'adult',
-            type: 'boolean',
-          },
-        ],
+      commands: {
+        greet: {
+          settings: {},
+          aliases: [],
+          commandPath: './Commands/Make',
+          commandName: 'greet',
+          description: 'Greet a user',
+          args: [
+            {
+              name: 'name',
+              type: 'string',
+              propertyName: 'name',
+              required: true,
+            },
+          ],
+          flags: [
+            {
+              name: 'adult',
+              propertyName: 'adult',
+              type: 'boolean',
+            },
+          ],
+        },
       },
+      aliases: {},
     })
   })
 
-  test('raise exception when commandPath doesnt exports a command', async (assert) => {
+  test("raise exception when commandPath doesn't exports a command", async (assert) => {
     assert.plan(1)
 
     await fs.add(
@@ -144,27 +148,31 @@ test.group('Manifest Generator', (group) => {
 
     const manifestJSON = await fs.fsExtra.readJSON(join(fs.basePath, 'ace-manifest.json'))
     assert.deepEqual(manifestJSON, {
-      greet: {
-        settings: {},
-        commandPath: './Commands/Make',
-        commandName: 'greet',
-        description: 'Greet a user',
-        args: [
-          {
-            name: 'name',
-            type: 'string',
-            propertyName: 'name',
-            required: true,
-          },
-        ],
-        flags: [
-          {
-            name: 'adult',
-            propertyName: 'adult',
-            type: 'boolean',
-          },
-        ],
+      commands: {
+        greet: {
+          settings: {},
+          aliases: [],
+          commandPath: './Commands/Make',
+          commandName: 'greet',
+          description: 'Greet a user',
+          args: [
+            {
+              name: 'name',
+              type: 'string',
+              propertyName: 'name',
+              required: true,
+            },
+          ],
+          flags: [
+            {
+              name: 'adult',
+              propertyName: 'adult',
+              type: 'boolean',
+            },
+          ],
+        },
       },
+      aliases: {},
     })
   })
 
@@ -196,68 +204,33 @@ test.group('Manifest Generator', (group) => {
     const manifestJSON = await fs.fsExtra.readJSON(join(fs.basePath, 'ace-manifest.json'))
 
     assert.deepEqual(manifestJSON, {
-      greet: {
-        settings: {},
-        commandPath: './Commands/Make',
-        commandName: 'greet',
-        description: 'Greet a user',
-        args: [
-          {
-            name: 'name',
-            type: 'string',
-            propertyName: 'name',
-            required: true,
-          },
-        ],
-        flags: [
-          {
-            name: 'adult',
-            propertyName: 'adult',
-            type: 'boolean',
-          },
-        ],
+      commands: {
+        greet: {
+          settings: {},
+          aliases: ['g', 'gr'],
+          commandPath: './Commands/Make',
+          commandName: 'greet',
+          description: 'Greet a user',
+          args: [
+            {
+              name: 'name',
+              type: 'string',
+              propertyName: 'name',
+              required: true,
+            },
+          ],
+          flags: [
+            {
+              name: 'adult',
+              propertyName: 'adult',
+              type: 'boolean',
+            },
+          ],
+        },
       },
-      g: {
-        settings: {},
-        commandPath: './Commands/Make',
-        commandName: 'greet',
-        description: 'Greet a user',
-        args: [
-          {
-            name: 'name',
-            type: 'string',
-            propertyName: 'name',
-            required: true,
-          },
-        ],
-        flags: [
-          {
-            name: 'adult',
-            propertyName: 'adult',
-            type: 'boolean',
-          },
-        ],
-      },
-      gr: {
-        settings: {},
-        commandPath: './Commands/Make',
-        commandName: 'greet',
-        description: 'Greet a user',
-        args: [
-          {
-            name: 'name',
-            type: 'string',
-            propertyName: 'name',
-            required: true,
-          },
-        ],
-        flags: [
-          {
-            name: 'adult',
-            propertyName: 'adult',
-            type: 'boolean',
-          },
-        ],
+      aliases: {
+        g: 'greet',
+        gr: 'greet',
       },
     })
   })

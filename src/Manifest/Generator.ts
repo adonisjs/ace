@@ -13,7 +13,7 @@ import { esmRequire, Exception } from '@poppinss/utils'
 import { resolveFrom } from '@poppinss/utils/build/helpers'
 
 import { validateCommand } from '../utils/validateCommand'
-import { CommandConstructorContract, ManifestNode } from '../Contracts'
+import { CommandConstructorContract, ManifestNode, Aliases } from '../Contracts'
 
 /**
  * Exposes the API to generate the ace manifest file. The manifest file
@@ -75,23 +75,27 @@ export class ManifestGenerator {
   public async generate() {
     const commands = await this.loadCommands(this.commands)
 
-    const manifest = commands.reduce<ManifestNode>((result, { command, commandPath }) => {
-      const manifestNode = {
-        settings: command.settings || {},
-        commandPath: commandPath.replace(new RegExp(`${extname(commandPath)}$`), ''),
-        commandName: command.commandName,
-        description: command.description,
-        args: command.args,
-        flags: command.flags,
-      }
+    const manifest = commands.reduce<{ commands: ManifestNode; aliases: Aliases }>(
+      (result, { command, commandPath }) => {
+        const manifestNode = {
+          settings: command.settings || {},
+          commandPath: commandPath.replace(new RegExp(`${extname(commandPath)}$`), ''),
+          commandName: command.commandName,
+          description: command.description,
+          args: command.args,
+          aliases: command.aliases,
+          flags: command.flags,
+        }
 
-      result[command.commandName] = manifestNode
-      command.aliases.forEach((alias) => {
-        result[alias] = manifestNode
-      })
+        result.commands[command.commandName] = manifestNode
+        command.aliases.forEach((alias) => {
+          result.aliases[alias] = command.commandName
+        })
 
-      return result
-    }, {})
+        return result
+      },
+      { commands: {}, aliases: {} }
+    )
 
     await outputJSON(join(this.basePath, 'ace-manifest.json'), manifest)
   }

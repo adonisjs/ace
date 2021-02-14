@@ -80,6 +80,7 @@ export type CommandsGroup = {
  */
 export type SerializedCommand = {
   args: CommandArg[]
+  aliases: string[]
   settings: CommandSettings
   flags: CommandFlag<any>[]
   commandName: string
@@ -102,11 +103,6 @@ export interface CommandConstructorContract extends SerializedCommand {
    * boot the commands by itself.
    */
   boot(): void
-
-  /**
-   * Command aliases
-   */
-  aliases: string[]
 
   /**
    * Add an argument directly on the command without using the decorator
@@ -149,6 +145,11 @@ export interface CommandContract {
 export type ManifestCommand = SerializedCommand & { commandPath: string }
 
 /**
+ * Shape of defined aliases
+ */
+export type Aliases = { [key: string]: string }
+
+/**
  * Shape of the manifest JSON file
  */
 export type ManifestNode = {
@@ -161,6 +162,11 @@ export type ManifestNode = {
 export interface ManifestLoaderContract {
   booted: boolean
   boot(): Promise<void>
+
+  /**
+   * Returns the base path for a given command. Helps in loading
+   * the command relative from that path
+   */
   getCommandBasePath(commandName: string): string | undefined
 
   /**
@@ -183,7 +189,7 @@ export interface ManifestLoaderContract {
   /**
    * Returns an array of manifest commands
    */
-  getCommands(): ManifestCommand[]
+  getCommands(): { commands: ManifestCommand[]; aliases: Aliases }
 }
 
 /**
@@ -224,6 +230,11 @@ export interface KernelContract {
    * A map of locally registered commands
    */
   commands: { [name: string]: CommandConstructorContract }
+
+  /**
+   * Registered command aliases
+   */
+  aliases: Aliases
 
   /**
    * A map of global flags
@@ -277,7 +288,7 @@ export interface KernelContract {
   /**
    * Get command suggestions
    */
-  getSuggestions(name: string, distance?: number): SerializedCommand[]
+  getSuggestions(name: string, distance?: number): string[]
 
   /**
    * Find a command using the command line `argv`
