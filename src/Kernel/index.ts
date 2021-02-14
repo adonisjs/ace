@@ -79,7 +79,7 @@ export class Kernel implements KernelContract {
    * List of registered commands
    */
   public commands: { [name: string]: CommandConstructorContract } = {}
-  public aliases: { [alias: string]: string } = {}
+  public aliases: { [alias: string]: string } = this.application.rcFile.aliases
 
   /**
    * List of registered flags
