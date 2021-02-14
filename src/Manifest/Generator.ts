@@ -28,9 +28,9 @@ export class ManifestGenerator {
    * exposed sub command paths. But they should be resolvable using
    * the base path
    */
-  private loadCommand(
+  private async loadCommand(
     commandPath: string
-  ): { command: CommandConstructorContract; commandPath: string }[] {
+  ): Promise<{ command: CommandConstructorContract; commandPath: string }[]> {
     if (isAbsolute(commandPath)) {
       throw new Exception(
         'Absolute path to a command is not allowed when generating the manifest file'
@@ -58,21 +58,22 @@ export class ManifestGenerator {
   /**
    * Loads all the commands from the disk recursively.
    */
-  private loadCommands(commandPaths: string[]) {
-    return commandPaths.reduce<{ command: CommandConstructorContract; commandPath: string }[]>(
-      (result, commandPath) => {
-        result = result.concat(this.loadCommand(commandPath))
-        return result
-      },
-      []
-    )
+  private async loadCommands(commandPaths: string[]) {
+    let commands: { command: CommandConstructorContract; commandPath: string }[] = []
+
+    for (const commandPath of commandPaths) {
+      const command = await this.loadCommand(commandPath)
+      commands = commands.concat(command)
+    }
+
+    return commands
   }
 
   /**
    * Generates and writes the ace manifest file to the base path
    */
   public async generate() {
-    const commands = this.loadCommands(this.commands)
+    const commands = await this.loadCommands(this.commands)
 
     const manifest = commands.reduce<ManifestNode>((result, { command, commandPath }) => {
       result[command.commandName] = {

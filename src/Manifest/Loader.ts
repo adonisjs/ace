@@ -92,7 +92,7 @@ export class ManifestLoader implements ManifestLoaderContract {
    * Load command from the disk. Make sure to use [[hasCommand]] before
    * calling this method
    */
-  public loadCommand(commandName: string): CommandConstructorContract {
+  public async loadCommand(commandName: string): Promise<CommandConstructorContract> {
     const { basePath, command } = this.getCommand(commandName)!
     const commandConstructor = esmRequire(resolveFrom(basePath, command.commandPath))
     validateCommand(commandConstructor)

@@ -173,7 +173,7 @@ export interface ManifestLoaderContract {
    * Load command from the disk. Make sure to use [[hasCommand]] before
    * calling this method
    */
-  loadCommand(commandName: string): CommandConstructorContract
+  loadCommand(commandName: string): Promise<CommandConstructorContract>
 
   /**
    * Returns an array of manifest commands
