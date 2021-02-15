@@ -8,8 +8,83 @@
  */
 
 import { logger } from '@poppinss/cliui'
+import termSize from 'term-size'
 import { sortAndGroupCommands } from './sortAndGroupCommands'
 import { Aliases, CommandArg, CommandFlag, SerializedCommand } from '../Contracts'
+
+/**
+ * Converts a line to rows at a specific width
+ */
+function lineToRows(text: string, width: number) {
+  const rows: string[] = []
+  let row: string[] = []
+  let wordsCount = 0
+
+  text.split(' ').forEach((word) => {
+    if (wordsCount + (word.length + 1) > width) {
+      /**
+       * Push the number of whitespace left after the existing current
+       * and the terminal space. We need to do this, coz we at times
+       * have whitespace when the upcoming word may break into next
+       * lines
+       */
+      row.push(new Array(width - wordsCount + 1).join(' '))
+
+      /**
+       * Push the existing row to the rows
+       */
+      rows.push(row.join(' '))
+
+      /**
+       * Row is empty now
+       */
+      row = []
+
+      /**
+       * Row has zero words
+       */
+      wordsCount = 0
+    }
+
+    /**
+     * Increase the words count + 1. The extra one is for the
+     * whitspace between the words
+     */
+    wordsCount += word.length + 1
+
+    /**
+     * Collect word inside the row
+     */
+    row.push(word)
+  })
+
+  /**
+   * Handle the orphan row
+   */
+  if (row.length) {
+    rows.push(row.join(' '))
+  }
+
+  return rows
+}
+
+/**
+ * Converts the description to multiple lines fitting into
+ * a given column size
+ */
+function descriptionToRows(
+  description: string,
+  options: {
+    nameColumnSize: number
+    descriptionColumnsSize: number
+  }
+): string {
+  return lineToRows(description, options.descriptionColumnsSize)
+    .map((column, index) => {
+      return index > 0 ? `${new Array(options.nameColumnSize + 1).join(' ')}${column}` : column
+    })
+    .join('')
+}
 
 /**
  * Wraps the command arg inside `<>` or `[]` brackets based upon if it's
@@ -124,6 +199,14 @@ export function printHelp(
   )
 
   /**
+   * Size of the terminal columns. Max width is the width of the command
+   * name and the extra four is whitespace around the command name.
+   *
+   * This gives the columns size for the description section
+   */
+  const descriptionColumnsSize = termSize().columns - (maxWidth + 4)
+
+  /**
    * Sort commands and group them, so that we can print them as per
    * the namespace they belongs to
    */
@@ -141,10 +224,14 @@ export function printHelp(
       const aliasesString = commandAliases.length ? ` [${commandAliases.join(', ')}]` : ''
       const displayName = `${commandName}${aliasesString}`
 
+      const whiteSpace = ''.padEnd(maxWidth - displayName.length, ' ')
+      const descriptionRows = descriptionToRows(description, {
+        nameColumnSize: maxWidth + 4,
+        descriptionColumnsSize,
+      })
+
       console.log(
-        `  ${logger.colors.green(displayName.padEnd(maxWidth, ' '))}  ${logger.colors.dim(
-          description
-        )}`
+        `  ${logger.colors.green(displayName)} ${whiteSpace}  ${logger.colors.dim(descriptionRows)}`
       )
     })
   })
@@ -155,10 +242,15 @@ export function printHelp(
 
     flagsList.forEach(({ displayName, displayType, description = '', width }) => {
       const whiteSpace = ''.padEnd(maxWidth - width, ' ')
+      const descriptionRows = descriptionToRows(description, {
+        nameColumnSize: maxWidth + 4,
+        descriptionColumnsSize,
+      })
+
       console.log(
         `  ${logger.colors.green(displayName)} ${logger.colors.dim(
           displayType
-        )} ${whiteSpace}  ${logger.colors.dim(description)}`
+        )}${whiteSpace}  ${logger.colors.dim(descriptionRows)}`
       )
     })
   }
@@ -191,6 +283,14 @@ export function printHelpFor(command: SerializedCommand, aliases: Aliases): void
     flags.concat(args as any).map(({ width }) => width)
   )
 
+  /**
+   * Size of the terminal columns. Max width is the width of the command
+   * name and the extra four is whitespace around the command name.
+   *
+   * This gives the columns size for the description section
+   */
+  const descriptionColumnsSize = termSize().columns - (maxWidth + 5)
+
   const commandAliases = getCommandAliases(command.commandName, aliases)
   if (commandAliases.length) {
     console.log('')
@@ -205,8 +305,13 @@ export function printHelpFor(command: SerializedCommand, aliases: Aliases): void
 
     args.forEach(({ displayName, description = '', width }) => {
       const whiteSpace = ''.padEnd(maxWidth - width, ' ')
+      const descriptionRow = descriptionToRows(description, {
+        nameColumnSize: maxWidth + 5,
+        descriptionColumnsSize,
+      })
+
       console.log(
-        `  ${logger.colors.green(displayName)} ${whiteSpace}   ${logger.colors.dim(description)}`
+        `  ${logger.colors.green(displayName)} ${whiteSpace}  ${logger.colors.dim(descriptionRow)}`
       )
     })
   }
@@ -217,10 +322,15 @@ export function printHelpFor(command: SerializedCommand, aliases: Aliases): void
 
     flags.forEach(({ displayName, displayType, description = '', width }) => {
       const whiteSpace = ''.padEnd(maxWidth - width, ' ')
+      const descriptionRow = descriptionToRows(description, {
+        nameColumnSize: maxWidth + 5,
+        descriptionColumnsSize,
+      })
+
       console.log(
         `  ${logger.colors.green(displayName)} ${logger.colors.dim(
           displayType
-        )} ${whiteSpace}  ${logger.colors.dim(description)}`
+        )}${whiteSpace}  ${logger.colors.dim(descriptionRow)}`
       )
     })
   }

@@ -38,7 +38,8 @@
     "getopts": "^2.2.4",
     "leven": "^3.1.0",
     "mustache": "^4.1.0",
-    "slash": "^3.0.0"
+    "slash": "^3.0.0",
+    "term-size": "^2.2.1"
   },
   "peerDependencies": {
     "@adonisjs/application": "^4.0.0"
