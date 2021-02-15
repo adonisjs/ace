@@ -245,13 +245,13 @@ export abstract class BaseCommand implements CommandContract {
        * Run prepare method when exists on the command instance
        */
       if (typeof this.prepare === 'function') {
-        await this.application.container.call(this, 'prepare' as any, [])
+        await this.application.container.callAsync(this, 'prepare' as any, [])
       }
 
       /**
        * Execute the command handle or run method
        */
-      commandResult = await this.application.container.call(
+      commandResult = await this.application.container.callAsync(
         this,
         hasRun ? 'run' : ('handle' as any),
         []
@@ -266,7 +266,7 @@ export abstract class BaseCommand implements CommandContract {
      * Run completed method when exists
      */
     if (typeof this.completed === 'function') {
-      errorHandled = await this.application.container.call(this, 'completed' as any, [])
+      errorHandled = await this.application.container.callAsync(this, 'completed' as any, [])
     }
 
     /**

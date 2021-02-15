@@ -239,7 +239,10 @@ export class Kernel implements KernelContract {
     /**
      * Make an instance of the command
      */
-    const commandInstance = this.application.container.make(command, [this.application, this])
+    const commandInstance = await this.application.container.makeAsync(command, [
+      this.application,
+      this,
+    ])
 
     /**
      * Execute global flags
