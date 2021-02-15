@@ -79,7 +79,7 @@ export class Kernel implements KernelContract {
    * List of registered commands
    */
   public commands: { [name: string]: CommandConstructorContract } = {}
-  public aliases: { [alias: string]: string } = this.application.rcFile.aliases
+  public aliases: { [alias: string]: string } = this.application.rcFile.commandsAliases
 
   /**
    * List of registered flags
@@ -141,7 +141,7 @@ export class Kernel implements KernelContract {
       (name) => this.commands[name]
     )
 
-    let aliases = Object.assign({}, this.aliases)
+    let aliases = {}
 
     /**
      * Concat manifest commands when they exists
@@ -158,7 +158,7 @@ export class Kernel implements KernelContract {
 
     return {
       commands,
-      aliases,
+      aliases: Object.assign(aliases, this.aliases),
     }
   }
 
@@ -453,35 +453,46 @@ export class Kernel implements KernelContract {
     const [commandName] = argv
 
     /**
-     * Manifest commands gets preference over manually registered commands.
-     */
-    if (this.manifestLoader && this.manifestLoader.hasCommand(commandName)) {
-      const commandNode = this.manifestLoader.getCommand(commandName)!
-      await this.hooks.execute('before', 'find', commandNode.command)
-      const command = await this.manifestLoader.loadCommand(commandName)
-      await this.hooks.execute('after', 'find', command)
-      return command
-    }
-
-    /**
      * Command name from the registered aliases
      */
     const aliasCommandName = this.aliases[commandName]
 
     /**
-     * Try to find command inside manually registered command or fallback
-     * to null
+     * Manifest commands gets preference over manually registered commands.
+     *
+     * - We check the manifest loader is register
+     * - The manifest loader has the command
+     * - Or the manifest loader has the alias command
      */
-    const command = this.commands[commandName] || this.commands[aliasCommandName] || null
+    const commandNode = this.manifestLoader
+      ? this.manifestLoader.hasCommand(commandName)
+        ? this.manifestLoader.getCommand(commandName)
+        : this.manifestLoader.hasCommand(aliasCommandName)
+        ? this.manifestLoader.getCommand(aliasCommandName)
+        : undefined
+      : undefined
 
-    /**
-     * Executing before and after together to be compatible
-     * with the manifest find before and after hooks
-     */
-    await this.hooks.execute('before', 'find', command)
-    await this.hooks.execute('after', 'find', command)
+    if (commandNode) {
+      await this.hooks.execute('before', 'find', commandNode.command)
+      const command = await this.manifestLoader.loadCommand(commandNode.command.commandName)
+      await this.hooks.execute('after', 'find', command)
+      return command
+    } else {
+      /**
+       * Try to find command inside manually registered command or fallback
+       * to null
+       */
+      const command = this.commands[commandName] || this.commands[aliasCommandName] || null
 
-    return command
+      /**
+       * Executing before and after together to be compatible
+       * with the manifest find before and after hooks
+       */
+      await this.hooks.execute('before', 'find', command)
+      await this.hooks.execute('after', 'find', command)
+
+      return command
+    }
   }
 
   /**

@@ -319,6 +319,49 @@ test.group('Kernel | find', () => {
     await fs.cleanup()
   })
 
+  test('define manifest command alias inside adonisjs rc file', async (assert) => {
+    const app = setupApp()
+    app.rcFile.commandsAliases = { sayhi: 'greet' }
+    const kernel = new Kernel(app)
+    const manifestLoader = new ManifestLoader([
+      {
+        basePath: fs.basePath,
+        manifestAbsPath: join(fs.basePath, 'ace-manifest.json'),
+      },
+    ])
+
+    await fs.add(
+      'ace-manifest.json',
+      JSON.stringify({
+        commands: {
+          greet: {
+            commandName: 'greet',
+            commandPath: './Commands/Greet.ts',
+          },
+        },
+        aliases: {},
+      })
+    )
+
+    await fs.add(
+      'Commands/Greet.ts',
+      `export default class Greet {
+			public static commandName = 'greet'
+			public static args = []
+			public static flags = []
+			public static boot() {}
+    }`
+    )
+
+    kernel.useManifest(manifestLoader)
+    await kernel.preloadManifest()
+
+    const greet = await kernel.find(['sayhi'])
+    assert.equal(greet!.name, 'Greet')
+
+    await fs.cleanup()
+  })
+
   test('register commands along with manifest', async (assert) => {
     const app = setupApp()
     const kernel = new Kernel(app)
