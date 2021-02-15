@@ -25,6 +25,8 @@ export class GeneratorFile implements GeneratorFileContract {
   private customAppRoot?: string
   private mustache: boolean = false
 
+  public state: 'persisted' | 'removed' | 'pending' = 'pending'
+
   constructor(private name: string, private options: GeneratorFileOptions = {}) {}
 
   /**
@@ -139,6 +141,7 @@ export class GeneratorFile implements GeneratorFileContract {
       relativepath: this.getFileRelativePath(`${filepath}${extension}`),
       extension,
       contents,
+      state: this.state,
     }
   }
 }

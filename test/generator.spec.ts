@@ -31,7 +31,9 @@ test.group('Generator', (group) => {
     generator.addFile('user', { suffix: 'controller', pattern: 'pascalcase' })
     generator.addFile('account', { suffix: 'controller', pattern: 'pascalcase' })
 
-    await generator.run()
+    const files = await generator.run()
+    assert.equal(files[0].state, 'persisted')
+    assert.equal(files[1].state, 'persisted')
 
     const userExists = await fs.fsExtra.pathExists(join(fs.basePath, 'UserController.ts'))
     const accountExists = await fs.fsExtra.pathExists(join(fs.basePath, 'UserController.ts'))
@@ -47,8 +49,11 @@ test.group('Generator', (group) => {
     const generator = new Generator(new GeneratorCommand(app, kernel), fs.basePath)
     await fs.add('UserController.ts', "export const greeting = 'hello world'")
 
-    generator.addFile('user', { suffix: 'controller' })
-    await generator.run()
+    generator.addFile('user', { suffix: 'controller', pattern: 'pascalcase' })
+
+    const files = await generator.run()
+    assert.equal(files[0].state, 'pending')
+    assert.equal(files[0].toJSON().filename, 'UserController')
 
     const user = await fs.get('UserController.ts')
     assert.equal(user, "export const greeting = 'hello world'")

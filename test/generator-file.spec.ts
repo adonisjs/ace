@@ -19,6 +19,7 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'Bar',
       contents: '',
+      state: 'pending',
       filepath: join(__dirname, 'foo', 'Bar.ts'),
       relativepath: join(__dirname, 'foo', 'Bar.ts'),
       extension: '.ts',
@@ -35,6 +36,7 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'UserController',
       contents: '',
+      state: 'pending',
       filepath: join(__dirname, 'foo', 'UserController.ts'),
       relativepath: join(__dirname, 'foo', 'UserController.ts'),
       extension: '.ts',
@@ -51,6 +53,7 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'UserController',
       contents: '',
+      state: 'pending',
       filepath: join(__dirname, 'foo', 'UserController.ts'),
       relativepath: join(__dirname, 'foo', 'UserController.ts'),
       extension: '.ts',
@@ -68,6 +71,7 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'UsersController',
       contents: '',
+      state: 'pending',
       filepath: join(__dirname, 'foo', 'UsersController.ts'),
       relativepath: join(__dirname, 'foo', 'UsersController.ts'),
       extension: '.ts',
@@ -85,6 +89,7 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'UsersController',
       contents: '',
+      state: 'pending',
       filepath: join(__dirname, 'UsersController.ts'),
       relativepath: join(__dirname, 'UsersController.ts'),
       extension: '.ts',
@@ -102,6 +107,7 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'UsersController',
       contents: '',
+      state: 'pending',
       filepath: join(__dirname, 'UsersController.ts'),
       relativepath: join(__dirname, 'UsersController.ts'),
       extension: '.ts',
@@ -121,6 +127,7 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'UsersController',
       contents: '',
+      state: 'pending',
       filepath: join(__dirname, 'foo', 'foo', 'UsersController.ts'),
       relativepath: join('foo', 'foo', 'UsersController.ts'),
       extension: '.ts',
@@ -140,6 +147,7 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'UsersController',
       contents: '',
+      state: 'pending',
       filepath: join(__dirname, 'UsersController.ts'),
       relativepath: 'UsersController.ts',
       extension: '.ts',
@@ -157,6 +165,7 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'UsersController',
       contents: '',
+      state: 'pending',
       filepath: join(process.cwd(), 'foo', 'UsersController.ts'),
       relativepath: join(process.cwd(), 'foo', 'UsersController.ts'),
       extension: '.ts',
@@ -175,6 +184,7 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'UsersController',
       contents: 'Hello virk',
+      state: 'pending',
       filepath: join(process.cwd(), 'foo', 'foo', 'UsersController.ts'),
       relativepath: join(process.cwd(), 'foo', 'foo', 'UsersController.ts'),
       extension: '.ts',
@@ -191,6 +201,7 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'ControllerUser',
       contents: '',
+      state: 'pending',
       filepath: join(__dirname, 'foo', 'ControllerUser.ts'),
       relativepath: join(__dirname, 'foo', 'ControllerUser.ts'),
       extension: '.ts',
@@ -207,6 +218,7 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'ControllerUser',
       contents: '',
+      state: 'pending',
       filepath: join(__dirname, 'foo', 'ControllerUser.ts'),
       relativepath: join(__dirname, 'foo', 'ControllerUser.ts'),
       extension: '.ts',
@@ -225,6 +237,7 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'HomeController',
       contents: '',
+      state: 'pending',
       filepath: join(__dirname, 'foo', 'HomeController.ts'),
       relativepath: join(__dirname, 'foo', 'HomeController.ts'),
       extension: '.ts',
@@ -243,6 +256,7 @@ test.group('Generator File', () => {
     assert.deepEqual(file.toJSON(), {
       filename: 'HomeController',
       contents: '',
+      state: 'pending',
       filepath: join(__dirname, 'HomeController.ts'),
       relativepath: join(__dirname, 'HomeController.ts'),
       extension: '.ts',

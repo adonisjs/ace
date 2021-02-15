@@ -46,12 +46,14 @@ export class Generator implements GeneratorContract {
 
       if (exists) {
         this.command.logger.action('create').skipped(fileJSON.relativepath, 'File already exists')
-        return
+      } else {
+        await outputFile(fileJSON.filepath, fileJSON.contents)
+        file.state = 'persisted'
+        this.command.logger.action('create').succeeded(fileJSON.relativepath)
       }
-
-      await outputFile(fileJSON.filepath, fileJSON.contents)
-      this.command.logger.action('create').succeeded(fileJSON.relativepath)
     }
+
+    return this.files
   }
 
   /**

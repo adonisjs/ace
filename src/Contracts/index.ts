@@ -332,6 +332,8 @@ export type GeneratorFileOptions = {
  * Shape of the individual generator file
  */
 export interface GeneratorFileContract {
+  state: 'persisted' | 'removed' | 'pending'
+
   /**
    * Define path to the stub template. You can also define inline text instead
    * of relying on a template file, but do make sure to set `raw=true` inside
@@ -368,6 +370,7 @@ export interface GeneratorFileContract {
     extension: string
     contents: string
     relativepath: string
+    state: 'persisted' | 'removed' | 'pending'
   }
 }
 
@@ -384,7 +387,7 @@ export interface GeneratorContract {
   /**
    * Run the generator and create all files registered using `addFiles`
    */
-  run(): Promise<void>
+  run(): Promise<GeneratorFileContract[]>
 
   /**
    * Clear the registered files from the generator
