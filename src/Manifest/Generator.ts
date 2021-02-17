@@ -97,6 +97,6 @@ export class ManifestGenerator {
       { commands: {}, aliases: {} }
     )
 
-    await outputJSON(join(this.basePath, 'ace-manifest.json'), manifest)
+    await outputJSON(join(this.basePath, 'ace-manifest.json'), manifest, { spaces: 2 })
   }
 }
