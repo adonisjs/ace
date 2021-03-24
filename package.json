@@ -57,7 +57,7 @@
     "tag": "latest"
   },
   "devDependencies": {
-    "@adonisjs/application": "^5.0.0",
+    "@adonisjs/application": "^5.0.2",
     "@adonisjs/mrm-preset": "^3.0.0",
     "@adonisjs/require-ts": "^2.0.3",
     "@poppinss/dev-utils": "^1.1.1",
