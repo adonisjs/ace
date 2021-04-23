@@ -24,7 +24,7 @@ class Greet extends BaseCommand {
   public name: string
 
   @args.string()
-  public age: number
+  public age?: string
 
   @args.spread()
   public files: string[]
