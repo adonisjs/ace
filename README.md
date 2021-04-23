@@ -19,11 +19,11 @@
 
 <div align="center">
   <h3>
-    <a href="https://preview.adonisjs.com">
+    <a href="https://adonisjs.com">
       Website
     </a>
     <span> | </span>
-    <a href="https://preview.adonisjs.com/guides/ace">
+    <a href="https://adonisjs.com/guides/ace-commandline">
       Guides
     </a>
     <span> | </span>
@@ -44,8 +44,8 @@
 [circleci-image]: https://img.shields.io/circleci/project/github/adonisjs/ace/master.svg?style=for-the-badge&logo=circleci
 [circleci-url]: https://circleci.com/gh/adonisjs/ace "circleci"
 
-[npm-image]: https://img.shields.io/npm/v/@adonisjs/ace/alpha.svg?style=for-the-badge&logo=npm
-[npm-url]: https://npmjs.org/package/@adonisjs/ace/v/alpha "npm"
+[npm-image]: https://img.shields.io/npm/v/@adonisjs/ace/latest.svg?style=for-the-badge&logo=npm
+[npm-url]: https://npmjs.org/package/@adonisjs/ace/v/latest "npm"
 
 [typescript-image]: https://img.shields.io/badge/Typescript-294E80.svg?style=for-the-badge&logo=typescript
 
