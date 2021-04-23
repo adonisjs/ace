@@ -9,13 +9,11 @@
 
 import { CommandArg, ArgTypes, CommandConstructorContract } from '../Contracts'
 
-type DecoratorArg = Partial<Pick<CommandArg, Exclude<keyof CommandArg, 'type'>>>
-
 /**
  * Adds arg to the list of command arguments with pre-defined
  * type.
  */
-function addArg(type: ArgTypes, options: DecoratorArg) {
+function addArg(type: ArgTypes, options: Partial<Omit<CommandArg, 'type' | 'propertyName'>>) {
   return function arg(target: any, propertyName: string) {
     const Command = target.constructor as CommandConstructorContract
     Command.boot()
@@ -27,7 +25,7 @@ export const args = {
   /**
    * Define argument that accepts string value
    */
-  string(options?: Partial<CommandArg>) {
+  string(options?: Partial<Omit<CommandArg, 'type' | 'propertyName'>>) {
     return addArg('string', options || {})
   },
 
@@ -35,7 +33,7 @@ export const args = {
    * Define argument that accepts multiple values. Must be
    * the last argument.
    */
-  spread(options?: Partial<CommandArg>) {
+  spread(options?: Partial<Omit<CommandArg, 'type' | 'propertyName'>>) {
     return addArg('spread', options || {})
   },
 }
