@@ -1,6 +1,6 @@
 {
   "name": "@adonisjs/ace",
-  "version": "10.0.1",
+  "version": "11.0.0",
   "description": "Commandline apps framework used by AdonisJs",
   "main": "build/index.js",
   "files": [
