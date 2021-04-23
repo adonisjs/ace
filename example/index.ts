@@ -32,25 +32,29 @@ class Greet extends BaseCommand {
   @flags.string({
     description: 'The environment to use to specialize certain commands',
     alias: 'e',
-    async defaultValue(command: Greet) {
-      return await command.prompt.choice('Select one of the given environments', [
-        'development',
-        'production',
-      ])
-    },
   })
   public env: 'development' | 'production'
 
   @flags.string({
     description: 'The main HTML file that will be requested',
-    async defaultValue(command: Greet) {
-      return await command.prompt.ask('Define entrypoint as we detected multiple?')
-    },
   })
   public entrypoint: string
 
   @flags.numArray({ description: 'HTML fragments loaded on demand', alias: 'f' })
   public fragment: string
+
+  public async prepare() {
+    if (this.env === undefined) {
+      this.env = await this.prompt.choice('Select one of the given environments', [
+        'development',
+        'production',
+      ])
+    }
+
+    if (this.entrypoint === undefined) {
+      this.entrypoint = await this.prompt.ask('Define entrypoint as we detected multiple?')
+    }
+  }
 
   public async run() {
     this.logger.success('Operation successful')

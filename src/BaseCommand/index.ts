@@ -51,7 +51,7 @@ export abstract class BaseCommand implements CommandContract {
   /**
    * Command flags
    */
-  public static flags: CommandFlag<any>[]
+  public static flags: CommandFlag[]
 
   /**
    * Command name. The command will be registered using this name only. Make
@@ -152,7 +152,7 @@ export abstract class BaseCommand implements CommandContract {
   /**
    * Define a flag directly on the command without using the decorator
    */
-  public static $addFlag(options: Partial<CommandFlag<any>>) {
+  public static $addFlag(options: Partial<CommandFlag>) {
     if (!options.propertyName) {
       throw new Exception(
         '"propertyName" is required to register command flag',
@@ -161,7 +161,7 @@ export abstract class BaseCommand implements CommandContract {
       )
     }
 
-    const flag: CommandFlag<any> = Object.assign(
+    const flag: CommandFlag = Object.assign(
       {
         name: options.name || string.snakeCase(options.propertyName).replace(/_/g, '-'),
         propertyName: options.propertyName,

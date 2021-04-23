@@ -16,7 +16,7 @@ import {
   CommandConstructorContract,
 } from '../Contracts'
 
-import { InvalidFlagException, MissingArgumentException } from '../Exceptions'
+import { InvalidFlagException, MissingArgumentException, UnknownFlagException } from '../Exceptions'
 
 /**
  * The job of the parser is to parse the command line values by taking
@@ -25,119 +25,241 @@ import { InvalidFlagException, MissingArgumentException } from '../Exceptions'
 export class Parser {
   constructor(
     private registeredFlags: {
-      [name: string]: CommandFlag<any> & { handler: GlobalFlagHandler }
+      [name: string]: CommandFlag & { handler: GlobalFlagHandler }
     }
   ) {}
 
   /**
-   * Processes ace command flag to set the options for `getopts`.
+   * Validate all the flags against the flags registered by the command
+   * or as global flags and disallow unknown flags.
    */
-  private preProcessFlag(flag: CommandFlag<any>, options: getopts.Options) {
+  private scanForUnknownFlags(parsed: getopts.ParsedOptions, flagsAndAliases: string[]) {
+    Object.keys(parsed).forEach((key) => {
+      if (key === '_') {
+        return
+      }
+
+      const hasFlag = flagsAndAliases.find((value) => value === key)
+      if (!hasFlag) {
+        throw UnknownFlagException.invoke(key)
+      }
+    })
+  }
+
+  /**
+   * Processes ace command flag to set the options for `getopts`.
+   * We just define the `alias` with getopts coz their default,
+   * string and boolean options produces the behavior we don't
+   * want.
+   */
+  private preProcessFlag(flag: CommandFlag, options: getopts.Options) {
     /**
      * Register alias (when exists)
      */
     if (flag.alias) {
       options.alias![flag.alias] = flag.name
     }
+  }
 
-    /**
-     * Register flag as boolean when `flag.type === 'boolean'`
-     */
-    if (flag.type === 'boolean') {
-      options.boolean!.push(flag.name)
+  /**
+   * Casts a flag value to a boolean. The casting logic is driven
+   * by the behavior of "getopts"
+   */
+  private castToBoolean(value: any) {
+    if (typeof value === 'boolean') {
+      return value
     }
 
-    /**
-     * Register flag as string when `flag.type === 'string' | 'array'`
-     */
-    if (['string', 'array'].indexOf(flag.type) > -1) {
-      options.string!.push(flag.name)
+    if (value === 'true' || value === '=true') {
+      return true
     }
 
-    /**
-     * Set default value when defined on the flag
-     */
-    if (flag.default !== undefined) {
-      options.default![flag.name] = flag.default
+    return undefined
+  }
+
+  /**
+   * Cast the value to a string. The casting logic is driven
+   * by the behavior of "getopts"
+   *
+   * - Convert numbers to string
+   * - Do not convert boolean to a string, since a flag without a value
+   *   gets a boolean value, which is invalid
+   */
+  private castToString(value: any) {
+    if (typeof value === 'number') {
+      value = String(value)
     }
+
+    if (typeof value === 'string' && value.trim()) {
+      return value
+    }
+
+    return undefined
+  }
+
+  /**
+   * Cast value to an array of string. The casting logic is driven
+   * by the behavior of "getopts"
+   *
+   * - Numeric values are converted to string of array
+   * - A string value is splitted by comma and trimmed.
+   * - An array is casted to an array of string values
+   */
+  private castToArray(value: any) {
+    if (typeof value === 'number') {
+      value = String(value)
+    }
+
+    if (typeof value === 'string') {
+      return value.split(',').filter((prop) => prop.trim())
+    }
+
+    if (Array.isArray(value)) {
+      /**
+       * This will also convert numeric values to a string. The behavior
+       * is same as string flag type.
+       */
+      return value.map((prop) => String(prop))
+    }
+
+    return undefined
+  }
+
+  /**
+   * Cast value to an array of numbers. The casting logic is driven
+   * by the behavior of "getopts".
+   *
+   * - Numeric values are wrapped to an array.
+   * - String is splitted by comma and each value is casted to a number
+   * - Each array value is casted to a number.
+   */
+  private castToNumArray(value: any) {
+    if (typeof value === 'number') {
+      return [value]
+    }
+
+    if (typeof value === 'string') {
+      return value.split(',').map((one) => Number(one))
+    }
+
+    if (Array.isArray(value)) {
+      return value.map((prop) => Number(prop))
+    }
+
+    return undefined
+  }
+
+  /**
+   * Cast value to a number. The casting logic is driven
+   * by the behavior of "getopts"
+   *
+   * - Boolean values are not allowed
+   * - A string is converted to a number
+   */
+  private castToNumer(value: any): number | undefined {
+    if (typeof value === 'number') {
+      return value
+    }
+
+    if (typeof value === 'string') {
+      // Possibility of NaN here
+      return Number(value)
+    }
+
+    return undefined
   }
 
   /**
    * Casts value of a flag to it's expected data type. These values
    * are then later validated to ensure that casting was successful.
    */
-  public castFlag(flag: CommandFlag<any>, parsed: getopts.ParsedOptions) {
-    const value = parsed[flag.name]
-
-    /**
-     * Return early when value is undefined or it's type is not an array
-     * type
-     */
-    if (['boolean', 'string', 'number'].indexOf(flag.type) > -1) {
-      return
-    }
-
-    /**
-     * If value is already and array then their is no point
-     * of casting them to an array
-     */
-    if (Array.isArray(value)) {
-      return
-    }
-
-    /**
-     * Parse string as array seperated by comma
-     */
-    if (flag.type === 'array') {
-      parsed[flag.name] = value ? value.split(',') : []
-      return
-    }
-
-    /**
-     * Parse numbers as an array of numbers seperated by comma
-     */
-    if (flag.type === 'numArray') {
-      parsed[flag.name] = value
-        ? typeof value === 'string'
-          ? value.split(',').map((one: any) => Number(one))
-          : [Number(value)]
-        : []
-    }
-  }
-
-  /**
-   * Validating the flag to ensure that it's valid as per the
-   * desired data type.
-   */
-  public validateFlag(
-    flag: CommandFlag<any>,
+  public processFlag(
+    flag: CommandFlag,
     parsed: getopts.ParsedOptions,
     command?: CommandConstructorContract
   ) {
-    const value = parsed[flag.name]
+    let value = parsed[flag.name]
+
+    /**
+     * Check for the value with the alias, if it undefined
+     * by the name
+     */
+    if (value === undefined && flag.alias) {
+      value = parsed[flag.alias]
+    }
+
+    /**
+     * Still undefined??
+     *
+     * It is fine. Flags are optional anyways
+     */
     if (value === undefined) {
       return
     }
 
-    if (flag.type === 'string' && typeof value !== 'string') {
-      throw InvalidFlagException.invoke(flag.name, flag.type, command)
-    }
-
-    if (flag.type === 'number' && typeof value !== 'number') {
-      throw InvalidFlagException.invoke(flag.name, flag.type, command)
+    /**
+     * Handle boolean values. It should be a valid boolean
+     * data type or a string value of `'true'`.
+     */
+    if (flag.type === 'boolean') {
+      value = this.castToBoolean(value)
+      if (value === undefined) {
+        throw InvalidFlagException.invoke(flag.name, flag.type, command)
+      }
     }
 
     /**
-     * Raise error when value is expected to be an array of numbers
-     * but one or more values are not numbers or is NAN.
+     * Handle string value. It should be a valid and not empty.
+     * Either remove the flag or provide a value
      */
-    if (
-      flag.type === 'numArray' &&
-      value.findIndex((one: any) => {
-        return typeof one !== 'number' || isNaN(one)
-      }) > -1
-    ) {
-      throw InvalidFlagException.invoke(flag.name, flag.type, command)
+    if (flag.type === 'string') {
+      value = this.castToString(value)
+      if (value === undefined) {
+        throw InvalidFlagException.invoke(flag.name, flag.type, command)
+      }
+    }
+
+    /**
+     * Handle numeric values. The flag should have a value and
+     * a valid number.
+     */
+    if (flag.type === 'number') {
+      value = this.castToNumer(value)
+      if (value === undefined || isNaN(value)) {
+        throw InvalidFlagException.invoke(flag.name, flag.type, command)
+      }
+    }
+
+    /**
+     * Parse the value to be an array of strings
+     */
+    if (flag.type === 'array') {
+      value = this.castToArray(value)
+      if (!value || !value.length) {
+        throw InvalidFlagException.invoke(flag.name, flag.type, command)
+      }
+    }
+
+    /**
+     * Parse the value to be an array of numbers
+     */
+    if (flag.type === 'numArray') {
+      value = this.castToNumArray(value)
+      if (!value || !value.length) {
+        throw InvalidFlagException.invoke(flag.name, flag.type, command)
+      }
+
+      /**
+       * Find if array has NaN values
+       */
+      if (value.findIndex((one: any) => isNaN(one)) > -1) {
+        throw InvalidFlagException.invoke(flag.name, flag.type, command)
+      }
+    }
+
+    parsed[flag.name] = value
+    if (flag.alias) {
+      parsed[flag.alias] = value
     }
   }
 
@@ -163,18 +285,28 @@ export class Parser {
    */
   public parse(argv: string[], command?: CommandConstructorContract): getopts.ParsedOptions {
     let options = { alias: {}, boolean: [], default: {}, string: [] }
+    const flagsAndAliases: string[] = []
+
     const globalFlags = Object.keys(this.registeredFlags).map((name) => this.registeredFlags[name])
 
     /**
      * Build options from global flags
      */
-    globalFlags.forEach((flag) => this.preProcessFlag(flag, options))
+    globalFlags.forEach((flag) => {
+      this.preProcessFlag(flag, options)
+      flagsAndAliases.push(flag.name)
+      flag.alias && flagsAndAliases.push(flag.alias)
+    })
 
     /**
      * Build options from command flags
      */
     if (command) {
-      command.flags.forEach((flag) => this.preProcessFlag(flag, options))
+      command.flags.forEach((flag) => {
+        this.preProcessFlag(flag, options)
+        flagsAndAliases.push(flag.name)
+        flag.alias && flagsAndAliases.push(flag.alias)
+      })
     }
 
     /**
@@ -183,11 +315,15 @@ export class Parser {
     const parsed = getopts(argv, options)
 
     /**
+     * Scan and report unknown flag as exception
+     */
+    this.scanForUnknownFlags(parsed, flagsAndAliases)
+
+    /**
      * Validating global flags (if any)
      */
     globalFlags.forEach((flag) => {
-      this.castFlag(flag, parsed)
-      this.validateFlag(flag, parsed)
+      this.processFlag(flag, parsed)
     })
 
     /**
@@ -195,8 +331,7 @@ export class Parser {
      */
     if (command) {
       command.flags.forEach((flag) => {
-        this.castFlag(flag, parsed)
-        this.validateFlag(flag, parsed, command)
+        this.processFlag(flag, parsed)
       })
     }
 

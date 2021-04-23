@@ -84,7 +84,7 @@ export class Kernel implements KernelContract {
   /**
    * List of registered flags
    */
-  public flags: { [name: string]: CommandFlag<any> & { handler: GlobalFlagHandler } } = {}
+  public flags: { [name: string]: CommandFlag & { handler: GlobalFlagHandler } } = {}
 
   /**
    * The exit code for the process
@@ -106,7 +106,7 @@ export class Kernel implements KernelContract {
    */
   private executeGlobalFlagsHandlers(argv: string[], command?: CommandConstructorContract) {
     const globalFlags = Object.keys(this.flags)
-    const parsedOptions = new Parser(this.flags).parse(argv)
+    const parsedOptions = new Parser(this.flags).parse(argv, command)
 
     globalFlags.forEach((name) => {
       const value = parsedOptions[name]
@@ -114,15 +114,7 @@ export class Kernel implements KernelContract {
       /**
        * Flag was not specified
        */
-      if (value === undefined || value === false) {
-        return
-      }
-
-      /**
-       * Flag was not specified, but `getops` will return empty array or
-       * empty string, when we coerce flag to be a string or array
-       */
-      if ((typeof value === 'string' || Array.isArray(value)) && !value.length) {
+      if (value === undefined) {
         return
       }
 
@@ -209,12 +201,7 @@ export class Kernel implements KernelContract {
      */
     for (let flag of command.flags) {
       const flagValue = parsedOptions[flag.name]
-
-      if (flag.type === 'boolean') {
-        commandInstance[flag.propertyName] = flagValue
-      } else if (!flagValue && typeof flag.defaultValue === 'function') {
-        commandInstance[flag.propertyName] = await flag.defaultValue(commandInstance)
-      } else if (flagValue || commandInstance[flag.propertyName] === undefined) {
+      if (flagValue !== undefined) {
         commandInstance[flag.propertyName] = flagValue
       }
     }
@@ -371,7 +358,7 @@ export class Kernel implements KernelContract {
   public flag(
     name: string,
     handler: GlobalFlagHandler,
-    options: Partial<Exclude<CommandFlag<any>, 'name' | 'propertyName'>>
+    options: Partial<Exclude<CommandFlag, 'name' | 'propertyName'>>
   ): this {
     this.flags[name] = Object.assign(
       {

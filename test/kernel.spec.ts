@@ -614,7 +614,11 @@ test.group('Kernel | exec', () => {
     kernel.register([Greet])
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     const argv = ['greet']
@@ -641,7 +645,11 @@ test.group('Kernel | exec', () => {
     kernel.register([Greet])
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     const argv = ['greet', 'virk']
@@ -668,7 +676,11 @@ test.group('Kernel | exec', () => {
     kernel.register([Greet])
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     const argv = ['greet', 'foo.js', 'bar.js']
@@ -703,7 +715,11 @@ test.group('Kernel | exec', () => {
     kernel.register([Greet])
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     const argv = ['greet', 'virk', '22', 'foo.js', 'bar.js']
@@ -734,7 +750,11 @@ test.group('Kernel | exec', () => {
     kernel.register([Greet])
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     const argv = ['greet', 'virk', '--admin']
@@ -765,7 +785,11 @@ test.group('Kernel | exec', () => {
     kernel.register([Greet])
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     const argv = ['greet', 'virk', '--admin=true']
@@ -796,7 +820,11 @@ test.group('Kernel | exec', () => {
     kernel.register([Greet])
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     const argv = ['greet', 'virk', '-a']
@@ -827,7 +855,11 @@ test.group('Kernel | exec', () => {
     kernel.register([Greet])
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     const argv = ['greet', 'virk', '-a']
@@ -858,7 +890,11 @@ test.group('Kernel | exec', () => {
     kernel.register([Greet])
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     const argv = ['greet', 'virk', '--admin=true']
@@ -889,7 +925,11 @@ test.group('Kernel | exec', () => {
     kernel.register([Greet])
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     const argv = ['greet', 'virk', '-a=true']
@@ -905,13 +945,13 @@ test.group('Kernel | exec', () => {
       @args.string()
       public name: string
 
-      @flags.boolean({ default: true, alias: 'a' })
-      public admin: boolean
+      @flags.boolean({ alias: 'a' })
+      public admin: boolean = false
 
       public async run() {
-        assert.deepEqual(this.parsed, { _: ['virk'], admin: true, a: true })
+        assert.deepEqual(this.parsed, { _: ['virk'] })
         assert.equal(this.name, 'virk')
-        assert.isTrue(this.admin)
+        assert.isFalse(this.admin)
       }
     }
 
@@ -920,7 +960,11 @@ test.group('Kernel | exec', () => {
     kernel.register([Greet])
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     const argv = ['greet', 'virk']
@@ -940,7 +984,7 @@ test.group('Kernel | exec', () => {
       public connection: string = 'foo'
 
       public async run() {
-        assert.deepEqual(this.parsed, { _: ['virk'], connection: '' })
+        assert.deepEqual(this.parsed, { _: ['virk'] })
         assert.equal(this.name, 'virk')
         assert.equal(this.connection, 'foo')
       }
@@ -951,42 +995,11 @@ test.group('Kernel | exec', () => {
     kernel.register([Greet])
 
     kernel.onExit(() => {
-      done()
-    })
-
-    const argv = ['greet', 'virk']
-    await kernel.handle(argv)
-  })
-
-  test('define default value via decorator', async (assert, done) => {
-    assert.plan(3)
-
-    class Greet extends BaseCommand {
-      public static commandName = 'greet'
-
-      @args.string()
-      public name: string
-
-      @flags.string({
-        async defaultValue() {
-          return 'foo'
-        },
-      })
-      public connection: string
-
-      public async run() {
-        assert.deepEqual(this.parsed, { _: ['virk'], connection: '' })
-        assert.equal(this.name, 'virk')
-        assert.equal(this.connection, 'foo')
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
       }
-    }
-
-    const app = setupApp()
-    const kernel = new Kernel(app)
-    kernel.register([Greet])
-
-    kernel.onExit(() => {
-      done()
     })
 
     const argv = ['greet', 'virk']
@@ -1017,7 +1030,11 @@ test.group('Kernel | exec', () => {
     kernel.register([Greet])
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     const argv = ['greet', 'virk', '--files=foo.js']
@@ -1039,7 +1056,11 @@ test.group('Kernel | exec', () => {
     )
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     const argv = ['--env=production']
@@ -1061,7 +1082,11 @@ test.group('Kernel | exec', () => {
     )
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     const argv = ['--ansi']
@@ -1079,9 +1104,14 @@ test.group('Kernel | exec', () => {
       { type: 'string' }
     )
 
-    const argv = ['--ansi']
+    const argv = []
+
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     await kernel.handle(argv)
@@ -1099,10 +1129,14 @@ test.group('Kernel | exec', () => {
     )
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
-    const argv = ['--ansi']
+    const argv = []
     await kernel.handle(argv)
   })
 
@@ -1133,7 +1167,11 @@ test.group('Kernel | exec', () => {
     )
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     const argv = ['greet', 'virk', '--env=production']
@@ -1160,7 +1198,11 @@ test.group('Kernel | exec', () => {
     kernel.register([Greet])
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     const argv = ['greet', 'virk']
@@ -1187,7 +1229,11 @@ test.group('Kernel | exec', () => {
     kernel.register([Greet])
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     const argv = ['greet', '--isAdmin']
@@ -1219,7 +1265,11 @@ test.group('Kernel | exec', () => {
     kernel.register([Greet])
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     const argv = ['greet']
@@ -1815,7 +1865,11 @@ test.group('Kernel | IoC container', () => {
     }
 
     kernel.onExit(() => {
-      done()
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
     })
 
     kernel.register([Install])

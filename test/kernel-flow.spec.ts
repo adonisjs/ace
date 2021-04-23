@@ -772,7 +772,10 @@ test.group('Kernel | command found', () => {
     }
 
     kernel.register([HelloCommand])
-    kernel.flag('env', () => stack.push('env-flag'), {})
+    kernel.flag('env', () => stack.push('env-flag'), {
+      type: 'string',
+    })
+
     kernel.before('find', () => stack.push('before-find'))
     kernel.after('find', () => stack.push('after-find'))
     kernel.before('run', () => stack.push('before-run'))
@@ -818,7 +821,9 @@ test.group('Kernel | command found', () => {
       () => {
         throw new Error('boom')
       },
-      {}
+      {
+        type: 'string',
+      }
     )
     kernel.before('find', () => stack.push('before-find'))
     kernel.after('find', () => stack.push('after-find'))
@@ -896,7 +901,10 @@ test.group('Kernel | command found', () => {
 
     kernel.onExit(() => {
       assert.equal(kernel.exitCode, 1)
-      assert.equal(kernel.error.message, 'E_INVALID_FLAG: "log-level" must be defined as "number"')
+      assert.equal(
+        kernel.error.message,
+        'E_INVALID_FLAG: "log-level" flag expects a "numeric" value'
+      )
     })
 
     await kernel.handle(['hello', 'world', '--log-level'])
@@ -952,7 +960,9 @@ test.group('Kernel | command not found', () => {
     kernel.after('find', () => stack.push('after-find'))
     kernel.before('run', () => stack.push('before-run'))
     kernel.after('run', () => stack.push('after-run'))
-    kernel.flag('env', () => stack.push('env-flag'), {})
+    kernel.flag('env', () => stack.push('env-flag'), {
+      type: 'string',
+    })
 
     await kernel.handle(['hello', 'world', '--env=foo'])
     assert.deepEqual(stack, ['before-find', 'after-find', 'env-flag'])

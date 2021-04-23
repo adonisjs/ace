@@ -56,7 +56,27 @@ export class InvalidFlagException extends Exception {
     expected: string,
     command?: CommandConstructorContract
   ): InvalidFlagException {
-    const exception = new this(`"${prop}" must be defined as "${expected}"`, 500, 'E_INVALID_FLAG')
+    let article: string = 'a'
+
+    if (expected === 'number') {
+      expected = 'numeric'
+    }
+
+    if (expected === 'array') {
+      article = 'an'
+      expected = 'array of strings'
+    }
+
+    if (expected === 'numArray') {
+      article = 'an'
+      expected = 'array of numbers'
+    }
+
+    const exception = new this(
+      `"${prop}" flag expects ${article} "${expected}" value`,
+      500,
+      'E_INVALID_FLAG'
+    )
 
     exception.flagName = prop
     exception.command = command
@@ -110,5 +130,25 @@ export class InvalidCommandException extends Exception {
     })
 
     suggestionLog.render()
+  }
+}
+
+/**
+ * Raised when an unknown flag is defined
+ */
+export class UnknownFlagException extends Exception {
+  /**
+   * Unknown flag
+   */
+  public static invoke(prop: string): UnknownFlagException {
+    const exception = new this(`Unknown flag "${prop}"`, 500, 'E_INVALID_FLAG')
+    return exception
+  }
+
+  /**
+   * Handle itself
+   */
+  public handle(error: UnknownFlagException) {
+    logger.error(logger.colors.red(error.message))
   }
 }

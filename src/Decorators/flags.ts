@@ -15,7 +15,7 @@ import { CommandFlag, FlagTypes, CommandConstructorContract } from '../Contracts
  */
 function addFlag<T extends any>(
   type: FlagTypes,
-  options: Partial<Omit<CommandFlag<T>, 'propertyName' | 'type'>>
+  options: Partial<Omit<CommandFlag, 'propertyName' | 'type'>>
 ) {
   return function flag<TKey extends string, TTarget extends { [K in TKey]: T }>(
     target: TTarget,
@@ -31,35 +31,35 @@ export const flags = {
   /**
    * Create a flag that excepts string values
    */
-  string<T extends any>(options?: Partial<Omit<CommandFlag<T>, 'propertyName' | 'type'>>) {
+  string<T extends any>(options?: Partial<Omit<CommandFlag, 'propertyName' | 'type'>>) {
     return addFlag<T>('string', options || {})
   },
 
   /**
    * Create a flag that excepts numeric values
    */
-  number<T extends any>(options?: Partial<Omit<CommandFlag<T>, 'propertyName' | 'type'>>) {
+  number<T extends any>(options?: Partial<Omit<CommandFlag, 'propertyName' | 'type'>>) {
     return addFlag<T>('number', options || {})
   },
 
   /**
    * Create a flag that excepts boolean values
    */
-  boolean<T extends any>(options?: Partial<Omit<CommandFlag<T>, 'propertyName' | 'type'>>) {
+  boolean<T extends any>(options?: Partial<Omit<CommandFlag, 'propertyName' | 'type'>>) {
     return addFlag<T>('boolean', options || {})
   },
 
   /**
    * Create a flag that excepts array of string values
    */
-  array<T extends any>(options?: Partial<Omit<CommandFlag<T>, 'propertyName' | 'type'>>) {
+  array<T extends any>(options?: Partial<Omit<CommandFlag, 'propertyName' | 'type'>>) {
     return addFlag<T>('array', options || {})
   },
 
   /**
    * Create a flag that excepts array of numeric values
    */
-  numArray<T extends any>(options?: Partial<Omit<CommandFlag<T>, 'propertyName' | 'type'>>) {
+  numArray<T extends any>(options?: Partial<Omit<CommandFlag, 'propertyName' | 'type'>>) {
     return addFlag<T>('numArray', options || {})
   },
 }

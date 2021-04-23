@@ -28,7 +28,7 @@ test.group('Parser | flags', () => {
     assert.deepEqual(output, { _: [], admin: true })
   })
 
-  test('parse string values as true', (assert) => {
+  test('do not parse string values as true', (assert) => {
     const parser = new Parser({
       admin: {
         type: 'boolean' as 'boolean',
@@ -38,8 +38,10 @@ test.group('Parser | flags', () => {
       },
     })
 
-    const output = parser.parse(['--admin=yes'])
-    assert.deepEqual(output, { _: [], admin: true })
+    assert.throw(
+      () => parser.parse(['--admin=yes']),
+      'E_INVALID_FLAG: "admin" flag expects a "boolean" value'
+    )
   })
 
   test('parse negative flags as boolean', (assert) => {
@@ -70,6 +72,20 @@ test.group('Parser | flags', () => {
     assert.deepEqual(output, { _: [], admin: true })
   })
 
+  test('do not set boolean flag when it is not mentioned', (assert) => {
+    const parser = new Parser({
+      admin: {
+        type: 'boolean' as 'boolean',
+        name: 'admin',
+        propertyName: 'admin',
+        handler: () => {},
+      },
+    })
+
+    const output = parser.parse([])
+    assert.deepEqual(output, { _: [] })
+  })
+
   test('parse flags as string', (assert) => {
     const parser = new Parser({
       admin: {
@@ -84,7 +100,7 @@ test.group('Parser | flags', () => {
     assert.deepEqual(output, { _: [], admin: 'true' })
   })
 
-  test('set flag to empty string when its undefined', (assert) => {
+  test('do not define string flag when it is not mentioned', (assert) => {
     const parser = new Parser({
       admin: {
         type: 'string' as 'string',
@@ -94,8 +110,24 @@ test.group('Parser | flags', () => {
       },
     })
 
-    const output = parser.parse(['--admin'])
-    assert.deepEqual(output, { _: [], admin: '' })
+    const output = parser.parse([])
+    assert.deepEqual(output, { _: [] })
+  })
+
+  test('raise error when string flag is used without value', (assert) => {
+    const parser = new Parser({
+      admin: {
+        type: 'string' as 'string',
+        name: 'admin',
+        propertyName: 'admin',
+        handler: () => {},
+      },
+    })
+
+    assert.throw(
+      () => parser.parse(['--admin']),
+      'E_INVALID_FLAG: "admin" flag expects a "string" value'
+    )
   })
 
   test('set flag to number', (assert) => {
@@ -126,7 +158,7 @@ test.group('Parser | flags', () => {
     assert.deepEqual(output, { _: [], age: '22' })
   })
 
-  test('raise error when value is not a number', (assert) => {
+  test('raise error when number flag receives a string', (assert) => {
     const parser = new Parser({
       age: {
         type: 'number' as 'number',
@@ -137,7 +169,21 @@ test.group('Parser | flags', () => {
     })
 
     const output = () => parser.parse(['--age=foo'])
-    assert.throw(output, 'E_INVALID_FLAG: "age" must be defined as "number"')
+    assert.throw(output, 'E_INVALID_FLAG: "age" flag expects a "numeric" value')
+  })
+
+  test('raise error when number flag receives a boolean', (assert) => {
+    const parser = new Parser({
+      age: {
+        type: 'number' as 'number',
+        name: 'age',
+        propertyName: 'age',
+        handler: () => {},
+      },
+    })
+
+    const output = () => parser.parse(['--age'])
+    assert.throw(output, 'E_INVALID_FLAG: "age" flag expects a "numeric" value')
   })
 
   test('parse value as an array of strings', (assert) => {
@@ -168,6 +214,50 @@ test.group('Parser | flags', () => {
     assert.deepEqual(output, { _: [], names: ['virk', 'nikk'] })
   })
 
+  test('parse value as an array of strings when defined a numeric value', (assert) => {
+    const parser = new Parser({
+      names: {
+        type: 'array' as 'array',
+        name: 'names',
+        propertyName: 'names',
+        handler: () => {},
+      },
+    })
+
+    const output = parser.parse(['--names=22'])
+    assert.deepEqual(output, { _: [], names: ['22'] })
+  })
+
+  test('parse value as an array of strings when defined a numeric value multiple times', (assert) => {
+    const parser = new Parser({
+      names: {
+        type: 'array' as 'array',
+        name: 'names',
+        propertyName: 'names',
+        handler: () => {},
+      },
+    })
+
+    const output = parser.parse(['--names=22', '--names=foo'])
+    assert.deepEqual(output, { _: [], names: ['22', 'foo'] })
+  })
+
+  test('raise error when array receives a boolean', (assert) => {
+    const parser = new Parser({
+      names: {
+        type: 'array' as 'array',
+        name: 'names',
+        propertyName: 'names',
+        handler: () => {},
+      },
+    })
+
+    assert.throw(
+      () => parser.parse(['--names']),
+      'E_INVALID_FLAG: "names" flag expects an "array of strings" value'
+    )
+  })
+
   test('parse value as an array of number', (assert) => {
     const parser = new Parser({
       scores: {
@@ -182,7 +272,7 @@ test.group('Parser | flags', () => {
     assert.deepEqual(output, { _: [], scores: [10] })
   })
 
-  test('parse value as an array of number when passed for multiple times', (assert) => {
+  test('parse value as an array of numbers when passed for multiple times', (assert) => {
     const parser = new Parser({
       scores: {
         type: 'numArray' as 'numArray',
@@ -206,11 +296,20 @@ test.group('Parser | flags', () => {
       },
     })
 
-    const output = () => parser.parse(['--scores=10', '--scores=foo'])
-    assert.throw(output, 'E_INVALID_FLAG: "scores" must be defined as "numArray"')
+    assert.throw(
+      () => parser.parse(['--scores=10', '--scores=foo']),
+      'E_INVALID_FLAG: "scores" flag expects an "array of numbers" value'
+    )
 
-    const fn = () => parser.parse(['--scores=foo'])
-    assert.throw(fn, 'E_INVALID_FLAG: "scores" must be defined as "numArray"')
+    assert.throw(
+      () => parser.parse(['--scores=foo']),
+      'E_INVALID_FLAG: "scores" flag expects an "array of numbers" value'
+    )
+
+    assert.throw(
+      () => parser.parse(['--scores=foo,22']),
+      'E_INVALID_FLAG: "scores" flag expects an "array of numbers" value'
+    )
   })
 })
 

@@ -98,7 +98,7 @@ function wrapArg(arg: CommandArg): string {
 /**
  * Returns an array of flags for displaying the help screen
  */
-function getFlagsForDisplay(flags: CommandFlag<any>[]) {
+function getFlagsForDisplay(flags: CommandFlag[]) {
   return flags.map(({ name, type, alias, description }) => {
     /**
      * Display name is the way we want to display a single flag in the
@@ -184,7 +184,7 @@ function getCommandAliases(commandName: string, aliases: Aliases) {
  */
 export function printHelp(
   commands: SerializedCommand[],
-  flags: CommandFlag<any>[],
+  flags: CommandFlag[],
   aliases: Aliases
 ): void {
   const flagsList = getFlagsForDisplay(flags)
