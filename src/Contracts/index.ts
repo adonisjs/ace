@@ -306,7 +306,11 @@ export interface KernelContract {
   /**
    * Print help for all commands or a given command
    */
-  printHelp(command?: CommandConstructorContract): void
+  printHelp(
+    command?: CommandConstructorContract,
+    commandsToAppend?: ManifestCommand[],
+    aliasesToAppend?: Record<string, string>
+  ): void
 
   /**
    * Trigger exit flow

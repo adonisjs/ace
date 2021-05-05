@@ -649,8 +649,22 @@ export class Kernel implements KernelContract {
   /**
    * Print the help screen for a given command or all commands/flags
    */
-  public printHelp(command?: CommandConstructorContract) {
-    const { commands, aliases } = this.getAllCommandsAndAliases()
+  public printHelp(
+    command?: CommandConstructorContract,
+    commandsToAppend?: ManifestCommand[],
+    aliasesToAppend?: Record<string, string>
+  ) {
+    let { commands, aliases } = this.getAllCommandsAndAliases()
+
+    /**
+     * Append additional commands and aliases for help screen only
+     */
+    if (commandsToAppend) {
+      commands = commands.concat(commandsToAppend)
+    }
+    if (aliasesToAppend) {
+      aliases = Object.assign({}, aliases, aliasesToAppend)
+    }
 
     if (command) {
       printHelpFor(command, aliases)
