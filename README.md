@@ -23,7 +23,7 @@
       Website
     </a>
     <span> | </span>
-    <a href="https://adonisjs.com/guides/ace-commandline">
+    <a href="https://docs.adonisjs.com/guides/ace-commandline">
       Guides
     </a>
     <span> | </span>
