@@ -198,7 +198,7 @@ export abstract class BaseCommand implements CommandContract {
   /**
    * Reference to the colors
    */
-  public colors = this.logger.colors
+  public colors: ReturnType<typeof instantiate>['logger']['colors'] = this.logger.colors
 
   /**
    * Generator instance to generate entity files
