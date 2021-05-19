@@ -40,10 +40,7 @@ export class ManifestLoader implements ManifestLoaderContract {
   /**
    * Loads the manifest file from the disk
    */
-  private async loadManifestFile(file: {
-    basePath: string
-    manifestAbsPath: string
-  }): Promise<
+  private async loadManifestFile(file: { basePath: string; manifestAbsPath: string }): Promise<
     ManifestNode & {
       basePath: string
     }

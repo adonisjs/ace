@@ -139,10 +139,8 @@ export class Kernel implements KernelContract {
      * Concat manifest commands when they exists
      */
     if (this.manifestLoader && this.manifestLoader.booted) {
-      const {
-        commands: manifestCommands,
-        aliases: manifestAliases,
-      } = this.manifestLoader.getCommands()
+      const { commands: manifestCommands, aliases: manifestAliases } =
+        this.manifestLoader.getCommands()
 
       commands = commands.concat(manifestCommands)
       aliases = Object.assign(aliases, manifestAliases)
