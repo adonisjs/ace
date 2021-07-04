@@ -322,7 +322,7 @@ export interface KernelContract {
  * Template generator options
  */
 export type GeneratorFileOptions = {
-  pattern?: 'pascalcase' | 'camelcase' | 'snakecase'
+  pattern?: 'pascalcase' | 'camelcase' | 'snakecase' | 'dashcase'
   form?: 'singular' | 'plural'
   formIgnoreList?: string[]
   suffix?: string

@@ -87,7 +87,7 @@ export class StringTransformer {
   /**
    * Changes the input case
    */
-  public changeCase(pattern?: 'pascalcase' | 'camelcase' | 'snakecase'): this {
+  public changeCase(pattern?: 'pascalcase' | 'camelcase' | 'snakecase' | 'dashcase'): this {
     switch (pattern) {
       case 'camelcase':
         this.input = string.camelCase(this.input)
@@ -98,6 +98,9 @@ export class StringTransformer {
         return this
       case 'snakecase':
         this.input = string.snakeCase(this.input)
+        return this
+      case 'dashcase':
+        this.input = string.dashCase(this.input)
         return this
       default:
         return this
