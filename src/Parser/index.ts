@@ -317,7 +317,9 @@ export class Parser {
     /**
      * Scan and report unknown flag as exception
      */
-    this.scanForUnknownFlags(parsed, flagsAndAliases)
+    if (command) {
+      this.scanForUnknownFlags(parsed, flagsAndAliases)
+    }
 
     /**
      * Validating global flags (if any)
