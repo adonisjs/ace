@@ -5,6 +5,10 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
-  "include": ["**/*"],
-  "files": ["./node_modules/@adonisjs/application/build/adonis-typings/index.d.ts"]
+  "include": [
+    "**/*"
+  ],
+  "files": [
+    "./node_modules/@adonisjs/application/build/adonis-typings/index.d.ts"
+  ]
 }

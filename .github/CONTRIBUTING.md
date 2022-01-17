@@ -1,6 +1,6 @@
 # Contributing
 
-AdonisJs is a community driven project. You are free to contribute in any of the following ways.
+AdonisJS is a community driven project. You are free to contribute in any of the following ways.
 
 - [Coding style](coding-style)
 - [Fix bugs by creating PR's](fix-bugs-by-creating-prs)
@@ -10,7 +10,7 @@ AdonisJs is a community driven project. You are free to contribute in any of the
 
 ## Coding style
 
-Majority of AdonisJs core packages are written in Typescript. Having a brief knowledge of Typescript is required to contribute to the core. [Learn more](https://adonisjs.com/coding-style) about the same.
+Majority of AdonisJS core packages are written in Typescript. Having a brief knowledge of Typescript is required to contribute to the core.
 
 ## Fix bugs by creating PR's
 
@@ -31,18 +31,16 @@ Sharing PR's for small changes works great. However, when contributing big featu
 
 ### What is an RFC?
 
-RFC stands for **Request for Commits**, a standard process followed by many other frameworks including [Ember](https://github.com/emberjs/rfcs), [yarn](https://github.com/yarnpkg/rfcs) and [rust](https://github.com/rust-lang/rfcs). 
+RFC stands for **Request for Commits**, a standard process followed by many other frameworks including [Ember](https://github.com/emberjs/rfcs), [yarn](https://github.com/yarnpkg/rfcs) and [rust](https://github.com/rust-lang/rfcs).
 
 In brief, RFC process allows you to talk about the changes with everyone in the community and get a view of the core team before dedicating your time to work on the feature.
 
-The RFC proposals are created as issues on [adonisjs/rfcs](https://github.com/adonisjs/rfcs) repo. Make sure to read the README to learn about the process in depth.
+The RFC proposals are created as Pull Request on [adonisjs/rfcs](https://github.com/adonisjs/rfcs) repo. Make sure to read the README to learn about the process in depth.
 
 ## Report security issues
 
-All of the security issues, must be reported via [email](mailto:virk@adonisjs.com) and not using any of the public channels. [Learn more](https://adonisjs.com/security) about the security policy
+All of the security issues, must be reported via [email](mailto:virk@adonisjs.com) and not using any of the public channels.
 
 ## Be a part of community
 
-We welcome you to participate in the [forum](https://forum.adonisjs.com/) and the AdonisJs [discord server](https://discord.me/adonisjs). You are free to ask your questions and share your work or contributions made to AdonisJs eco-system. 
-
-We follow a strict [Code of Conduct](https://adonisjs.com/community-guidelines) to make sure everyone is respectful to each other.
+We welcome you to participate in [GitHub Discussion](https://github.com/adonisjs/core/discussions) and the AdonisJS [Discord Server](https://discord.gg/vDcEjq6). You are free to ask your questions and share your work or contributions made to AdonisJS eco-system.
