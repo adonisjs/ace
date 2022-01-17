@@ -17,7 +17,7 @@
     "compile": "npm run lint && npm run clean && tsc",
     "build": "npm run compile",
     "commit": "git-cz",
-    "release": "np --message=\"chore(release): %s\"",
+    "release": "FORCE_COLOR=true np --message=\"chore(release): %s\"",
     "version": "npm run build",
     "sync-labels": "github-label-sync --labels ./node_modules/@adonisjs/mrm-preset/gh-labels.json adonisjs/ace",
     "format": "prettier --write .",
