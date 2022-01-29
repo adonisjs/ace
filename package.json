@@ -36,7 +36,7 @@
     "@poppinss/utils": "^4.0.1",
     "fs-extra": "^10.0.0",
     "getopts": "^2.3.0",
-    "leven": "^3.1.0",
+    "leven": "^4.0.0",
     "mustache": "^4.2.0",
     "slash": "^3.0.0",
     "term-size": "^2.2.1"
