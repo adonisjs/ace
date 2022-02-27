@@ -11,7 +11,7 @@
   "scripts": {
     "mrm": "mrm --preset=@adonisjs/mrm-preset",
     "pretest": "npm run lint",
-    "test": "node -r ts-node/register/transpile-only .bin/test.ts",
+    "test": "node -r @adonisjs/require-ts/build/register ./bin/test.ts",
     "lint": "eslint . --ext=.ts",
     "clean": "del-cli build",
     "compile": "npm run lint && npm run clean && tsc",
@@ -79,7 +79,6 @@
     "np": "^7.6.0",
     "prettier": "^2.5.1",
     "reflect-metadata": "^0.1.13",
-    "ts-node": "^10.5.0",
     "typescript": "^4.5.4"
   },
   "husky": {

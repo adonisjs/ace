@@ -20,8 +20,8 @@ configure({
   ...processCliArgs(process.argv.slice(2)),
   ...{
     files: ['test/**/*.spec.ts'],
-    plugins: [assert()],
-    reporters: [specReporter(), runFailedTests()],
+    plugins: [assert(), runFailedTests()],
+    reporters: [specReporter()],
     importer: (filePath: string) => import(filePath),
   },
 })
