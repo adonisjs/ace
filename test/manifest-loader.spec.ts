@@ -8,7 +8,7 @@
  */
 
 import 'reflect-metadata'
-import test from 'japa'
+import { test } from '@japa/runner'
 import { join } from 'path'
 
 import { fs } from '../test-helpers'
@@ -16,15 +16,15 @@ import { ManifestLoader } from '../src/Manifest/Loader'
 import { ManifestGenerator } from '../src/Manifest/Generator'
 
 test.group('Manifest Generator', (group) => {
-  group.before(async () => {
+  group.setup(async () => {
     await fs.ensureRoot()
   })
 
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await fs.cleanup()
   })
 
-  test('read manifest file', async (assert) => {
+  test('read manifest file', async ({ assert }) => {
     await fs.add(
       './Commands/Greet.ts',
       `
@@ -84,7 +84,7 @@ test.group('Manifest Generator', (group) => {
     })
   })
 
-  test('read more than one manifest files', async (assert) => {
+  test('read more than one manifest files', async ({ assert }) => {
     await fs.add(
       './Commands/Greet.ts',
       `
@@ -183,7 +183,7 @@ test.group('Manifest Generator', (group) => {
     })
   })
 
-  test('merge aliases of more than one command', async (assert) => {
+  test('merge aliases of more than one command', async ({ assert }) => {
     await fs.add(
       './Commands/Greet.ts',
       `
@@ -287,7 +287,7 @@ test.group('Manifest Generator', (group) => {
     })
   })
 
-  test('find if a command exists', async (assert) => {
+  test('find if a command exists', async ({ assert }) => {
     await fs.add(
       './Commands/Greet.ts',
       `
@@ -345,7 +345,7 @@ test.group('Manifest Generator', (group) => {
     assert.isFalse(manifestLoader.hasCommand('make'))
   })
 
-  test('get command manifest node', async (assert) => {
+  test('get command manifest node', async ({ assert }) => {
     await fs.add(
       './Commands/Greet.ts',
       `
@@ -447,7 +447,7 @@ test.group('Manifest Generator', (group) => {
     assert.isUndefined(manifestLoader.getCommand('make'))
   })
 
-  test('load command', async (assert) => {
+  test('load command', async ({ assert }) => {
     await fs.add(
       './Commands/Greet.ts',
       `

@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import test from 'japa'
+import { test } from '@japa/runner'
 import { join } from 'path'
 import { GeneratorFile } from '../src/Generator/File'
 
 test.group('Generator File', () => {
-  test('use the base name for computing the filename', (assert) => {
+  test('use the base name for computing the filename', ({ assert }) => {
     const file = new GeneratorFile('foo/bar', { pattern: 'pascalcase' })
     file.destinationDir(__dirname)
 
@@ -26,7 +26,7 @@ test.group('Generator File', () => {
     })
   })
 
-  test('add suffix when defined', (assert) => {
+  test('add suffix when defined', ({ assert }) => {
     const file = new GeneratorFile('foo/user', {
       suffix: 'controller',
       pattern: 'pascalcase',
@@ -43,7 +43,7 @@ test.group('Generator File', () => {
     })
   })
 
-  test('do not add suffix when already defined in the name', (assert) => {
+  test('do not add suffix when already defined in the name', ({ assert }) => {
     const file = new GeneratorFile('foo/userController', {
       suffix: 'controller',
       pattern: 'pascalcase',
@@ -60,7 +60,7 @@ test.group('Generator File', () => {
     })
   })
 
-  test('pluralize name when form is plural', (assert) => {
+  test('pluralize name when form is plural', ({ assert }) => {
     const file = new GeneratorFile('foo/user', {
       suffix: 'controller',
       form: 'plural',
@@ -78,7 +78,7 @@ test.group('Generator File', () => {
     })
   })
 
-  test('pluralize name properly when name has suffix', (assert) => {
+  test('pluralize name properly when name has suffix', ({ assert }) => {
     const file = new GeneratorFile('usercontroller', {
       suffix: 'controller',
       form: 'plural',
@@ -96,7 +96,7 @@ test.group('Generator File', () => {
     })
   })
 
-  test('handle case where suffix is name is added after a dash', (assert) => {
+  test('handle case where suffix is name is added after a dash', ({ assert }) => {
     const file = new GeneratorFile('user-controller', {
       suffix: 'controller',
       form: 'plural',
@@ -114,7 +114,7 @@ test.group('Generator File', () => {
     })
   })
 
-  test('use app root when destination path is not absolute', (assert) => {
+  test('use app root when destination path is not absolute', ({ assert }) => {
     const file = new GeneratorFile('foo/user-controller', {
       suffix: 'controller',
       form: 'plural',
@@ -134,7 +134,7 @@ test.group('Generator File', () => {
     })
   })
 
-  test('do not use app root when destination path is absolute', (assert) => {
+  test('do not use app root when destination path is absolute', ({ assert }) => {
     const file = new GeneratorFile('user-controller', {
       suffix: 'controller',
       form: 'plural',
@@ -154,7 +154,7 @@ test.group('Generator File', () => {
     })
   })
 
-  test('use process.cwd() when app root is not defined', (assert) => {
+  test('use process.cwd() when app root is not defined', ({ assert }) => {
     const file = new GeneratorFile('user-controller', {
       suffix: 'controller',
       form: 'plural',
@@ -172,7 +172,7 @@ test.group('Generator File', () => {
     })
   })
 
-  test('substitute stub variables from raw string', (assert) => {
+  test('substitute stub variables from raw string', ({ assert }) => {
     const file = new GeneratorFile('foo/user-controller', {
       suffix: 'controller',
       form: 'plural',
@@ -191,7 +191,7 @@ test.group('Generator File', () => {
     })
   })
 
-  test('add prefix when defined', (assert) => {
+  test('add prefix when defined', ({ assert }) => {
     const file = new GeneratorFile('foo/user', {
       prefix: 'controller',
       pattern: 'pascalcase',
@@ -208,7 +208,7 @@ test.group('Generator File', () => {
     })
   })
 
-  test('do not add prefix when already defined in the name', (assert) => {
+  test('do not add prefix when already defined in the name', ({ assert }) => {
     const file = new GeneratorFile('foo/controlleruser', {
       prefix: 'controller',
       pattern: 'pascalcase',
@@ -225,7 +225,7 @@ test.group('Generator File', () => {
     })
   })
 
-  test('do not pluralize when word is in ignore list', (assert) => {
+  test('do not pluralize when word is in ignore list', ({ assert }) => {
     const file = new GeneratorFile('foo/home', {
       suffix: 'controller',
       form: 'plural',
@@ -244,7 +244,7 @@ test.group('Generator File', () => {
     })
   })
 
-  test('do not pluralize when word is in ignore list and has the suffix', (assert) => {
+  test('do not pluralize when word is in ignore list and has the suffix', ({ assert }) => {
     const file = new GeneratorFile('homecontroller', {
       suffix: 'controller',
       form: 'plural',

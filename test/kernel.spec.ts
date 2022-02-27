@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import test from 'japa'
+import { test } from '@japa/runner'
 import 'reflect-metadata'
 import { join } from 'path'
 
@@ -20,7 +20,7 @@ import { ManifestLoader } from '../src/Manifest/Loader'
 import { setupApp, fs, info } from '../test-helpers'
 
 test.group('Kernel | register', () => {
-  test('raise error when required argument comes after optional argument', (assert) => {
+  test('raise error when required argument comes after optional argument', ({ assert }) => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
@@ -36,10 +36,10 @@ test.group('Kernel | register', () => {
     const app = setupApp()
     const kernel = new Kernel(app)
     const fn = () => kernel.register([Greet])
-    assert.throw(fn, 'Optional argument "name" must be after the required argument "age"')
+    assert.throws(fn, 'Optional argument "name" must be after the required argument "age"')
   })
 
-  test('raise error when command name is missing', (assert) => {
+  test('raise error when command name is missing', ({ assert }) => {
     class Greet extends BaseCommand {
       public async run() {}
     }
@@ -47,13 +47,13 @@ test.group('Kernel | register', () => {
     const app = setupApp()
     const kernel = new Kernel(app)
     const fn = () => kernel.register([Greet])
-    assert.throw(
+    assert.throws(
       fn,
       'Invalid command "Greet". Make sure to define the static property "commandName"'
     )
   })
 
-  test("raise error when spread argument isn't the last one", (assert) => {
+  test("raise error when spread argument isn't the last one", ({ assert }) => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
@@ -69,10 +69,10 @@ test.group('Kernel | register', () => {
     const app = setupApp()
     const kernel = new Kernel(app)
     const fn = () => kernel.register([Greet])
-    assert.throw(fn, 'Spread argument "files" must be at last position')
+    assert.throws(fn, 'Spread argument "files" must be at last position')
   })
 
-  test('register command', (assert) => {
+  test('register command', ({ assert }) => {
     const app = setupApp()
     const kernel = new Kernel(app)
 
@@ -90,7 +90,7 @@ test.group('Kernel | register', () => {
     assert.deepEqual(kernel.commands, { install: Install, greet: Greet })
   })
 
-  test('register command with aliases', (assert) => {
+  test('register command with aliases', ({ assert }) => {
     const app = setupApp()
     const kernel = new Kernel(app)
 
@@ -110,7 +110,7 @@ test.group('Kernel | register', () => {
     assert.deepEqual(kernel.aliases, { g: 'greet', gr: 'greet' })
   })
 
-  test('return command name suggestions for a given string', (assert) => {
+  test('return command name suggestions for a given string', ({ assert }) => {
     const app = setupApp()
     const kernel = new Kernel(app)
 
@@ -128,7 +128,7 @@ test.group('Kernel | register', () => {
     assert.deepEqual(kernel.getSuggestions('itall'), ['install'])
   })
 
-  test('return command alias suggestions for a given string', (assert) => {
+  test('return command alias suggestions for a given string', ({ assert }) => {
     const app = setupApp()
     const kernel = new Kernel(app)
 
@@ -147,7 +147,7 @@ test.group('Kernel | register', () => {
     assert.deepEqual(kernel.getSuggestions('hi'), ['sayhi'])
   })
 
-  test('return command name suggestions from manifest file', async (assert) => {
+  test('return command name suggestions from manifest file', async ({ assert }) => {
     const app = setupApp()
     const kernel = new Kernel(app)
 
@@ -184,7 +184,7 @@ test.group('Kernel | register', () => {
     await fs.cleanup()
   })
 
-  test('change camelCase alias name to dashcase', (assert) => {
+  test('change camelCase alias name to dashcase', ({ assert }) => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
 
@@ -199,7 +199,7 @@ test.group('Kernel | register', () => {
 })
 
 test.group('Kernel | find', () => {
-  test('find relevant command from the commands list', async (assert) => {
+  test('find relevant command from the commands list', async ({ assert }) => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
       public async run() {}
@@ -213,7 +213,7 @@ test.group('Kernel | find', () => {
     assert.deepEqual(greet, Greet)
   })
 
-  test('find relevant command from the commands aliases', async (assert) => {
+  test('find relevant command from the commands aliases', async ({ assert }) => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
       public static aliases = ['sayhi']
@@ -228,7 +228,7 @@ test.group('Kernel | find', () => {
     assert.deepEqual(greet, Greet)
   })
 
-  test('return null when unable to find command', async (assert) => {
+  test('return null when unable to find command', async ({ assert }) => {
     const app = setupApp()
     const kernel = new Kernel(app)
     const greet = await kernel.find(['greet'])
@@ -236,7 +236,7 @@ test.group('Kernel | find', () => {
     assert.isNull(greet)
   })
 
-  test('find command from manifest when manifestCommands exists', async (assert) => {
+  test('find command from manifest when manifestCommands exists', async ({ assert }) => {
     const app = setupApp()
     const kernel = new Kernel(app)
     const manifestLoader = new ManifestLoader([
@@ -275,7 +275,7 @@ test.group('Kernel | find', () => {
     await fs.cleanup()
   })
 
-  test('find command from manifest aliases', async (assert) => {
+  test('find command from manifest aliases', async ({ assert }) => {
     const app = setupApp()
     const kernel = new Kernel(app)
     const manifestLoader = new ManifestLoader([
@@ -319,7 +319,7 @@ test.group('Kernel | find', () => {
     await fs.cleanup()
   })
 
-  test('define manifest command alias inside adonisjs rc file', async (assert) => {
+  test('define manifest command alias inside adonisjs rc file', async ({ assert }) => {
     const app = setupApp()
     app.rcFile.commandsAliases = { sayhi: 'greet' }
     const kernel = new Kernel(app)
@@ -362,7 +362,7 @@ test.group('Kernel | find', () => {
     await fs.cleanup()
   })
 
-  test('register commands along with manifest', async (assert) => {
+  test('register commands along with manifest', async ({ assert }) => {
     const app = setupApp()
     const kernel = new Kernel(app)
     const manifestLoader = new ManifestLoader([
@@ -414,7 +414,7 @@ test.group('Kernel | find', () => {
     await fs.cleanup()
   })
 
-  test('execute before and after hook when finding command from manifest', async (assert) => {
+  test('execute before and after hook when finding command from manifest', async ({ assert }) => {
     assert.plan(3)
 
     const app = setupApp()
@@ -462,7 +462,9 @@ test.group('Kernel | find', () => {
     await fs.cleanup()
   })
 
-  test('execute before and after hook when finding command from manifest aliases', async (assert) => {
+  test('execute before and after hook when finding command from manifest aliases', async ({
+    assert,
+  }) => {
     assert.plan(3)
 
     const app = setupApp()
@@ -515,7 +517,7 @@ test.group('Kernel | find', () => {
     await fs.cleanup()
   })
 
-  test('pass null to before and after hook when unable to find command', async (assert) => {
+  test('pass null to before and after hook when unable to find command', async ({ assert }) => {
     assert.plan(3)
 
     const app = setupApp()
@@ -528,7 +530,9 @@ test.group('Kernel | find', () => {
     assert.isNull(greet)
   })
 
-  test('pass command constructor to before and after hook found command from local commands', async (assert) => {
+  test('pass command constructor to before and after hook found command from local commands', async ({
+    assert,
+  }) => {
     assert.plan(3)
     class Greet extends BaseCommand {
       public static commandName = 'greet'
@@ -546,7 +550,9 @@ test.group('Kernel | find', () => {
     assert.deepEqual(greet, Greet)
   })
 
-  test('pass command constructor to before and after hook found command from local aliases', async (assert) => {
+  test('pass command constructor to before and after hook found command from local aliases', async ({
+    assert,
+  }) => {
     assert.plan(3)
     class Greet extends BaseCommand {
       public static commandName = 'greet'
@@ -567,7 +573,7 @@ test.group('Kernel | find', () => {
 })
 
 test.group('Kernel | exec', () => {
-  test('raise exception when required argument is missing', async (assert, done) => {
+  test('raise exception when required argument is missing', async ({ assert }, done) => {
     assert.plan(3)
 
     class Greet extends BaseCommand {
@@ -593,9 +599,9 @@ test.group('Kernel | exec', () => {
     })
 
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('work fine when argument is missing and is optional', async (assert, done) => {
+  test('work fine when argument is missing and is optional', async ({ assert }, done) => {
     assert.plan(1)
 
     class Greet extends BaseCommand {
@@ -623,9 +629,9 @@ test.group('Kernel | exec', () => {
 
     const argv = ['greet']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('work fine when required argument is defined', async (assert, done) => {
+  test('work fine when required argument is defined', async ({ assert }, done) => {
     assert.plan(2)
 
     class Greet extends BaseCommand {
@@ -654,9 +660,9 @@ test.group('Kernel | exec', () => {
 
     const argv = ['greet', 'virk']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('define spread arguments', async (assert, done) => {
+  test('define spread arguments', async ({ assert }, done) => {
     assert.plan(2)
 
     class Greet extends BaseCommand {
@@ -685,9 +691,9 @@ test.group('Kernel | exec', () => {
 
     const argv = ['greet', 'foo.js', 'bar.js']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('define spread arguments with regular arguments', async (assert, done) => {
+  test('define spread arguments with regular arguments', async ({ assert }, done) => {
     assert.plan(4)
 
     class Greet extends BaseCommand {
@@ -724,9 +730,9 @@ test.group('Kernel | exec', () => {
 
     const argv = ['greet', 'virk', '22', 'foo.js', 'bar.js']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('set arguments and flags', async (assert, done) => {
+  test('set arguments and flags', async ({ assert }, done) => {
     assert.plan(3)
 
     class Greet extends BaseCommand {
@@ -759,9 +765,9 @@ test.group('Kernel | exec', () => {
 
     const argv = ['greet', 'virk', '--admin']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('set arguments and flags when flag is defined with = sign', async (assert, done) => {
+  test('set arguments and flags when flag is defined with = sign', async ({ assert }, done) => {
     assert.plan(3)
 
     class Greet extends BaseCommand {
@@ -794,9 +800,9 @@ test.group('Kernel | exec', () => {
 
     const argv = ['greet', 'virk', '--admin=true']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('set arguments and flags when flag alias is passed', async (assert, done) => {
+  test('set arguments and flags when flag alias is passed', async ({ assert }, done) => {
     assert.plan(3)
 
     class Greet extends BaseCommand {
@@ -829,9 +835,9 @@ test.group('Kernel | exec', () => {
 
     const argv = ['greet', 'virk', '-a']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test("set flag when it's name is different from command property", async (assert, done) => {
+  test("set flag when it's name is different from command property", async ({ assert }, done) => {
     assert.plan(3)
 
     class Greet extends BaseCommand {
@@ -864,9 +870,9 @@ test.group('Kernel | exec', () => {
 
     const argv = ['greet', 'virk', '-a']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('parse boolean flags as boolean always', async (assert, done) => {
+  test('parse boolean flags as boolean always', async ({ assert }, done) => {
     assert.plan(3)
 
     class Greet extends BaseCommand {
@@ -899,9 +905,11 @@ test.group('Kernel | exec', () => {
 
     const argv = ['greet', 'virk', '--admin=true']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('parse boolean flags as boolean always also when aliases are defined', async (assert, done) => {
+  test('parse boolean flags as boolean always also when aliases are defined', async ({
+    assert,
+  }, done) => {
     assert.plan(3)
 
     class Greet extends BaseCommand {
@@ -934,9 +942,9 @@ test.group('Kernel | exec', () => {
 
     const argv = ['greet', 'virk', '-a=true']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('do not override default value when flag is not defined', async (assert, done) => {
+  test('do not override default value when flag is not defined', async ({ assert }, done) => {
     assert.plan(3)
 
     class Greet extends BaseCommand {
@@ -969,9 +977,11 @@ test.group('Kernel | exec', () => {
 
     const argv = ['greet', 'virk']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('do not overwrite default value defined on the instance property', async (assert, done) => {
+  test('do not overwrite default value defined on the instance property', async ({
+    assert,
+  }, done) => {
     assert.plan(3)
 
     class Greet extends BaseCommand {
@@ -1004,9 +1014,9 @@ test.group('Kernel | exec', () => {
 
     const argv = ['greet', 'virk']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('parse flags as array when type is set to array', async (assert, done) => {
+  test('parse flags as array when type is set to array', async ({ assert }, done) => {
     assert.plan(3)
 
     class Greet extends BaseCommand {
@@ -1039,9 +1049,9 @@ test.group('Kernel | exec', () => {
 
     const argv = ['greet', 'virk', '--files=foo.js']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('register global flags', async (assert, done) => {
+  test('register global flags', async ({ assert }, done) => {
     assert.plan(2)
 
     const app = setupApp()
@@ -1065,9 +1075,9 @@ test.group('Kernel | exec', () => {
 
     const argv = ['--env=production']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('register global boolean flags', async (assert, done) => {
+  test('register global boolean flags', async ({ assert }, done) => {
     assert.plan(2)
 
     const app = setupApp()
@@ -1091,7 +1101,7 @@ test.group('Kernel | exec', () => {
 
     const argv = ['--ansi']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
   test('do not execute string global flag when flag is not defined', async (_, done) => {
     const app = setupApp()
@@ -1115,7 +1125,7 @@ test.group('Kernel | exec', () => {
     })
 
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
   test('do not execute num array type global flag when flag is not defined', async (_, done) => {
     const app = setupApp()
@@ -1138,9 +1148,11 @@ test.group('Kernel | exec', () => {
 
     const argv = []
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('pass command instance to the global flag, when flag is defined on a command', async (assert, done) => {
+  test('pass command instance to the global flag, when flag is defined on a command', async ({
+    assert,
+  }, done) => {
     assert.plan(3)
     const app = setupApp()
     const kernel = new Kernel(app)
@@ -1176,9 +1188,9 @@ test.group('Kernel | exec', () => {
 
     const argv = ['greet', 'virk', '--env=production']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('define arg name different from property name', async (assert, done) => {
+  test('define arg name different from property name', async ({ assert }, done) => {
     assert.plan(2)
 
     class Greet extends BaseCommand {
@@ -1207,9 +1219,9 @@ test.group('Kernel | exec', () => {
 
     const argv = ['greet', 'virk']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('define flag name different from property name', async (assert, done) => {
+  test('define flag name different from property name', async ({ assert }, done) => {
     assert.plan(2)
 
     class Greet extends BaseCommand {
@@ -1238,9 +1250,9 @@ test.group('Kernel | exec', () => {
 
     const argv = ['greet', '--isAdmin']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('execute before and after run hooks', async (assert, done) => {
+  test('execute before and after run hooks', async ({ assert }, done) => {
     assert.plan(2)
 
     class Greet extends BaseCommand {
@@ -1274,9 +1286,11 @@ test.group('Kernel | exec', () => {
 
     const argv = ['greet']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 
-  test('execute before and after run hooks even when command raises an exception', async (assert, done) => {
+  test('execute before and after run hooks even when command raises an exception', async ({
+    assert,
+  }, done) => {
     assert.plan(5)
 
     class Greet extends BaseCommand {
@@ -1311,11 +1325,11 @@ test.group('Kernel | exec', () => {
 
     const argv = ['greet']
     await kernel.handle(argv)
-  })
+  }).waitForDone()
 })
 
 test.group('Kernel | runCommand', () => {
-  test('test logs in test mode', async (assert) => {
+  test('test logs in test mode', async ({ assert }) => {
     assert.plan(1)
 
     class Greet extends BaseCommand {
@@ -1344,7 +1358,7 @@ test.group('Kernel | runCommand', () => {
     ])
   })
 
-  test('test input prompt in raw mode', async (assert) => {
+  test('test input prompt in raw mode', async ({ assert }) => {
     assert.plan(1)
 
     class Greet extends BaseCommand {
@@ -1383,7 +1397,7 @@ test.group('Kernel | runCommand', () => {
     ])
   })
 
-  test('test input prompt validation in raw mode', async (assert) => {
+  test('test input prompt validation in raw mode', async ({ assert }) => {
     assert.plan(2)
 
     class Greet extends BaseCommand {
@@ -1429,7 +1443,7 @@ test.group('Kernel | runCommand', () => {
     ])
   })
 
-  test('test choice prompt in raw mode', async (assert) => {
+  test('test choice prompt in raw mode', async ({ assert }) => {
     assert.plan(1)
 
     class Greet extends BaseCommand {
@@ -1465,7 +1479,7 @@ test.group('Kernel | runCommand', () => {
     ])
   })
 
-  test('test choice prompt validation in raw mode', async (assert) => {
+  test('test choice prompt validation in raw mode', async ({ assert }) => {
     assert.plan(2)
 
     class Greet extends BaseCommand {
@@ -1509,7 +1523,7 @@ test.group('Kernel | runCommand', () => {
     ])
   })
 
-  test('test multiple prompt in raw mode', async (assert) => {
+  test('test multiple prompt in raw mode', async ({ assert }) => {
     assert.plan(1)
     process.env.CLI_UI_IS_TESTING = 'true'
 
@@ -1549,7 +1563,7 @@ test.group('Kernel | runCommand', () => {
     ])
   })
 
-  test('test multiple prompt validation in raw mode', async (assert) => {
+  test('test multiple prompt validation in raw mode', async ({ assert }) => {
     assert.plan(2)
 
     class Greet extends BaseCommand {
@@ -1598,7 +1612,7 @@ test.group('Kernel | runCommand', () => {
     ])
   })
 
-  test('test toggle prompt in raw mode', async (assert) => {
+  test('test toggle prompt in raw mode', async ({ assert }) => {
     assert.plan(1)
     process.env.CLI_UI_IS_TESTING = 'true'
 
@@ -1637,7 +1651,7 @@ test.group('Kernel | runCommand', () => {
 })
 
 test.group('Kernel | exec', () => {
-  test('exec command by name', async (assert) => {
+  test('exec command by name', async ({ assert }) => {
     assert.plan(1)
 
     class Foo extends BaseCommand {
@@ -1654,7 +1668,7 @@ test.group('Kernel | exec', () => {
     await kernel.exec('foo', [])
   })
 
-  test('exec command by alias', async (assert) => {
+  test('exec command by alias', async ({ assert }) => {
     assert.plan(1)
 
     class Foo extends BaseCommand {
@@ -1672,7 +1686,7 @@ test.group('Kernel | exec', () => {
     await kernel.exec('bar', [])
   })
 
-  test('pass arguments and flags to command using exec', async (assert) => {
+  test('pass arguments and flags to command using exec', async ({ assert }) => {
     assert.plan(2)
 
     class Foo extends BaseCommand {
@@ -1697,7 +1711,7 @@ test.group('Kernel | exec', () => {
     await kernel.exec('foo', ['virk', '--is-admin=true'])
   })
 
-  test('exec find and run hooks for the command using exec', async (assert) => {
+  test('exec find and run hooks for the command using exec', async ({ assert }) => {
     assert.plan(5)
 
     class Foo extends BaseCommand {
@@ -1730,7 +1744,7 @@ test.group('Kernel | exec', () => {
     await kernel.exec('foo', [])
   })
 
-  test('exec command prepare method', async (assert) => {
+  test('exec command prepare method', async ({ assert }) => {
     assert.plan(2)
 
     class Foo extends BaseCommand {
@@ -1750,7 +1764,7 @@ test.group('Kernel | exec', () => {
     await kernel.exec('foo', [])
   })
 
-  test('exec command completed method', async (assert) => {
+  test('exec command completed method', async ({ assert }) => {
     assert.plan(2)
 
     class Foo extends BaseCommand {
@@ -1770,7 +1784,7 @@ test.group('Kernel | exec', () => {
     await kernel.exec('foo', [])
   })
 
-  test('exec command completed method, when command fails', async (assert) => {
+  test('exec command completed method, when command fails', async ({ assert }) => {
     assert.plan(2)
 
     class Foo extends BaseCommand {
@@ -1792,7 +1806,7 @@ test.group('Kernel | exec', () => {
     await kernel.exec('foo', [])
   })
 
-  test("raise exception when completed method doesn't handle it", async (assert) => {
+  test("raise exception when completed method doesn't handle it", async ({ assert }) => {
     assert.plan(3)
 
     class Foo extends BaseCommand {
@@ -1817,7 +1831,7 @@ test.group('Kernel | exec', () => {
     }
   })
 
-  test('return command response', async (assert) => {
+  test('return command response', async ({ assert }) => {
     class Foo extends BaseCommand {
       public static commandName = 'foo'
       public async run() {
@@ -1835,7 +1849,7 @@ test.group('Kernel | exec', () => {
 })
 
 test.group('Kernel | IoC container', () => {
-  test('make command instance by injecting dependencies', async (assert, done) => {
+  test('make command instance by injecting dependencies', async ({ assert }, done) => {
     assert.plan(1)
 
     const app = setupApp()
@@ -1874,9 +1888,9 @@ test.group('Kernel | IoC container', () => {
 
     kernel.register([Install])
     await kernel.handle(['install'])
-  })
+  }).waitForDone()
 
-  test('inject dependencies to command methods', async (assert, done) => {
+  test('inject dependencies to command methods', async ({ assert }, done) => {
     assert.plan(1)
 
     const app = setupApp()
@@ -1905,11 +1919,11 @@ test.group('Kernel | IoC container', () => {
     kernel.onExit(() => done())
 
     await kernel.handle(['install'])
-  })
+  }).waitForDone()
 })
 
 test.group('Kernel | defaultCommand', () => {
-  test('set custom default command', async (assert, done) => {
+  test('set custom default command', async ({ assert }, done) => {
     assert.plan(1)
 
     class Help extends BaseCommand {
@@ -1925,9 +1939,9 @@ test.group('Kernel | defaultCommand', () => {
 
     kernel.onExit(() => done())
     await kernel.handle([])
-  })
+  }).waitForDone()
 
-  test('execute before after hooks for the default command', async (assert, done) => {
+  test('execute before after hooks for the default command', async ({ assert }, done) => {
     assert.plan(3)
 
     class Help extends BaseCommand {
@@ -1951,5 +1965,5 @@ test.group('Kernel | defaultCommand', () => {
     kernel.defaultCommand = Help
     kernel.onExit(() => done())
     await kernel.handle([])
-  })
+  }).waitForDone()
 })

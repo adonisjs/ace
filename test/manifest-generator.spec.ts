@@ -8,22 +8,22 @@
  */
 
 import 'reflect-metadata'
-import test from 'japa'
+import { test } from '@japa/runner'
 import { join } from 'path'
 
 import { fs } from '../test-helpers'
 import { ManifestGenerator } from '../src/Manifest/Generator'
 
 test.group('Manifest Generator', (group) => {
-  group.before(async () => {
+  group.setup(async () => {
     await fs.ensureRoot()
   })
 
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await fs.cleanup()
   })
 
-  test('generate manifest from command paths', async (assert) => {
+  test('generate manifest from command paths', async ({ assert }) => {
     await fs.add(
       'Commands/Make.ts',
       `
@@ -78,7 +78,7 @@ test.group('Manifest Generator', (group) => {
     })
   })
 
-  test("raise exception when commandPath doesn't exports a command", async (assert) => {
+  test("raise exception when commandPath doesn't exports a command", async ({ assert }) => {
     assert.plan(1)
 
     await fs.add(
@@ -113,7 +113,7 @@ test.group('Manifest Generator', (group) => {
     }
   })
 
-  test('generate manifest from command subpaths', async (assert) => {
+  test('generate manifest from command subpaths', async ({ assert }) => {
     await fs.add(
       'Commands/Make.ts',
       `
@@ -176,7 +176,7 @@ test.group('Manifest Generator', (group) => {
     })
   })
 
-  test('register command aliases inside manifest file', async (assert) => {
+  test('register command aliases inside manifest file', async ({ assert }) => {
     await fs.add(
       'Commands/Make.ts',
       `
