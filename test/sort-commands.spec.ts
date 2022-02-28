@@ -7,13 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import test from 'japa'
+import { test } from '@japa/runner'
 
 import { BaseCommand } from '../src/BaseCommand'
 import { sortAndGroupCommands } from '../src/utils/sortAndGroupCommands'
 
 test.group('utils | sortAndGroupCommands', () => {
-  test('sort commands in alphabetical order', (assert) => {
+  test('sort commands in alphabetical order', ({ assert }) => {
     class Greet extends BaseCommand {
       public static commandName = 'greet'
       public async handle() {}
@@ -28,7 +28,7 @@ test.group('utils | sortAndGroupCommands', () => {
     assert.deepEqual(output, [{ group: 'root', commands: [Greet, Run] }])
   })
 
-  test('sort and group commands in alphabetical order', (assert) => {
+  test('sort and group commands in alphabetical order', ({ assert }) => {
     class MakeController extends BaseCommand {
       public static commandName = 'make:controller'
       public async handle() {}
@@ -51,7 +51,7 @@ test.group('utils | sortAndGroupCommands', () => {
     ])
   })
 
-  test('sort groups in alphabetical order too', (assert) => {
+  test('sort groups in alphabetical order too', ({ assert }) => {
     class MakeController extends BaseCommand {
       public static commandName = 'make:controller'
       public async handle() {}

@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import test from 'japa'
+import { test } from '@japa/runner'
 import { Kernel } from '../src/Kernel'
 import { BaseCommand } from '../src/BaseCommand'
 
@@ -16,7 +16,7 @@ import { args } from '../src/Decorators/args'
 import { flags } from '../src/Decorators/flags'
 
 test.group('Kernel | no argv', () => {
-  test('execute the default command when no argv are defined', async (assert) => {
+  test('execute the default command when no argv are defined', async ({ assert }) => {
     assert.plan(3)
 
     class MyDefaultCommand extends BaseCommand {
@@ -37,7 +37,7 @@ test.group('Kernel | no argv', () => {
     await kernel.handle([])
   })
 
-  test('handle exceptions raised by the default command', async (assert) => {
+  test('handle exceptions raised by the default command', async ({ assert }) => {
     assert.plan(2)
 
     class MyDefaultCommand extends BaseCommand {
@@ -58,7 +58,7 @@ test.group('Kernel | no argv', () => {
     await kernel.handle([])
   })
 
-  test('execute find hooks when running the default command', async (assert) => {
+  test('execute find hooks when running the default command', async ({ assert }) => {
     assert.plan(3)
 
     const stack: string[] = []
@@ -83,7 +83,7 @@ test.group('Kernel | no argv', () => {
     await kernel.handle([])
   })
 
-  test('execute run hooks when running the default command', async (assert) => {
+  test('execute run hooks when running the default command', async ({ assert }) => {
     assert.plan(3)
 
     const stack: string[] = []
@@ -111,7 +111,7 @@ test.group('Kernel | no argv', () => {
     await kernel.handle([])
   })
 
-  test('run all hooks even when default command raises an exception', async (assert) => {
+  test('run all hooks even when default command raises an exception', async ({ assert }) => {
     assert.plan(3)
 
     const stack: string[] = []
@@ -141,7 +141,7 @@ test.group('Kernel | no argv', () => {
     await kernel.handle([])
   })
 
-  test('handle case where find hooks raise an exception', async (assert) => {
+  test('handle case where find hooks raise an exception', async ({ assert }) => {
     assert.plan(3)
 
     const stack: string[] = []
@@ -173,7 +173,7 @@ test.group('Kernel | no argv', () => {
     await kernel.handle([])
   })
 
-  test('handle case where run hooks raise an exception', async (assert) => {
+  test('handle case where run hooks raise an exception', async ({ assert }) => {
     assert.plan(3)
 
     const stack: string[] = []
@@ -205,7 +205,7 @@ test.group('Kernel | no argv', () => {
     await kernel.handle([])
   })
 
-  test('handle case where "after run" hooks raise an exception', async (assert) => {
+  test('handle case where "after run" hooks raise an exception', async ({ assert }) => {
     assert.plan(3)
 
     const stack: string[] = []
@@ -240,7 +240,7 @@ test.group('Kernel | no argv', () => {
 })
 
 test.group('Kernel | only flags', () => {
-  test('execute global flags when no command name is defined', async (assert) => {
+  test('execute global flags when no command name is defined', async ({ assert }) => {
     assert.plan(3)
     const kernel = new Kernel(setupApp())
 
@@ -260,7 +260,7 @@ test.group('Kernel | only flags', () => {
     await kernel.handle(['--help'])
   })
 
-  test('execute global flags when no command name is defined', async (assert) => {
+  test('execute global flags when no command name is defined', async ({ assert }) => {
     assert.plan(3)
     const kernel = new Kernel(setupApp())
 
@@ -280,7 +280,7 @@ test.group('Kernel | only flags', () => {
     await kernel.handle(['--help'])
   })
 
-  test('execute string type flags', async (assert) => {
+  test('execute string type flags', async ({ assert }) => {
     assert.plan(3)
     const kernel = new Kernel(setupApp())
 
@@ -302,7 +302,7 @@ test.group('Kernel | only flags', () => {
     await kernel.handle(['--env=production'])
   })
 
-  test('execute array type flags', async (assert) => {
+  test('execute array type flags', async ({ assert }) => {
     assert.plan(3)
     const kernel = new Kernel(setupApp())
 
@@ -324,7 +324,7 @@ test.group('Kernel | only flags', () => {
     await kernel.handle(['--env=production,development'])
   })
 
-  test('do not execute flag handlers when not mentioned in argv', async (assert) => {
+  test('do not execute flag handlers when not mentioned in argv', async ({ assert }) => {
     assert.plan(3)
     const kernel = new Kernel(setupApp())
 
@@ -352,7 +352,7 @@ test.group('Kernel | only flags', () => {
     await kernel.handle(['--help'])
   })
 
-  test('do not execute flag of type string when not mentioned in argv', async (assert) => {
+  test('do not execute flag of type string when not mentioned in argv', async ({ assert }) => {
     assert.plan(3)
     const kernel = new Kernel(setupApp())
 
@@ -382,7 +382,7 @@ test.group('Kernel | only flags', () => {
     await kernel.handle(['--help'])
   })
 
-  test('do not execute flag of type array when not mentioned in argv', async (assert) => {
+  test('do not execute flag of type array when not mentioned in argv', async ({ assert }) => {
     assert.plan(3)
     const kernel = new Kernel(setupApp())
 
@@ -412,7 +412,7 @@ test.group('Kernel | only flags', () => {
     await kernel.handle(['--help'])
   })
 
-  test('handle use case when flag raises an exception', async (assert) => {
+  test('handle use case when flag raises an exception', async ({ assert }) => {
     assert.plan(2)
     const kernel = new Kernel(setupApp())
 
@@ -436,7 +436,7 @@ test.group('Kernel | only flags', () => {
 })
 
 test.group('Kernel | command found', () => {
-  test('execute registered command', async (assert) => {
+  test('execute registered command', async ({ assert }) => {
     assert.plan(3)
     const kernel = new Kernel(setupApp())
 
@@ -461,7 +461,7 @@ test.group('Kernel | command found', () => {
     await kernel.handle(['hello', 'world'])
   })
 
-  test('handle use case where command raises an exception', async (assert) => {
+  test('handle use case where command raises an exception', async ({ assert }) => {
     assert.plan(2)
     const kernel = new Kernel(setupApp())
 
@@ -486,7 +486,7 @@ test.group('Kernel | command found', () => {
     await kernel.handle(['hello', 'world'])
   })
 
-  test('handle use case where long lived marks itself as failed', async (assert, done) => {
+  test('handle use case where long lived marks itself as failed', async ({ assert }, done) => {
     assert.plan(2)
     const kernel = new Kernel(setupApp())
 
@@ -517,9 +517,9 @@ test.group('Kernel | command found', () => {
     })
 
     await kernel.handle(['hello', 'world'])
-  })
+  }).waitForDone()
 
-  test('handle case when command invokes kernel.exit right away', async (assert) => {
+  test('handle case when command invokes kernel.exit right away', async ({ assert }) => {
     assert.plan(3)
     const kernel = new Kernel(setupApp())
 
@@ -545,7 +545,7 @@ test.group('Kernel | command found', () => {
     await kernel.handle(['hello', 'world'])
   })
 
-  test('invoke find hooks before running the command', async (assert) => {
+  test('invoke find hooks before running the command', async ({ assert }) => {
     assert.plan(4)
     const kernel = new Kernel(setupApp())
 
@@ -576,7 +576,7 @@ test.group('Kernel | command found', () => {
     assert.deepEqual(stack, ['before-find', 'after-find', 'command'])
   })
 
-  test('invoke run hooks when running the command', async (assert) => {
+  test('invoke run hooks when running the command', async ({ assert }) => {
     assert.plan(4)
     const kernel = new Kernel(setupApp())
 
@@ -609,7 +609,7 @@ test.group('Kernel | command found', () => {
     assert.deepEqual(stack, ['before-find', 'after-find', 'before-run', 'command', 'after-run'])
   })
 
-  test('handle case where before find hook fails', async (assert) => {
+  test('handle case where before find hook fails', async ({ assert }) => {
     assert.plan(3)
     const kernel = new Kernel(setupApp())
 
@@ -644,7 +644,7 @@ test.group('Kernel | command found', () => {
     assert.deepEqual(stack, [])
   })
 
-  test('handle case where after find hook fails', async (assert) => {
+  test('handle case where after find hook fails', async ({ assert }) => {
     assert.plan(3)
     const kernel = new Kernel(setupApp())
 
@@ -680,7 +680,7 @@ test.group('Kernel | command found', () => {
     assert.deepEqual(stack, ['before-find'])
   })
 
-  test('handle case where before run hook fails', async (assert) => {
+  test('handle case where before run hook fails', async ({ assert }) => {
     assert.plan(3)
     const kernel = new Kernel(setupApp())
 
@@ -716,7 +716,7 @@ test.group('Kernel | command found', () => {
     assert.deepEqual(stack, ['before-find', 'after-find', 'after-run'])
   })
 
-  test('handle case where after run fails', async (assert) => {
+  test('handle case where after run fails', async ({ assert }) => {
     assert.plan(4)
     const kernel = new Kernel(setupApp())
 
@@ -753,7 +753,7 @@ test.group('Kernel | command found', () => {
     assert.deepEqual(stack, ['before-find', 'after-find', 'before-run', 'command'])
   })
 
-  test('invoke global flags before running the command', async (assert) => {
+  test('invoke global flags before running the command', async ({ assert }) => {
     assert.plan(4)
     const kernel = new Kernel(setupApp())
 
@@ -797,7 +797,7 @@ test.group('Kernel | command found', () => {
     ])
   })
 
-  test('handle case when global flag raises an exception', async (assert) => {
+  test('handle case when global flag raises an exception', async ({ assert }) => {
     assert.plan(3)
     const kernel = new Kernel(setupApp())
 
@@ -839,7 +839,7 @@ test.group('Kernel | command found', () => {
     assert.deepEqual(stack, ['before-find', 'after-find'])
   })
 
-  test('validate command args', async (assert) => {
+  test('validate command args', async ({ assert }) => {
     assert.plan(3)
     const kernel = new Kernel(setupApp())
 
@@ -872,7 +872,7 @@ test.group('Kernel | command found', () => {
     assert.deepEqual(stack, ['before-find', 'after-find'])
   })
 
-  test('validate command flags', async (assert) => {
+  test('validate command flags', async ({ assert }) => {
     assert.plan(3)
     const kernel = new Kernel(setupApp())
 
@@ -913,7 +913,7 @@ test.group('Kernel | command found', () => {
 })
 
 test.group('Kernel | command not found', () => {
-  test('raise error when command is missing', async (assert) => {
+  test('raise error when command is missing', async ({ assert }) => {
     assert.plan(2)
     const kernel = new Kernel(setupApp())
 
@@ -925,7 +925,7 @@ test.group('Kernel | command not found', () => {
     await kernel.handle(['hello', 'world'])
   })
 
-  test('run find hooks', async (assert) => {
+  test('run find hooks', async ({ assert }) => {
     assert.plan(3)
 
     const kernel = new Kernel(setupApp())
@@ -945,7 +945,7 @@ test.group('Kernel | command not found', () => {
     assert.deepEqual(stack, ['before-find', 'after-find'])
   })
 
-  test('run global flag handlers', async (assert) => {
+  test('run global flag handlers', async ({ assert }) => {
     assert.plan(3)
 
     const kernel = new Kernel(setupApp())
@@ -970,7 +970,7 @@ test.group('Kernel | command not found', () => {
 })
 
 test.group('Kernel | subcommands', () => {
-  test('allow executing commands within commands', async (assert) => {
+  test('allow executing commands within commands', async ({ assert }) => {
     assert.plan(4)
     const kernel = new Kernel(setupApp())
 
@@ -1008,7 +1008,9 @@ test.group('Kernel | subcommands', () => {
     await kernel.handle(['hello', 'world'])
   })
 
-  test('do not trigger exit when subcommand finishes and the main one is pending', async (assert) => {
+  test('do not trigger exit when subcommand finishes and the main one is pending', async ({
+    assert,
+  }) => {
     assert.plan(4)
     const kernel = new Kernel(setupApp())
 
@@ -1048,7 +1050,7 @@ test.group('Kernel | subcommands', () => {
     await kernel.handle(['hello', 'world'])
   })
 
-  test('execute find hooks before the subcommand', async (assert) => {
+  test('execute find hooks before the subcommand', async ({ assert }) => {
     assert.plan(5)
     const kernel = new Kernel(setupApp())
 
@@ -1100,7 +1102,7 @@ test.group('Kernel | subcommands', () => {
     ])
   })
 
-  test('execute run hooks before the subcommand', async (assert) => {
+  test('execute run hooks before the subcommand', async ({ assert }) => {
     assert.plan(5)
     const kernel = new Kernel(setupApp())
 
@@ -1158,7 +1160,7 @@ test.group('Kernel | subcommands', () => {
     ])
   })
 
-  test('handle case when subcommand error is unhandled', async (assert) => {
+  test('handle case when subcommand error is unhandled', async ({ assert }) => {
     assert.plan(5)
     const kernel = new Kernel(setupApp())
 
@@ -1217,7 +1219,7 @@ test.group('Kernel | subcommands', () => {
     ])
   })
 
-  test('handle case when subcommand error is handled', async (assert) => {
+  test('handle case when subcommand error is handled', async ({ assert }) => {
     assert.plan(6)
     const kernel = new Kernel(setupApp())
 
@@ -1281,7 +1283,7 @@ test.group('Kernel | subcommands', () => {
     ])
   })
 
-  test('do not run global flags when executing subcommand', async (assert) => {
+  test('do not run global flags when executing subcommand', async ({ assert }) => {
     assert.plan(5)
     const kernel = new Kernel(setupApp())
 

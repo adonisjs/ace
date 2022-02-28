@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import test from 'japa'
+import { test } from '@japa/runner'
 import { join } from 'path'
 
 import { Generator } from '../src/Generator'
@@ -19,11 +19,11 @@ class GeneratorCommand extends BaseCommand {
 }
 
 test.group('Generator', (group) => {
-  group.after(async () => {
+  group.teardown(async () => {
     await fs.cleanup()
   })
 
-  test('generate one or more entity files', async (assert) => {
+  test('generate one or more entity files', async ({ assert }) => {
     const app = setupApp()
     const kernel = getKernel(app)
 
@@ -42,7 +42,7 @@ test.group('Generator', (group) => {
     assert.isTrue(accountExists)
   })
 
-  test('do not overwrite existing files', async (assert) => {
+  test('do not overwrite existing files', async ({ assert }) => {
     const app = setupApp()
     const kernel = getKernel(app)
 

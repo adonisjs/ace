@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import test from 'japa'
+import { test } from '@japa/runner'
 import { join } from 'path'
 import { Filesystem } from '@poppinss/dev-utils'
 import { listDirectoryFiles } from '../src/utils/listDirectoryFiles'
@@ -15,11 +15,11 @@ import { listDirectoryFiles } from '../src/utils/listDirectoryFiles'
 const fs = new Filesystem(join(__dirname, './app'))
 
 test.group('listDirectoryFiles', (group) => {
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await fs.cleanup()
   })
 
-  test('get a list of javascript files from a given directory', async (assert) => {
+  test('get a list of javascript files from a given directory', async ({ assert }) => {
     await fs.add('foo.js', '')
     await fs.add('bar.js', '')
     await fs.add('baz.js', '')
@@ -30,7 +30,7 @@ test.group('listDirectoryFiles', (group) => {
     assert.deepEqual(directories, ['./bar.js', './baz.js', './foo.js'])
   })
 
-  test('allow inline files filter', async (assert) => {
+  test('allow inline files filter', async ({ assert }) => {
     await fs.add('foo.js', '')
     await fs.add('bar.js', '')
     await fs.add('baz.js', '')
@@ -43,7 +43,7 @@ test.group('listDirectoryFiles', (group) => {
     assert.deepEqual(directories, ['./bar.js', './foo.js'])
   })
 
-  test('define nested directories', async (assert) => {
+  test('define nested directories', async ({ assert }) => {
     await fs.add('commands/foo.js', '')
     await fs.add('commands/bar.js', '')
     await fs.add('commands/baz.js', '')
@@ -57,7 +57,7 @@ test.group('listDirectoryFiles', (group) => {
     assert.deepEqual(directories, ['./commands/bar.js', './commands/foo.js'])
   })
 
-  test('ignore files by defining list of ignored files', async (assert) => {
+  test('ignore files by defining list of ignored files', async ({ assert }) => {
     await fs.add('commands/foo.js', '')
     await fs.add('commands/bar.js', '')
     await fs.add('commands/baz.js', '')
@@ -71,7 +71,7 @@ test.group('listDirectoryFiles', (group) => {
     assert.deepEqual(directories, ['./commands/bar.js', './commands/foo.js'])
   })
 
-  test('ignore files by defining list of ignored extension agnostic files', async (assert) => {
+  test('ignore files by defining list of ignored extension agnostic files', async ({ assert }) => {
     await fs.add('commands/foo.js', '')
     await fs.add('commands/bar.js', '')
     await fs.add('commands/baz.js', '')

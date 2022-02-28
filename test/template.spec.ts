@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import test from 'japa'
+import { test } from '@japa/runner'
 import { join } from 'path'
 import { template, templateFromFile } from '../src/utils/template'
 
 test.group('template', () => {
-  test('interpolate valid template', (assert) => {
+  test('interpolate valid template', ({ assert }) => {
     const result = template('${test} ${other}', {
       test: 123,
       other: 'hello',
@@ -20,12 +20,12 @@ test.group('template', () => {
     assert.strictEqual(result, '123 hello')
   })
 
-  test('raise error when value is missing', (assert) => {
+  test('raise error when value is missing', ({ assert }) => {
     const fn = () => template('${test} ${other}', {})
-    assert.throw(fn, 'Error in template eval:1:1\ntest is not defined')
+    assert.throws(fn, 'Error in template eval:1:1\ntest is not defined')
   })
 
-  test('interpolate template using mustache', (assert) => {
+  test('interpolate template using mustache', ({ assert }) => {
     const result = template(
       '{{test}} {{other}}',
       {
@@ -38,14 +38,14 @@ test.group('template', () => {
     assert.strictEqual(result, '123 hello')
   })
 
-  test('interpolate function calls', (assert) => {
+  test('interpolate function calls', ({ assert }) => {
     const result = template('${test()}', {
       test: () => 123,
     })
     assert.strictEqual(result, '123')
   })
 
-  test('interpolate property accessor', (assert) => {
+  test('interpolate property accessor', ({ assert }) => {
     const result = template('${user.name}', {
       user: { name: 'virk' },
     })
@@ -54,7 +54,7 @@ test.group('template', () => {
 })
 
 test.group('Template From File', () => {
-  test('interpolate valid template', (assert) => {
+  test('interpolate valid template', ({ assert }) => {
     const result = templateFromFile(
       join(__dirname, 'fixtures/template1.txt'),
       {
@@ -67,17 +67,17 @@ test.group('Template From File', () => {
     assert.strictEqual(result, 'Hello World, 42')
   })
 
-  test('raise error when values is missing', (assert) => {
+  test('raise error when values is missing', ({ assert }) => {
     const file = join(__dirname, 'fixtures/template1.txt')
     const fn = () => templateFromFile(file, {}, false)
-    assert.throw(fn, `Error in template ${file}:1:10\nvalue1 is not defined`)
+    assert.throws(fn, `Error in template ${file}:1:10\nvalue1 is not defined`)
   })
 
-  test('error if file is missing', (assert) => {
+  test('error if file is missing', ({ assert }) => {
     assert.throws(() => templateFromFile(join(__dirname, 'fixtures/i-do-not-exist'), {}, false))
   })
 
-  test('interpolate mustache from template file', (assert) => {
+  test('interpolate mustache from template file', ({ assert }) => {
     const result = templateFromFile(
       join(__dirname, 'fixtures/template1.mustache'),
       {
