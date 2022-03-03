@@ -39,6 +39,21 @@ export abstract class BaseCommand implements CommandContract {
   constructor(public application: ApplicationContract, public kernel: KernelContract) {}
 
   /**
+   * Is the current command the main command executed from the
+   * CLI
+   */
+  public get isMain(): boolean {
+    return this.kernel.isMain(this)
+  }
+
+  /**
+   * Terminal is interactive
+   */
+  public get isInteractive(): boolean {
+    return this.kernel.isInteractive
+  }
+
+  /**
    * Command arguments
    */
   public static args: CommandArg[]

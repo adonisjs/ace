@@ -27,7 +27,7 @@ import {
   GlobalFlagHandler,
   CommandConstructorContract,
 } from '../Contracts'
-import { logger } from '@poppinss/cliui'
+import { logger, isInteractive } from '@poppinss/cliui'
 
 /**
  * Ace kernel class is used to register, find and invoke commands by
@@ -68,6 +68,12 @@ export class Kernel implements KernelContract {
 
     process.exit(kernel.exitCode === undefined ? 0 : kernel.exitCode)
   }
+
+  /**
+   * Find if CLI process is interactive. This flag can be
+   * toggled programmatically
+   */
+  public isInteractive: boolean = isInteractive
 
   /**
    * The default command that will be invoked when no command is
@@ -500,7 +506,7 @@ export class Kernel implements KernelContract {
     /**
      * Make the command instance using the container
      */
-    const commandInstance = this.application.container.make(this.defaultCommand, [
+    const commandInstance = await this.application.container.makeAsync(this.defaultCommand, [
       this.application,
       this,
     ])
@@ -522,6 +528,22 @@ export class Kernel implements KernelContract {
   }
 
   /**
+   * Find if a command is the main command. Main commands are executed
+   * directly from the terminal.
+   */
+  public isMain(command: CommandContract): boolean {
+    return !!this.entryCommand && this.entryCommand === command
+  }
+
+  /**
+   * Toggle interactive state
+   */
+  public interactive(state: boolean): this {
+    this.isInteractive = state
+    return this
+  }
+
+  /**
    * Execute a command as a sub-command. Do not call "handle" and
    * always use this method to invoke command programatically
    */
@@ -529,8 +551,7 @@ export class Kernel implements KernelContract {
     const command = await this.find([commandName])
 
     /**
-     * Command not found. So execute global flags handlers and
-     * raise an exception
+     * Command not found.
      */
     if (!command) {
       throw InvalidCommandException.invoke(commandName, this.getSuggestions(commandName))
@@ -539,7 +560,10 @@ export class Kernel implements KernelContract {
     /**
      * Make an instance of command and keep a reference of it as `this.entryCommand`
      */
-    const commandInstance = this.application.container.make(command, [this.application, this])
+    const commandInstance = await this.application.container.makeAsync(command, [
+      this.application,
+      this,
+    ])
 
     /**
      * Process args and flags for the command

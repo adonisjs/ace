@@ -90,6 +90,7 @@ export type SerializedCommand = {
  */
 export interface CommandConstructorContract extends SerializedCommand {
   new (application: ApplicationContract, kernel: KernelContract, ...args: any[]): CommandContract
+
   /**
    * A boolean to know if the command has been booted or not. We initialize some
    * static properties to the class during the boot process.
@@ -126,6 +127,20 @@ export interface CommandContract {
   ui: typeof ui
   generator: GeneratorContract
   kernel: KernelContract
+
+  /**
+   * The flag is set to true, when the command is executed as the main command
+   * from the terminal.
+   *
+   * However, set to false when command is executed programmatically.
+   */
+  readonly isMain: boolean
+
+  /**
+   * The flag is set to true, when the commandline is in interactive mode.
+   * Can be disabled manually via the kernel
+   */
+  readonly isInteractive: boolean
 
   onExit(callback: () => Promise<void> | void): this
   exit(): Promise<void>
@@ -296,7 +311,7 @@ export interface KernelContract {
   /**
    * Handle the command line argv to execute commands
    */
-  handle(argv: string[]): Promise<any>
+  handle(args: string[]): Promise<any>
 
   /**
    * Execute a command by its name and args
@@ -311,6 +326,22 @@ export interface KernelContract {
     commandsToAppend?: ManifestCommand[],
     aliasesToAppend?: Record<string, string>
   ): void
+
+  /**
+   * Find if a command is the main command. Main commands are executed
+   * directly from the terminal
+   */
+  isMain(command: CommandContract): boolean
+
+  /**
+   * Find if CLI process is interactive.
+   */
+  isInteractive: boolean
+
+  /**
+   * Toggle isInteractive state
+   */
+  interactive(state: boolean): this
 
   /**
    * Trigger exit flow

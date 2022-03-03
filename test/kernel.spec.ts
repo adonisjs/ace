@@ -259,10 +259,10 @@ test.group('Kernel | find', () => {
     await fs.add(
       'Commands/Greet.ts',
       `export default class Greet {
-			public static commandName = 'greet'
-			public static args = []
-			public static flags = []
-			public static boot() {}
+      public static commandName = 'greet'
+      public static args = []
+      public static flags = []
+      public static boot() {}
     }`
     )
 
@@ -303,10 +303,10 @@ test.group('Kernel | find', () => {
     await fs.add(
       'Commands/Greet.ts',
       `export default class Greet {
-			public static commandName = 'greet'
-			public static args = []
-			public static flags = []
-			public static boot() {}
+      public static commandName = 'greet'
+      public static args = []
+      public static flags = []
+      public static boot() {}
     }`
     )
 
@@ -346,10 +346,10 @@ test.group('Kernel | find', () => {
     await fs.add(
       'Commands/Greet.ts',
       `export default class Greet {
-			public static commandName = 'greet'
-			public static args = []
-			public static flags = []
-			public static boot() {}
+      public static commandName = 'greet'
+      public static args = []
+      public static flags = []
+      public static boot() {}
     }`
     )
 
@@ -389,9 +389,9 @@ test.group('Kernel | find', () => {
       'Commands/Greet.ts',
       `export default class Greet {
       public static commandName = 'greet'
-			public static args = []
-			public static flags = []
-			public static boot() {}
+      public static args = []
+      public static flags = []
+      public static boot() {}
     }`
     )
 
@@ -440,9 +440,9 @@ test.group('Kernel | find', () => {
       'Commands/Greet.ts',
       `export default class Greet {
       public static commandName = 'greet'
-			public static args = []
-			public static flags = []
-			public static boot() {}
+      public static args = []
+      public static flags = []
+      public static boot() {}
     }`
     )
 
@@ -495,9 +495,9 @@ test.group('Kernel | find', () => {
       'Commands/Greet.ts',
       `export default class Greet {
       public static commandName = 'greet'
-			public static args = []
-			public static flags = []
-			public static boot() {}
+      public static args = []
+      public static flags = []
+      public static boot() {}
     }`
     )
 
@@ -1326,6 +1326,26 @@ test.group('Kernel | exec', () => {
     const argv = ['greet']
     await kernel.handle(argv)
   }).waitForDone()
+
+  test('isMain should be false when command is called using exec', async ({ assert }) => {
+    assert.plan(1)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @flags.boolean({ name: 'isAdmin' })
+      public admin: boolean
+
+      public async run() {
+        assert.isFalse(this.isMain)
+      }
+    }
+
+    const app = setupApp()
+    const kernel = new Kernel(app)
+    kernel.register([Greet])
+    await kernel.exec('greet', [])
+  })
 })
 
 test.group('Kernel | runCommand', () => {
@@ -1869,7 +1889,7 @@ test.group('Kernel | IoC container', () => {
         }
       }
 
-      constructor(public application: Application, public _kernel, public foo: Foo) {
+      constructor(public application: Application, public _kernel: Kernel, public foo: Foo) {
         super(application, _kernel)
       }
 
