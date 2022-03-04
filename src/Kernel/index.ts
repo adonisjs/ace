@@ -571,7 +571,6 @@ export class Kernel implements KernelContract {
     await this.processCommandArgsAndFlags(commandInstance, args)
 
     let commandError: any
-    let commandResponse: any
 
     /**
      * Wrapping the command execution inside a try/catch, so that
@@ -580,7 +579,7 @@ export class Kernel implements KernelContract {
      */
     try {
       await this.hooks.execute('before', 'run', commandInstance)
-      commandResponse = await commandInstance.exec()
+      await commandInstance.exec()
     } catch (error) {
       commandError = error
     }
@@ -597,7 +596,7 @@ export class Kernel implements KernelContract {
       throw commandError
     }
 
-    return commandResponse
+    return commandInstance
   }
 
   /**

@@ -1328,7 +1328,7 @@ test.group('Kernel | exec', () => {
   }).waitForDone()
 
   test('isMain should be false when command is called using exec', async ({ assert }) => {
-    assert.plan(1)
+    assert.plan(2)
 
     class Greet extends BaseCommand {
       public static commandName = 'greet'
@@ -1344,7 +1344,8 @@ test.group('Kernel | exec', () => {
     const app = setupApp()
     const kernel = new Kernel(app)
     kernel.register([Greet])
-    await kernel.exec('greet', [])
+    const greet = await kernel.exec('greet', [])
+    assert.instanceOf(greet, Greet)
   })
 })
 
@@ -1849,22 +1850,6 @@ test.group('Kernel | exec', () => {
     } catch (error) {
       assert.equal(error.message, 'Boom')
     }
-  })
-
-  test('return command response', async ({ assert }) => {
-    class Foo extends BaseCommand {
-      public static commandName = 'foo'
-      public async run() {
-        return 'foo'
-      }
-    }
-
-    const app = setupApp()
-    const kernel = new Kernel(app)
-    kernel.register([Foo])
-
-    const response = await kernel.exec('foo', [])
-    assert.equal(response, 'foo')
   })
 })
 

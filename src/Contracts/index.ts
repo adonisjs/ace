@@ -145,7 +145,7 @@ export interface CommandContract {
   onExit(callback: () => Promise<void> | void): this
   exit(): Promise<void>
 
-  exec(): Promise<any>
+  exec(): Promise<CommandContract>
   handle?(...args: any[]): Promise<any>
   run?(...args: any[]): Promise<any>
   prepare?(...args: any[]): Promise<any>
