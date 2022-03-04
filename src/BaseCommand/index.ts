@@ -191,7 +191,7 @@ export abstract class BaseCommand implements CommandContract {
   /**
    * Reference to cli ui
    */
-  public ui = instantiate(this.application.environment === 'test')
+  public ui = instantiate(this.kernel.isMockingConsoleOutput)
 
   /**
    * Parsed options on the command. They only exist when the command
@@ -202,8 +202,9 @@ export abstract class BaseCommand implements CommandContract {
   /**
    * The prompt for the command
    */
-  public prompt: Prompt | FakePrompt =
-    this.application.environment === 'test' ? new FakePrompt() : new Prompt()
+  public prompt: Prompt | FakePrompt = this.kernel.isMockingConsoleOutput
+    ? new FakePrompt()
+    : new Prompt()
 
   /**
    * Returns the instance of logger to log messages

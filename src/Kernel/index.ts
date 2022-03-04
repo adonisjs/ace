@@ -76,6 +76,11 @@ export class Kernel implements KernelContract {
   public isInteractive: boolean = isInteractive
 
   /**
+   * Find if console output is mocked
+   */
+  public isMockingConsoleOutput: boolean = false
+
+  /**
    * The default command that will be invoked when no command is
    * defined
    */
@@ -533,6 +538,15 @@ export class Kernel implements KernelContract {
    */
   public isMain(command: CommandContract): boolean {
     return !!this.entryCommand && this.entryCommand === command
+  }
+
+  /**
+   * Enforce mocking the console output. Command logs, tables, prompts
+   * will be mocked
+   */
+  public mockConsoleOutput(): this {
+    this.isMockingConsoleOutput = true
+    return this
   }
 
   /**

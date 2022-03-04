@@ -1350,7 +1350,7 @@ test.group('Kernel | exec', () => {
 })
 
 test.group('Kernel | runCommand', () => {
-  test('test logs in test mode', async ({ assert }) => {
+  test('test logs', async ({ assert }) => {
     assert.plan(1)
 
     class Greet extends BaseCommand {
@@ -1365,7 +1365,7 @@ test.group('Kernel | runCommand', () => {
     }
 
     const app = setupApp()
-    const kernel = new Kernel(app)
+    const kernel = new Kernel(app).mockConsoleOutput()
 
     const commandInstance = new Greet(app, kernel)
     commandInstance.name = 'virk'
@@ -1379,7 +1379,7 @@ test.group('Kernel | runCommand', () => {
     ])
   })
 
-  test('test input prompt in raw mode', async ({ assert }) => {
+  test('test input prompt', async ({ assert }) => {
     assert.plan(1)
 
     class Greet extends BaseCommand {
@@ -1398,7 +1398,7 @@ test.group('Kernel | runCommand', () => {
 
     const app = setupApp()
 
-    const kernel = new Kernel(app)
+    const kernel = new Kernel(app).mockConsoleOutput()
     const commandInstance = new Greet(app, kernel)
 
     /**
@@ -1418,7 +1418,7 @@ test.group('Kernel | runCommand', () => {
     ])
   })
 
-  test('test input prompt validation in raw mode', async ({ assert }) => {
+  test('test input prompt validation', async ({ assert }) => {
     assert.plan(2)
 
     class Greet extends BaseCommand {
@@ -1441,7 +1441,7 @@ test.group('Kernel | runCommand', () => {
 
     const app = setupApp()
 
-    const kernel = new Kernel(app)
+    const kernel = new Kernel(app).mockConsoleOutput()
     const commandInstance = new Greet(app, kernel)
 
     /**
@@ -1464,7 +1464,7 @@ test.group('Kernel | runCommand', () => {
     ])
   })
 
-  test('test choice prompt in raw mode', async ({ assert }) => {
+  test('test choice prompt', async ({ assert }) => {
     assert.plan(1)
 
     class Greet extends BaseCommand {
@@ -1481,7 +1481,7 @@ test.group('Kernel | runCommand', () => {
 
     const app = setupApp()
 
-    const kernel = new Kernel(app)
+    const kernel = new Kernel(app).mockConsoleOutput()
     const commandInstance = new Greet!(app, kernel)
 
     /**
@@ -1500,7 +1500,7 @@ test.group('Kernel | runCommand', () => {
     ])
   })
 
-  test('test choice prompt validation in raw mode', async ({ assert }) => {
+  test('test choice prompt validation', async ({ assert }) => {
     assert.plan(2)
 
     class Greet extends BaseCommand {
@@ -1521,7 +1521,7 @@ test.group('Kernel | runCommand', () => {
 
     const app = setupApp()
 
-    const kernel = new Kernel(app)
+    const kernel = new Kernel(app).mockConsoleOutput()
     const commandInstance = new Greet(app, kernel)
 
     /**
@@ -1544,7 +1544,7 @@ test.group('Kernel | runCommand', () => {
     ])
   })
 
-  test('test multiple prompt in raw mode', async ({ assert }) => {
+  test('test multiple prompts', async ({ assert }) => {
     assert.plan(1)
     process.env.CLI_UI_IS_TESTING = 'true'
 
@@ -1565,7 +1565,7 @@ test.group('Kernel | runCommand', () => {
 
     const app = setupApp()
 
-    const kernel = new Kernel(app)
+    const kernel = new Kernel(app).mockConsoleOutput()
     const commandInstance = new Greet(app, kernel)
 
     /**
@@ -1584,7 +1584,7 @@ test.group('Kernel | runCommand', () => {
     ])
   })
 
-  test('test multiple prompt validation in raw mode', async ({ assert }) => {
+  test('test multiple prompt validation', async ({ assert }) => {
     assert.plan(2)
 
     class Greet extends BaseCommand {
@@ -1610,7 +1610,7 @@ test.group('Kernel | runCommand', () => {
 
     const app = setupApp()
 
-    const kernel = new Kernel(app)
+    const kernel = new Kernel(app).mockConsoleOutput()
     const commandInstance = new Greet(app, kernel)
 
     /**
@@ -1633,7 +1633,7 @@ test.group('Kernel | runCommand', () => {
     ])
   })
 
-  test('test toggle prompt in raw mode', async ({ assert }) => {
+  test('test toggle prompt', async ({ assert }) => {
     assert.plan(1)
     process.env.CLI_UI_IS_TESTING = 'true'
 
@@ -1651,7 +1651,7 @@ test.group('Kernel | runCommand', () => {
 
     const app = setupApp()
 
-    const kernel = new Kernel(app)
+    const kernel = new Kernel(app).mockConsoleOutput()
     const commandInstance = new Greet(app, kernel)
 
     /**

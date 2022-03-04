@@ -15,7 +15,7 @@ import { Kernel } from '../src/Kernel'
 export const fs = new Filesystem(join(__dirname, 'app'))
 
 export function setupApp() {
-  const app = new Application(fs.basePath, 'test', {})
+  const app = new Application(fs.basePath, 'console', {})
   return app
 }
 

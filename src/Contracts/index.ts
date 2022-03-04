@@ -344,6 +344,17 @@ export interface KernelContract {
   interactive(state: boolean): this
 
   /**
+   * Find if console output is mocked
+   */
+  isMockingConsoleOutput: boolean
+
+  /**
+   * Enforce mocking the console output. Command logs, tables, prompts
+   * will be mocked
+   */
+  mockConsoleOutput(): this
+
+  /**
    * Trigger exit flow
    */
   exit(command: CommandContract, error?: any): Promise<void>
