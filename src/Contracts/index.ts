@@ -145,7 +145,7 @@ export interface CommandContract {
   onExit(callback: () => Promise<void> | void): this
   exit(): Promise<void>
 
-  exec(): Promise<CommandContract>
+  exec(): Promise<any>
   handle?(...args: any[]): Promise<any>
   run?(...args: any[]): Promise<any>
   prepare?(...args: any[]): Promise<any>
@@ -316,7 +316,7 @@ export interface KernelContract {
   /**
    * Execute a command by its name and args
    */
-  exec(commandName: string, args: string[]): Promise<any>
+  exec(commandName: string, args: string[]): Promise<CommandContract>
 
   /**
    * Print help for all commands or a given command
