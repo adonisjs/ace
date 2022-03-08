@@ -732,6 +732,97 @@ test.group('Kernel | exec', () => {
     await kernel.handle(argv)
   }).waitForDone()
 
+  test('allow spread arguments to be optional', async ({ assert }, done) => {
+    assert.plan(4)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.string()
+      public name: string
+
+      @args.string()
+      public age: string
+
+      @args.spread({ required: false })
+      public files: string[]
+
+      public async run() {
+        assert.deepEqual(this.parsed, { _: ['virk', '22'] })
+        assert.equal(this.name, 'virk')
+        assert.equal(this.age, '22')
+        assert.deepEqual(this.files, [])
+      }
+    }
+
+    const app = setupApp()
+    const kernel = new Kernel(app)
+    kernel.register([Greet])
+
+    kernel.onExit(() => {
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
+    })
+
+    const argv = ['greet', 'virk', '22']
+    await kernel.handle(argv)
+  }).waitForDone()
+
+  test('allow only spread argument to be optional', async ({ assert }, done) => {
+    assert.plan(2)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.spread({ required: false })
+      public files: string[]
+
+      public async run() {
+        assert.deepEqual(this.parsed, { _: [] })
+        assert.deepEqual(this.files, [])
+      }
+    }
+
+    const app = setupApp()
+    const kernel = new Kernel(app)
+    kernel.register([Greet])
+
+    kernel.onExit(() => {
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
+    })
+
+    const argv = ['greet']
+    await kernel.handle(argv)
+  }).waitForDone()
+
+  test('disallow required arg after optional arg', async ({ assert }) => {
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.string({ required: false })
+      public name: string
+
+      @args.string({ required: true })
+      public age: string
+
+      public async run() {}
+    }
+
+    const app = setupApp()
+    const kernel = new Kernel(app)
+    assert.throws(
+      () => kernel.register([Greet]),
+      'Optional argument "name" must be after the required argument "age"'
+    )
+  })
+
   test('set arguments and flags', async ({ assert }, done) => {
     assert.plan(3)
 
