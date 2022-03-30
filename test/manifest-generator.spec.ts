@@ -176,6 +176,68 @@ test.group('Manifest Generator', (group) => {
     })
   })
 
+  test('generate manifest from command subpaths using listDirectoryFiles', async ({ assert }) => {
+    await fs.add(
+      'Commands/Make.ts',
+      `
+    import { args, flags } from '../../../index'
+    import { BaseCommand } from '../../../src/BaseCommand'
+
+    export default class Greet extends BaseCommand {
+      public static commandName = 'greet'
+      public static description = 'Greet a user'
+
+      @args.string()
+      public name: string
+
+      @flags.boolean()
+      public adult: boolean
+
+      public async run () {}
+    }`
+    )
+
+    await fs.add(
+      'Commands/index.ts',
+      `
+      import { listDirectoryFiles } from '../../../index'
+      export default listDirectoryFiles(__dirname, '${fs.basePath}')
+    `
+    )
+
+    const manifest = new ManifestGenerator(fs.basePath, ['./Commands/index.ts'])
+    await manifest.generate()
+
+    const manifestJSON = await fs.fsExtra.readJSON(join(fs.basePath, 'ace-manifest.json'))
+    assert.deepEqual(manifestJSON, {
+      commands: {
+        greet: {
+          settings: {},
+          aliases: [],
+          commandPath: './Commands/Make',
+          commandName: 'greet',
+          description: 'Greet a user',
+          args: [
+            {
+              name: 'name',
+              type: 'string',
+              propertyName: 'name',
+              required: true,
+            },
+          ],
+          flags: [
+            {
+              name: 'adult',
+              propertyName: 'adult',
+              type: 'boolean',
+            },
+          ],
+        },
+      },
+      aliases: {},
+    })
+  })
+
   test('register command aliases inside manifest file', async ({ assert }) => {
     await fs.add(
       'Commands/Make.ts',
