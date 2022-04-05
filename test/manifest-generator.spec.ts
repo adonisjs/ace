@@ -201,7 +201,7 @@ test.group('Manifest Generator', (group) => {
       'Commands/index.ts',
       `
       import { listDirectoryFiles } from '../../../index'
-      export default listDirectoryFiles(__dirname, '${fs.basePath}')
+      export default listDirectoryFiles(__dirname, '${fs.basePath.replace(/\\/g, '\\\\')}')
     `
     )
 
