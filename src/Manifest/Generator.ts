@@ -21,6 +21,12 @@ import { CommandConstructorContract, ManifestNode } from '../Contracts'
  * up the boot cycle of ace
  */
 export class ManifestGenerator {
+  /**
+   * Here we keep track of processed command files to prevent loops. Mainly when using
+   * listDirectoryFiles to export command paths from directory and not excluding current file.
+   */
+  private processedFiles: Set<string> = new Set()
+
   constructor(private basePath: string, private commands: string[]) {}
 
   /**
@@ -37,7 +43,16 @@ export class ManifestGenerator {
       )
     }
 
-    const commandOrSubCommandsPaths = esmRequire(resolveFrom(this.basePath, commandPath))
+    const resolvedPath = resolveFrom(this.basePath, commandPath)
+
+    if (this.processedFiles.has(resolvedPath)) {
+      return []
+    }
+
+    const commandOrSubCommandsPaths = esmRequire(resolvedPath)
+
+    this.processedFiles.add(resolvedPath)
+
     if (Array.isArray(commandOrSubCommandsPaths)) {
       return this.loadCommands(commandOrSubCommandsPaths)
     }
