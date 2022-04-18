@@ -88,6 +88,9 @@ export class ManifestGenerator {
    * Generates and writes the ace manifest file to the base path
    */
   public async generate() {
+    // clean files from the old run when reusing the same instance
+    this.processedFiles.clear()
+
     const commands = await this.loadCommands(this.commands)
 
     const manifest = commands.reduce<ManifestNode>(
