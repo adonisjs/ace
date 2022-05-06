@@ -472,6 +472,11 @@ export class Kernel implements KernelContract {
       : undefined
 
     if (commandNode) {
+      commandNode.command.aliases = commandNode.command.aliases || []
+      if (aliasCommandName && !commandNode.command.aliases.includes(commandName)) {
+        commandNode.command.aliases.push(commandName)
+      }
+
       await this.hooks.execute('before', 'find', commandNode.command)
       const command = await this.manifestLoader.loadCommand(commandNode.command.commandName)
       await this.hooks.execute('after', 'find', command)
@@ -482,6 +487,16 @@ export class Kernel implements KernelContract {
        * to null
        */
       const command = this.commands[commandName] || this.commands[aliasCommandName] || null
+
+      /**
+       * Share main command name as an alias with the command
+       */
+      if (command) {
+        command.aliases = command.aliases || []
+        if (aliasCommandName && !command.aliases.includes(commandName)) {
+          command.aliases.push(commandName)
+        }
+      }
 
       /**
        * Executing before and after together to be compatible

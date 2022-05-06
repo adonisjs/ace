@@ -100,10 +100,12 @@ export class ManifestLoader implements ManifestLoaderContract {
     }
 
     const aliasCommandName = manifestCommands.aliases[commandName]
+    const command =
+      manifestCommands.commands[commandName] || manifestCommands.commands[aliasCommandName]
+
     return {
       basePath: manifestCommands.basePath,
-      command:
-        manifestCommands.commands[commandName] || manifestCommands.commands[aliasCommandName],
+      command: command,
     }
   }
 
