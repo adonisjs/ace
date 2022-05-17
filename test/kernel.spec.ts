@@ -1438,6 +1438,76 @@ test.group('Kernel | exec', () => {
     const greet = await kernel.exec('greet', [])
     assert.instanceOf(greet, Greet)
   })
+
+  test('do not overwrite default value when argument value is not defined', async ({
+    assert,
+  }, done) => {
+    assert.plan(2)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.string({ required: false })
+      public name: string = 'foo'
+
+      public async run() {
+        assert.deepEqual(this.parsed, { _: [] })
+        assert.equal(this.name, 'foo')
+      }
+    }
+
+    const app = setupApp()
+    const kernel = new Kernel(app)
+    kernel.register([Greet])
+
+    kernel.onExit(() => {
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
+    })
+
+    const argv = ['greet']
+    await kernel.handle(argv)
+  }).waitForDone()
+
+  test('do not overwrite default value when spread argument value is not defined', async ({
+    assert,
+  }, done) => {
+    assert.plan(3)
+
+    class Greet extends BaseCommand {
+      public static commandName = 'greet'
+
+      @args.string()
+      public name: string
+
+      @args.spread({ required: false })
+      public files: string[] = ['foo']
+
+      public async run() {
+        assert.deepEqual(this.parsed, { _: ['virk'] })
+        assert.equal(this.name, 'virk')
+        assert.deepEqual(this.files, ['foo'])
+      }
+    }
+
+    const app = setupApp()
+    const kernel = new Kernel(app)
+    kernel.register([Greet])
+
+    kernel.onExit(() => {
+      if (kernel.error) {
+        done(kernel.error)
+      } else {
+        done()
+      }
+    })
+
+    const argv = ['greet', 'virk']
+    await kernel.handle(argv)
+  }).waitForDone()
 })
 
 test.group('Kernel | runCommand', () => {

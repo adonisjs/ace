@@ -197,11 +197,26 @@ export class Kernel implements KernelContract {
      */
     for (let i = 0; i < command.args.length; i++) {
       const arg = command.args[i]
+      const defaultValue = commandInstance[arg.propertyName]
+
       if (arg.type === 'spread') {
-        commandInstance[arg.propertyName] = parsedOptions._.slice(i)
+        const value = parsedOptions._.slice(i)
+
+        /**
+         * Set the property value to arguments defined via the CLI
+         * If no arguments are supplied, then use the default value assigned to the class property
+         * If the default value is undefined, then assign an empty array
+         */
+        commandInstance[arg.propertyName] = value.length
+          ? value
+          : defaultValue !== undefined
+          ? defaultValue
+          : []
+
         break
       } else {
-        commandInstance[arg.propertyName] = parsedOptions._[i]
+        const value = parsedOptions._[i]
+        commandInstance[arg.propertyName] = value !== undefined ? value : defaultValue
       }
     }
 
