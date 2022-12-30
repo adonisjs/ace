@@ -1,45 +1,42 @@
 /*
  * @adonisjs/ace
  *
- * (c) Harminder Virk <virk@adonisjs.com>
+ * (c) AdonisJS
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-import { CommandArg, ArgTypes, CommandConstructorContract } from '../Contracts'
+import type { BaseCommand } from '../commands/base.js'
+import type { SpreadArgument, StringArgument } from '../types.js'
 
 /**
- * Adds arg to the list of command arguments with pre-defined
- * type.
+ * Namespace for defining arguments using decorators.
  */
-function addArg<PropType extends any>(
-  type: ArgTypes,
-  options: Partial<Omit<CommandArg, 'type' | 'propertyName'>>
-) {
-  return function arg<TKey extends string, TTarget extends { [K in TKey]?: PropType }>(
-    target: TTarget,
-    propertyName: TKey
-  ) {
-    const Command = target.constructor as CommandConstructorContract
-    Command.boot()
-    Command.$addArgument(Object.assign({ type, propertyName }, options))
-  }
-}
-
 export const args = {
   /**
-   * Define argument that accepts string value
+   * Define argument that accepts a string value
    */
-  string(options?: Partial<Omit<CommandArg, 'type' | 'propertyName'>>) {
-    return addArg<string>('string', options || {})
+  string<Type = string>(options?: Partial<Omit<StringArgument<Type>, 'type'>>) {
+    return function addArg<Key extends string, Target extends { [K in Key]?: Type }>(
+      target: Target,
+      propertyName: Key
+    ) {
+      const Command = target.constructor as typeof BaseCommand
+      Command.defineArgument(propertyName, { ...options, type: 'string' })
+    }
   },
 
   /**
-   * Define argument that accepts multiple values. Must be
-   * the last argument.
+   * Define argument that accepts a spread value
    */
-  spread(options?: Partial<Omit<CommandArg, 'type' | 'propertyName'>>) {
-    return addArg<string[]>('spread', options || {})
+  spread<Type extends any = string[]>(options?: Partial<Omit<SpreadArgument<Type>, 'type'>>) {
+    return function addArg<Key extends string, Target extends { [K in Key]?: Type }>(
+      target: Target,
+      propertyName: Key
+    ) {
+      const Command = target.constructor as typeof BaseCommand
+      Command.defineArgument(propertyName, { ...options, type: 'spread' })
+    }
   },
 }

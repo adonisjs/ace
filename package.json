@@ -3,102 +3,74 @@
   "version": "11.3.1",
   "description": "Commandline apps framework used by AdonisJs",
   "main": "build/index.js",
+  "type": "module",
   "files": [
     "build/src",
     "build/index.d.ts",
     "build/index.js"
   ],
+  "exports": {
+    ".": "./build/index.js",
+    "./types": "./build/src/types.js"
+  },
   "scripts": {
-    "mrm": "mrm --preset=@adonisjs/mrm-preset",
     "pretest": "npm run lint",
-    "test": "node -r @adonisjs/require-ts/build/register ./bin/test.ts",
-    "lint": "eslint . --ext=.ts",
+    "test": "cross-env NODE_DEBUG=adonisjs:core c8 npm run vscode:test",
     "clean": "del-cli build",
     "compile": "npm run lint && npm run clean && tsc",
     "build": "npm run compile",
-    "commit": "git-cz",
-    "release": "FORCE_COLOR=true np --message=\"chore(release): %s\"",
+    "release": "np",
     "version": "npm run build",
-    "sync-labels": "github-label-sync --labels ./node_modules/@adonisjs/mrm-preset/gh-labels.json adonisjs/ace",
+    "prepublishOnly": "npm run build",
+    "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
-    "prepublishOnly": "npm run build"
+    "sync-labels": "github-label-sync --labels .github/labels.json adonisjs/ace",
+    "vscode:test": "node --loader=ts-node/esm bin/test.ts"
   },
   "keywords": [
     "adonisjs",
+    "commandline",
+    "cli",
     "commander"
   ],
-  "author": "virk",
-  "homepage": "https://adonisjs.com",
+  "author": "virk,adonisjs",
   "license": "MIT",
   "dependencies": {
-    "@poppinss/cliui": "^3.0.2",
-    "@poppinss/prompts": "^2.0.2",
-    "@poppinss/utils": "^5.0.0",
-    "fs-extra": "^10.1.0",
-    "getopts": "^2.3.0",
-    "leven": "^3.1.0",
-    "mustache": "^4.2.0",
-    "slash": "^3.0.0",
-    "term-size": "^2.2.1"
-  },
-  "peerDependencies": {
-    "@adonisjs/application": "^5.0.0"
-  },
-  "nyc": {
-    "exclude": [
-      "test"
-    ],
-    "extension": [
-      ".ts"
-    ]
-  },
-  "publishConfig": {
-    "access": "public",
-    "tag": "latest"
+    "@poppinss/cliui": "^6.1.1-0",
+    "@poppinss/hooks": "^7.1.0-0",
+    "@poppinss/utils": "^6.3.0-0",
+    "string-similarity": "^4.0.4",
+    "string-width": "^5.1.2",
+    "yargs-parser": "^21.1.1"
   },
   "devDependencies": {
-    "@adonisjs/application": "^5.2.5",
-    "@adonisjs/mrm-preset": "^5.0.3",
-    "@adonisjs/require-ts": "^2.0.12",
+    "@commitlint/cli": "^17.3.0",
+    "@commitlint/config-conventional": "^17.3.0",
     "@japa/assert": "^1.3.5",
+    "@japa/expect-type": "^1.0.2",
     "@japa/run-failed-tests": "^1.0.8",
     "@japa/runner": "^2.1.1",
     "@japa/spec-reporter": "^1.2.0",
     "@poppinss/dev-utils": "^2.0.3",
+    "@swc/core": "^1.3.22",
     "@types/node": "^18.7.15",
-    "commitizen": "^4.2.5",
-    "cz-conventional-changelog": "^3.3.0",
+    "@types/sinon": "^10.0.13",
+    "@types/string-similarity": "^4.0.0",
+    "c8": "^7.12.0",
+    "cross-env": "^7.0.3",
     "del-cli": "^5.0.0",
     "eslint": "^8.23.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-adonis": "^2.1.0",
+    "eslint-plugin-adonis": "^3.0.3",
     "eslint-plugin-prettier": "^4.2.1",
     "github-label-sync": "^2.2.0",
-    "husky": "^8.0.1",
-    "mrm": "^4.1.0",
-    "np": "^7.6.2",
+    "husky": "^8.0.2",
+    "np": "^7.6.3",
     "prettier": "^2.7.1",
     "reflect-metadata": "^0.1.13",
+    "sinon": "^15.0.1",
+    "ts-node": "^10.9.1",
     "typescript": "^4.8.2"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "node ./node_modules/@adonisjs/mrm-preset/validateCommit/conventional/validate.js"
-    }
-  },
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
-    }
-  },
-  "np": {
-    "contents": ".",
-    "anyBranch": false
-  },
-  "directories": {
-    "doc": "docs",
-    "example": "example",
-    "test": "test"
   },
   "repository": {
     "type": "git",
@@ -107,19 +79,7 @@
   "bugs": {
     "url": "https://github.com/adonisjs/ace/issues"
   },
-  "mrmConfig": {
-    "core": true,
-    "license": "MIT",
-    "services": [
-      "github-actions"
-    ],
-    "minNodeVersion": "14.15.4",
-    "probotApps": [
-      "stale",
-      "lock"
-    ],
-    "runGhActionsOnWindows": true
-  },
+  "homepage": "https://adonisjs.com",
   "eslintConfig": {
     "extends": [
       "plugin:adonis/typescriptPackage",
@@ -138,7 +98,8 @@
     }
   },
   "eslintIgnore": [
-    "build"
+    "build",
+    "backup"
   ],
   "prettier": {
     "trailingComma": "es5",
@@ -149,5 +110,29 @@
     "bracketSpacing": true,
     "arrowParens": "always",
     "printWidth": 100
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "next"
+  },
+  "np": {
+    "message": "chore(release): %s",
+    "tag": "next",
+    "branch": "main",
+    "anyBranch": false
+  },
+  "c8": {
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "tests/**"
+    ]
   }
 }
