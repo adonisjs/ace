@@ -105,7 +105,7 @@ export class ModulesLoader implements LoadersContract {
       const list = await this.#getCommandsList(loader, sourcePath)
 
       list.forEach((metaData) => {
-        validCommandMetaData(metaData, `${sourcePath}.list`)
+        validCommandMetaData(metaData, `"${sourcePath}.list" method`)
         commands.push(metaData)
         this.#commandsLoaders!.set(metaData.commandName, { loader, sourcePath })
       })
@@ -144,7 +144,7 @@ export class ModulesLoader implements LoadersContract {
       return null
     }
 
-    validateCommand(command, `${commandLoader.sourcePath}.load`)
+    validateCommand(command, `"${commandLoader.sourcePath}.load" method`)
     return command
   }
 }

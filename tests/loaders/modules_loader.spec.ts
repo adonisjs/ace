@@ -251,7 +251,7 @@ test.group('Loaders | modules', (group) => {
     const loader = new ModulesLoader(BASE_URL, ['./loader_two.js?v=3'])
     await assert.rejects(
       () => loader.getCommand({ commandName: 'make:controller' } as any),
-      'Invalid command exported from "./loader_two.js?v=3.load". Expected command to be a class'
+      'Invalid command exported from "./loader_two.js?v=3.load" method. Expected command to be a class'
     )
   })
 

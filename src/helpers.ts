@@ -59,9 +59,7 @@ export function validCommandMetaData(
 ): asserts command is CommandMetaData {
   if (!command || (typeof command !== 'object' && typeof command !== 'function')) {
     throw new RuntimeException(
-      `Invalid command exported from "${exportPath}" method. Expected object, received "${inspect(
-        command
-      )}"`
+      `Invalid command exported from ${exportPath}. Expected object, received "${inspect(command)}"`
     )
   }
 
@@ -76,7 +74,7 @@ export function validCommandMetaData(
   expectedProperties.forEach((prop) => {
     if (prop in command === false) {
       throw new RuntimeException(
-        `Invalid command exported from "${exportPath}" method. Missing property "${prop}"`
+        `Invalid command exported from ${exportPath}. Missing property "${prop}"`
       )
     }
   })
@@ -94,7 +92,7 @@ export function validateCommand(
   validCommandMetaData(command, exportPath)
   if (typeof command !== 'function' && !command.toString().startsWith('class ')) {
     throw new RuntimeException(
-      `Invalid command exported from "${exportPath}". Expected command to be a class`
+      `Invalid command exported from ${exportPath}. Expected command to be a class`
     )
   }
 }
