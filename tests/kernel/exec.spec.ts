@@ -198,7 +198,7 @@ test.group('Kernel | exec', () => {
     kernel.registerExecutor({
       create(Command, parsed, self) {
         stack.push('creating')
-        return new Command(self, parsed, self.ui)
+        return new Command(self, parsed, self.ui, self.prompt)
       },
       run(command) {
         stack.push('running')
@@ -220,7 +220,7 @@ test.group('Kernel | exec', () => {
       () =>
         kernel.registerExecutor({
           create(Command, parsed, self) {
-            return new Command(self, parsed, self.ui)
+            return new Command(self, parsed, self.ui, self.prompt)
           },
           run(command) {
             return command.exec()

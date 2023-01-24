@@ -44,7 +44,12 @@ test.group('Kernel | terminate', (group) => {
     kernel.addLoader(new ListLoader([MakeController, MakeModel]))
     kernel.executed(async () => {
       await kernel.terminate(
-        new MakeModel(kernel, { args: [], _: [], flags: {}, unknownFlags: [] }, kernel.ui)
+        new MakeModel(
+          kernel,
+          { args: [], _: [], flags: {}, unknownFlags: [] },
+          kernel.ui,
+          kernel.prompt
+        )
       )
     })
     kernel.executed(async () => {

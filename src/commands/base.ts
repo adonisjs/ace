@@ -9,6 +9,7 @@
 
 import string from '@poppinss/utils/string'
 import lodash from '@poppinss/utils/lodash'
+import type { Prompt } from '@poppinss/prompts'
 import { defineStaticProperty, InvalidArgumentsException } from '@poppinss/utils'
 
 import * as errors from '../errors.js'
@@ -382,7 +383,8 @@ export class BaseCommand {
     this: T,
     kernel: Kernel,
     parsed: ParsedOutput,
-    ui: UIPrimitives
+    ui: UIPrimitives,
+    prompt: Prompt
   ): InstanceType<T> {
     this.validate(parsed)
 
@@ -390,7 +392,7 @@ export class BaseCommand {
      * Type casting is needed because of this issue
      * https://github.com/microsoft/TypeScript/issues/5863
      */
-    return new this(kernel, parsed, ui) as InstanceType<T>
+    return new this(kernel, parsed, ui, prompt) as InstanceType<T>
   }
 
   /**
@@ -424,7 +426,12 @@ export class BaseCommand {
     return this.ui.colors
   }
 
-  constructor(protected kernel: Kernel, protected parsed: ParsedOutput, public ui: UIPrimitives) {
+  constructor(
+    protected kernel: Kernel,
+    protected parsed: ParsedOutput,
+    public ui: UIPrimitives,
+    public prompt: Prompt
+  ) {
     this.#consumeParsedOutput()
   }
 

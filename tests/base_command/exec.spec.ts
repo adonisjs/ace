@@ -87,6 +87,44 @@ test.group('Base command | execute', () => {
     assert.deepEqual(model.stack, ['prepare', 'interact', 'run', 'completed'])
     assert.equal(model.result, 'completed')
   })
+
+  test('display prompts', async ({ assert }) => {
+    class MakeModel extends BaseCommand {
+      name!: string
+      connection!: string
+
+      async interact() {
+        if (!this.name) {
+          this.name = await this.prompt.ask('Enter model name')
+        }
+
+        if (!this.connection) {
+          this.connection = await this.prompt.choice('Select command connection', [
+            'sqlite',
+            'mysql',
+          ])
+        }
+      }
+
+      async run() {}
+    }
+
+    MakeModel.defineArgument('name', { type: 'string', required: false })
+    MakeModel.defineFlag('connection', { type: 'string' })
+
+    const kernel = new Kernel()
+    kernel.ui = cliui({ mode: 'raw' })
+
+    const model = await kernel.create(MakeModel, [])
+
+    model.prompt.trap('Enter model name').replyWith('user')
+    model.prompt.trap('Select command connection').chooseOption(0)
+
+    await model.exec()
+
+    assert.equal(model.name, 'user')
+    assert.equal(model.connection, 'sqlite')
+  })
 })
 
 test.group('Base command | execute | prepare fails', () => {

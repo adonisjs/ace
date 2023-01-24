@@ -9,6 +9,7 @@
 
 import Hooks from '@poppinss/hooks'
 import { cliui } from '@poppinss/cliui'
+import { Prompt } from '@poppinss/prompts'
 import { findBestMatch } from 'string-similarity'
 import { RuntimeException } from '@poppinss/utils'
 
@@ -91,7 +92,7 @@ export class Kernel {
    */
   #executor: ExecutorContract = {
     create(command, parsedArgs, kernel) {
-      return new command(kernel, parsedArgs, kernel.ui)
+      return new command(kernel, parsedArgs, kernel.ui, kernel.prompt)
     },
     run(command) {
       return command.exec()
@@ -146,6 +147,14 @@ export class Kernel {
    * The UI primitives to use within commands
    */
   ui: UIPrimitives = cliui()
+
+  /**
+   * Instance of prompt to display CLI prompts. We share
+   * a single instance with all the commands. This
+   * allows trapping prompts for commands executed
+   * internally.
+   */
+  prompt = new Prompt()
 
   /**
    * CLI info map

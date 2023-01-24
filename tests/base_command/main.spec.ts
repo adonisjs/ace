@@ -24,7 +24,12 @@ test.group('Base command', () => {
     MakeModel.boot()
 
     const kernel = new Kernel()
-    const model = new MakeModel(kernel, { _: [], args: [], unknownFlags: [], flags: {} }, cliui())
+    const model = new MakeModel(
+      kernel,
+      { _: [], args: [], unknownFlags: [], flags: {} },
+      cliui(),
+      kernel.prompt
+    )
     assert.strictEqual(model.logger, model.ui.logger)
   })
 
@@ -37,7 +42,12 @@ test.group('Base command', () => {
     MakeModel.boot()
 
     const kernel = new Kernel()
-    const model = new MakeModel(kernel, { _: [], args: [], unknownFlags: [], flags: {} }, cliui())
+    const model = new MakeModel(
+      kernel,
+      { _: [], args: [], unknownFlags: [], flags: {} },
+      cliui(),
+      kernel.prompt
+    )
     assert.strictEqual(model.colors, model.ui.colors)
   })
 })
@@ -55,7 +65,7 @@ test.group('Base command | consume args', () => {
     const parsed = new Parser(MakeModel.getParserOptions()).parse('user --connection=sqlite')
 
     const kernel = new Kernel()
-    const model = MakeModel.create(kernel, parsed, cliui())
+    const model = MakeModel.create(kernel, parsed, cliui(), kernel.prompt)
 
     assert.equal(model.name, 'user')
     assert.equal(model.connection, 'sqlite')
@@ -73,7 +83,7 @@ test.group('Base command | consume args', () => {
     const parsed = new Parser(MakeModel.getParserOptions()).parse('user post --connection=sqlite')
 
     const kernel = new Kernel()
-    const model = MakeModel.create(kernel, parsed, cliui())
+    const model = MakeModel.create(kernel, parsed, cliui(), kernel.prompt)
 
     assert.deepEqual(model.names, ['user', 'post'])
     assert.equal(model.connection, 'sqlite')
@@ -97,7 +107,7 @@ test.group('Base command | consume flags', () => {
     )
 
     const kernel = new Kernel()
-    const model = MakeModel.create(kernel, parsed, cliui())
+    const model = MakeModel.create(kernel, parsed, cliui(), kernel.prompt)
 
     assert.equal(model.name, 'user')
     assert.equal(model.connection, 'sqlite')
@@ -120,7 +130,7 @@ test.group('Base command | consume flags', () => {
     )
 
     const kernel = new Kernel()
-    const model = MakeModel.create(kernel, parsed, cliui())
+    const model = MakeModel.create(kernel, parsed, cliui(), kernel.prompt)
 
     assert.equal(model.name, 'user')
     assert.deepEqual(model.connections, ['sqlite', 'mysql'])
@@ -141,7 +151,7 @@ test.group('Base command | consume flags', () => {
     const parsed = new Parser(MakeModel.getParserOptions()).parse('user')
 
     const kernel = new Kernel()
-    const model = MakeModel.create(kernel, parsed, cliui())
+    const model = MakeModel.create(kernel, parsed, cliui(), kernel.prompt)
 
     assert.equal(model.name, 'user')
     assert.deepEqual(model.connections, ['sqlite'])

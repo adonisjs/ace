@@ -120,7 +120,7 @@ kernel.on('ansi', (_, $kernel, options) => {
 
 kernel.on('help', async (command, $kernel, options) => {
   options.args.unshift(command.commandName)
-  await new HelpCommand($kernel, options, kernel.ui).exec()
+  await new HelpCommand($kernel, options, kernel.ui, kernel.prompt).exec()
   return true
 })
 

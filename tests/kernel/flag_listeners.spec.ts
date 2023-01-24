@@ -8,6 +8,7 @@
  */
 
 import { test } from '@japa/runner'
+import { Prompt } from '@poppinss/prompts'
 import { Kernel } from '../../src/kernel.js'
 import { BaseCommand } from '../../src/commands/base.js'
 import { ListLoader } from '../../src/loaders/list_loader.js'
@@ -73,8 +74,8 @@ test.group('Kernel | handle', (group) => {
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
-      constructor($kernel: Kernel, parsed: ParsedOutput, ui: UIPrimitives) {
-        super($kernel, parsed, ui)
+      constructor($kernel: Kernel, parsed: ParsedOutput, ui: UIPrimitives, prompt: Prompt) {
+        super($kernel, parsed, ui, prompt)
         stack.push('constructor')
       }
 
