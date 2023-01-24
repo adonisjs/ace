@@ -115,7 +115,7 @@ test.group('Kernel | find', () => {
     assert.strictEqual(command, MakeModel)
   })
 
-  test('execute finding and found hooks', async ({ assert }) => {
+  test('execute finding, loading and loaded hooks', async ({ assert }) => {
     const kernel = new Kernel()
     const stack: string[] = []
 
@@ -137,17 +137,23 @@ test.group('Kernel | find', () => {
       stack.push('finding')
     })
 
-    kernel.found((command) => {
-      assert.equal(command.commandName, 'make:model')
-      stack.push('found')
+    kernel.loading((command) => {
+      assert.deepEqual(command, MakeModel.serialize())
+      stack.push('loading')
     })
+
+    kernel.loaded((command) => {
+      assert.strictEqual(command, MakeModel)
+      stack.push('loaded')
+    })
+
     const command = await kernel.find('make:model')
 
     assert.strictEqual(command, MakeModel)
-    assert.deepEqual(stack, ['finding', 'found'])
+    assert.deepEqual(stack, ['finding', 'loading', 'loaded'])
   })
 
-  test('do not execute found hook when command not found', async ({ assert }) => {
+  test('do not execute loading hook when command not found', async ({ assert }) => {
     const kernel = new Kernel()
     const stack: string[] = []
 
@@ -169,8 +175,7 @@ test.group('Kernel | find', () => {
       stack.push('finding')
     })
 
-    kernel.found((command) => {
-      assert.equal(command.commandName, 'make:model')
+    kernel.loading(() => {
       stack.push('found')
     })
 

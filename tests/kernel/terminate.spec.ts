@@ -43,7 +43,9 @@ test.group('Kernel | terminate', (group) => {
 
     kernel.addLoader(new CommandsList([MakeController, MakeModel]))
     kernel.executed(async () => {
-      await kernel.terminate(new MakeModel(kernel, { _: [] }, kernel.ui))
+      await kernel.terminate(
+        new MakeModel(kernel, { args: [], _: [], flags: {}, unknownFlags: [] }, kernel.ui)
+      )
     })
     kernel.executed(async () => {
       assert.equal(kernel.getState(), 'running')
@@ -56,7 +58,7 @@ test.group('Kernel | terminate', (group) => {
     assert.equal(kernel.getState(), 'terminated')
   })
 
-  test('terminate from a main command', async ({ assert }) => {
+  test('terminate automatically after running the main command', async ({ assert }) => {
     const kernel = new Kernel()
 
     class MakeController extends BaseCommand {
@@ -70,14 +72,89 @@ test.group('Kernel | terminate', (group) => {
     }
 
     kernel.addLoader(new CommandsList([MakeController, MakeModel]))
-    kernel.executed(async (command) => {
-      await kernel.terminate(command)
-    })
-    kernel.executed(async () => {
-      assert.equal(kernel.getState(), 'terminated')
+    await kernel.handle(['make:controller'])
+
+    assert.equal(kernel.exitCode, 0)
+    assert.equal(process.exitCode, 0)
+    assert.equal(kernel.getState(), 'terminated')
+  })
+
+  test('do not terminate if command options.staysAlive is true', async ({ assert }) => {
+    const kernel = new Kernel()
+
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+      static options = {
+        staysAlive: true,
+      }
+      async run() {}
+    }
+
+    class MakeModel extends BaseCommand {
+      static commandName = 'make:model'
+      async run() {}
+    }
+
+    kernel.addLoader(new CommandsList([MakeController, MakeModel]))
+    await kernel.handle(['make:controller'])
+
+    assert.isUndefined(kernel.exitCode)
+    assert.isUndefined(process.exitCode)
+    assert.equal(kernel.getState(), 'running')
+  })
+
+  test('terminate when alive command calls terminate method', async ({ assert }) => {
+    const kernel = new Kernel()
+
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+      static options = {
+        staysAlive: true,
+      }
+      async run() {
+        await this.terminate()
+      }
+    }
+
+    class MakeModel extends BaseCommand {
+      static commandName = 'make:model'
+      async run() {}
+    }
+
+    kernel.addLoader(new CommandsList([MakeController, MakeModel]))
+    await kernel.handle(['make:controller'])
+
+    assert.equal(kernel.exitCode, 0)
+    assert.equal(process.exitCode, 0)
+    assert.equal(kernel.getState(), 'terminated')
+  })
+
+  test('terminate from flag listener', async ({ assert }) => {
+    const kernel = new Kernel()
+
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+      static options = {
+        staysAlive: true,
+      }
+      async run() {}
+    }
+
+    class MakeModel extends BaseCommand {
+      static commandName = 'make:model'
+      async run() {}
+    }
+
+    kernel.addLoader(new CommandsList([MakeController, MakeModel]))
+    kernel.defineFlag('help', {
+      type: 'boolean',
     })
 
-    await kernel.handle(['make:controller'])
+    kernel.on('help', () => {
+      return true
+    })
+
+    await kernel.handle(['make:controller', '--help'])
 
     assert.equal(kernel.exitCode, 0)
     assert.equal(process.exitCode, 0)

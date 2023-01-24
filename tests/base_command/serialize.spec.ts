@@ -27,7 +27,6 @@ test.group('Base command | serialize', () => {
       aliases: [],
       options: {
         allowUnknownFlags: false,
-        handlesSignals: false,
         staysAlive: false,
       },
     })
@@ -49,7 +48,6 @@ test.group('Base command | serialize', () => {
       aliases: [],
       options: {
         allowUnknownFlags: false,
-        handlesSignals: false,
         staysAlive: false,
       },
     })
@@ -81,7 +79,6 @@ test.group('Base command | serialize', () => {
       aliases: [],
       options: {
         allowUnknownFlags: false,
-        handlesSignals: false,
         staysAlive: false,
       },
     })
@@ -120,7 +117,6 @@ test.group('Base command | serialize', () => {
       ],
       options: {
         allowUnknownFlags: false,
-        handlesSignals: false,
         staysAlive: false,
       },
       aliases: [],

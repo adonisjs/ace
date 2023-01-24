@@ -109,13 +109,19 @@ kernel.defineFlag('ansi', {
 })
 
 kernel.on('ansi', (_, $kernel, options) => {
-  if (options.ansi === false) {
+  if (options.flags.ansi === false) {
     $kernel.ui.switchMode('silent')
   }
 
-  if (options.ansi === true) {
+  if (options.flags.ansi === true) {
     $kernel.ui.switchMode('normal')
   }
+})
+
+kernel.on('help', async (command, $kernel, options) => {
+  options.args.unshift(command.commandName)
+  await new HelpCommand($kernel, options, kernel.ui).exec()
+  return true
 })
 
 kernel.info.set('binary', 'node ace')

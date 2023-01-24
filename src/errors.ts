@@ -10,43 +10,11 @@
 import { createError, Exception } from '@poppinss/utils'
 
 /**
- * Cannot define required argument after an optional argument
- */
-export const E_CANNOT_DEFINE_REQUIRED_ARG = createError<[arg: string, optionalArg: string]>(
-  'Cannot define required argument "%s" after optional argument "%s"',
-  'E_CANNOT_DEFINE_REQUIRED_ARG'
-)
-
-/**
- * Cannot define another argument after a spread argument
- */
-export const E_CANNOT_DEFINE_ARG = createError<[arg: string, spreadArg: string]>(
-  'Cannot define argument "%s" after spread argument "%s". Spread argument should be the last one',
-  'E_CANNOT_DEFINE_ARG'
-)
-
-/**
- * Cannot define a flag because it is missing the flag type
- */
-export const E_MISSING_FLAG_TYPE = createError<[flag: string]>(
-  'Cannot define flag "%s". Specify the flag type',
-  'E_MISSING_FLAG_TYPE'
-)
-
-/**
  * Command is missing the static property command name
  */
 export const E_MISSING_COMMAND_NAME = createError<[command: string]>(
   'Cannot serialize command "%s". Missing static property "commandName"',
   'E_MISSING_COMMAND_NAME'
-)
-
-/**
- * Cannot define an argument because it is missing the arg type
- */
-export const E_MISSING_ARG_TYPE = createError<[arg: string]>(
-  'Cannot define argument "%s". Specify the argument type',
-  'E_MISSING_ARG_TYPE'
 )
 
 /**

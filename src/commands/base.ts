@@ -9,7 +9,7 @@
 
 import string from '@poppinss/utils/string'
 import lodash from '@poppinss/utils/lodash'
-import { defineStaticProperty } from '@poppinss/utils'
+import { defineStaticProperty, InvalidArgumentsException } from '@poppinss/utils'
 
 import * as errors from '../errors.js'
 import type { Kernel } from '../kernel.js'
@@ -23,6 +23,7 @@ import type {
   FlagsParserOptions,
   ArgumentsParserOptions,
 } from '../types.js'
+import debug from '../debug.js'
 
 /**
  * The base command sets the foundation for defining ace commands.
@@ -84,14 +85,14 @@ export class BaseCommand {
     defineStaticProperty(this, 'description', { initialValue: '', strategy: 'define' })
     defineStaticProperty(this, 'help', { initialValue: '', strategy: 'define' })
     defineStaticProperty(this, 'options', {
-      initialValue: { staysAlive: false, handlesSignals: false, allowUnknownFlags: false },
+      initialValue: { staysAlive: false, allowUnknownFlags: false },
       strategy: 'inherit',
     })
   }
 
   /**
-   * Specify the argument the command accepts. The arguments will be accepted
-   * in the same order as they are defined.
+   * Specify the argument the command accepts. The arguments via the CLI
+   * will be accepted in the same order as they are defined.
    *
    * Mostly, you will be using the `@args` decorator to define the arguments.
    *
@@ -108,14 +109,18 @@ export class BaseCommand {
      * Ensure the arg type is specified
      */
     if (!arg.type) {
-      throw new errors.E_MISSING_ARG_TYPE([`${this.name}.${name}`])
+      throw new InvalidArgumentsException(
+        `Cannot define argument "${this.name}.${name}". Specify the argument type`
+      )
     }
 
     /**
      * Ensure we are not adding arguments after a spread argument
      */
     if (lastArg && lastArg.type === 'spread') {
-      throw new errors.E_CANNOT_DEFINE_ARG([`${this.name}.${name}`, `${this.name}.${lastArg.name}`])
+      throw new InvalidArgumentsException(
+        `Cannot define argument "${this.name}.${name}" after spread argument "${this.name}.${lastArg.name}". Spread argument should be the last one`
+      )
     }
 
     /**
@@ -123,10 +128,13 @@ export class BaseCommand {
      * argument
      */
     if (arg.required && lastArg && lastArg.required === false) {
-      throw new errors.E_CANNOT_DEFINE_REQUIRED_ARG([
-        `${this.name}.${name}`,
-        `${this.name}.${lastArg.name}`,
-      ])
+      throw new InvalidArgumentsException(
+        `Cannot define required argument "${this.name}.${name}" after optional argument "${this.name}.${lastArg.name}"`
+      )
+    }
+
+    if (debug.enabled) {
+      debug('defining arg %O, command: %O', arg, `[class: ${this.name}]`)
     }
 
     this.args.push(arg)
@@ -152,7 +160,13 @@ export class BaseCommand {
      * Ensure the arg type is specified
      */
     if (!flag.type) {
-      throw new errors.E_MISSING_FLAG_TYPE([`${this.name}.${name}`])
+      throw new InvalidArgumentsException(
+        `Cannot define flag "${this.name}.${name}". Specify the flag type`
+      )
+    }
+
+    if (debug.enabled) {
+      debug('defining flag %O, command: %O', flag, `[class: ${this.name}]`)
     }
 
     this.flags.push(flag)
@@ -273,6 +287,10 @@ export class BaseCommand {
       }
 
       if (hasDefinedArgument && !arg.allowEmptyValue && (value === '' || !value.length)) {
+        if (debug.enabled) {
+          debug('disallowing empty value "%s" for arg: "%s"', value, arg.name)
+        }
+
         throw new errors.E_MISSING_ARG_VALUE([arg.name])
       }
     })
@@ -345,6 +363,10 @@ export class BaseCommand {
            * In case of array, flag with no value receives an empty array
            */
           if (hasMentionedFlag && !flag.allowEmptyValue && (value === '' || !value.length)) {
+            if (debug.enabled) {
+              debug('disallowing empty value "%s" for flag: "%s"', value, flag.name)
+            }
+
             throw new errors.E_MISSING_FLAG_VALUE([flag.flagName])
           }
       }

@@ -23,21 +23,24 @@ import type {
   Flag,
   UIPrimitives,
   FlagListener,
-  FoundHookArgs,
+  LoadedHookArgs,
   CommandMetaData,
   LoadersContract,
+  LoadingHookArgs,
   FindingHookArgs,
   ExecutedHookArgs,
   ExecutorContract,
-  FoundHookHandler,
+  LoadedHookHandler,
   AllowedInfoValues,
   ExecutingHookArgs,
+  LoadingHookHandler,
   FindingHookHandler,
   TerminatingHookArgs,
   ExecutedHookHandler,
   ExecutingHookHandler,
   TerminatingHookHandler,
 } from './types.js'
+import debug from './debug.js'
 
 const knowErrorCodes = Object.keys(errors)
 
@@ -49,7 +52,7 @@ const knowErrorCodes = Object.keys(errors)
  */
 export class Kernel {
   /**
-   * Listeners for CLI options. Executed for main command
+   * Listeners for CLI options. Executed for the main command
    * only
    */
   #optionListeners: Map<string, FlagListener> = new Map()
@@ -75,7 +78,8 @@ export class Kernel {
    */
   #hooks: Hooks<{
     finding: FindingHookArgs
-    found: FoundHookArgs
+    loading: LoadingHookArgs
+    loaded: LoadedHookArgs
     executing: ExecutingHookArgs
     executed: ExecutedHookArgs
     terminating: TerminatingHookArgs
@@ -95,13 +99,13 @@ export class Kernel {
   }
 
   /**
-   * Keep a track of the main command. There are some action (like termination)
+   * Keeping track of the main command. There are some action (like termination)
    * that only the main command can perform
    */
   #mainCommand?: BaseCommand
 
   /**
-   * The current state of kernel. The `running` and `completed`
+   * The current state of kernel. The `running` and `terminated`
    * states are only set when kernel takes over the process.
    */
   #state: 'idle' | 'booted' | 'running' | 'terminated' = 'idle'
@@ -223,17 +227,13 @@ export class Kernel {
       this.#globalCommand.validate(parsed)
 
       /**
-       * Validate the parsed output
-       */
-      Command.validate(parsed)
-
-      /**
        * Run options listeners. Option listeners can terminate
        * the process early
        */
       let shortcircuit = false
       for (let [option, listener] of this.#optionListeners) {
         if (parsed.flags[option] !== undefined) {
+          debug('running listener for "%s" flag', option)
           shortcircuit = await listener(Command, this, parsed)
           if (shortcircuit) {
             break
@@ -242,9 +242,15 @@ export class Kernel {
       }
 
       /**
+       * Validate the parsed output
+       */
+      Command.validate(parsed)
+
+      /**
        * Terminate if a flag listener ends the process
        */
       if (shortcircuit) {
+        debug('short circuiting from flag listener')
         await this.terminate()
         return
       }
@@ -255,7 +261,7 @@ export class Kernel {
       this.#mainCommand = await this.#executor.create(Command, parsed, this)
 
       /**
-       * Execute the command either using the executor
+       * Execute the command using the executor
        */
       await this.#hooks.runner('executing').run(this.#mainCommand, true)
       await this.#executor.run(this.#mainCommand, this)
@@ -276,12 +282,12 @@ export class Kernel {
    * Handles the error raised during the main command execution.
    *
    * @note: Do not use this error handler for anything other than
-   * the handle method
+   * handling errors of the main command
    */
   async #handleError(error: any) {
     /**
      * Exit code will always be 1 if a hard exception was raised
-     * during the command executed.
+     * during command execution.
      */
     this.exitCode = 1
 
@@ -314,6 +320,7 @@ export class Kernel {
    * The callbacks are only executed for the main command
    */
   on(option: string, callback: FlagListener): this {
+    debug('registering flag listener for "%s" flag', option)
     this.#optionListeners.set(option, callback)
     return this
   }
@@ -519,10 +526,18 @@ export class Kernel {
   }
 
   /**
-   * Listen for the event when a command is found
+   * Listen for the event when importing the command
    */
-  found(callback: FoundHookHandler) {
-    this.#hooks.add('found', callback)
+  loading(callback: LoadingHookHandler) {
+    this.#hooks.add('loading', callback)
+    return this
+  }
+
+  /**
+   * Listen for the event when the command has been imported
+   */
+  loaded(callback: LoadedHookHandler) {
+    this.#hooks.add('loaded', callback)
     return this
   }
 
@@ -576,7 +591,7 @@ export class Kernel {
 
     /**
      * A set of unique namespaces. Later, we will store them on kernel
-     * directly as an array sorted alphabetically.
+     * directly as an alphabetically sorted array.
      */
     const namespaces: Set<string> = new Set()
 
@@ -614,6 +629,8 @@ export class Kernel {
       throw new errors.E_COMMAND_NOT_FOUND([commandName])
     }
 
+    await this.#hooks.runner('loading').run(command.metaData)
+
     /**
      * Find if the loader is able to load the command
      */
@@ -622,7 +639,7 @@ export class Kernel {
       throw new errors.E_COMMAND_NOT_FOUND([commandName])
     }
 
-    await this.#hooks.runner('found').run(commandConstructor)
+    await this.#hooks.runner('loaded').run(commandConstructor)
     return commandConstructor as T
   }
 
@@ -701,6 +718,7 @@ export class Kernel {
      * or if only flags are mentioned
      */
     if (!argv.length || argv[0].startsWith('-')) {
+      debug('running default command "%s"', this.#defaultCommand.commandName)
       return this.#execMain(this.#defaultCommand.commandName, argv)
     }
 
@@ -708,6 +726,7 @@ export class Kernel {
      * Run the mentioned command as the main command
      */
     const [commandName, ...args] = argv
+    debug('running main command "%s"', commandName)
     return this.#execMain(commandName, args)
   }
 
@@ -724,6 +743,7 @@ export class Kernel {
      * is always running when we execute the handle method
      */
     if (this.#state !== 'running') {
+      debug('denied terminating, since kernel.handle was never called')
       return
     }
 
@@ -733,12 +753,14 @@ export class Kernel {
      * do not terminate
      */
     if (this.#mainCommand && command !== this.#mainCommand) {
+      debug('denied terminating, since command other than main command attempted to terminate')
       return
     }
 
     /**
      * Started the termination process
      */
+    debug('terminating')
     await this.#hooks.runner('terminating').run(this.#mainCommand)
     this.#state = 'terminated'
 

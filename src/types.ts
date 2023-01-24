@@ -309,14 +309,6 @@ export type CommandOptions = {
    * Defaults to false
    */
   staysAlive?: boolean
-
-  /**
-   * When set to true, the kernel will not listen for process signals
-   * like SIGTERM or SIGINT
-   *
-   * Defaults to false
-   */
-  handlesSignals?: boolean
 }
 
 /**
@@ -328,8 +320,14 @@ export type FindingHookHandler = HookHandler<FindingHookArgs[0], FindingHookArgs
 /**
  * Found hook handler and data
  */
-export type FoundHookArgs = [[typeof BaseCommand], [typeof BaseCommand]]
-export type FoundHookHandler = HookHandler<FoundHookArgs[0], FoundHookArgs[1]>
+export type LoadingHookArgs = [[CommandMetaData], [CommandMetaData]]
+export type LoadingHookHandler = HookHandler<LoadingHookArgs[0], LoadingHookArgs[1]>
+
+/**
+ * Found hook handler and data
+ */
+export type LoadedHookArgs = [[typeof BaseCommand], [typeof BaseCommand]]
+export type LoadedHookHandler = HookHandler<LoadedHookArgs[0], LoadedHookArgs[1]>
 
 /**
  * Executing hook handler and data

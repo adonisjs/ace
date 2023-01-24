@@ -19,21 +19,22 @@ test.group('Parser | flags', () => {
     MakeModel.defineFlag('batchSize', { type: 'number' })
     MakeModel.defineFlag('files', { type: 'array' })
 
-    const output = new Parser(MakeModel.getParserOptions()).parse(
-      '--connection=sqlite --drop-all --batch-size=1 --files=a,b'
+    assert.deepEqual(
+      new Parser(MakeModel.getParserOptions()).parse(
+        '--connection=sqlite --drop-all --batch-size=1 --files=a,b'
+      ),
+      {
+        _: [],
+        args: [],
+        unknownFlags: [],
+        flags: {
+          'batch-size': 1,
+          'connection': 'sqlite',
+          'drop-all': true,
+          'files': ['a,b'],
+        },
+      }
     )
-
-    assert.deepEqual(output, {
-      _: [],
-      args: [],
-      unknownFlags: [],
-      flags: {
-        'batch-size': 1,
-        'connection': 'sqlite',
-        'drop-all': true,
-        'files': ['a,b'],
-      },
-    })
 
     assert.deepEqual(new Parser(MakeModel.getParserOptions()).parse('--files=a --files=b'), {
       _: [],
@@ -52,9 +53,7 @@ test.group('Parser | flags', () => {
     MakeModel.defineFlag('batchSize', { type: 'number', alias: 'b' })
     MakeModel.defineFlag('files', { type: 'array', alias: 'f' })
 
-    const output = new Parser(MakeModel.getParserOptions()).parse('-c=sqlite -d -b=1 -f=a,b')
-
-    assert.deepEqual(output, {
+    assert.deepEqual(new Parser(MakeModel.getParserOptions()).parse('-c=sqlite -d -b=1 -f=a,b'), {
       _: [],
       args: [],
       unknownFlags: [],
@@ -92,7 +91,7 @@ test.group('Parser | flags', () => {
     })
   })
 
-  test('set flags to default values when not set', ({ assert }) => {
+  test('set flags to default values when not mentioned', ({ assert }) => {
     class MakeModel extends BaseCommand {}
     MakeModel.defineFlag('dropAll', { type: 'boolean', default: false })
     MakeModel.defineFlag('connection', { type: 'string', default: 'sqlite' })
@@ -136,7 +135,7 @@ test.group('Parser | flags', () => {
     })
   })
 
-  test('return parsed values', ({ assert }) => {
+  test('parse flags using the parse method', ({ assert }) => {
     class MakeModel extends BaseCommand {}
     MakeModel.defineFlag('dropAll', {
       type: 'boolean',
@@ -229,7 +228,7 @@ test.group('Parser | flags', () => {
     })
   })
 
-  test('do not call parse method when flags are not set', ({ assert }) => {
+  test('do not call parse method when flags are not mentioned', ({ assert }) => {
     class MakeModel extends BaseCommand {}
     MakeModel.defineFlag('dropAll', {
       type: 'boolean',
@@ -289,7 +288,7 @@ test.group('Parser | arguments', () => {
     })
   })
 
-  test('use default value when argument is not defined', ({ assert }) => {
+  test('use default value when argument is not mentioned', ({ assert }) => {
     class MakeModel extends BaseCommand {}
     MakeModel.defineArgument('name', { type: 'string' })
     MakeModel.defineArgument('connections', { type: 'spread', default: ['sqlite'] })
@@ -303,7 +302,7 @@ test.group('Parser | arguments', () => {
     })
   })
 
-  test('do not use default value when argument is defined as empty string', ({ assert }) => {
+  test('do not use default value when argument is mentioned as empty string', ({ assert }) => {
     class MakeModel extends BaseCommand {}
     MakeModel.defineArgument('name', { type: 'string' })
     MakeModel.defineArgument('connections', { type: 'spread', default: ['sqlite'] })
@@ -395,18 +394,10 @@ test.group('Parser | arguments', () => {
     class MakeModel extends BaseCommand {}
     MakeModel.defineArgument('name', {
       type: 'string',
-      parse(value) {
-        return value.toUpperCase()
-      },
     })
     MakeModel.defineArgument('connections', {
       type: 'spread',
       default: 1,
-      parse(values) {
-        return values.map((value: string | number) => {
-          return typeof value === 'string' ? value.toUpperCase() : value
-        })
-      },
     })
 
     const output = new Parser(MakeModel.getParserOptions()).parse([])
@@ -423,18 +414,10 @@ test.group('Parser | arguments', () => {
     MakeModel.defineArgument('name', {
       type: 'string',
       default: null,
-      parse(value) {
-        return value ? value.toUpperCase() : value
-      },
     })
     MakeModel.defineArgument('connections', {
       type: 'spread',
       default: 1,
-      parse(values) {
-        return values.map((value: string | number) => {
-          return typeof value === 'string' ? value.toUpperCase() : value
-        })
-      },
     })
 
     const output = new Parser(MakeModel.getParserOptions()).parse([])
