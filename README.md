@@ -1,47 +1,27 @@
-<div align="center">
-  <img src="https://res.cloudinary.com/adonisjs/image/upload/q_100/v1558612869/adonis-readme_zscycu.jpg" width="600px">
-</div>
+# @adonisjs/ace
 
 <br />
-
-<div align="center">
-  <h3>Command line framework of AdonisJS</h3>
-  <p> Ace is command line framework embedded into AdonisJS for creating CLI commands. AdonisJS is the <strong>only Node.js framework</strong> that allows creating CLI commands as part of the application codebase. </p>
-</div>
-
-<br />
-
-<div align="center">
 
 [![gh-workflow-image]][gh-workflow-url] [![npm-image]][npm-url] ![][typescript-image] [![license-image]][license-url] [![synk-image]][synk-url]
 
-</div>
+## Introduction
+Ace is the command-line framework for Node.js. It is built with **testing in mind**, is **light weight** in comparison to other CLI frameworks, and offers a clean API for creating CLI commands.
 
-<div align="center">
-  <h3>
-    <a href="https://adonisjs.com">
-      Website
-    </a>
-    <span> | </span>
-    <a href="https://docs.adonisjs.com/guides/ace-commandline">
-      Guides
-    </a>
-    <span> | </span>
-    <a href="CONTRIBUTING.md">
-      Contributing
-    </a>
-		<span> | </span>
-		<a href="flow-chart.png">
-			Flow chart
-		</a>
-  </h3>
-</div>
+## Official Documentation
+The documentation is available on the official website
 
-<div align="center">
-  <sub>Built with ❤︎ by <a href="https://twitter.com/AmanVirk1">Harminder Virk</a>
-</div>
+## Contributing
+One of the primary goals of AdonisJS is to have a vibrant community of users and contributors who believes in the principles of the framework.
 
-[gh-workflow-image]: https://img.shields.io/github/workflow/status/adonisjs/ace/test?style=for-the-badge
+We encourage you to read the [contribution guide](https://github.com/adonisjs/.github/blob/main/docs/CONTRIBUTING.md) before contributing to the framework.
+
+## Code of Conduct
+In order to ensure that the AdonisJS community is welcoming to all, please review and abide by the [Code of Conduct](https://github.com/adonisjs/.github/blob/main/docs/CODE_OF_CONDUCT.md).
+
+## License
+AdonisJS Ace is open-sourced software licensed under the [MIT license](LICENSE.md).
+
+[gh-workflow-image]: https://img.shields.io/github/actions/workflow/status/adonisjs/ace/test.yml?style=for-the-badge
 [gh-workflow-url]: https://github.com/adonisjs/ace/actions/workflows/test.yml "Github action"
 
 [npm-image]: https://img.shields.io/npm/v/@adonisjs/ace/latest.svg?style=for-the-badge&logo=npm
