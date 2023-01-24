@@ -8,9 +8,12 @@
  */
 
 import { inspect } from 'node:util'
+import { Validator } from 'jsonschema'
 import { RuntimeException } from '@poppinss/utils'
-import type { CommandMetaData, UIPrimitives } from './types.js'
+
 import { BaseCommand } from '../index.js'
+import type { CommandMetaData, UIPrimitives } from './types.js'
+import schema from '../command_metadata_schema.json' assert { type: 'json' }
 
 /**
  * Helper to sort array of strings alphabetically.
@@ -63,21 +66,11 @@ export function validCommandMetaData(
     )
   }
 
-  const expectedProperties: (keyof CommandMetaData)[] = [
-    'commandName',
-    'aliases',
-    'flags',
-    'args',
-    'options',
-  ]
-
-  expectedProperties.forEach((prop) => {
-    if (prop in command === false) {
-      throw new RuntimeException(
-        `Invalid command exported from ${exportPath}. Missing property "${prop}"`
-      )
-    }
-  })
+  try {
+    new Validator().validate(command, schema, { throwError: true })
+  } catch (error) {
+    throw new RuntimeException(`Invalid command exported from ${exportPath}. ${error.message}`)
+  }
 }
 
 /**
@@ -89,10 +82,18 @@ export function validateCommand(
   command: unknown,
   exportPath: string
 ): asserts command is typeof BaseCommand {
-  validCommandMetaData(command, exportPath)
-  if (typeof command !== 'function' && !command.toString().startsWith('class ')) {
+  if (typeof command !== 'function' || !command.toString().startsWith('class ')) {
     throw new RuntimeException(
       `Invalid command exported from ${exportPath}. Expected command to be a class`
     )
   }
+
+  const commandConstructor = command as Function & { serialize: () => unknown }
+  if (typeof commandConstructor.serialize !== 'function') {
+    throw new RuntimeException(
+      `Invalid command exported from ${exportPath}. Expected command to extend the "BaseCommand"`
+    )
+  }
+
+  validCommandMetaData(commandConstructor.serialize(), exportPath)
 }

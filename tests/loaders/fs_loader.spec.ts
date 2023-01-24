@@ -37,7 +37,7 @@ test.group('Loaders | fs', (group) => {
     const loader = new FsLoader(join(BASE_PATH, './commands'))
     await assert.rejects(
       () => loader.getMetaData(),
-      'Invalid command exported from "make_controller_v_1" file. Missing property "commandName"'
+      'Invalid command exported from "make_controller_v_1" file. Expected command to be a class'
     )
   })
 
@@ -51,10 +51,14 @@ test.group('Loaders | fs', (group) => {
         static flags = []
         static aliases = []
         static options = {}
+        static description = ''
+        static namespace = 'make'
 
         static serialize() {
           return {
             commandName: this.commandName,
+            description: this.description,
+            namespace: this.namespace,
             args: this.args,
             flags: this.flags,
             options: this.options,
@@ -70,6 +74,8 @@ test.group('Loaders | fs', (group) => {
     assert.deepEqual(commands, [
       {
         commandName: 'make:controller',
+        description: '',
+        namespace: 'make',
         args: [],
         flags: [],
         options: {},
@@ -88,10 +94,14 @@ test.group('Loaders | fs', (group) => {
         static flags = []
         static aliases = []
         static options = {}
+        static description = ''
+        static namespace = 'make'
 
         static serialize() {
           return {
             commandName: this.commandName,
+            description: this.description,
+            namespace: this.namespace,
             args: this.args,
             flags: this.flags,
             options: this.options,
@@ -107,6 +117,8 @@ test.group('Loaders | fs', (group) => {
     assert.deepEqual(commands, [
       {
         commandName: 'make:controller',
+        description: '',
+        namespace: 'make',
         args: [],
         flags: [],
         options: {},
@@ -125,10 +137,14 @@ test.group('Loaders | fs', (group) => {
         static flags = []
         static aliases = []
         static options = {}
+        static description = ''
+        static namespace = 'make'
 
         static serialize() {
           return {
             commandName: this.commandName,
+            description: this.description,
+            namespace: this.namespace,
             args: this.args,
             flags: this.flags,
             options: this.options,
@@ -146,6 +162,8 @@ test.group('Loaders | fs', (group) => {
     assert.deepEqual(commands, [
       {
         commandName: 'make:controller',
+        description: '',
+        namespace: 'make',
         args: [],
         flags: [],
         options: {},
@@ -164,10 +182,14 @@ test.group('Loaders | fs', (group) => {
         static flags = []
         static aliases = []
         static options = {}
+        static description = ''
+        static namespace = 'make'
 
         static serialize() {
           return {
             commandName: this.commandName,
+            description: this.description,
+            namespace: this.namespace,
             args: this.args,
             flags: this.flags,
             options: this.options,
@@ -187,31 +209,6 @@ test.group('Loaders | fs', (group) => {
   })
 
   test('return null when unable to lookup command', async ({ assert }) => {
-    await fs.outputFile(
-      join(BASE_PATH, 'commands', 'make_controller_v_6.ts'),
-      `
-      export default class MakeController {
-        static commandName = 'make:controller'
-        static args = []
-        static flags = []
-        static aliases = []
-        static options = {}
-
-        static serialize() {
-          return {
-            commandName: this.commandName,
-            args: this.args,
-            flags: this.flags,
-            options: this.options,
-            aliases: this.aliases,
-          }
-        }
-      }
-    `
-    )
-
-    await fs.outputFile(join(BASE_PATH, 'commands', 'foo.json'), `{}`)
-
     const loader = new FsLoader(join(BASE_PATH, './commands'))
     const command = await loader.getCommand({ commandName: 'make:model' } as any)
     assert.isNull(command)

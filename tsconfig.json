@@ -4,6 +4,7 @@
     "module": "NodeNext",
     "lib": ["ESNext"],
     "useDefineForClassFields": true,
+    "resolveJsonModule": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "isolatedModules": true,

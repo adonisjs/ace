@@ -103,7 +103,7 @@ test.group('Loaders | modules', (group) => {
     const loader = new ModulesLoader(BASE_URL, ['./loader_one.js?v=4'])
     await assert.rejects(
       () => loader.getMetaData(),
-      `Invalid command exported from "./loader_one.js?v=4.list" method. Missing property "commandName"`
+      `Invalid command exported from "./loader_one.js?v=4.list" method. requires property "commandName"`
     )
   })
 
@@ -115,6 +115,8 @@ test.group('Loaders | modules', (group) => {
         return [
           {
             commandName: 'make:controller',
+            description: '',
+            namespace: 'make',
             args: [],
             flags: [],
             aliases: [],
@@ -133,6 +135,8 @@ test.group('Loaders | modules', (group) => {
         return [
           {
             commandName: 'make:model',
+            description: '',
+            namespace: 'make',
             args: [],
             flags: [],
             aliases: [],
@@ -150,6 +154,8 @@ test.group('Loaders | modules', (group) => {
     assert.deepEqual(commands, [
       {
         commandName: 'make:controller',
+        description: '',
+        namespace: 'make',
         args: [],
         flags: [],
         aliases: [],
@@ -157,6 +163,8 @@ test.group('Loaders | modules', (group) => {
       },
       {
         commandName: 'make:model',
+        description: '',
+        namespace: 'make',
         args: [],
         flags: [],
         aliases: [],
@@ -173,6 +181,8 @@ test.group('Loaders | modules', (group) => {
         return [
           {
             commandName: 'make:controller',
+            description: '',
+            namespace: 'make',
             args: [],
             flags: [],
             aliases: [],
@@ -203,6 +213,8 @@ test.group('Loaders | modules', (group) => {
         return [
           {
             commandName: 'make:controller',
+            description: '',
+            namespace: null,
             args: [],
             flags: [],
             aliases: [],
@@ -229,6 +241,8 @@ test.group('Loaders | modules', (group) => {
         return [
           {
             commandName: 'make:controller',
+            description: '',
+            namespace: 'make',
             args: [],
             flags: [],
             aliases: [],
@@ -236,9 +250,12 @@ test.group('Loaders | modules', (group) => {
           }
         ]
       }
+
       export async function load() {
         return {
           commandName: 'make:controller',
+          description: '',
+          namespace: 'make',
           args: [],
           flags: [],
           aliases: [],
@@ -255,7 +272,7 @@ test.group('Loaders | modules', (group) => {
     )
   })
 
-  test('get command constructor returned by the load method', async ({ assert }) => {
+  test('raise error when command class does not have serialize method', async ({ assert }) => {
     await fs.outputFile(
       join(BASE_PATH, './loader_two.js'),
       `
@@ -263,6 +280,8 @@ test.group('Loaders | modules', (group) => {
         return [
           {
             commandName: 'make:controller',
+            description: '',
+            namespace: 'make',
             args: [],
             flags: [],
             aliases: [],
@@ -277,12 +296,64 @@ test.group('Loaders | modules', (group) => {
           static flags = []
           static aliases = []
           static options = {}
+          static description = ''
+          static namespace = 'make'
         }
       }
       `
     )
 
     const loader = new ModulesLoader(BASE_URL, ['./loader_two.js?v=4'])
+    await assert.rejects(
+      () => loader.getCommand({ commandName: 'make:controller' } as any),
+      'Invalid command exported from "./loader_two.js?v=4.load" method. Expected command to extend the "BaseCommand"'
+    )
+  })
+
+  test('get command constructor returned by the load method', async ({ assert }) => {
+    await fs.outputFile(
+      join(BASE_PATH, './loader_two.js'),
+      `
+      export async function list() {
+        return [
+          {
+            commandName: 'make:controller',
+            description: '',
+            namespace: 'make',
+            args: [],
+            flags: [],
+            aliases: [],
+            options: {},
+          }
+        ]
+      }
+      export async function load() {
+        return class Command {
+          static commandName = 'make:controller'
+          static args = []
+          static flags = []
+          static aliases = []
+          static options = {}
+          static description = ''
+          static namespace = 'make'
+
+          static serialize() {
+            return {
+              commandName: this.commandName,
+              args: this.args,
+              flags: this.flags,
+              aliases: this.aliases,
+              options: this.options,
+              description: this.description,
+              namespace: this.namespace,
+            }
+          }
+        }
+      }
+      `
+    )
+
+    const loader = new ModulesLoader(BASE_URL, ['./loader_two.js?v=5'])
     const command = await loader.getCommand({ commandName: 'make:controller' } as any)
     assert.isFunction(command)
   })
