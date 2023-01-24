@@ -11,7 +11,7 @@ import { test } from '@japa/runner'
 import { Kernel } from '../../src/kernel.js'
 import { args } from '../../src/decorators/args.js'
 import { flags } from '../../src/decorators/flags.js'
-import { CommandsList } from '../../src/loaders/list.js'
+import { ListLoader } from '../../src/loaders/list_loader.js'
 import { BaseCommand } from '../../src/commands/base.js'
 
 test.group('List command', () => {
@@ -36,7 +36,7 @@ test.group('List command', () => {
       static description: string = 'Make a new HTTP controller'
     }
 
-    kernel.addLoader(new CommandsList([Serve, MakeController]))
+    kernel.addLoader(new ListLoader([Serve, MakeController]))
     const command = await kernel.exec('list', [])
 
     assert.equal(command.exitCode, 0)
@@ -92,7 +92,7 @@ test.group('List command', () => {
       static description: string = 'Make a new HTTP controller'
     }
 
-    kernel.addLoader(new CommandsList([Serve, MakeController]))
+    kernel.addLoader(new ListLoader([Serve, MakeController]))
     const command = await kernel.exec('list', ['make'])
 
     assert.equal(command.exitCode, 0)
@@ -133,7 +133,7 @@ test.group('List command', () => {
       static description: string = 'Make a new HTTP controller'
     }
 
-    kernel.addLoader(new CommandsList([Serve, MakeController]))
+    kernel.addLoader(new ListLoader([Serve, MakeController]))
     const command = await kernel.exec('list', ['foo'])
 
     assert.equal(command.exitCode, 1)
@@ -166,7 +166,7 @@ test.group('List command', () => {
       static description: string = 'Make a new HTTP controller'
     }
 
-    kernel.addLoader(new CommandsList([Serve, MakeController]))
+    kernel.addLoader(new ListLoader([Serve, MakeController]))
     kernel.defineFlag('help', { type: 'boolean', description: 'View help of a given command' })
     const command = await kernel.exec('list', [])
 

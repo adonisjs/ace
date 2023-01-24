@@ -11,7 +11,7 @@ import { test } from '@japa/runner'
 
 import { Kernel } from '../../src/kernel.js'
 import { BaseCommand } from '../../src/commands/base.js'
-import { CommandsList } from '../../src/loaders/list.js'
+import { ListLoader } from '../../src/loaders/list_loader.js'
 import { ListCommand } from '../../src/commands/list.js'
 
 test.group('Kernel', () => {
@@ -26,7 +26,7 @@ test.group('Kernel', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeModel, MakeController]))
+    kernel.addLoader(new ListLoader([MakeModel, MakeController]))
     await kernel.boot()
 
     const commands = kernel.getCommands()
@@ -51,7 +51,7 @@ test.group('Kernel', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeModel, MakeController, ListRoutes]))
+    kernel.addLoader(new ListLoader([MakeModel, MakeController, ListRoutes]))
     await kernel.boot()
 
     assert.deepEqual(kernel.getNamespaces(), ['list', 'make'])
@@ -72,7 +72,7 @@ test.group('Kernel', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeModel, MakeController, ListRoutes]))
+    kernel.addLoader(new ListLoader([MakeModel, MakeController, ListRoutes]))
     await kernel.boot()
 
     assert.deepEqual(
@@ -105,7 +105,7 @@ test.group('Kernel', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeModel, MakeController, ListRoutes, Migrate]))
+    kernel.addLoader(new ListLoader([MakeModel, MakeController, ListRoutes, Migrate]))
     await kernel.boot()
 
     assert.deepEqual(
@@ -134,7 +134,7 @@ test.group('Kernel', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeModel, MakeController, ListRoutes, Migrate]))
+    kernel.addLoader(new ListLoader([MakeModel, MakeController, ListRoutes, Migrate]))
     kernel.addAlias('mc', 'make:controller')
     kernel.addAlias('mm', 'make:model')
     await kernel.boot()
@@ -162,7 +162,7 @@ test.group('Kernel', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeModel, MakeController, ListRoutes, Migrate]))
+    kernel.addLoader(new ListLoader([MakeModel, MakeController, ListRoutes, Migrate]))
     kernel.addAlias('mc', 'make:controller')
     kernel.addAlias('mm', 'make:model')
     await kernel.boot()
@@ -191,7 +191,7 @@ test.group('Kernel', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeModel, MakeController, ListRoutes, Migrate]))
+    kernel.addLoader(new ListLoader([MakeModel, MakeController, ListRoutes, Migrate]))
     kernel.addAlias('mc', 'make:controller')
     kernel.addAlias('mm', 'unrecognized:command')
     await kernel.boot()
@@ -208,7 +208,7 @@ test.group('Kernel', () => {
       static commandName = 'migrate'
     }
 
-    kernel.addLoader(new CommandsList([Migrate]))
+    kernel.addLoader(new ListLoader([Migrate]))
     await kernel.boot()
 
     assert.deepEqual(kernel.getCommand('migrate'), Migrate.serialize())
@@ -241,7 +241,7 @@ test.group('Kernel', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeModel, MakeController, ListRoutes, Migrate]))
+    kernel.addLoader(new ListLoader([MakeModel, MakeController, ListRoutes, Migrate]))
     kernel.addAlias('mc', 'make:controller')
     kernel.addAlias('mm', 'unrecognized:command')
     await kernel.boot()
@@ -269,7 +269,7 @@ test.group('Kernel', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeModel, MakeController, ListRoutes, Migrate]))
+    kernel.addLoader(new ListLoader([MakeModel, MakeController, ListRoutes, Migrate]))
     kernel.addAlias('mc', 'make:controller')
     kernel.addAlias('mm', 'unrecognized:command')
     await kernel.boot()
@@ -296,7 +296,7 @@ test.group('Kernel', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeModel, MakeController, ListRoutes, Migrate]))
+    kernel.addLoader(new ListLoader([MakeModel, MakeController, ListRoutes, Migrate]))
     kernel.addAlias('mc', 'make:controller')
     await kernel.boot()
 

@@ -10,7 +10,7 @@
 import { test } from '@japa/runner'
 import { Kernel } from '../../src/kernel.js'
 import { BaseCommand } from '../../src/commands/base.js'
-import { CommandsList } from '../../src/loaders/list.js'
+import { ListLoader } from '../../src/loaders/list_loader.js'
 import { ParsedOutput, UIPrimitives } from '../../src/types.js'
 
 test.group('Kernel | handle', (group) => {
@@ -29,7 +29,7 @@ test.group('Kernel | handle', (group) => {
     }
     MakeController.defineArgument('name', { type: 'string' })
 
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     kernel.defineFlag('verbose', { type: 'boolean' })
     kernel.on('verbose', (Command, _, options) => {
       assert.strictEqual(Command, MakeController)
@@ -54,7 +54,7 @@ test.group('Kernel | handle', (group) => {
     MakeController.defineArgument('name', { type: 'string' })
     MakeController.defineFlag('connection', { type: 'string' })
 
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     kernel.defineFlag('verbose', { type: 'boolean' })
     kernel.on('connection', (Command, _, options) => {
       assert.strictEqual(Command, MakeController)
@@ -85,7 +85,7 @@ test.group('Kernel | handle', (group) => {
     }
 
     MakeController.defineArgument('name', { type: 'string' })
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
 
     kernel.defineFlag('help', { type: 'boolean' })
     kernel.on('help', () => {

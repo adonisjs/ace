@@ -12,7 +12,7 @@ import { cliui } from '@poppinss/cliui'
 import { Kernel } from '../../src/kernel.js'
 import { CommandOptions } from '../../src/types.js'
 import { BaseCommand } from '../../src/commands/base.js'
-import { CommandsList } from '../../src/loaders/list.js'
+import { ListLoader } from '../../src/loaders/list_loader.js'
 
 test.group('Kernel | handle', (group) => {
   group.each.teardown(() => {
@@ -29,7 +29,7 @@ test.group('Kernel | handle', (group) => {
       }
     }
 
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     await kernel.handle(['make:controller'])
 
     assert.equal(kernel.exitCode, 0)
@@ -49,7 +49,7 @@ test.group('Kernel | handle', (group) => {
     }
     MakeController.defineArgument('name', { type: 'string' })
 
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     await kernel.handle(['make:controller'])
 
     assert.equal(kernel.getState(), 'terminated')
@@ -75,7 +75,7 @@ test.group('Kernel | handle', (group) => {
     }
     MakeController.defineArgument('name', { type: 'string' })
 
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     await kernel.handle(['foo'])
 
     assert.equal(kernel.getState(), 'terminated')
@@ -101,7 +101,7 @@ test.group('Kernel | handle', (group) => {
     }
     MakeController.defineArgument('name', { type: 'string' })
 
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     kernel.executing(() => {
       stack.push('executing')
     })
@@ -137,7 +137,7 @@ test.group('Kernel | handle', (group) => {
     }
     MakeController.defineArgument('name', { type: 'string' })
 
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     kernel.terminating(() => {
       stack.push('terminating')
     })
@@ -159,7 +159,7 @@ test.group('Kernel | handle', (group) => {
       }
     }
     MakeController.defineArgument('name', { type: 'string' })
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     await kernel.boot()
 
     await assert.rejects(
@@ -184,7 +184,7 @@ test.group('Kernel | handle', (group) => {
       }
     }
     MakeController.defineArgument('name', { type: 'string' })
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     await kernel.handle(['make:controller', 'users'])
 
     await assert.rejects(
@@ -203,7 +203,7 @@ test.group('Kernel | handle', (group) => {
       }
     }
     MakeController.defineArgument('name', { type: 'string' })
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     await kernel.handle(['make:controller', 'users'])
 
     await assert.rejects(

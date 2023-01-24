@@ -11,7 +11,7 @@ import { test } from '@japa/runner'
 
 import { Kernel } from '../../src/kernel.js'
 import { BaseCommand } from '../../src/commands/base.js'
-import { CommandsList } from '../../src/loaders/list.js'
+import { ListLoader } from '../../src/loaders/list_loader.js'
 
 test.group('Kernel | loaders', () => {
   test('register commands using a loader', async ({ assert }) => {
@@ -25,7 +25,7 @@ test.group('Kernel | loaders', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeController, MakeModel]))
+    kernel.addLoader(new ListLoader([MakeController, MakeModel]))
     await kernel.boot()
 
     assert.deepEqual(kernel.getCommands(), [
@@ -46,8 +46,8 @@ test.group('Kernel | loaders', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeController]))
-    kernel.addLoader(new CommandsList([MakeModel]))
+    kernel.addLoader(new ListLoader([MakeController]))
+    kernel.addLoader(new ListLoader([MakeModel]))
     await kernel.boot()
 
     assert.deepEqual(kernel.getCommands(), [
@@ -68,7 +68,7 @@ test.group('Kernel | loaders', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     await kernel.boot()
 
     assert.deepEqual(kernel.getCommands(), [
@@ -77,7 +77,7 @@ test.group('Kernel | loaders', () => {
     ])
 
     assert.throws(
-      () => kernel.addLoader(new CommandsList([MakeModel])),
+      () => kernel.addLoader(new ListLoader([MakeModel])),
       'Cannot add loader in "booted" state'
     )
   })

@@ -11,7 +11,7 @@ import { test } from '@japa/runner'
 
 import { Kernel } from '../../src/kernel.js'
 import { BaseCommand } from '../../src/commands/base.js'
-import { CommandsList } from '../../src/loaders/list.js'
+import { ListLoader } from '../../src/loaders/list_loader.js'
 
 test.group('Kernel | terminate', (group) => {
   group.each.teardown(() => {
@@ -41,7 +41,7 @@ test.group('Kernel | terminate', (group) => {
       async run() {}
     }
 
-    kernel.addLoader(new CommandsList([MakeController, MakeModel]))
+    kernel.addLoader(new ListLoader([MakeController, MakeModel]))
     kernel.executed(async () => {
       await kernel.terminate(
         new MakeModel(kernel, { args: [], _: [], flags: {}, unknownFlags: [] }, kernel.ui)
@@ -71,7 +71,7 @@ test.group('Kernel | terminate', (group) => {
       async run() {}
     }
 
-    kernel.addLoader(new CommandsList([MakeController, MakeModel]))
+    kernel.addLoader(new ListLoader([MakeController, MakeModel]))
     await kernel.handle(['make:controller'])
 
     assert.equal(kernel.exitCode, 0)
@@ -95,7 +95,7 @@ test.group('Kernel | terminate', (group) => {
       async run() {}
     }
 
-    kernel.addLoader(new CommandsList([MakeController, MakeModel]))
+    kernel.addLoader(new ListLoader([MakeController, MakeModel]))
     await kernel.handle(['make:controller'])
 
     assert.isUndefined(kernel.exitCode)
@@ -121,7 +121,7 @@ test.group('Kernel | terminate', (group) => {
       async run() {}
     }
 
-    kernel.addLoader(new CommandsList([MakeController, MakeModel]))
+    kernel.addLoader(new ListLoader([MakeController, MakeModel]))
     await kernel.handle(['make:controller'])
 
     assert.equal(kernel.exitCode, 0)
@@ -145,7 +145,7 @@ test.group('Kernel | terminate', (group) => {
       async run() {}
     }
 
-    kernel.addLoader(new CommandsList([MakeController, MakeModel]))
+    kernel.addLoader(new ListLoader([MakeController, MakeModel]))
     kernel.defineFlag('help', {
       type: 'boolean',
     })

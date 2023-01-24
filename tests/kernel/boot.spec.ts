@@ -11,7 +11,7 @@ import { test } from '@japa/runner'
 
 import { Kernel } from '../../src/kernel.js'
 import { BaseCommand } from '../../src/commands/base.js'
-import { CommandsList } from '../../src/loaders/list.js'
+import { ListLoader } from '../../src/loaders/list_loader.js'
 
 test.group('Kernel | boot', () => {
   test('load commands from loader during boot phase', async ({ assert }) => {
@@ -25,7 +25,7 @@ test.group('Kernel | boot', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeController, MakeModel]))
+    kernel.addLoader(new ListLoader([MakeController, MakeModel]))
     await kernel.boot()
 
     assert.deepEqual(kernel.getCommands(), [
@@ -46,7 +46,7 @@ test.group('Kernel | boot', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeController, MakeModel]))
+    kernel.addLoader(new ListLoader([MakeController, MakeModel]))
     await kernel.boot()
     await kernel.boot()
     await kernel.boot()
@@ -74,7 +74,7 @@ test.group('Kernel | boot', () => {
       static commandName = 'migration:run'
     }
 
-    kernel.addLoader(new CommandsList([MakeController, MakeModel, MigrationRun]))
+    kernel.addLoader(new ListLoader([MakeController, MakeModel, MigrationRun]))
     await kernel.boot()
 
     assert.deepEqual(kernel.getNamespaces(), ['make', 'migration'])
@@ -98,7 +98,7 @@ test.group('Kernel | boot', () => {
       static aliases: string[] = ['migrate']
     }
 
-    kernel.addLoader(new CommandsList([MakeController, MakeModel, MigrationRun]))
+    kernel.addLoader(new ListLoader([MakeController, MakeModel, MigrationRun]))
     await kernel.boot()
 
     assert.deepEqual(kernel.getAliases(), ['mc', 'mm', 'migrate'])

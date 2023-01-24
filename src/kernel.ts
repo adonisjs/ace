@@ -16,7 +16,7 @@ import { Parser } from './parser.js'
 import * as errors from './errors.js'
 import { ListCommand } from './commands/list.js'
 import { BaseCommand } from './commands/base.js'
-import { CommandsList } from './loaders/list.js'
+import { ListLoader } from './loaders/list_loader.js'
 import { sortAlphabetically, renderErrorWithSuggestions } from './helpers.js'
 
 import type {
@@ -582,7 +582,7 @@ export class Kernel {
     /**
      * Registering the default command
      */
-    this.addLoader(new CommandsList([this.#defaultCommand]))
+    this.addLoader(new ListLoader([this.#defaultCommand]))
 
     /**
      * Set state to booted

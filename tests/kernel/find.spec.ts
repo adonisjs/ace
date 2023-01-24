@@ -11,7 +11,7 @@ import { test } from '@japa/runner'
 
 import { Kernel } from '../../src/kernel.js'
 import { BaseCommand } from '../../src/commands/base.js'
-import { CommandsList } from '../../src/loaders/list.js'
+import { ListLoader } from '../../src/loaders/list_loader.js'
 import { CommandMetaData } from '../../src/types.js'
 
 test.group('Kernel | find', () => {
@@ -26,7 +26,7 @@ test.group('Kernel | find', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeController, MakeModel]))
+    kernel.addLoader(new ListLoader([MakeController, MakeModel]))
     await kernel.boot()
 
     const command = await kernel.find('make:controller')
@@ -45,7 +45,7 @@ test.group('Kernel | find', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeController, MakeModel]))
+    kernel.addLoader(new ListLoader([MakeController, MakeModel]))
     kernel.addAlias('controller', 'make:controller')
     await kernel.boot()
 
@@ -65,7 +65,7 @@ test.group('Kernel | find', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeController, MakeModel]))
+    kernel.addLoader(new ListLoader([MakeController, MakeModel]))
     await kernel.boot()
 
     await assert.rejects(() => kernel.find('foo'), 'Command "foo" is not defined')
@@ -83,7 +83,7 @@ test.group('Kernel | find', () => {
       static commandName = 'make:model'
     }
 
-    class CustomLoader extends CommandsList {
+    class CustomLoader extends ListLoader {
       async getCommand(_: CommandMetaData): Promise<typeof BaseCommand | null> {
         return null
       }
@@ -107,8 +107,8 @@ test.group('Kernel | find', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeController]))
-    kernel.addLoader(new CommandsList([MakeModel]))
+    kernel.addLoader(new ListLoader([MakeController]))
+    kernel.addLoader(new ListLoader([MakeModel]))
     await kernel.boot()
 
     const command = await kernel.find('make:model')
@@ -128,8 +128,8 @@ test.group('Kernel | find', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeController]))
-    kernel.addLoader(new CommandsList([MakeModel]))
+    kernel.addLoader(new ListLoader([MakeController]))
+    kernel.addLoader(new ListLoader([MakeModel]))
     await kernel.boot()
 
     kernel.finding((commandName) => {
@@ -166,8 +166,8 @@ test.group('Kernel | find', () => {
       static commandName = 'make:model'
     }
 
-    kernel.addLoader(new CommandsList([MakeController]))
-    kernel.addLoader(new CommandsList([MakeModel]))
+    kernel.addLoader(new ListLoader([MakeController]))
+    kernel.addLoader(new ListLoader([MakeModel]))
     await kernel.boot()
 
     kernel.finding((commandName) => {

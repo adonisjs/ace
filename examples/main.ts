@@ -11,7 +11,7 @@ import { Kernel } from '../src/kernel.js'
 import { args } from '../src/decorators/args.js'
 import { flags } from '../src/decorators/flags.js'
 import { BaseCommand } from '../src/commands/base.js'
-import { CommandsList } from '../src/loaders/list.js'
+import { ListLoader } from '../src/loaders/list_loader.js'
 import { HelpCommand } from '../src/commands/help.js'
 
 const kernel = new Kernel()
@@ -73,7 +73,7 @@ class DbWipe extends BaseCommand {
 }
 
 kernel.addLoader(
-  new CommandsList([
+  new ListLoader([
     HelpCommand,
     Configure,
     Build,

@@ -10,7 +10,7 @@
 import { test } from '@japa/runner'
 import { Kernel } from '../../src/kernel.js'
 import { BaseCommand } from '../../src/commands/base.js'
-import { CommandsList } from '../../src/loaders/list.js'
+import { ListLoader } from '../../src/loaders/list_loader.js'
 
 test.group('Kernel | exec', () => {
   test('execute command', async ({ assert }) => {
@@ -23,7 +23,7 @@ test.group('Kernel | exec', () => {
       }
     }
 
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     const command = await kernel.exec('make:controller', [])
 
     assert.equal(command.result, 'executed')
@@ -45,7 +45,7 @@ test.group('Kernel | exec', () => {
       }
     }
 
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     kernel.executing((cmd) => {
       expectTypeOf(cmd).toEqualTypeOf<MakeController>()
       stack.push('executing')
@@ -75,7 +75,7 @@ test.group('Kernel | exec', () => {
     }
     MakeController.defineArgument('name', { type: 'string' })
 
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     await assert.rejects(
       () => kernel.exec('make:controller', []),
       'Missing required argument "name"'
@@ -93,7 +93,7 @@ test.group('Kernel | exec', () => {
     }
     MakeController.defineArgument('name', { type: 'string' })
 
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     await assert.rejects(() => kernel.exec('foo', []), 'Command "foo" is not defined')
     assert.isUndefined(kernel.exitCode)
     assert.equal(kernel.getState(), 'booted')
@@ -110,7 +110,7 @@ test.group('Kernel | exec', () => {
     }
     MakeController.defineArgument('name', { type: 'string' })
 
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     kernel.executing(() => {
       throw new Error('Pre hook failed')
     })
@@ -129,7 +129,7 @@ test.group('Kernel | exec', () => {
     }
     MakeController.defineArgument('name', { type: 'string' })
 
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     kernel.executed(() => {
       throw new Error('Post hook failed')
     })
@@ -151,7 +151,7 @@ test.group('Kernel | exec', () => {
 
     MakeController.defineArgument('name', { type: 'string' })
 
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     kernel.terminating(() => {
       stack.push('terminating')
       throw new Error('Never expected to run')
@@ -193,7 +193,7 @@ test.group('Kernel | exec', () => {
     MakeModel.defineFlag('connection', { type: 'string' })
 
     const kernel = new Kernel()
-    kernel.addLoader(new CommandsList([MakeModel]))
+    kernel.addLoader(new ListLoader([MakeModel]))
 
     kernel.registerExecutor({
       create(Command, parsed, self) {
@@ -242,7 +242,7 @@ test.group('Kernel | exec', () => {
 
     MakeController.defineFlag('connections', { type: 'string' })
 
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
     kernel.on('connections', () => {
       throw new Error('Never expected to reach here')
     })
@@ -267,7 +267,7 @@ test.group('Kernel | exec', () => {
       }
     }
 
-    kernel.addLoader(new CommandsList([MakeController]))
+    kernel.addLoader(new ListLoader([MakeController]))
 
     kernel.defineFlag('help', { type: 'boolean' })
     await assert.rejects(

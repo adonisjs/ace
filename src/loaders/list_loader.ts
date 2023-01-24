@@ -14,7 +14,7 @@ import type { CommandMetaData, LoadersContract } from '../types.js'
  * The CommandsList loader registers commands classes with the kernel.
  * The commands are kept within memory
  */
-export class CommandsList implements LoadersContract {
+export class ListLoader implements LoadersContract {
   #commands: (typeof BaseCommand)[]
 
   constructor(commands: (typeof BaseCommand)[]) {

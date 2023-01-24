@@ -9,7 +9,7 @@
 
 import { test } from '@japa/runner'
 import { BaseCommand } from '../../src/commands/base.js'
-import { CommandsList } from '../../src/loaders/list.js'
+import { ListLoader } from '../../src/loaders/list_loader.js'
 
 test.group('Loaders | list', () => {
   test('instantiate loader with commands', async ({ assert }) => {
@@ -21,7 +21,7 @@ test.group('Loaders | list', () => {
       static commandName = 'make:model'
     }
 
-    const loader = new CommandsList([MakeController, MakeModel])
+    const loader = new ListLoader([MakeController, MakeModel])
     assert.strictEqual(await loader.getCommand(MakeController.serialize()), MakeController)
     assert.strictEqual(await loader.getCommand(MakeModel.serialize()), MakeModel)
   })
@@ -35,7 +35,7 @@ test.group('Loaders | list', () => {
       static commandName = 'make:model'
     }
 
-    const loader = new CommandsList([MakeModel])
+    const loader = new ListLoader([MakeModel])
     assert.isNull(await loader.getCommand(MakeController.serialize()))
   })
 
@@ -48,7 +48,7 @@ test.group('Loaders | list', () => {
       static commandName = 'make:model'
     }
 
-    const loader = new CommandsList([MakeController, MakeModel])
+    const loader = new ListLoader([MakeController, MakeModel])
     assert.deepEqual(await loader.getMetaData(), [
       MakeController.serialize(),
       MakeModel.serialize(),
