@@ -16,7 +16,7 @@ import { ListCommand } from '../../src/commands/list.js'
 
 test.group('Kernel', () => {
   test('get alphabetically sorted list of commands', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -37,7 +37,7 @@ test.group('Kernel', () => {
   })
 
   test('get alphabetically sorted list of namespaces', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class ListRoutes extends BaseCommand {
       static commandName = 'list:routes'
@@ -58,7 +58,7 @@ test.group('Kernel', () => {
   })
 
   test('get list of commands for a given namespace', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class ListRoutes extends BaseCommand {
       static commandName = 'list:routes'
@@ -87,7 +87,7 @@ test.group('Kernel', () => {
   })
 
   test('get list of top level commands without a namespace', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class Migrate extends BaseCommand {
       static commandName = 'migrate'
@@ -115,7 +115,7 @@ test.group('Kernel', () => {
   })
 
   test('get an array of registered aliases', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class Migrate extends BaseCommand {
       static commandName = 'migrate'
@@ -143,7 +143,7 @@ test.group('Kernel', () => {
   })
 
   test('get aliases for a given command', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class Migrate extends BaseCommand {
       static commandName = 'migrate'
@@ -172,7 +172,7 @@ test.group('Kernel', () => {
   })
 
   test('get command for an alias', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class Migrate extends BaseCommand {
       static commandName = 'migrate'
@@ -202,7 +202,7 @@ test.group('Kernel', () => {
   })
 
   test('get command metadata', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class Migrate extends BaseCommand {
       static commandName = 'migrate'
@@ -216,14 +216,14 @@ test.group('Kernel', () => {
   })
 
   test('get the default command', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     await kernel.boot()
 
     assert.strictEqual(kernel.getDefaultCommand(), ListCommand)
   })
 
   test('get commands suggestions for a given keyword', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class Migrate extends BaseCommand {
       static commandName = 'migration:run'
@@ -251,7 +251,7 @@ test.group('Kernel', () => {
   })
 
   test('get commands suggestions for a namespace', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class Migrate extends BaseCommand {
       static commandName = 'migration:run'
@@ -278,7 +278,7 @@ test.group('Kernel', () => {
   })
 
   test('get namespaces suggestions for a given keyword', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class Migrate extends BaseCommand {
       static commandName = 'migration:run'

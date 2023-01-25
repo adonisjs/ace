@@ -375,27 +375,6 @@ export class BaseCommand {
   }
 
   /**
-   * Create the command instance by validating the parsed input. It is
-   * recommended to use this method over create a new instance
-   * directly.
-   */
-  static create<T extends typeof BaseCommand>(
-    this: T,
-    kernel: Kernel,
-    parsed: ParsedOutput,
-    ui: UIPrimitives,
-    prompt: Prompt
-  ): InstanceType<T> {
-    this.validate(parsed)
-
-    /**
-     * Type casting is needed because of this issue
-     * https://github.com/microsoft/TypeScript/issues/5863
-     */
-    return new this(kernel, parsed, ui, prompt) as InstanceType<T>
-  }
-
-  /**
    * The exit code for the command
    */
   exitCode?: number
@@ -427,7 +406,7 @@ export class BaseCommand {
   }
 
   constructor(
-    protected kernel: Kernel,
+    protected kernel: Kernel<typeof BaseCommand>,
     protected parsed: ParsedOutput,
     public ui: UIPrimitives,
     public prompt: Prompt

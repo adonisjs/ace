@@ -15,7 +15,7 @@ import { ListLoader } from '../../src/loaders/list_loader.js'
 
 test.group('Kernel | boot', () => {
   test('load commands from loader during boot phase', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -36,7 +36,7 @@ test.group('Kernel | boot', () => {
   })
 
   test('multiple calls to boot method should be a noop', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -60,7 +60,7 @@ test.group('Kernel | boot', () => {
   })
 
   test('collect namespaces from the loaded commands', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -81,7 +81,7 @@ test.group('Kernel | boot', () => {
   })
 
   test('collect command aliases', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'

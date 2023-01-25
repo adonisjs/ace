@@ -9,14 +9,15 @@
 
 import { test } from '@japa/runner'
 import { Kernel } from '../../src/kernel.js'
+import { ListCommand } from '../../index.js'
 import { args } from '../../src/decorators/args.js'
 import { flags } from '../../src/decorators/flags.js'
-import { ListLoader } from '../../src/loaders/list_loader.js'
 import { BaseCommand } from '../../src/commands/base.js'
+import { ListLoader } from '../../src/loaders/list_loader.js'
 
 test.group('List command', () => {
   test('show list of all the registered commands', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     kernel.ui.switchMode('raw')
 
     class Serve extends BaseCommand {
@@ -37,7 +38,8 @@ test.group('List command', () => {
     }
 
     kernel.addLoader(new ListLoader([Serve, MakeController]))
-    const command = await kernel.exec('list', [])
+    const command = await kernel.create(ListCommand, [])
+    await command.exec()
 
     assert.equal(command.exitCode, 0)
     assert.deepEqual(kernel.ui.logger.getLogs(), [
@@ -72,7 +74,7 @@ test.group('List command', () => {
   })
 
   test('show list of all the registered commands for a namespace', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     kernel.ui.switchMode('raw')
 
     class Serve extends BaseCommand {
@@ -93,7 +95,8 @@ test.group('List command', () => {
     }
 
     kernel.addLoader(new ListLoader([Serve, MakeController]))
-    const command = await kernel.exec('list', ['make'])
+    const command = await kernel.create(ListCommand, ['make'])
+    await command.exec()
 
     assert.equal(command.exitCode, 0)
     assert.deepEqual(kernel.ui.logger.getLogs(), [
@@ -113,7 +116,7 @@ test.group('List command', () => {
   })
 
   test('display error when namespace is invalid', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     kernel.ui.switchMode('raw')
 
     class Serve extends BaseCommand {
@@ -134,7 +137,8 @@ test.group('List command', () => {
     }
 
     kernel.addLoader(new ListLoader([Serve, MakeController]))
-    const command = await kernel.exec('list', ['foo'])
+    const command = await kernel.create(ListCommand, ['foo'])
+    await command.exec()
 
     assert.equal(command.exitCode, 1)
     assert.deepEqual(kernel.ui.logger.getLogs(), [
@@ -146,7 +150,7 @@ test.group('List command', () => {
   })
 
   test('show list of all kernel global flags', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     kernel.ui.switchMode('raw')
 
     class Serve extends BaseCommand {
@@ -168,7 +172,8 @@ test.group('List command', () => {
 
     kernel.addLoader(new ListLoader([Serve, MakeController]))
     kernel.defineFlag('help', { type: 'boolean', description: 'View help of a given command' })
-    const command = await kernel.exec('list', [])
+    const command = await kernel.create(ListCommand, [])
+    await command.exec()
 
     assert.equal(command.exitCode, 0)
     assert.deepEqual(kernel.ui.logger.getLogs(), [

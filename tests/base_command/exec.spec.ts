@@ -45,7 +45,7 @@ test.group('Base command | execute', () => {
     MakeModel.defineArgument('name', { type: 'string' })
     MakeModel.defineFlag('connection', { type: 'string' })
 
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     const model = await kernel.create(MakeModel, ['user', '--connection=sqlite'])
 
     await model.exec()
@@ -79,7 +79,7 @@ test.group('Base command | execute', () => {
     MakeModel.defineArgument('name', { type: 'string' })
     MakeModel.defineFlag('connection', { type: 'string' })
 
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     kernel.ui = cliui({ mode: 'raw' })
     const model = await kernel.create(MakeModel, ['user', '--connection=sqlite'])
 
@@ -112,7 +112,7 @@ test.group('Base command | execute', () => {
     MakeModel.defineArgument('name', { type: 'string', required: false })
     MakeModel.defineFlag('connection', { type: 'string' })
 
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     kernel.ui = cliui({ mode: 'raw' })
 
     const model = await kernel.create(MakeModel, [])
@@ -146,7 +146,7 @@ test.group('Base command | execute | prepare fails', () => {
     MakeModel.defineArgument('name', { type: 'string' })
     MakeModel.defineFlag('connection', { type: 'string' })
 
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     kernel.ui = cliui({ mode: 'raw' })
     const model = await kernel.create(MakeModel, ['user', '--connection=sqlite'])
 
@@ -185,7 +185,7 @@ test.group('Base command | execute | prepare fails', () => {
     MakeModel.defineArgument('name', { type: 'string' })
     MakeModel.defineFlag('connection', { type: 'string' })
 
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     kernel.ui = cliui({ mode: 'raw' })
     const model = await kernel.create(MakeModel, ['user', '--connection=sqlite'])
 
@@ -213,7 +213,7 @@ test.group('Base command | execute | intertact fails', () => {
     MakeModel.defineArgument('name', { type: 'string' })
     MakeModel.defineFlag('connection', { type: 'string' })
 
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     kernel.ui = cliui({ mode: 'raw' })
     const model = await kernel.create(MakeModel, ['user', '--connection=sqlite'])
 
@@ -248,7 +248,7 @@ test.group('Base command | execute | intertact fails', () => {
     MakeModel.defineArgument('name', { type: 'string' })
     MakeModel.defineFlag('connection', { type: 'string' })
 
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     kernel.ui = cliui({ mode: 'raw' })
     const model = await kernel.create(MakeModel, ['user', '--connection=sqlite'])
 
@@ -272,7 +272,7 @@ test.group('Base command | execute | run fails', () => {
     MakeModel.defineArgument('name', { type: 'string' })
     MakeModel.defineFlag('connection', { type: 'string' })
 
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     kernel.ui = cliui({ mode: 'raw' })
     const model = await kernel.create(MakeModel, ['user', '--connection=sqlite'])
 
@@ -302,7 +302,7 @@ test.group('Base command | execute | run fails', () => {
     MakeModel.defineArgument('name', { type: 'string' })
     MakeModel.defineFlag('connection', { type: 'string' })
 
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     kernel.ui = cliui({ mode: 'raw' })
     const model = await kernel.create(MakeModel, ['user', '--connection=sqlite'])
 
@@ -329,7 +329,7 @@ test.group('Base command | execute | complete method', () => {
     MakeModel.defineArgument('name', { type: 'string' })
     MakeModel.defineFlag('connection', { type: 'string' })
 
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     kernel.ui = cliui({ mode: 'raw' })
     const model = await kernel.create(MakeModel, ['user', '--connection=sqlite'])
 
@@ -343,7 +343,7 @@ test.group('Base command | terminate', () => {
     class MakeModel extends BaseCommand {}
     MakeModel.boot()
 
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     kernel.ui = cliui({ mode: 'raw' })
     const model = await kernel.create(MakeModel, [])
 

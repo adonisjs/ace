@@ -14,29 +14,13 @@ import { BaseCommand } from '../../src/commands/base.js'
 
 test.group('Kernel | default command', () => {
   test('use a custom default command', async ({ assert }) => {
-    const kernel = new Kernel()
-
     class VerboseHelp extends BaseCommand {
       static commandName = 'help'
     }
 
-    kernel.registerDefaultCommand(VerboseHelp)
+    const kernel = new Kernel(VerboseHelp, Kernel.commandExecutor)
 
     await kernel.boot()
     assert.strictEqual(kernel.getDefaultCommand(), VerboseHelp)
-  })
-
-  test('disallow registering default command after kernel is booted', async ({ assert }) => {
-    const kernel = new Kernel()
-    await kernel.boot()
-
-    class VerboseHelp extends BaseCommand {
-      static commandName = 'help'
-    }
-
-    assert.throws(
-      () => kernel.registerDefaultCommand(VerboseHelp),
-      'Cannot register default command in "booted" state'
-    )
   })
 })

@@ -72,20 +72,23 @@ export interface LoadersContract {
  * Command executor is used to create a new instance of the command
  * and run it.
  */
-export interface ExecutorContract {
+export interface ExecutorContract<Command extends typeof BaseCommand> {
   /**
    * Create a new instance of the command
    */
   create(
-    command: typeof BaseCommand,
+    command: Command,
     parsedOutput: ParsedOutput,
-    kernel: Kernel
-  ): Promise<BaseCommand> | BaseCommand
+    kernel: Kernel<Command>
+  ): Promise<InstanceType<Command>> | InstanceType<Command>
 
   /**
    * Run the command
    */
-  run<Command extends BaseCommand>(command: Command, kernel: Kernel): Promise<Command>
+  run<Instance extends InstanceType<Command>>(
+    command: Instance,
+    kernel: Kernel<Command>
+  ): Promise<Instance>
 }
 
 /**
@@ -350,9 +353,9 @@ export type TerminatingHookHandler = HookHandler<TerminatingHookArgs[0], Termina
 /**
  * A listener that listeners for flags when they are mentioned.
  */
-export type FlagListener = (
-  command: typeof BaseCommand,
-  kernel: Kernel,
+export type FlagListener<Command extends typeof BaseCommand> = (
+  command: Command,
+  kernel: Kernel<Command>,
   parsedOutput: ParsedOutput
 ) => any | Promise<any>
 

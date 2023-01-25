@@ -10,7 +10,6 @@
 import { test } from '@japa/runner'
 import { cliui } from '@poppinss/cliui'
 
-import { Parser } from '../../src/parser.js'
 import { Kernel } from '../../src/kernel.js'
 import { BaseCommand } from '../../src/commands/base.js'
 
@@ -23,7 +22,7 @@ test.group('Base command', () => {
 
     MakeModel.boot()
 
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     const model = new MakeModel(
       kernel,
       { _: [], args: [], unknownFlags: [], flags: {} },
@@ -41,7 +40,7 @@ test.group('Base command', () => {
 
     MakeModel.boot()
 
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     const model = new MakeModel(
       kernel,
       { _: [], args: [], unknownFlags: [], flags: {} },
@@ -53,7 +52,7 @@ test.group('Base command', () => {
 })
 
 test.group('Base command | consume args', () => {
-  test('consume parsed output to set command properties', ({ assert }) => {
+  test('consume parsed output to set command properties', async ({ assert }) => {
     class MakeModel extends BaseCommand {
       name!: string
       connection!: string
@@ -62,16 +61,14 @@ test.group('Base command | consume args', () => {
     MakeModel.defineArgument('name', { type: 'string' })
     MakeModel.defineFlag('connection', { type: 'string' })
 
-    const parsed = new Parser(MakeModel.getParserOptions()).parse('user --connection=sqlite')
-
-    const kernel = new Kernel()
-    const model = MakeModel.create(kernel, parsed, cliui(), kernel.prompt)
+    const kernel = Kernel.create()
+    const model = await kernel.create(MakeModel, ['user', '--connection=sqlite'])
 
     assert.equal(model.name, 'user')
     assert.equal(model.connection, 'sqlite')
   })
 
-  test('consume spread arg', ({ assert }) => {
+  test('consume spread arg', async ({ assert }) => {
     class MakeModel extends BaseCommand {
       names!: string[]
       connection!: string
@@ -80,10 +77,8 @@ test.group('Base command | consume args', () => {
     MakeModel.defineArgument('names', { type: 'spread' })
     MakeModel.defineFlag('connection', { type: 'string' })
 
-    const parsed = new Parser(MakeModel.getParserOptions()).parse('user post --connection=sqlite')
-
-    const kernel = new Kernel()
-    const model = MakeModel.create(kernel, parsed, cliui(), kernel.prompt)
+    const kernel = Kernel.create()
+    const model = await kernel.create(MakeModel, ['user', 'post', '--connection=sqlite'])
 
     assert.deepEqual(model.names, ['user', 'post'])
     assert.equal(model.connection, 'sqlite')
@@ -91,7 +86,7 @@ test.group('Base command | consume args', () => {
 })
 
 test.group('Base command | consume flags', () => {
-  test('consume boolean flag', ({ assert }) => {
+  test('consume boolean flag', async ({ assert }) => {
     class MakeModel extends BaseCommand {
       name!: string
       connection!: string
@@ -102,19 +97,15 @@ test.group('Base command | consume flags', () => {
     MakeModel.defineFlag('connection', { type: 'string' })
     MakeModel.defineFlag('dropAll', { type: 'boolean', default: true })
 
-    const parsed = new Parser(MakeModel.getParserOptions()).parse(
-      'user --connection=sqlite --drop-all'
-    )
-
-    const kernel = new Kernel()
-    const model = MakeModel.create(kernel, parsed, cliui(), kernel.prompt)
+    const kernel = Kernel.create()
+    const model = await kernel.create(MakeModel, ['user', '--connection=sqlite', '--drop-all'])
 
     assert.equal(model.name, 'user')
     assert.equal(model.connection, 'sqlite')
     assert.isTrue(model.dropAll)
   })
 
-  test('consume array flag', ({ assert }) => {
+  test('consume array flag', async ({ assert }) => {
     class MakeModel extends BaseCommand {
       name!: string
       connections!: string[]
@@ -125,19 +116,19 @@ test.group('Base command | consume flags', () => {
     MakeModel.defineFlag('connections', { type: 'array' })
     MakeModel.defineFlag('dropAll', { type: 'boolean' })
 
-    const parsed = new Parser(MakeModel.getParserOptions()).parse(
-      'user --connections=sqlite --connections=mysql'
-    )
-
-    const kernel = new Kernel()
-    const model = MakeModel.create(kernel, parsed, cliui(), kernel.prompt)
+    const kernel = Kernel.create()
+    const model = await kernel.create(MakeModel, [
+      'user',
+      '--connections=sqlite',
+      '--connections=mysql',
+    ])
 
     assert.equal(model.name, 'user')
     assert.deepEqual(model.connections, ['sqlite', 'mysql'])
     assert.isUndefined(model.dropAll)
   })
 
-  test('use default value when array flag is missing', ({ assert }) => {
+  test('use default value when array flag is missing', async ({ assert }) => {
     class MakeModel extends BaseCommand {
       name!: string
       connections!: string[]
@@ -148,10 +139,8 @@ test.group('Base command | consume flags', () => {
     MakeModel.defineFlag('connections', { type: 'array', default: ['sqlite'] })
     MakeModel.defineFlag('dropAll', { type: 'boolean' })
 
-    const parsed = new Parser(MakeModel.getParserOptions()).parse('user')
-
-    const kernel = new Kernel()
-    const model = MakeModel.create(kernel, parsed, cliui(), kernel.prompt)
+    const kernel = Kernel.create()
+    const model = await kernel.create(MakeModel, ['user'])
 
     assert.equal(model.name, 'user')
     assert.deepEqual(model.connections, ['sqlite'])

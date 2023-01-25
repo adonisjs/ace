@@ -15,7 +15,7 @@ import { ListLoader } from '../../src/loaders/list_loader.js'
 
 test.group('Kernel | loaders', () => {
   test('register commands using a loader', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -36,7 +36,7 @@ test.group('Kernel | loaders', () => {
   })
 
   test('register commands using multiple loaders', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -58,7 +58,7 @@ test.group('Kernel | loaders', () => {
   })
 
   test('disallow adding a loader after kernel is booted', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'

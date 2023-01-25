@@ -16,7 +16,7 @@ import { CommandMetaData } from '../../src/types.js'
 
 test.group('Kernel | find', () => {
   test('find commands registered using a loader', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -34,7 +34,7 @@ test.group('Kernel | find', () => {
   })
 
   test('find command using the command alias', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -54,7 +54,7 @@ test.group('Kernel | find', () => {
   })
 
   test('raise error when unable to find command', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -72,7 +72,7 @@ test.group('Kernel | find', () => {
   })
 
   test('raise error when loader is not able to lookup command', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -96,7 +96,7 @@ test.group('Kernel | find', () => {
   })
 
   test('find command when using multiple loaders', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -116,7 +116,7 @@ test.group('Kernel | find', () => {
   })
 
   test('execute finding, loading and loaded hooks', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     const stack: string[] = []
 
     class MakeController extends BaseCommand {
@@ -154,7 +154,7 @@ test.group('Kernel | find', () => {
   })
 
   test('do not execute loading hook when command not found', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     const stack: string[] = []
 
     class MakeController extends BaseCommand {

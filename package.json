@@ -141,7 +141,8 @@
     ],
     "exclude": [
       "tests/**",
-      "build/**"
+      "build/**",
+      "examples/**"
     ]
   }
 }

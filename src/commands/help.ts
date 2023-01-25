@@ -86,8 +86,8 @@ export class HelpCommand extends BaseCommand {
     if (!command) {
       renderErrorWithSuggestions(
         this.ui,
-        `Command "${this.colors}" is not defined`,
-        this.kernel.getNamespaceSuggestions(this.commandName)
+        `Command "${this.commandName}" is not defined`,
+        this.kernel.getCommandSuggestions(this.commandName)
       )
       return false
     }

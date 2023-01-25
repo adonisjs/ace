@@ -12,8 +12,8 @@ import { Kernel } from '../../src/kernel.js'
 
 test.group('Kernel | global flags', () => {
   test('define global flags', async ({ assert }) => {
-    const kernel = new Kernel()
-    const kernel1 = new Kernel()
+    const kernel = Kernel.create()
+    const kernel1 = Kernel.create()
 
     kernel.defineFlag('help', { type: 'boolean' })
     kernel1.defineFlag('version', { type: 'boolean' })
@@ -37,7 +37,7 @@ test.group('Kernel | global flags', () => {
   })
 
   test('disallow registering global flags after kernel is booted', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     await kernel.boot()
 
     assert.throws(

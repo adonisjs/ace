@@ -14,7 +14,7 @@ import { BaseCommand } from '../src/commands/base.js'
 import { ListLoader } from '../src/loaders/list_loader.js'
 import { HelpCommand } from '../src/commands/help.js'
 
-const kernel = new Kernel()
+const kernel = Kernel.create()
 
 class Configure extends BaseCommand {
   static commandName: string = 'configure'

@@ -20,7 +20,7 @@ test.group('Kernel | handle', (group) => {
   })
 
   test('execute flag listener on a global flag', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -44,7 +44,7 @@ test.group('Kernel | handle', (group) => {
   })
 
   test('execute flag listener on a command flag', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -69,12 +69,17 @@ test.group('Kernel | handle', (group) => {
   })
 
   test('terminate from the flag listener', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     const stack: string[] = []
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
-      constructor($kernel: Kernel, parsed: ParsedOutput, ui: UIPrimitives, prompt: Prompt) {
+      constructor(
+        $kernel: Kernel<typeof BaseCommand>,
+        parsed: ParsedOutput,
+        ui: UIPrimitives,
+        prompt: Prompt
+      ) {
         super($kernel, parsed, ui, prompt)
         stack.push('constructor')
       }
@@ -100,9 +105,6 @@ test.group('Kernel | handle', (group) => {
   })
 
   test('execute flag listener for the default command', async ({ assert }) => {
-    const kernel = new Kernel()
-    const stack: string[] = []
-
     class Help extends BaseCommand {
       static commandName = 'help'
       async run() {
@@ -110,7 +112,9 @@ test.group('Kernel | handle', (group) => {
       }
     }
 
-    kernel.registerDefaultCommand(Help)
+    const kernel = new Kernel(Help, Kernel.commandExecutor)
+    const stack: string[] = []
+
     kernel.defineFlag('help', { type: 'boolean' })
     kernel.on('help', (Command, _, options) => {
       assert.strictEqual(Command, Help)
@@ -125,7 +129,6 @@ test.group('Kernel | handle', (group) => {
   })
 
   test('terminate from the flag listener for the default command', async ({ assert }) => {
-    const kernel = new Kernel()
     const stack: string[] = []
 
     class Help extends BaseCommand {
@@ -135,7 +138,7 @@ test.group('Kernel | handle', (group) => {
       }
     }
 
-    kernel.registerDefaultCommand(Help)
+    const kernel = new Kernel(Help, Kernel.commandExecutor)
     kernel.defineFlag('help', { type: 'boolean' })
 
     kernel.on('help', (Command, _, options) => {

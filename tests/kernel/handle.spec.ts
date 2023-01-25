@@ -20,7 +20,7 @@ test.group('Kernel | handle', (group) => {
   })
 
   test('execute command as main command', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
       async run() {
@@ -38,7 +38,7 @@ test.group('Kernel | handle', (group) => {
   })
 
   test('report error using logger command validation fails', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     kernel.ui = cliui({ mode: 'raw' })
 
     class MakeController extends BaseCommand {
@@ -64,7 +64,7 @@ test.group('Kernel | handle', (group) => {
   })
 
   test('report error using logger when unable to find command', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     kernel.ui = cliui({ mode: 'raw' })
 
     class MakeController extends BaseCommand {
@@ -89,7 +89,7 @@ test.group('Kernel | handle', (group) => {
   })
 
   test('report error when command hooks fails', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     const stack: string[] = []
 
     class MakeController extends BaseCommand {
@@ -121,7 +121,7 @@ test.group('Kernel | handle', (group) => {
   })
 
   test('report error when command completed method fails', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     const stack: string[] = []
 
     class MakeController extends BaseCommand {
@@ -150,7 +150,7 @@ test.group('Kernel | handle', (group) => {
   })
 
   test('disallow calling handle method twice in parallel', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -175,7 +175,7 @@ test.group('Kernel | handle', (group) => {
   test('disallow calling handle method after the process has been terminated', async ({
     assert,
   }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -194,7 +194,7 @@ test.group('Kernel | handle', (group) => {
   })
 
   test('disallow calling exec method after the process has been terminated', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -213,7 +213,6 @@ test.group('Kernel | handle', (group) => {
   })
 
   test('run default command when args are provided', async ({ assert }) => {
-    const kernel = new Kernel()
     const stack: string[] = []
 
     class Help extends BaseCommand {
@@ -223,7 +222,7 @@ test.group('Kernel | handle', (group) => {
       }
     }
 
-    kernel.registerDefaultCommand(Help)
+    const kernel = new Kernel(Help, Kernel.commandExecutor)
     await kernel.handle([])
 
     assert.deepEqual(stack, ['run help'])
@@ -233,7 +232,6 @@ test.group('Kernel | handle', (group) => {
   })
 
   test('run default command when only flags are provided', async ({ assert }) => {
-    const kernel = new Kernel()
     const stack: string[] = []
 
     class Help extends BaseCommand {
@@ -247,7 +245,7 @@ test.group('Kernel | handle', (group) => {
       }
     }
 
-    kernel.registerDefaultCommand(Help)
+    const kernel = new Kernel(Help, Kernel.commandExecutor)
     await kernel.handle(['--help'])
 
     assert.deepEqual(stack, ['run help'])

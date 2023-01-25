@@ -14,7 +14,7 @@ import { ListLoader } from '../../src/loaders/list_loader.js'
 
 test.group('Kernel | exec', () => {
   test('execute command', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -35,7 +35,7 @@ test.group('Kernel | exec', () => {
   })
 
   test('run executing and executed hooks', async ({ assert, expectTypeOf }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     const stack: string[] = []
 
     class MakeController extends BaseCommand {
@@ -65,7 +65,7 @@ test.group('Kernel | exec', () => {
   })
 
   test('report error when command validation fails', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -83,7 +83,7 @@ test.group('Kernel | exec', () => {
   })
 
   test('report error when unable to find command', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -100,7 +100,7 @@ test.group('Kernel | exec', () => {
   })
 
   test('report error when executing hook fails', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -119,7 +119,7 @@ test.group('Kernel | exec', () => {
   })
 
   test('report error when executed hook fails', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -138,7 +138,7 @@ test.group('Kernel | exec', () => {
   })
 
   test('do not allow termination from non-main commands', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     const stack: string[] = []
 
     class MakeController extends BaseCommand {
@@ -192,10 +192,7 @@ test.group('Kernel | exec', () => {
     MakeModel.defineArgument('name', { type: 'string' })
     MakeModel.defineFlag('connection', { type: 'string' })
 
-    const kernel = new Kernel()
-    kernel.addLoader(new ListLoader([MakeModel]))
-
-    kernel.registerExecutor({
+    const kernel = new Kernel(Kernel.defaultCommand, {
       create(Command, parsed, self) {
         stack.push('creating')
         return new Command(self, parsed, self.ui, self.prompt)
@@ -206,32 +203,16 @@ test.group('Kernel | exec', () => {
       },
     })
 
+    kernel.addLoader(new ListLoader([MakeModel]))
+
     await kernel.exec('make:model', ['users'])
     assert.deepEqual(stack, ['creating', 'running', 'prepare', 'interact', 'run', 'completed'])
     assert.isUndefined(kernel.exitCode)
     assert.equal(kernel.getState(), 'booted')
   })
 
-  test('do not register executor after kernel is booted', async ({ assert }) => {
-    const kernel = new Kernel()
-    await kernel.boot()
-
-    assert.throws(
-      () =>
-        kernel.registerExecutor({
-          create(Command, parsed, self) {
-            return new Command(self, parsed, self.ui, self.prompt)
-          },
-          run(command) {
-            return command.exec()
-          },
-        }),
-      'Cannot register commands executor in "booted" state'
-    )
-  })
-
   test('do not trigger flag listeners when not executing a main command', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -258,7 +239,7 @@ test.group('Kernel | exec', () => {
   })
 
   test('disallow using global flags when executing commands', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'

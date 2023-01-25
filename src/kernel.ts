@@ -51,12 +51,39 @@ const knowErrorCodes = Object.keys(errors)
  * The kernel is the main entry point of a console application, and
  * is tailored for a standard CLI environment.
  */
-export class Kernel {
+export class Kernel<Command extends typeof BaseCommand> {
+  /**
+   * The default executor for creating command's instance
+   * and running them
+   */
+  static commandExecutor: ExecutorContract<typeof BaseCommand> = {
+    create(command, parsedArgs, kernel) {
+      return new command(kernel, parsedArgs, kernel.ui, kernel.prompt)
+    },
+    run(command) {
+      return command.exec()
+    },
+  }
+
+  /**
+   * The default command to use when creating kernel instance
+   * via "static create" method.
+   */
+  static defaultCommand: typeof BaseCommand = ListCommand
+
+  /**
+   * Creates an instance of kernel with the default executor
+   * and default command
+   */
+  static create() {
+    return new Kernel<typeof BaseCommand>(this.defaultCommand, this.commandExecutor)
+  }
+
   /**
    * Listeners for CLI options. Executed for the main command
    * only
    */
-  #optionListeners: Map<string, FlagListener> = new Map()
+  #optionListeners: Map<string, FlagListener<Command>> = new Map()
 
   /**
    * The global command is used to register global flags applicable
@@ -72,7 +99,7 @@ export class Kernel {
    * The default command to run when no command is mentioned. The default
    * command will also run when only flags are mentioned.
    */
-  #defaultCommand: typeof BaseCommand = ListCommand
+  #defaultCommand: Command
 
   /**
    * Available hooks
@@ -90,20 +117,13 @@ export class Kernel {
    * Executors are used to instantiate a command and execute
    * the run method.
    */
-  #executor: ExecutorContract = {
-    create(command, parsedArgs, kernel) {
-      return new command(kernel, parsedArgs, kernel.ui, kernel.prompt)
-    },
-    run(command) {
-      return command.exec()
-    },
-  }
+  #executor: ExecutorContract<Command>
 
   /**
    * Keeping track of the main command. There are some action (like termination)
    * that only the main command can perform
    */
-  #mainCommand?: BaseCommand
+  #mainCommand?: InstanceType<Command>
 
   /**
    * The current state of kernel. The `running` and `terminated`
@@ -168,14 +188,16 @@ export class Kernel {
     return this.#globalCommand.flags
   }
 
+  constructor(defaultCommand: Command, executor: ExecutorContract<Command>) {
+    this.#defaultCommand = defaultCommand
+    this.#executor = executor
+  }
+
   /**
    * Creates an instance of a command by parsing and validating
    * the command line arguments.
    */
-  async #create<T extends typeof BaseCommand>(
-    Command: T,
-    argv: string[]
-  ): Promise<InstanceType<T>> {
+  async #create<T extends Command>(Command: T, argv: string | string[]): Promise<InstanceType<T>> {
     /**
      * Parse CLI argv without global flags. When running commands directly, we
      * should not be using global flags anyways
@@ -198,10 +220,7 @@ export class Kernel {
    * Executes a given command. The main commands are executed using the
    * "execMain" method.
    */
-  async #exec<T extends typeof BaseCommand>(
-    commandName: string,
-    argv: string[]
-  ): Promise<InstanceType<T>> {
+  async #exec<T extends Command>(commandName: string, argv: string[]): Promise<InstanceType<T>> {
     const Command = await this.find<T>(commandName)
     const commandInstance = await this.#create<T>(Command, argv)
 
@@ -328,7 +347,7 @@ export class Kernel {
    *
    * The callbacks are only executed for the main command
    */
-  on(option: string, callback: FlagListener): this {
+  on(option: string, callback: FlagListener<Command>): this {
     debug('registering flag listener for "%s" flag', option)
     this.#optionListeners.set(option, callback)
     return this
@@ -347,31 +366,6 @@ export class Kernel {
     }
 
     this.#globalCommand.defineFlag(name, options)
-  }
-
-  /**
-   * Register a custom default command. Default command runs
-   * when no command is mentioned
-   */
-  registerDefaultCommand(command: typeof BaseCommand): this {
-    if (this.#state !== 'idle') {
-      throw new RuntimeException(`Cannot register default command in "${this.#state}" state`)
-    }
-
-    this.#defaultCommand = command
-    return this
-  }
-
-  /**
-   * Register a custom executor to execute the command
-   */
-  registerExecutor(executor: ExecutorContract): this {
-    if (this.#state !== 'idle') {
-      throw new RuntimeException(`Cannot register commands executor in "${this.#state}" state`)
-    }
-
-    this.#executor = executor
-    return this
   }
 
   /**
@@ -623,7 +617,7 @@ export class Kernel {
   /**
    * Find a command by its name
    */
-  async find<T extends typeof BaseCommand>(commandName: string): Promise<T> {
+  async find<T extends Command>(commandName: string): Promise<T> {
     /**
      * Get command name from the alias (if one exists)
      */
@@ -656,7 +650,7 @@ export class Kernel {
    * Execute a command. The second argument is an array of commandline
    * arguments (without the command name)
    */
-  async exec<T extends typeof BaseCommand>(commandName: string, argv: string[]) {
+  async exec<T extends Command>(commandName: string, argv: string[]) {
     /**
      * Boot if not already booted
      */
@@ -681,7 +675,7 @@ export class Kernel {
    * Creates a command instance by parsing and validating
    * the command-line arguments.
    */
-  async create<T extends typeof BaseCommand>(command: T, argv: string[]): Promise<InstanceType<T>> {
+  async create<T extends Command>(command: T, argv: string | string[]): Promise<InstanceType<T>> {
     /**
      * Boot if not already booted
      */

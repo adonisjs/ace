@@ -9,4 +9,5 @@
 
 import { Kernel } from '../index.js'
 
-new Kernel()
+const kernel = Kernel.create()
+kernel.handle()

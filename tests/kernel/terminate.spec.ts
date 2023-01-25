@@ -19,7 +19,7 @@ test.group('Kernel | terminate', (group) => {
   })
 
   test('do not terminate when not in running state', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
     await kernel.boot()
     await kernel.terminate()
 
@@ -29,7 +29,7 @@ test.group('Kernel | terminate', (group) => {
   })
 
   test('do not terminate from a non-main command', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -64,7 +64,7 @@ test.group('Kernel | terminate', (group) => {
   })
 
   test('terminate automatically after running the main command', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -85,7 +85,7 @@ test.group('Kernel | terminate', (group) => {
   })
 
   test('do not terminate if command options.staysAlive is true', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -109,7 +109,7 @@ test.group('Kernel | terminate', (group) => {
   })
 
   test('terminate when alive command calls terminate method', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -135,7 +135,7 @@ test.group('Kernel | terminate', (group) => {
   })
 
   test('terminate from flag listener', async ({ assert }) => {
-    const kernel = new Kernel()
+    const kernel = Kernel.create()
 
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
