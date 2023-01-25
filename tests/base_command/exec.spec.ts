@@ -7,7 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import sinon from 'sinon'
 import { test } from '@japa/runner'
 import { cliui } from '@poppinss/cliui'
 
@@ -335,24 +334,5 @@ test.group('Base command | execute | complete method', () => {
 
     await model.exec()
     assert.lengthOf(model.ui.logger.getRenderer().getLogs(), 0)
-  })
-})
-
-test.group('Base command | terminate', () => {
-  test('call terminate method on kernel', async ({ cleanup }) => {
-    class MakeModel extends BaseCommand {}
-    MakeModel.boot()
-
-    const kernel = Kernel.create()
-    kernel.ui = cliui({ mode: 'raw' })
-    const model = await kernel.create(MakeModel, [])
-
-    const terminate = sinon.stub(kernel, 'terminate')
-    cleanup(() => {
-      terminate.restore()
-    })
-
-    await model.terminate()
-    terminate.calledWith(model)
   })
 })

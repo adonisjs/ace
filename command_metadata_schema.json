@@ -156,7 +156,6 @@
       "type": "object"
     },
     "CommandOptions": {
-      "additionalProperties": false,
       "description": "Static set of command options",
       "properties": {
         "allowUnknownFlags": {

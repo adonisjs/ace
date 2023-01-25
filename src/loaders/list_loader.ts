@@ -7,17 +7,16 @@
  * file that was distributed with this source code.
  */
 
-import { BaseCommand } from '../commands/base.js'
-import type { CommandMetaData, LoadersContract } from '../types.js'
+import type { AbstractBaseCommand, CommandMetaData, LoadersContract } from '../types.js'
 
 /**
  * The CommandsList loader registers commands classes with the kernel.
  * The commands are kept within memory
  */
-export class ListLoader implements LoadersContract {
-  #commands: (typeof BaseCommand)[]
+export class ListLoader<Command extends AbstractBaseCommand> implements LoadersContract<Command> {
+  #commands: Command[]
 
-  constructor(commands: (typeof BaseCommand)[]) {
+  constructor(commands: Command[]) {
     this.#commands = commands
   }
 
@@ -32,7 +31,7 @@ export class ListLoader implements LoadersContract {
    * Returns the command class constructor for a given command. Null
    * is returned when unable to lookup the command
    */
-  async getCommand(metaData: CommandMetaData): Promise<typeof BaseCommand | null> {
+  async getCommand(metaData: CommandMetaData): Promise<Command | null> {
     return this.#commands.find((command) => command.commandName === metaData.commandName) || null
   }
 }

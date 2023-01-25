@@ -12,7 +12,6 @@ import type { Arguments, Options } from 'yargs-parser'
 import type { HookHandler } from '@poppinss/hooks/types'
 
 import type { Kernel } from './kernel.js'
-import type { BaseCommand } from './commands/base.js'
 
 /**
  * Parsed output of yargs
@@ -55,7 +54,7 @@ export type UIPrimitives = ReturnType<typeof cliui>
 /**
  * All loaders must adhere to the LoadersContract
  */
-export interface LoadersContract {
+export interface LoadersContract<Command extends AbstractBaseCommand> {
   /**
    * The method should return an array of commands metadata
    */
@@ -65,14 +64,14 @@ export interface LoadersContract {
    * The method should return the command instance by command
    * name
    */
-  getCommand(command: CommandMetaData): Promise<typeof BaseCommand | null>
+  getCommand(command: CommandMetaData): Promise<Command | null>
 }
 
 /**
  * Command executor is used to create a new instance of the command
  * and run it.
  */
-export interface ExecutorContract<Command extends typeof BaseCommand> {
+export interface ExecutorContract<Command extends AbstractBaseCommand> {
   /**
    * Create a new instance of the command
    */
@@ -312,7 +311,7 @@ export type CommandOptions = {
    * Defaults to false
    */
   staysAlive?: boolean
-}
+} & Record<string, any>
 
 /**
  * Finding hook handler and data
@@ -329,31 +328,31 @@ export type LoadingHookHandler = HookHandler<LoadingHookArgs[0], LoadingHookArgs
 /**
  * Found hook handler and data
  */
-export type LoadedHookArgs = [[typeof BaseCommand], [typeof BaseCommand]]
-export type LoadedHookHandler = HookHandler<LoadedHookArgs[0], LoadedHookArgs[1]>
+export type LoadedHookArgs<Command extends AbstractBaseCommand> = [[Command], [Command]]
+export type LoadedHookHandler<Command extends AbstractBaseCommand> = HookHandler<
+  LoadedHookArgs<Command>[0],
+  LoadedHookArgs<Command>[1]
+>
 
 /**
  * Executing hook handler and data
  */
-export type ExecutingHookArgs = [[BaseCommand, boolean], [BaseCommand, boolean]]
-export type ExecutingHookHandler = HookHandler<ExecutingHookArgs[0], ExecutingHookArgs[1]>
+export type ExecutingHookArgs<Command> = [[Command, boolean], [Command, boolean]]
+export type ExecutingHookHandler<Command> = HookHandler<
+  ExecutingHookArgs<Command>[0],
+  ExecutingHookArgs<Command>[1]
+>
 
 /**
  * Executed hook handler and data
  */
-export type ExecutedHookArgs = ExecutingHookArgs
-export type ExecutedHookHandler = ExecutingHookHandler
-
-/**
- * Terminating hook handler and data
- */
-export type TerminatingHookArgs = [[BaseCommand?], [BaseCommand?]]
-export type TerminatingHookHandler = HookHandler<TerminatingHookArgs[0], TerminatingHookArgs[1]>
+export type ExecutedHookArgs<Command> = ExecutingHookArgs<Command>
+export type ExecutedHookHandler<Command> = ExecutingHookHandler<Command>
 
 /**
  * A listener that listeners for flags when they are mentioned.
  */
-export type FlagListener<Command extends typeof BaseCommand> = (
+export type FlagListener<Command extends AbstractBaseCommand> = (
   command: Command,
   kernel: Kernel<Command>,
   parsedOutput: ParsedOutput
@@ -374,3 +373,19 @@ export type ListTable = {
  * A union of data types allowed for the info key-value pair
  */
 export type AllowedInfoValues = number | boolean | string | string[] | number[] | boolean[]
+
+/**
+ * Abstract command defines the mandatory properties on a
+ * command class needed by the internals of ace.
+ */
+export type AbstractBaseCommand = {
+  commandName: string
+  options: CommandOptions
+  serialize(): CommandMetaData
+  validate(parsedOutput: ParsedOutput): void
+  getParserOptions(options?: FlagsParserOptions): {
+    flagsParserOptions: Required<FlagsParserOptions>
+    argumentsParserOptions: ArgumentsParserOptions[]
+  }
+  new (...args: any[]): any
+}

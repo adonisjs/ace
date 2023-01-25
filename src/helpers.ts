@@ -10,10 +10,8 @@
 import { inspect } from 'node:util'
 import { Validator } from 'jsonschema'
 import { RuntimeException } from '@poppinss/utils'
-
-import { BaseCommand } from '../index.js'
-import type { CommandMetaData, UIPrimitives } from './types.js'
 import schema from '../command_metadata_schema.json' assert { type: 'json' }
+import type { AbstractBaseCommand, CommandMetaData, UIPrimitives } from './types.js'
 
 /**
  * Helper to sort array of strings alphabetically.
@@ -78,10 +76,10 @@ export function validCommandMetaData(
  * class, because the ace version mis-match could make the validation
  * fail.
  */
-export function validateCommand(
+export function validateCommand<Command extends AbstractBaseCommand>(
   command: unknown,
   exportPath: string
-): asserts command is typeof BaseCommand {
+): asserts command is Command {
   if (typeof command !== 'function' || !command.toString().startsWith('class ')) {
     throw new RuntimeException(
       `Invalid command exported from ${exportPath}. Expected command to be a class`

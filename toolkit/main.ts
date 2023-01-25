@@ -10,4 +10,4 @@
 import { Kernel } from '../index.js'
 
 const kernel = Kernel.create()
-kernel.handle()
+kernel.handle(process.argv)

@@ -83,7 +83,7 @@ test.group('Kernel | find', () => {
       static commandName = 'make:model'
     }
 
-    class CustomLoader extends ListLoader {
+    class CustomLoader extends ListLoader<typeof BaseCommand> {
       async getCommand(_: CommandMetaData): Promise<typeof BaseCommand | null> {
         return null
       }

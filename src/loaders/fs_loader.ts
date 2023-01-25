@@ -11,12 +11,11 @@ import { extname } from 'node:path'
 import { fsImportAll } from '@poppinss/utils'
 
 import { validateCommand } from '../helpers.js'
-import { BaseCommand } from '../commands/base.js'
-import type { CommandMetaData, LoadersContract } from '../types.js'
+import type { AbstractBaseCommand, CommandMetaData, LoadersContract } from '../types.js'
 
 const JS_MODULES = ['.js', '.cjs', '.mjs']
 
-export class FsLoader implements LoadersContract {
+export class FsLoader<Command extends AbstractBaseCommand> implements LoadersContract<Command> {
   /**
    * Absolute path to directory from which to load files
    */
@@ -25,7 +24,7 @@ export class FsLoader implements LoadersContract {
   /**
    * An array of loaded commands
    */
-  #commands: (typeof BaseCommand)[] = []
+  #commands: Command[] = []
 
   constructor(comandsDirectory: string) {
     this.#comandsDirectory = comandsDirectory
@@ -60,7 +59,7 @@ export class FsLoader implements LoadersContract {
 
     Object.keys(commandsCollection).forEach((key) => {
       const command = commandsCollection[key]
-      validateCommand(command, `"${key}" file`)
+      validateCommand<Command>(command, `"${key}" file`)
       this.#commands.push(command)
     })
 
@@ -71,7 +70,7 @@ export class FsLoader implements LoadersContract {
    * Returns the command class constructor for a given command. Null
    * is returned when unable to lookup the command
    */
-  async getCommand(metaData: CommandMetaData): Promise<typeof BaseCommand | null> {
+  async getCommand(metaData: CommandMetaData): Promise<Command | null> {
     return this.#commands.find((command) => command.commandName === metaData.commandName) || null
   }
 }

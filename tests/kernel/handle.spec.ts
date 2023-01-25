@@ -25,6 +25,7 @@ test.group('Kernel | handle', (group) => {
       static commandName = 'make:controller'
       async run() {
         assert.equal(this.kernel.getState(), 'running')
+        assert.strictEqual(this.kernel.getMainCommand(), this)
         return 'executed'
       }
     }
@@ -33,8 +34,7 @@ test.group('Kernel | handle', (group) => {
     await kernel.handle(['make:controller'])
 
     assert.equal(kernel.exitCode, 0)
-    assert.equal(process.exitCode, 0)
-    assert.equal(kernel.getState(), 'terminated')
+    assert.equal(kernel.getState(), 'completed')
   })
 
   test('report error using logger command validation fails', async ({ assert }) => {
@@ -52,7 +52,7 @@ test.group('Kernel | handle', (group) => {
     kernel.addLoader(new ListLoader([MakeController]))
     await kernel.handle(['make:controller'])
 
-    assert.equal(kernel.getState(), 'terminated')
+    assert.equal(kernel.getState(), 'completed')
     assert.equal(kernel.exitCode, 1)
 
     assert.deepEqual(kernel.ui.logger.getRenderer().getLogs(), [
@@ -78,7 +78,7 @@ test.group('Kernel | handle', (group) => {
     kernel.addLoader(new ListLoader([MakeController]))
     await kernel.handle(['foo'])
 
-    assert.equal(kernel.getState(), 'terminated')
+    assert.equal(kernel.getState(), 'completed')
     assert.equal(kernel.exitCode, 1)
     assert.deepEqual(kernel.ui.logger.getRenderer().getLogs(), [
       {
@@ -109,15 +109,12 @@ test.group('Kernel | handle', (group) => {
       stack.push('executed')
       throw new Error('Post hook failed')
     })
-    kernel.terminating(() => {
-      stack.push('terminating')
-    })
 
     await kernel.handle(['make:controller', 'users'])
 
-    assert.equal(kernel.getState(), 'terminated')
+    assert.equal(kernel.getState(), 'completed')
     assert.equal(kernel.exitCode, 1)
-    assert.deepEqual(stack, ['executing', 'run', 'executed', 'terminating'])
+    assert.deepEqual(stack, ['executing', 'run', 'executed'])
   })
 
   test('report error when command completed method fails', async ({ assert }) => {
@@ -138,15 +135,12 @@ test.group('Kernel | handle', (group) => {
     MakeController.defineArgument('name', { type: 'string' })
 
     kernel.addLoader(new ListLoader([MakeController]))
-    kernel.terminating(() => {
-      stack.push('terminating')
-    })
 
     await kernel.handle(['make:controller', 'users'])
 
-    assert.equal(kernel.getState(), 'terminated')
+    assert.equal(kernel.getState(), 'completed')
     assert.equal(kernel.exitCode, 1)
-    assert.deepEqual(stack, ['run', 'terminating'])
+    assert.deepEqual(stack, ['run'])
   })
 
   test('disallow calling handle method twice in parallel', async ({ assert }) => {
@@ -172,7 +166,7 @@ test.group('Kernel | handle', (group) => {
     )
   })
 
-  test('disallow calling handle method after the process has been terminated', async ({
+  test('disallow calling handle method after the process has been completed', async ({
     assert,
   }) => {
     const kernel = Kernel.create()
@@ -227,8 +221,7 @@ test.group('Kernel | handle', (group) => {
 
     assert.deepEqual(stack, ['run help'])
     assert.equal(kernel.exitCode, 0)
-    assert.equal(process.exitCode, 0)
-    assert.equal(kernel.getState(), 'terminated')
+    assert.equal(kernel.getState(), 'completed')
   })
 
   test('run default command when only flags are provided', async ({ assert }) => {
@@ -250,7 +243,6 @@ test.group('Kernel | handle', (group) => {
 
     assert.deepEqual(stack, ['run help'])
     assert.equal(kernel.exitCode, 0)
-    assert.equal(process.exitCode, 0)
-    assert.equal(kernel.getState(), 'terminated')
+    assert.equal(kernel.getState(), 'completed')
   })
 })

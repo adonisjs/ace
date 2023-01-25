@@ -13,6 +13,7 @@ import { Prompt } from '@poppinss/prompts'
 import { findBestMatch } from 'string-similarity'
 import { RuntimeException } from '@poppinss/utils'
 
+import debug from './debug.js'
 import { Parser } from './parser.js'
 import * as errors from './errors.js'
 import { ListCommand } from './commands/list.js'
@@ -36,12 +37,10 @@ import type {
   ExecutingHookArgs,
   LoadingHookHandler,
   FindingHookHandler,
-  TerminatingHookArgs,
+  AbstractBaseCommand,
   ExecutedHookHandler,
   ExecutingHookHandler,
-  TerminatingHookHandler,
 } from './types.js'
-import debug from './debug.js'
 
 const knowErrorCodes = Object.keys(errors)
 
@@ -51,7 +50,7 @@ const knowErrorCodes = Object.keys(errors)
  * The kernel is the main entry point of a console application, and
  * is tailored for a standard CLI environment.
  */
-export class Kernel<Command extends typeof BaseCommand> {
+export class Kernel<Command extends AbstractBaseCommand> {
   /**
    * The default executor for creating command's instance
    * and running them
@@ -107,10 +106,9 @@ export class Kernel<Command extends typeof BaseCommand> {
   #hooks: Hooks<{
     finding: FindingHookArgs
     loading: LoadingHookArgs
-    loaded: LoadedHookArgs
-    executing: ExecutingHookArgs
-    executed: ExecutedHookArgs
-    terminating: TerminatingHookArgs
+    loaded: LoadedHookArgs<Command>
+    executing: ExecutingHookArgs<InstanceType<Command>>
+    executed: ExecutedHookArgs<InstanceType<Command>>
   }> = new Hooks()
 
   /**
@@ -129,12 +127,12 @@ export class Kernel<Command extends typeof BaseCommand> {
    * The current state of kernel. The `running` and `terminated`
    * states are only set when kernel takes over the process.
    */
-  #state: 'idle' | 'booted' | 'running' | 'terminated' = 'idle'
+  #state: 'idle' | 'booted' | 'running' | 'completed' = 'idle'
 
   /**
    * Collection of loaders to use for loading commands
    */
-  #loaders: LoadersContract[] = []
+  #loaders: LoadersContract<Command>[] = []
 
   /**
    * An array of registered namespaces. Sorted alphabetically
@@ -155,7 +153,8 @@ export class Kernel<Command extends typeof BaseCommand> {
    * the unique commands and also keep the loader reference to know which
    * loader to ask for loading the command.
    */
-  #commands: Map<string, { metaData: CommandMetaData; loader: LoadersContract }> = new Map()
+  #commands: Map<string, { metaData: CommandMetaData; loader: LoadersContract<Command> }> =
+    new Map()
 
   /**
    * The exit code for the kernel. The exit code is inferred
@@ -275,11 +274,12 @@ export class Kernel<Command extends typeof BaseCommand> {
       Command.validate(parsed)
 
       /**
-       * Terminate if a flag listener ends the process
+       * Return early if a flag listener shortcircuits
        */
       if (shortcircuit) {
         debug('short circuiting from flag listener')
-        await this.terminate()
+        this.exitCode = this.exitCode ?? 0
+        this.#state = 'completed'
         return
       }
 
@@ -291,17 +291,14 @@ export class Kernel<Command extends typeof BaseCommand> {
       /**
        * Execute the command using the executor
        */
-      await this.#hooks.runner('executing').run(this.#mainCommand, true)
-      await this.#executor.run(this.#mainCommand, this)
-      await this.#hooks.runner('executed').run(this.#mainCommand, true)
-
-      /**
-       * Terminate the process unless command wants to stay alive
-       */
-      if (!Command.options.staysAlive) {
-        await this.terminate(this.#mainCommand)
-      }
+      await this.#hooks.runner('executing').run(this.#mainCommand!, true)
+      await this.#executor.run(this.#mainCommand!, this)
+      await this.#hooks.runner('executed').run(this.#mainCommand!, true)
+      this.exitCode = this.exitCode ?? this.#mainCommand!.exitCode ?? 0
+      this.#state = 'completed'
     } catch (error) {
+      this.exitCode = 1
+      this.#state = 'completed'
       await this.#handleError(error)
     }
   }
@@ -313,12 +310,6 @@ export class Kernel<Command extends typeof BaseCommand> {
    * handling errors of the main command
    */
   async #handleError(error: any) {
-    /**
-     * Exit code will always be 1 if a hard exception was raised
-     * during command execution.
-     */
-    this.exitCode = 1
-
     /**
      * Reporting errors with the best UI possible based upon the error
      * type
@@ -334,11 +325,6 @@ export class Kernel<Command extends typeof BaseCommand> {
     } else {
       console.log(error.stack)
     }
-
-    /**
-     * Start termination
-     */
-    await this.terminate(this.#mainCommand)
   }
 
   /**
@@ -375,7 +361,7 @@ export class Kernel<Command extends typeof BaseCommand> {
    * Incase multiple loaders returns a single command, the command from the
    * most recent loader will be used.
    */
-  addLoader(loader: LoadersContract): this {
+  addLoader(loader: LoadersContract<Command>): this {
     if (this.#state !== 'idle') {
       throw new RuntimeException(`Cannot add loader in "${this.#state}" state`)
     }
@@ -444,6 +430,13 @@ export class Kernel<Command extends typeof BaseCommand> {
    */
   getDefaultCommand() {
     return this.#defaultCommand
+  }
+
+  /**
+   * Returns reference to the main command
+   */
+  getMainCommand() {
+    return this.#mainCommand
   }
 
   /**
@@ -539,7 +532,7 @@ export class Kernel<Command extends typeof BaseCommand> {
   /**
    * Listen for the event when the command has been imported
    */
-  loaded(callback: LoadedHookHandler) {
+  loaded(callback: LoadedHookHandler<Command>) {
     this.#hooks.add('loaded', callback)
     return this
   }
@@ -547,7 +540,7 @@ export class Kernel<Command extends typeof BaseCommand> {
   /**
    * Listen for the event before we start to execute the command.
    */
-  executing(callback: ExecutingHookHandler) {
+  executing(callback: ExecutingHookHandler<InstanceType<Command>>) {
     this.#hooks.add('executing', callback)
     return this
   }
@@ -555,16 +548,8 @@ export class Kernel<Command extends typeof BaseCommand> {
   /**
    * Listen for the event after the command has been executed
    */
-  executed(callback: ExecutedHookHandler) {
+  executed(callback: ExecutedHookHandler<InstanceType<Command>>) {
     this.#hooks.add('executed', callback)
-    return this
-  }
-
-  /**
-   * Listen for the event before we start to terminate the kernel
-   */
-  terminating(callback: TerminatingHookHandler) {
-    this.#hooks.add('terminating', callback)
     return this
   }
 
@@ -659,10 +644,9 @@ export class Kernel<Command extends typeof BaseCommand> {
     }
 
     /**
-     * Disallow calling commands if main commands was executed once and
-     * terminated
+     * Cannot execute commands after the main command has exited
      */
-    if (this.#state === 'terminated') {
+    if (this.#state === 'completed') {
       throw new RuntimeException(
         'The kernel has been terminated. Create a fresh instance to execute commands'
       )
@@ -699,9 +683,9 @@ export class Kernel<Command extends typeof BaseCommand> {
     }
 
     /**
-     * Cannot run main command once the kernel has already been terminated
+     * Cannot run multiple main commands from the same instance
      */
-    if (this.#state === 'terminated') {
+    if (this.#state === 'completed') {
       throw new RuntimeException(
         'The kernel has been terminated. Create a fresh instance to execute commands'
       )
@@ -731,47 +715,5 @@ export class Kernel<Command extends typeof BaseCommand> {
     const [commandName, ...args] = argv
     debug('running main command "%s"', commandName)
     return this.#execMain(commandName, args)
-  }
-
-  /**
-   * Trigger process termination. The terminate method needs the command
-   * instance to know if the main command is triggering the termination
-   * or not.
-   *
-   * Only main commands can trigger the termination.
-   */
-  async terminate(command?: BaseCommand) {
-    /**
-     * Do not terminate when the state is not running. The state
-     * is always running when we execute the handle method
-     */
-    if (this.#state !== 'running') {
-      debug('denied terminating, since kernel.handle was never called')
-      return
-    }
-
-    /**
-     * If we know about the command and the command trying
-     * to exit is not same as the main command, then
-     * do not terminate
-     */
-    if (this.#mainCommand && command !== this.#mainCommand) {
-      debug('denied terminating, since command other than main command attempted to terminate')
-      return
-    }
-
-    /**
-     * Started the termination process
-     */
-    debug('terminating')
-    await this.#hooks.runner('terminating').run(this.#mainCommand)
-    this.#state = 'terminated'
-
-    /**
-     * Set exit code if not already set. Also try to infer
-     * from the main command if exists
-     */
-    this.exitCode = this.exitCode ?? this.#mainCommand?.exitCode ?? 0
-    process.exitCode = this.exitCode
   }
 }

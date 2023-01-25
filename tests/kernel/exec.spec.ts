@@ -137,32 +137,6 @@ test.group('Kernel | exec', () => {
     await assert.rejects(() => kernel.exec('make:controller', ['users']), 'Post hook failed')
   })
 
-  test('do not allow termination from non-main commands', async ({ assert }) => {
-    const kernel = Kernel.create()
-    const stack: string[] = []
-
-    class MakeController extends BaseCommand {
-      static commandName = 'make:controller'
-      async run() {
-        await this.terminate()
-        return 'executed'
-      }
-    }
-
-    MakeController.defineArgument('name', { type: 'string' })
-
-    kernel.addLoader(new ListLoader([MakeController]))
-    kernel.terminating(() => {
-      stack.push('terminating')
-      throw new Error('Never expected to run')
-    })
-
-    await kernel.exec('make:controller', ['users'])
-    assert.deepEqual(stack, [])
-    assert.isUndefined(kernel.exitCode)
-    assert.equal(kernel.getState(), 'booted')
-  })
-
   test('use custom executor', async ({ assert }) => {
     const stack: string[] = []
 

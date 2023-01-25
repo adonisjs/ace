@@ -406,7 +406,7 @@ export class BaseCommand {
   }
 
   constructor(
-    protected kernel: Kernel<typeof BaseCommand>,
+    protected kernel: Kernel<any>,
     protected parsed: ParsedOutput,
     public ui: UIPrimitives,
     public prompt: Prompt
@@ -506,12 +506,5 @@ export class BaseCommand {
     }
 
     return this.result
-  }
-
-  /**
-   * Invokes the terminate method on the kernel
-   */
-  async terminate() {
-    this.kernel.terminate(this)
   }
 }

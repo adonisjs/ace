@@ -39,7 +39,7 @@ test.group('Kernel | handle', (group) => {
 
     await kernel.handle(['make:controller', 'users', '--verbose'])
 
-    assert.equal(kernel.getState(), 'terminated')
+    assert.equal(kernel.getState(), 'completed')
     assert.equal(kernel.exitCode, 0)
   })
 
@@ -64,7 +64,7 @@ test.group('Kernel | handle', (group) => {
 
     await kernel.handle(['make:controller', 'users', '--connection', 'sqlite'])
 
-    assert.equal(kernel.getState(), 'terminated')
+    assert.equal(kernel.getState(), 'completed')
     assert.equal(kernel.exitCode, 0)
   })
 
@@ -99,7 +99,7 @@ test.group('Kernel | handle', (group) => {
     })
 
     await kernel.handle(['make:controller', 'users', '--help'])
-    assert.equal(kernel.getState(), 'terminated')
+    assert.equal(kernel.getState(), 'completed')
     assert.equal(kernel.exitCode, 0)
     assert.deepEqual(stack, [])
   })
@@ -123,7 +123,7 @@ test.group('Kernel | handle', (group) => {
 
     await kernel.handle(['--help'])
 
-    assert.equal(kernel.getState(), 'terminated')
+    assert.equal(kernel.getState(), 'completed')
     assert.equal(kernel.exitCode, 0)
     assert.deepEqual(stack, ['run help'])
   })
@@ -149,7 +149,7 @@ test.group('Kernel | handle', (group) => {
 
     await kernel.handle(['--help'])
 
-    assert.equal(kernel.getState(), 'terminated')
+    assert.equal(kernel.getState(), 'completed')
     assert.equal(kernel.exitCode, 0)
     assert.deepEqual(stack, [])
   })

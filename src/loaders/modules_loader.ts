@@ -9,9 +9,8 @@
 
 import { RuntimeException } from '@poppinss/utils'
 
-import { BaseCommand } from '../commands/base.js'
-import type { CommandMetaData, LoadersContract } from '../types.js'
 import { validateCommand, validCommandMetaData } from '../helpers.js'
+import type { AbstractBaseCommand, CommandMetaData, LoadersContract } from '../types.js'
 
 /**
  * Module based command loader must implement the following methods.
@@ -28,7 +27,9 @@ type CommandsLoader = {
  * The modules have to implement the `list` and the `load`
  * methods
  */
-export class ModulesLoader implements LoadersContract {
+export class ModulesLoader<Command extends AbstractBaseCommand>
+  implements LoadersContract<Command>
+{
   /**
    * The import root is the base path to use when resolving
    * modules mentioned in the command source.
@@ -125,7 +126,7 @@ export class ModulesLoader implements LoadersContract {
    * Returns the command class constructor for a given command. Null
    * is returned when unable to lookup the command
    */
-  async getCommand(metaData: CommandMetaData): Promise<typeof BaseCommand | null> {
+  async getCommand(metaData: CommandMetaData): Promise<Command | null> {
     /**
      * Running "loadCommands" method instantiates the commands loader
      * collection
@@ -144,7 +145,7 @@ export class ModulesLoader implements LoadersContract {
       return null
     }
 
-    validateCommand(command, `"${commandLoader.sourcePath}.load" method`)
+    validateCommand<Command>(command, `"${commandLoader.sourcePath}.load" method`)
     return command
   }
 }
