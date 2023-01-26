@@ -7,14 +7,20 @@
  * file that was distributed with this source code.
  */
 
-import { extname } from 'node:path'
-import { fsImportAll } from '@poppinss/utils'
+import { fileURLToPath } from 'node:url'
+import { extname, relative } from 'node:path'
+import { fsReadAll, RuntimeException } from '@poppinss/utils'
 
 import { validateCommand } from '../helpers.js'
 import type { AbstractBaseCommand, CommandMetaData, LoadersContract } from '../types.js'
 
 const JS_MODULES = ['.js', '.cjs', '.mjs']
 
+/**
+ * Fs loader exposes the API to load commands from a directory. All files
+ * ending with ".js", ".cjs", ".mjs", ".ts" and ".mts" are considered
+ * as commands
+ */
 export class FsLoader<Command extends AbstractBaseCommand> implements LoadersContract<Command> {
   /**
    * Absolute path to directory from which to load files
@@ -24,7 +30,7 @@ export class FsLoader<Command extends AbstractBaseCommand> implements LoadersCon
   /**
    * An array of loaded commands
    */
-  #commands: Command[] = []
+  #commands: { command: Command; filePath: string }[] = []
 
   constructor(comandsDirectory: string) {
     this.#comandsDirectory = comandsDirectory
@@ -35,7 +41,13 @@ export class FsLoader<Command extends AbstractBaseCommand> implements LoadersCon
    * is unknown and must be validated
    */
   async #loadCommands(): Promise<Record<string, unknown>> {
-    return fsImportAll(this.#comandsDirectory, {
+    const commands: Record<string, unknown> = {}
+
+    /**
+     * Scanning all files
+     */
+    const commandFiles = await fsReadAll(this.#comandsDirectory, {
+      pathType: 'url',
       filter: (filePath: string) => {
         const ext = extname(filePath)
         if (JS_MODULES.includes(ext)) {
@@ -49,21 +61,41 @@ export class FsLoader<Command extends AbstractBaseCommand> implements LoadersCon
         return false
       },
     })
+
+    /**
+     * Importing files and validating the exports to have a default
+     * export
+     */
+    for (let file of commandFiles) {
+      const fileRelativeName = relative(this.#comandsDirectory, fileURLToPath(file))
+      const commandFileExports = await import(file)
+      if (!commandFileExports.default) {
+        throw new RuntimeException(
+          `Invalid command exported from "${fileRelativeName}" file. Missing export default`
+        )
+      }
+
+      commands[fileRelativeName] = commandFileExports.default
+    }
+
+    return commands
   }
 
   /**
    * Returns the metadata of commands
    */
-  async getMetaData(): Promise<CommandMetaData[]> {
+  async getMetaData(): Promise<(CommandMetaData & { filePath: string })[]> {
     const commandsCollection = await this.#loadCommands()
 
     Object.keys(commandsCollection).forEach((key) => {
       const command = commandsCollection[key]
       validateCommand<Command>(command, `"${key}" file`)
-      this.#commands.push(command)
+      this.#commands.push({ command, filePath: key })
     })
 
-    return this.#commands.map((command) => command.serialize())
+    return this.#commands.map(({ command, filePath }) => {
+      return Object.assign({}, command.serialize(), { filePath })
+    })
   }
 
   /**
@@ -71,6 +103,9 @@ export class FsLoader<Command extends AbstractBaseCommand> implements LoadersCon
    * is returned when unable to lookup the command
    */
   async getCommand(metaData: CommandMetaData): Promise<Command | null> {
-    return this.#commands.find((command) => command.commandName === metaData.commandName) || null
+    return (
+      this.#commands.find(({ command }) => command.commandName === metaData.commandName)?.command ||
+      null
+    )
   }
 }

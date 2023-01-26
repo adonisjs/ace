@@ -15,17 +15,16 @@ import type { AbstractBaseCommand, CommandMetaData, LoadersContract } from '../t
 /**
  * Module based command loader must implement the following methods.
  */
-type CommandsLoader = {
+interface CommandsModuleLoader {
   list: () => Promise<unknown>
   load: (command: CommandMetaData) => Promise<unknown>
 }
 
 /**
  * Modules loader exposes the API to lazy load commands from
- * one or more ES modules.
+ * ES modules.
  *
- * The modules have to implement the `list` and the `load`
- * methods
+ * The modules have to implement the [[CommandsModuleLoader]] interface
  */
 export class ModulesLoader<Command extends AbstractBaseCommand>
   implements LoadersContract<Command>
@@ -45,7 +44,7 @@ export class ModulesLoader<Command extends AbstractBaseCommand>
    * A collection of commands with their loaders. The key is the
    * command name and the value is the imported loader.
    */
-  #commandsLoaders?: Map<string, { loader: CommandsLoader; sourcePath: string }>
+  #commandsLoaders?: Map<string, { loader: CommandsModuleLoader; sourcePath: string }>
 
   constructor(importRoot: string | URL, commandSources: string[]) {
     this.#importRoot = importRoot
@@ -55,7 +54,9 @@ export class ModulesLoader<Command extends AbstractBaseCommand>
   /**
    * Imports the source by first resolving its import path.
    */
-  async #importSource(sourcePath: string): Promise<{ loader: CommandsLoader; importPath: string }> {
+  async #importSource(
+    sourcePath: string
+  ): Promise<{ loader: CommandsModuleLoader; importPath: string }> {
     const importPath = await import.meta.resolve!(sourcePath, this.#importRoot)
     const loader = await import(importPath)
 
@@ -83,7 +84,7 @@ export class ModulesLoader<Command extends AbstractBaseCommand>
   /**
    * Returns an array of commands returns by the loader list method
    */
-  async #getCommandsList(loader: CommandsLoader, importPath: string): Promise<unknown[]> {
+  async #getCommandsList(loader: CommandsModuleLoader, importPath: string): Promise<unknown[]> {
     const list = await loader.list()
     if (!Array.isArray(list)) {
       throw new RuntimeException(

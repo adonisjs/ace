@@ -37,7 +37,7 @@ test.group('Loaders | fs', (group) => {
     const loader = new FsLoader(join(BASE_PATH, './commands'))
     await assert.rejects(
       () => loader.getMetaData(),
-      'Invalid command exported from "make_controller_v_1" file. Expected command to be a class'
+      'Invalid command exported from "make_controller_v_1.ts" file. Missing export default'
     )
   })
 
@@ -73,6 +73,7 @@ test.group('Loaders | fs', (group) => {
     const commands = await loader.getMetaData()
     assert.deepEqual(commands, [
       {
+        filePath: 'make_controller_v_2.ts',
         commandName: 'make:controller',
         description: '',
         namespace: 'make',
@@ -117,6 +118,7 @@ test.group('Loaders | fs', (group) => {
     assert.deepEqual(commands, [
       {
         commandName: 'make:controller',
+        filePath: 'make_controller.js',
         description: '',
         namespace: 'make',
         args: [],
@@ -162,6 +164,7 @@ test.group('Loaders | fs', (group) => {
     assert.deepEqual(commands, [
       {
         commandName: 'make:controller',
+        filePath: 'make_controller_v_3.ts',
         description: '',
         namespace: 'make',
         args: [],
@@ -212,5 +215,49 @@ test.group('Loaders | fs', (group) => {
     const loader = new FsLoader(join(BASE_PATH, './commands'))
     const command = await loader.getCommand({ commandName: 'make:model' } as any)
     assert.isNull(command)
+  })
+
+  test('load commands from nested directories', async ({ assert }) => {
+    await fs.outputFile(
+      join(BASE_PATH, 'commands', 'make', 'controller.ts'),
+      `
+      export default class MakeController {
+        static commandName = 'make:controller'
+        static args = []
+        static flags = []
+        static aliases = []
+        static options = {}
+        static description = ''
+        static namespace = 'make'
+
+        static serialize() {
+          return {
+            commandName: this.commandName,
+            description: this.description,
+            namespace: this.namespace,
+            args: this.args,
+            flags: this.flags,
+            options: this.options,
+            aliases: this.aliases,
+          }
+        }
+      }
+    `
+    )
+
+    const loader = new FsLoader(join(BASE_PATH, './commands'))
+    const commands = await loader.getMetaData()
+    assert.deepEqual(commands, [
+      {
+        commandName: 'make:controller',
+        filePath: 'make/controller.ts',
+        description: '',
+        namespace: 'make',
+        args: [],
+        flags: [],
+        options: {},
+        aliases: [],
+      },
+    ])
   })
 })

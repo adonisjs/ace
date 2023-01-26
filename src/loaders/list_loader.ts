@@ -10,8 +10,7 @@
 import type { AbstractBaseCommand, CommandMetaData, LoadersContract } from '../types.js'
 
 /**
- * The CommandsList loader registers commands classes with the kernel.
- * The commands are kept within memory
+ * List loader exposes the API to register commands as classes
  */
 export class ListLoader<Command extends AbstractBaseCommand> implements LoadersContract<Command> {
   #commands: Command[]
