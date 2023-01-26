@@ -42,9 +42,10 @@ export class ModulesLoader<Command extends AbstractBaseCommand>
 
   /**
    * A collection of commands with their loaders. The key is the
-   * command name and the value is the imported loader.
+   * command name and the value is the loader that loaded the
+   * command.
    */
-  #commandsLoaders?: Map<string, { loader: CommandsModuleLoader; sourcePath: string }>
+  #commands?: Map<string, { loader: CommandsModuleLoader; sourcePath: string }>
 
   constructor(importRoot: string | URL, commandSources: string[]) {
     this.#importRoot = importRoot
@@ -52,11 +53,9 @@ export class ModulesLoader<Command extends AbstractBaseCommand>
   }
 
   /**
-   * Imports the source by first resolving its import path.
+   * Imports the loader from the loader source path.
    */
-  async #importSource(
-    sourcePath: string
-  ): Promise<{ loader: CommandsModuleLoader; importPath: string }> {
+  async #importLoader(sourcePath: string): Promise<CommandsModuleLoader> {
     const importPath = await import.meta.resolve!(sourcePath, this.#importRoot)
     const loader = await import(importPath)
 
@@ -78,7 +77,7 @@ export class ModulesLoader<Command extends AbstractBaseCommand>
       )
     }
 
-    return { loader, importPath }
+    return loader
   }
 
   /**
@@ -86,6 +85,7 @@ export class ModulesLoader<Command extends AbstractBaseCommand>
    */
   async #getCommandsList(loader: CommandsModuleLoader, importPath: string): Promise<unknown[]> {
     const list = await loader.list()
+
     if (!Array.isArray(list)) {
       throw new RuntimeException(
         `Invalid commands list. The "${importPath}.list" method must return an array of commands`
@@ -99,21 +99,37 @@ export class ModulesLoader<Command extends AbstractBaseCommand>
    * Loads commands from the registered sources
    */
   async #loadCommands() {
-    this.#commandsLoaders = new Map()
+    this.#commands = new Map()
     const commands: CommandMetaData[] = []
 
     for (let sourcePath of this.#commandSources) {
-      const { loader } = await this.#importSource(sourcePath)
+      const loader = await this.#importLoader(sourcePath)
       const list = await this.#getCommandsList(loader, sourcePath)
 
       list.forEach((metaData) => {
         validCommandMetaData(metaData, `"${sourcePath}.list" method`)
         commands.push(metaData)
-        this.#commandsLoaders!.set(metaData.commandName, { loader, sourcePath })
+        this.#commands!.set(metaData.commandName, { loader, sourcePath })
       })
     }
 
     return commands
+  }
+
+  /**
+   * Returns the loader for a given command
+   */
+  async #getCommandLoader(commandName: string) {
+    if (!this.#commands) {
+      await this.#loadCommands()
+    }
+
+    const loader = this.#commands!.get(commandName)
+    if (!loader) {
+      return null
+    }
+
+    return loader
   }
 
   /**
@@ -128,25 +144,17 @@ export class ModulesLoader<Command extends AbstractBaseCommand>
    * is returned when unable to lookup the command
    */
   async getCommand(metaData: CommandMetaData): Promise<Command | null> {
-    /**
-     * Running "loadCommands" method instantiates the commands loader
-     * collection
-     */
-    if (!this.#commandsLoaders) {
-      await this.#loadCommands()
-    }
-
-    const commandLoader = this.#commandsLoaders!.get(metaData.commandName)
-    if (!commandLoader) {
+    const loader = await this.#getCommandLoader(metaData.commandName)
+    if (!loader) {
       return null
     }
 
-    const command = await commandLoader.loader.load(metaData)
+    const command = await loader.loader.load(metaData)
     if (command === null || command === undefined) {
       return null
     }
 
-    validateCommand<Command>(command, `"${commandLoader.sourcePath}.load" method`)
+    validateCommand<Command>(command, `"${loader.sourcePath}.load" method`)
     return command
   }
 }
