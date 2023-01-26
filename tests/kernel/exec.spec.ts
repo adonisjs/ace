@@ -34,7 +34,7 @@ test.group('Kernel | exec', () => {
     assert.equal(kernel.getState(), 'booted')
   })
 
-  test('run executing and executed hooks', async ({ assert, expectTypeOf }) => {
+  test('run executing and executed hooks', async ({ assert }) => {
     const kernel = Kernel.create()
     const stack: string[] = []
 
@@ -46,12 +46,10 @@ test.group('Kernel | exec', () => {
     }
 
     kernel.addLoader(new ListLoader([MakeController]))
-    kernel.executing((cmd) => {
-      expectTypeOf(cmd).toEqualTypeOf<MakeController>()
+    kernel.executing(() => {
       stack.push('executing')
     })
-    kernel.executed((cmd) => {
-      expectTypeOf(cmd).toEqualTypeOf<MakeController>()
+    kernel.executed(() => {
       stack.push('executed')
     })
 
@@ -146,18 +144,6 @@ test.group('Kernel | exec', () => {
       name!: string
       connection!: string
 
-      async prepare() {
-        stack.push('prepare')
-      }
-
-      async interact() {
-        stack.push('interact')
-      }
-
-      async completed() {
-        stack.push('completed')
-      }
-
       async run() {
         stack.push('run')
       }
@@ -180,7 +166,7 @@ test.group('Kernel | exec', () => {
     kernel.addLoader(new ListLoader([MakeModel]))
 
     await kernel.exec('make:model', ['users'])
-    assert.deepEqual(stack, ['creating', 'running', 'prepare', 'interact', 'run', 'completed'])
+    assert.deepEqual(stack, ['creating', 'running', 'run'])
     assert.isUndefined(kernel.exitCode)
     assert.equal(kernel.getState(), 'booted')
   })

@@ -117,32 +117,6 @@ test.group('Kernel | handle', (group) => {
     assert.deepEqual(stack, ['executing', 'run', 'executed'])
   })
 
-  test('report error when command completed method fails', async ({ assert }) => {
-    const kernel = Kernel.create()
-    const stack: string[] = []
-
-    class MakeController extends BaseCommand {
-      static commandName = 'make:controller'
-      async run() {
-        stack.push('run')
-        return 'executed'
-      }
-
-      async completed(): Promise<any> {
-        throw new Error('Something went wrong')
-      }
-    }
-    MakeController.defineArgument('name', { type: 'string' })
-
-    kernel.addLoader(new ListLoader([MakeController]))
-
-    await kernel.handle(['make:controller', 'users'])
-
-    assert.equal(kernel.getState(), 'completed')
-    assert.equal(kernel.exitCode, 1)
-    assert.deepEqual(stack, ['run'])
-  })
-
   test('disallow calling handle method twice in parallel', async ({ assert }) => {
     const kernel = Kernel.create()
 

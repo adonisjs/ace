@@ -302,4 +302,9 @@ test.group('Kernel', () => {
 
     assert.deepEqual(kernel.getNamespaceSuggestions('migrate'), ['migration'])
   })
+
+  test('return true when shorthand shortcircuit method', async ({ assert }) => {
+    const kernel = Kernel.create()
+    assert.isTrue(kernel.shortcircuit())
+  })
 })

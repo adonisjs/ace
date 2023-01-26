@@ -446,48 +446,16 @@ export class BaseCommand {
   }
 
   /**
-   * The prepare template method is used to prepare the
-   * state for the command. This is the first method
-   * executed on a given command instance.
-   */
-  async prepare() {}
-
-  /**
-   * The interact template method is used to display the prompts
-   * to the user. The method is called after the prepare
-   * method.
-   */
-  async interact() {}
-
-  /**
    * The run method should include the implementation for the
    * command.
    */
-  async run(): Promise<any> {}
+  async run(..._: any[]): Promise<any> {}
 
   /**
-   * The completed method is the method invoked after the command
-   * finishes or results in an error.
-   *
-   * You can access the command error using the `this.error` property.
-   * Returning `true` from completed method supresses the error
-   * reporting to the kernel layer.
-   */
-  async completed(): Promise<any> {}
-
-  /**
-   * Executes the commands by running the command template methods.
-   * The following methods are executed in order they are mentioned.
-   *
-   * - prepare
-   * - interact
-   * - run
-   * - completed (runs regardless of error)
+   * Executes the commands by running the command's run method.
    */
   async exec() {
     try {
-      await this.prepare()
-      await this.interact()
       this.result = await this.run()
       this.exitCode = this.exitCode ?? 0
     } catch (error) {
@@ -495,13 +463,7 @@ export class BaseCommand {
       this.exitCode = this.exitCode ?? 1
     }
 
-    const errorHandled = await this.completed()
-
-    /**
-     * Print the error if the completed method has not
-     * handled it already
-     */
-    if (!errorHandled && this.error) {
+    if (this.error) {
       this.logger.fatal(this.error)
     }
 
