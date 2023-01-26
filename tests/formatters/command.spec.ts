@@ -72,7 +72,7 @@ test.group('Formatters | command', () => {
       static description: string = 'Make an HTTP controller'
 
       @args.string()
-      name!: string
+      declare name: string
     }
 
     const formatter = new CommandFormatter(MakeController.serialize(), colors.raw())
@@ -85,10 +85,10 @@ test.group('Formatters | command', () => {
       static description: string = 'Make an HTTP controller'
 
       @args.string()
-      name!: string
+      declare name: string
 
       @flags.boolean()
-      resource!: boolean
+      declare resource: boolean
     }
 
     const formatter = new CommandFormatter(MakeController.serialize(), colors.raw())
@@ -103,7 +103,7 @@ test.group('Formatters | command', () => {
       static description: string = 'Make an HTTP controller'
 
       @flags.boolean()
-      resource!: boolean
+      declare resource: boolean
     }
 
     const formatter = new CommandFormatter(MakeController.serialize(), colors.raw())
@@ -116,10 +116,10 @@ test.group('Formatters | command', () => {
       static description: string = 'Make an HTTP controller'
 
       @args.string()
-      name!: string
+      declare name: string
 
       @flags.boolean()
-      resource!: boolean
+      declare resource: boolean
     }
 
     const formatter = new CommandFormatter(MakeController.serialize(), colors.raw())
@@ -135,10 +135,10 @@ test.group('Formatters | command', () => {
       static description: string = 'Make an HTTP controller'
 
       @args.string()
-      name!: string
+      declare name: string
 
       @flags.boolean()
-      resource!: boolean
+      declare resource: boolean
     }
 
     const formatter = new CommandFormatter(MakeController.serialize(), colors.raw())
@@ -153,10 +153,10 @@ test.group('Formatters | command', () => {
       static commandName: string = 'make:controller'
 
       @args.string()
-      name!: string
+      declare name: string
 
       @flags.boolean()
-      resource!: boolean
+      declare resource: boolean
     }
 
     const formatter = new CommandFormatter(MakeController.serialize(), colors.raw())
@@ -169,10 +169,10 @@ test.group('Formatters | command', () => {
       static help = 'Make a new HTTP controller make:controller <name>'
 
       @args.string()
-      name!: string
+      declare name: string
 
       @flags.boolean()
-      resource!: boolean
+      declare resource: boolean
     }
 
     const formatter = new CommandFormatter(MakeController.serialize(), colors.raw())
@@ -188,10 +188,10 @@ test.group('Formatters | command', () => {
       static help = 'Make a new HTTP controller {{binaryName}}make:controller <name>'
 
       @args.string()
-      name!: string
+      declare name: string
 
       @flags.boolean()
-      resource!: boolean
+      declare resource: boolean
     }
 
     const formatter = new CommandFormatter(MakeController.serialize(), colors.raw())
@@ -213,10 +213,10 @@ test.group('Formatters | command', () => {
       ]
 
       @args.string()
-      name!: string
+      declare name: string
 
       @flags.boolean()
-      resource!: boolean
+      declare resource: boolean
     }
 
     const formatter = new CommandFormatter(MakeController.serialize(), colors.raw())

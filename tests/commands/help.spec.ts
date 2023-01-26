@@ -64,7 +64,7 @@ test.group('Help command', () => {
 
     class MakeController extends BaseCommand {
       @args.string({ description: 'Name of the controller' })
-      name!: string
+      declare name: string
 
       static commandName: string = 'make:controller'
       static description: string = 'Make a new HTTP controller'
@@ -121,7 +121,7 @@ test.group('Help command', () => {
 
     class MakeController extends BaseCommand {
       @args.string({ description: 'Name of the controller', required: false })
-      name!: string
+      declare name: string
 
       static commandName: string = 'make:controller'
       static description: string = 'Make a new HTTP controller'
@@ -178,7 +178,7 @@ test.group('Help command', () => {
 
     class MakeController extends BaseCommand {
       @flags.boolean({ description: 'Create resource methods' })
-      resource!: boolean
+      declare resource: boolean
 
       static commandName: string = 'make:controller'
       static description: string = 'Make a new HTTP controller'
@@ -235,7 +235,7 @@ test.group('Help command', () => {
 
     class MakeController extends BaseCommand {
       @flags.boolean({ description: 'Create resource methods', required: true })
-      resource!: boolean
+      declare resource: boolean
 
       static commandName: string = 'make:controller'
       static description: string = 'Make a new HTTP controller'

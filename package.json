@@ -57,7 +57,7 @@
     "@japa/runner": "^2.1.1",
     "@japa/spec-reporter": "^1.2.0",
     "@poppinss/dev-utils": "^2.0.3",
-    "@swc/core": "^1.3.27",
+    "@swc/core": "^1.3.28",
     "@types/fs-extra": "^11.0.1",
     "@types/node": "^18.7.15",
     "@types/sinon": "^10.0.13",

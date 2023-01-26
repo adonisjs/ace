@@ -716,4 +716,12 @@ export class Kernel<Command extends AbstractBaseCommand> {
     debug('running main command "%s"', commandName)
     return this.#execMain(commandName, args)
   }
+
+  /**
+   * A named function that returns true. To be used
+   * by flag listeners
+   */
+  shortcircuit() {
+    return true
+  }
 }

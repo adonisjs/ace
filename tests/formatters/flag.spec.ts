@@ -17,7 +17,7 @@ test.group('Formatters | flag', () => {
   test('format string flag name', ({ assert }) => {
     class MakeController extends BaseCommand {
       @flags.string()
-      connection!: string
+      declare connection: string
     }
 
     const formatter = new FlagFormatter(MakeController.flags[0], colors.raw())
@@ -27,7 +27,7 @@ test.group('Formatters | flag', () => {
   test('format required string flag name', ({ assert }) => {
     class MakeController extends BaseCommand {
       @flags.string({ required: true })
-      connection!: string
+      declare connection: string
     }
 
     const formatter = new FlagFormatter(MakeController.flags[0], colors.raw())
@@ -37,7 +37,7 @@ test.group('Formatters | flag', () => {
   test('format flag with alias', ({ assert }) => {
     class MakeController extends BaseCommand {
       @flags.string({ required: true, alias: 'c' })
-      connection!: string
+      declare connection: string
     }
 
     const formatter = new FlagFormatter(MakeController.flags[0], colors.raw())
@@ -47,7 +47,7 @@ test.group('Formatters | flag', () => {
   test('format flag with mutliple aliases', ({ assert }) => {
     class MakeController extends BaseCommand {
       @flags.string({ required: true, alias: ['c', 'o'] })
-      connection!: string
+      declare connection: string
     }
 
     const formatter = new FlagFormatter(MakeController.flags[0], colors.raw())
@@ -57,7 +57,7 @@ test.group('Formatters | flag', () => {
   test('show negated flag', ({ assert }) => {
     class MakeController extends BaseCommand {
       @flags.boolean({ required: true, showNegatedVariantInHelp: true })
-      resource!: boolean
+      declare resource: boolean
     }
 
     const formatter = new FlagFormatter(MakeController.flags[0], colors.raw())
@@ -67,7 +67,7 @@ test.group('Formatters | flag', () => {
   test('format array flag name', ({ assert }) => {
     class MakeController extends BaseCommand {
       @flags.array()
-      connections!: string[]
+      declare connections: string[]
     }
 
     const formatter = new FlagFormatter(MakeController.flags[0], colors.raw())
@@ -77,7 +77,7 @@ test.group('Formatters | flag', () => {
   test('format array flag with aliases', ({ assert }) => {
     class MakeController extends BaseCommand {
       @flags.array({ alias: ['c'] })
-      connections!: string[]
+      declare connections: string[]
     }
 
     const formatter = new FlagFormatter(MakeController.flags[0], colors.raw())
@@ -87,7 +87,7 @@ test.group('Formatters | flag', () => {
   test('format required array flag name', ({ assert }) => {
     class MakeController extends BaseCommand {
       @flags.array({ required: true })
-      connections!: string[]
+      declare connections: string[]
     }
 
     const formatter = new FlagFormatter(MakeController.flags[0], colors.raw())
@@ -97,7 +97,7 @@ test.group('Formatters | flag', () => {
   test('format numeric flag name', ({ assert }) => {
     class MakeController extends BaseCommand {
       @flags.number()
-      actions!: number
+      declare actions: number
     }
 
     const formatter = new FlagFormatter(MakeController.flags[0], colors.raw())
@@ -107,7 +107,7 @@ test.group('Formatters | flag', () => {
   test('format numeric flag with alias', ({ assert }) => {
     class MakeController extends BaseCommand {
       @flags.number({ alias: 'a' })
-      actions!: number
+      declare actions: number
     }
 
     const formatter = new FlagFormatter(MakeController.flags[0], colors.raw())
@@ -117,7 +117,7 @@ test.group('Formatters | flag', () => {
   test('format required numeric flag name', ({ assert }) => {
     class MakeController extends BaseCommand {
       @flags.number({ required: true })
-      actions!: number
+      declare actions: number
     }
 
     const formatter = new FlagFormatter(MakeController.flags[0], colors.raw())
@@ -127,7 +127,7 @@ test.group('Formatters | flag', () => {
   test('format boolean flag name', ({ assert }) => {
     class MakeController extends BaseCommand {
       @flags.boolean()
-      resource!: boolean
+      declare resource: boolean
     }
 
     const formatter = new FlagFormatter(MakeController.flags[0], colors.raw())
@@ -137,7 +137,7 @@ test.group('Formatters | flag', () => {
   test('format boolean flag with alias', ({ assert }) => {
     class MakeController extends BaseCommand {
       @flags.boolean({ alias: ['r'] })
-      resource!: boolean
+      declare resource: boolean
     }
 
     const formatter = new FlagFormatter(MakeController.flags[0], colors.raw())
@@ -147,7 +147,7 @@ test.group('Formatters | flag', () => {
   test('format required boolean flag name', ({ assert }) => {
     class MakeController extends BaseCommand {
       @flags.boolean({ required: true })
-      resource!: boolean
+      declare resource: boolean
     }
 
     const formatter = new FlagFormatter(MakeController.flags[0], colors.raw())
@@ -157,7 +157,7 @@ test.group('Formatters | flag', () => {
   test('format description', ({ assert }) => {
     class MakeController extends BaseCommand {
       @flags.boolean({ description: 'Generate resource actions' })
-      resource!: boolean
+      declare resource: boolean
     }
 
     const formatter = new FlagFormatter(MakeController.flags[0], colors.raw())
@@ -167,7 +167,7 @@ test.group('Formatters | flag', () => {
   test('format description with flag default value', ({ assert }) => {
     class MakeController extends BaseCommand {
       @flags.boolean({ description: 'Generate resource actions', default: true })
-      resource!: boolean
+      declare resource: boolean
     }
 
     const formatter = new FlagFormatter(MakeController.flags[0], colors.raw())
@@ -177,7 +177,7 @@ test.group('Formatters | flag', () => {
   test('format empty description with flag default value', ({ assert }) => {
     class MakeController extends BaseCommand {
       @flags.boolean({ default: true })
-      resource!: boolean
+      declare resource: boolean
     }
 
     const formatter = new FlagFormatter(MakeController.flags[0], colors.raw())

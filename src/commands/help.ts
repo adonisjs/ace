@@ -32,7 +32,7 @@ export class HelpCommand extends BaseCommand {
    * The command name argument
    */
   @args.string({ description: 'Command name', argumentName: 'command' })
-  commandName!: string
+  declare commandName: string
 
   /**
    * Returns the command arguments table

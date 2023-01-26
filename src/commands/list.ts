@@ -39,7 +39,7 @@ export class ListCommand extends BaseCommand {
     description: 'Filter list by namespace',
     required: false,
   })
-  namespaces?: string[]
+  declare namespaces?: string[]
 
   /**
    * Returns a table for an array of commands.

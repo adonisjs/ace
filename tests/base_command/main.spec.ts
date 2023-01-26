@@ -16,8 +16,8 @@ import { BaseCommand } from '../../src/commands/base.js'
 test.group('Base command', () => {
   test('access the ui logger from the logger property', ({ assert }) => {
     class MakeModel extends BaseCommand {
-      name!: string
-      connection!: string
+      declare name: string
+      declare connection: string
     }
 
     MakeModel.boot()
@@ -34,8 +34,8 @@ test.group('Base command', () => {
 
   test('access the ui colors from the colors property', ({ assert }) => {
     class MakeModel extends BaseCommand {
-      name!: string
-      connection!: string
+      declare name: string
+      declare connection: string
     }
 
     MakeModel.boot()
@@ -54,8 +54,8 @@ test.group('Base command', () => {
 test.group('Base command | consume args', () => {
   test('consume parsed output to set command properties', async ({ assert }) => {
     class MakeModel extends BaseCommand {
-      name!: string
-      connection!: string
+      declare name: string
+      declare connection: string
     }
 
     MakeModel.defineArgument('name', { type: 'string' })
@@ -70,8 +70,8 @@ test.group('Base command | consume args', () => {
 
   test('consume spread arg', async ({ assert }) => {
     class MakeModel extends BaseCommand {
-      names!: string[]
-      connection!: string
+      declare names: string[]
+      declare connection: string
     }
 
     MakeModel.defineArgument('names', { type: 'spread' })
@@ -88,9 +88,9 @@ test.group('Base command | consume args', () => {
 test.group('Base command | consume flags', () => {
   test('consume boolean flag', async ({ assert }) => {
     class MakeModel extends BaseCommand {
-      name!: string
-      connection!: string
-      dropAll!: boolean
+      declare name: string
+      declare connection: string
+      declare dropAll: boolean
     }
 
     MakeModel.defineArgument('name', { type: 'string' })
@@ -107,9 +107,9 @@ test.group('Base command | consume flags', () => {
 
   test('consume array flag', async ({ assert }) => {
     class MakeModel extends BaseCommand {
-      name!: string
-      connections!: string[]
-      dropAll!: boolean
+      declare name: string
+      declare connections: string[]
+      declare dropAll: boolean
     }
 
     MakeModel.defineArgument('name', { type: 'string' })
@@ -130,9 +130,9 @@ test.group('Base command | consume flags', () => {
 
   test('use default value when array flag is missing', async ({ assert }) => {
     class MakeModel extends BaseCommand {
-      name!: string
-      connections!: string[]
-      dropAll!: boolean
+      declare name: string
+      declare connections: string[]
+      declare dropAll: boolean
     }
 
     MakeModel.defineArgument('name', { type: 'string' })

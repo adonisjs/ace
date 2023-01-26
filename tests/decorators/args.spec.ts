@@ -15,7 +15,7 @@ test.group('Decorators | args', () => {
   test('define string argument', ({ assert }) => {
     class MakeModel extends BaseCommand {
       @args.string()
-      name!: string
+      declare name: string
     }
 
     assert.deepEqual(MakeModel.args, [
@@ -26,7 +26,7 @@ test.group('Decorators | args', () => {
   test('define argument with inheritance', ({ assert }) => {
     class MakeEntity extends BaseCommand {
       @args.string()
-      name!: string
+      declare name: string
     }
 
     class MakeModel extends MakeEntity {
@@ -36,7 +36,7 @@ test.group('Decorators | args', () => {
 
     class MakeController extends MakeEntity {
       @args.string()
-      resourceName!: string
+      declare resourceName: string
     }
 
     assert.deepEqual(MakeModel.args, [
@@ -52,10 +52,10 @@ test.group('Decorators | args', () => {
   test('define spread argument', ({ assert }) => {
     class MakeModel extends BaseCommand {
       @args.string()
-      name!: string
+      declare name: string
 
       @args.spread()
-      connections!: string[]
+      declare connections: string[]
     }
 
     assert.deepEqual(MakeModel.args, [

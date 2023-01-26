@@ -17,7 +17,7 @@ test.group('Formatters | arg', () => {
   test('format string arg', ({ assert }) => {
     class MakeController extends BaseCommand {
       @args.string()
-      name!: string
+      declare name: string
     }
 
     const formatter = new ArgumentFormatter(MakeController.args[0], colors.raw())
@@ -28,7 +28,7 @@ test.group('Formatters | arg', () => {
   test('format optional string arg', ({ assert }) => {
     class MakeController extends BaseCommand {
       @args.string({ required: false })
-      name!: string
+      declare name: string
     }
 
     const formatter = new ArgumentFormatter(MakeController.args[0], colors.raw())
@@ -39,7 +39,7 @@ test.group('Formatters | arg', () => {
   test('format spread arg', ({ assert }) => {
     class MakeController extends BaseCommand {
       @args.spread()
-      name!: string[]
+      declare name: string[]
     }
 
     const formatter = new ArgumentFormatter(MakeController.args[0], colors.raw())
@@ -50,7 +50,7 @@ test.group('Formatters | arg', () => {
   test('format optional spread arg', ({ assert }) => {
     class MakeController extends BaseCommand {
       @args.spread({ required: false })
-      name!: string[]
+      declare name: string[]
     }
 
     const formatter = new ArgumentFormatter(MakeController.args[0], colors.raw())
@@ -61,7 +61,7 @@ test.group('Formatters | arg', () => {
   test('format arg description', ({ assert }) => {
     class MakeController extends BaseCommand {
       @args.string({ description: 'The name of the controller' })
-      name!: string
+      declare name: string
     }
 
     const formatter = new ArgumentFormatter(MakeController.args[0], colors.raw())
@@ -71,7 +71,7 @@ test.group('Formatters | arg', () => {
   test('format description with flag default value', ({ assert }) => {
     class MakeController extends BaseCommand {
       @args.string({ description: 'The name of the controller', default: 'posts' })
-      name!: string
+      declare name: string
     }
 
     const formatter = new ArgumentFormatter(MakeController.args[0], colors.raw())
@@ -81,7 +81,7 @@ test.group('Formatters | arg', () => {
   test('format empty description with flag default value', ({ assert }) => {
     class MakeController extends BaseCommand {
       @args.string({ default: 'posts' })
-      name!: string
+      declare name: string
     }
 
     const formatter = new ArgumentFormatter(MakeController.args[0], colors.raw())

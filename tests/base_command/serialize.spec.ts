@@ -131,4 +131,109 @@ test.group('Base command | serialize', () => {
       'Cannot serialize command "MakeModel". Missing static property "commandName"'
     )
   })
+
+  test('serialize inherited command with args', ({ assert }) => {
+    class MakeModel extends BaseCommand {
+      static commandName: string = 'make:model'
+      static description: string = 'Make a new model'
+    }
+
+    MakeModel.defineArgument('name', { type: 'string', description: 'Name of the argument' })
+
+    class MakeNewModel extends MakeModel {}
+
+    assert.deepEqual(MakeNewModel.serialize(), {
+      commandName: 'make:model',
+      namespace: 'make',
+      description: 'Make a new model',
+      help: '',
+      args: [
+        {
+          name: 'name',
+          argumentName: 'name',
+          required: true,
+          type: 'string',
+          description: 'Name of the argument',
+        },
+      ],
+      flags: [],
+      aliases: [],
+      options: {
+        allowUnknownFlags: false,
+        staysAlive: false,
+      },
+    })
+  })
+
+  test('override command name from inherited command', ({ assert }) => {
+    class MakeModel extends BaseCommand {
+      static commandName: string = 'make:model'
+      static description: string = 'Make a new model'
+    }
+
+    MakeModel.defineArgument('name', { type: 'string', description: 'Name of the argument' })
+
+    class MakeNewModel extends MakeModel {
+      static commandName: string = 'make:new:model'
+    }
+
+    assert.deepEqual(MakeNewModel.serialize(), {
+      commandName: 'make:new:model',
+      namespace: 'make',
+      description: 'Make a new model',
+      help: '',
+      args: [
+        {
+          name: 'name',
+          argumentName: 'name',
+          required: true,
+          type: 'string',
+          description: 'Name of the argument',
+        },
+      ],
+      flags: [],
+      aliases: [],
+      options: {
+        allowUnknownFlags: false,
+        staysAlive: false,
+      },
+    })
+  })
+
+  test('override aliases from inherited command', ({ assert }) => {
+    class MakeModel extends BaseCommand {
+      static commandName: string = 'make:model'
+      static aliases: string[] = ['mm']
+      static description: string = 'Make a new model'
+    }
+
+    MakeModel.defineArgument('name', { type: 'string', description: 'Name of the argument' })
+
+    class MakeNewModel extends MakeModel {
+      static commandName: string = 'make:new:model'
+      static aliases: string[] = ['mnm']
+    }
+
+    assert.deepEqual(MakeNewModel.serialize(), {
+      commandName: 'make:new:model',
+      namespace: 'make',
+      description: 'Make a new model',
+      help: '',
+      args: [
+        {
+          name: 'name',
+          argumentName: 'name',
+          required: true,
+          type: 'string',
+          description: 'Name of the argument',
+        },
+      ],
+      flags: [],
+      aliases: ['mnm'],
+      options: {
+        allowUnknownFlags: false,
+        staysAlive: false,
+      },
+    })
+  })
 })

@@ -81,10 +81,10 @@ export class BaseCommand {
     this.booted = true
     defineStaticProperty(this, 'args', { initialValue: [], strategy: 'inherit' })
     defineStaticProperty(this, 'flags', { initialValue: [], strategy: 'inherit' })
-    defineStaticProperty(this, 'aliases', { initialValue: [], strategy: 'define' })
-    defineStaticProperty(this, 'commandName', { initialValue: '', strategy: 'define' })
-    defineStaticProperty(this, 'description', { initialValue: '', strategy: 'define' })
-    defineStaticProperty(this, 'help', { initialValue: '', strategy: 'define' })
+    defineStaticProperty(this, 'aliases', { initialValue: [], strategy: 'inherit' })
+    defineStaticProperty(this, 'commandName', { initialValue: '', strategy: 'inherit' })
+    defineStaticProperty(this, 'description', { initialValue: '', strategy: 'inherit' })
+    defineStaticProperty(this, 'help', { initialValue: '', strategy: 'inherit' })
     defineStaticProperty(this, 'options', {
       initialValue: { staysAlive: false, allowUnknownFlags: false },
       strategy: 'inherit',

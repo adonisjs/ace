@@ -15,16 +15,16 @@ test.group('Base command | flags', () => {
   test('define flags using decorators', ({ assert }) => {
     class MakeModel extends BaseCommand {
       @flags.string()
-      connection?: string
+      declare connection?: string
 
       @flags.boolean()
-      dropAll?: boolean
+      declare dropAll?: boolean
 
       @flags.number()
-      batchSize?: number
+      declare batchSize?: number
 
       @flags.array()
-      files?: string[]
+      declare files?: string[]
     }
 
     assert.deepEqual(MakeModel.getParserOptions().flagsParserOptions, {
