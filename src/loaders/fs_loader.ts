@@ -9,7 +9,7 @@
 
 import { fileURLToPath } from 'node:url'
 import { extname, relative } from 'node:path'
-import { fsReadAll, importDefault } from '@poppinss/utils'
+import { fsReadAll, importDefault, slash } from '@poppinss/utils'
 
 import { validateCommand } from '../helpers.js'
 import type { AbstractBaseCommand, CommandMetaData, LoadersContract } from '../types.js'
@@ -81,7 +81,7 @@ export class FsLoader<Command extends AbstractBaseCommand> implements LoadersCon
         file = file.replace(/\.ts$/, '.js')
       }
 
-      const relativeFileName = relative(this.#comandsDirectory, fileURLToPath(file))
+      const relativeFileName = slash(relative(this.#comandsDirectory, fileURLToPath(file)))
 
       if (!this.#ignorePaths?.includes(relativeFileName)) {
         commands[relativeFileName] = await importDefault(() => import(file), relativeFileName)
