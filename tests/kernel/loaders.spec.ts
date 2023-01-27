@@ -81,4 +81,25 @@ test.group('Kernel | loaders', () => {
       'Cannot add loader in "booted" state'
     )
   })
+
+  test('register loader as a function', async ({ assert }) => {
+    const kernel = Kernel.create()
+
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+    }
+
+    class MakeModel extends BaseCommand {
+      static commandName = 'make:model'
+    }
+
+    kernel.addLoader(async () => new ListLoader([MakeController, MakeModel]))
+    await kernel.boot()
+
+    assert.deepEqual(kernel.getCommands(), [
+      kernel.getDefaultCommand().serialize(),
+      MakeController.serialize(),
+      MakeModel.serialize(),
+    ])
+  })
 })

@@ -289,7 +289,7 @@ export type CommandMetaData = {
    * Command configuration options
    */
   options: CommandOptions
-}
+} & Record<string, any>
 
 /**
  * Static set of command options

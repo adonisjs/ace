@@ -3,7 +3,6 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
     "CommandMetaData": {
-      "additionalProperties": false,
       "description": "Command metdata required to display command help.",
       "properties": {
         "aliases": {
@@ -145,12 +144,12 @@
         }
       },
       "required": [
+        "aliases",
+        "args",
         "commandName",
         "description",
-        "namespace",
-        "aliases",
         "flags",
-        "args",
+        "namespace",
         "options"
       ],
       "type": "object"

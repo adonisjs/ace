@@ -7,10 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { inspect } from 'node:util'
 import { Validator } from 'jsonschema'
 import { RuntimeException } from '@poppinss/utils'
-import schema from '../command_metadata_schema.json' assert { type: 'json' }
+import schema from '../schemas/command_metadata_schema.json' assert { type: 'json' }
 import type { AbstractBaseCommand, CommandMetaData, UIPrimitives } from './types.js'
 
 /**
@@ -54,14 +53,12 @@ export function renderErrorWithSuggestions(
  * Validates the metadata of a command to ensure it has all the neccessary
  * properties
  */
-export function validCommandMetaData(
+export function validateCommandMetaData(
   command: unknown,
   exportPath: string
 ): asserts command is CommandMetaData {
-  if (!command || (typeof command !== 'object' && typeof command !== 'function')) {
-    throw new RuntimeException(
-      `Invalid command exported from ${exportPath}. Expected object, received "${inspect(command)}"`
-    )
+  if (!command || typeof command !== 'object') {
+    throw new RuntimeException(`Invalid command metadata exported from ${exportPath}`)
   }
 
   try {
@@ -93,5 +90,5 @@ export function validateCommand<Command extends AbstractBaseCommand>(
     )
   }
 
-  validCommandMetaData(commandConstructor.serialize(), exportPath)
+  validateCommandMetaData(commandConstructor.serialize(), exportPath)
 }

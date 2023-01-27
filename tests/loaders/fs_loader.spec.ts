@@ -8,10 +8,11 @@
  */
 
 import fs from 'fs-extra'
+import { join } from 'node:path'
 import { test } from '@japa/runner'
 import { fileURLToPath } from 'node:url'
+
 import { FsLoader } from '../../src/loaders/fs_loader.js'
-import { join } from 'node:path'
 
 const BASE_URL = new URL('./tmp/', import.meta.url)
 const BASE_PATH = fileURLToPath(BASE_URL)
@@ -37,7 +38,7 @@ test.group('Loaders | fs', (group) => {
     const loader = new FsLoader(join(BASE_PATH, './commands'))
     await assert.rejects(
       () => loader.getMetaData(),
-      'Invalid command exported from "make_controller_v_1.ts" file. Missing export default'
+      'Missing "export default" in module "make_controller_v_1.js"'
     )
   })
 
@@ -73,7 +74,7 @@ test.group('Loaders | fs', (group) => {
     const commands = await loader.getMetaData()
     assert.deepEqual(commands, [
       {
-        filePath: 'make_controller_v_2.ts',
+        filePath: 'make_controller_v_2.js',
         commandName: 'make:controller',
         description: '',
         namespace: 'make',
@@ -164,7 +165,7 @@ test.group('Loaders | fs', (group) => {
     assert.deepEqual(commands, [
       {
         commandName: 'make:controller',
-        filePath: 'make_controller_v_3.ts',
+        filePath: 'make_controller_v_3.js',
         description: '',
         namespace: 'make',
         args: [],
@@ -250,7 +251,78 @@ test.group('Loaders | fs', (group) => {
     assert.deepEqual(commands, [
       {
         commandName: 'make:controller',
-        filePath: 'make/controller.ts',
+        filePath: 'make/controller.js',
+        description: '',
+        namespace: 'make',
+        args: [],
+        flags: [],
+        options: {},
+        aliases: [],
+      },
+    ])
+  })
+
+  test('ignore commands by filename', async ({ assert }) => {
+    await fs.outputFile(
+      join(BASE_PATH, 'commands', 'make_controller_v_2.ts'),
+      `
+      export default class MakeController {
+        static commandName = 'make:controller'
+        static args = []
+        static flags = []
+        static aliases = []
+        static options = {}
+        static description = ''
+        static namespace = 'make'
+
+        static serialize() {
+          return {
+            commandName: this.commandName,
+            description: this.description,
+            namespace: this.namespace,
+            args: this.args,
+            flags: this.flags,
+            options: this.options,
+            aliases: this.aliases,
+          }
+        }
+      }
+    `
+    )
+
+    await fs.outputFile(
+      join(BASE_PATH, 'commands', 'make', 'controller.ts'),
+      `
+      export default class MakeController {
+        static commandName = 'make:controller'
+        static args = []
+        static flags = []
+        static aliases = []
+        static options = {}
+        static description = ''
+        static namespace = 'make'
+
+        static serialize() {
+          return {
+            commandName: this.commandName,
+            description: this.description,
+            namespace: this.namespace,
+            args: this.args,
+            flags: this.flags,
+            options: this.options,
+            aliases: this.aliases,
+          }
+        }
+      }
+    `
+    )
+
+    const loader = new FsLoader(join(BASE_PATH, './commands'), ['make_controller_v_2.js'])
+    const commands = await loader.getMetaData()
+    assert.deepEqual(commands, [
+      {
+        commandName: 'make:controller',
+        filePath: 'make/controller.js',
         description: '',
         namespace: 'make',
         args: [],

@@ -7,7 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { Kernel } from '../index.js'
+import { getDirname } from '@poppinss/utils'
 
-const kernel = Kernel.create()
-kernel.handle(process.argv)
+export const stubsRoot = getDirname(import.meta.url)

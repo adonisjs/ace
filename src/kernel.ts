@@ -132,7 +132,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
   /**
    * Collection of loaders to use for loading commands
    */
-  #loaders: LoadersContract<Command>[] = []
+  #loaders: (LoadersContract<Command> | (() => Promise<LoadersContract<Command>>))[] = []
 
   /**
    * An array of registered namespaces. Sorted alphabetically
@@ -294,7 +294,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
       await this.#hooks.runner('executing').run(this.#mainCommand!, true)
       await this.#executor.run(this.#mainCommand!, this)
       await this.#hooks.runner('executed').run(this.#mainCommand!, true)
-      this.exitCode = this.exitCode ?? this.#mainCommand!.exitCode ?? 0
+      this.exitCode = this.exitCode ?? this.#mainCommand!.exitCode
       this.#state = 'completed'
     } catch (error) {
       this.exitCode = 1
@@ -361,7 +361,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
    * Incase multiple loaders returns a single command, the command from the
    * most recent loader will be used.
    */
-  addLoader(loader: LoadersContract<Command>): this {
+  addLoader(loader: LoadersContract<Command> | (() => Promise<LoadersContract<Command>>)): this {
     if (this.#state !== 'idle') {
       throw new RuntimeException(`Cannot add loader in "${this.#state}" state`)
     }
@@ -587,10 +587,22 @@ export class Kernel<Command extends AbstractBaseCommand> {
      * Load metadata for all commands using the loaders
      */
     for (let loader of this.#loaders) {
-      const commands = await loader.getMetaData()
+      let loaderInstance: LoadersContract<Command>
+
+      /**
+       * A loader can be a function that lazily imports and instantiates
+       * a loader
+       */
+      if (typeof loader === 'function') {
+        loaderInstance = await loader()
+      } else {
+        loaderInstance = loader
+      }
+
+      const commands = await loaderInstance.getMetaData()
 
       commands.forEach((command) => {
-        this.#commands.set(command.commandName, { metaData: command, loader })
+        this.#commands.set(command.commandName, { metaData: command, loader: loaderInstance })
         command.aliases.forEach((alias) => this.addAlias(alias, command.commandName))
         command.namespace && namespaces.add(command.namespace)
       })

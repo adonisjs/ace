@@ -8,10 +8,12 @@
  */
 
 import string from '@poppinss/utils/string'
+import Macroable from '@poppinss/macroable'
 import lodash from '@poppinss/utils/lodash'
 import type { Prompt } from '@poppinss/prompts'
 import { defineStaticProperty, InvalidArgumentsException } from '@poppinss/utils'
 
+import debug from '../debug.js'
 import * as errors from '../errors.js'
 import type { Kernel } from '../kernel.js'
 import type {
@@ -24,13 +26,12 @@ import type {
   FlagsParserOptions,
   ArgumentsParserOptions,
 } from '../types.js'
-import debug from '../debug.js'
 
 /**
  * The base command sets the foundation for defining ace commands.
  * Every command should inherit from the base command.
  */
-export class BaseCommand {
+export class BaseCommand extends Macroable {
   static booted: boolean = false
 
   /**
@@ -411,6 +412,7 @@ export class BaseCommand {
     public ui: UIPrimitives,
     public prompt: Prompt
   ) {
+    super()
     this.#consumeParsedOutput()
   }
 

@@ -9,7 +9,7 @@
 
 import { fileURLToPath } from 'node:url'
 import { extname, relative } from 'node:path'
-import { fsReadAll, RuntimeException } from '@poppinss/utils'
+import { fsReadAll, importDefault } from '@poppinss/utils'
 
 import { validateCommand } from '../helpers.js'
 import type { AbstractBaseCommand, CommandMetaData, LoadersContract } from '../types.js'
@@ -28,12 +28,18 @@ export class FsLoader<Command extends AbstractBaseCommand> implements LoadersCon
   #comandsDirectory: string
 
   /**
+   * Paths to ignore
+   */
+  #ignorePaths: string[]
+
+  /**
    * An array of loaded commands
    */
   #commands: { command: Command; filePath: string }[] = []
 
-  constructor(comandsDirectory: string) {
+  constructor(comandsDirectory: string, ignorePaths?: string[]) {
     this.#comandsDirectory = comandsDirectory
+    this.#ignorePaths = ignorePaths || []
   }
 
   /**
@@ -48,6 +54,7 @@ export class FsLoader<Command extends AbstractBaseCommand> implements LoadersCon
      */
     const commandFiles = await fsReadAll(this.#comandsDirectory, {
       pathType: 'url',
+      ignoreMissingRoot: true,
       filter: (filePath: string) => {
         const ext = extname(filePath)
         if (JS_MODULES.includes(ext)) {
@@ -67,15 +74,18 @@ export class FsLoader<Command extends AbstractBaseCommand> implements LoadersCon
      * export
      */
     for (let file of commandFiles) {
-      const fileRelativeName = relative(this.#comandsDirectory, fileURLToPath(file))
-      const commandFileExports = await import(file)
-      if (!commandFileExports.default) {
-        throw new RuntimeException(
-          `Invalid command exported from "${fileRelativeName}" file. Missing export default`
-        )
+      /**
+       * Remapping .ts files to .js, otherwise the file cannot imported
+       */
+      if (file.endsWith('.ts')) {
+        file = file.replace(/\.ts$/, '.js')
       }
 
-      commands[fileRelativeName] = commandFileExports.default
+      const relativeFileName = relative(this.#comandsDirectory, fileURLToPath(file))
+
+      if (!this.#ignorePaths?.includes(relativeFileName)) {
+        commands[relativeFileName] = await importDefault(() => import(file), relativeFileName)
+      }
     }
 
     return commands
@@ -84,7 +94,7 @@ export class FsLoader<Command extends AbstractBaseCommand> implements LoadersCon
   /**
    * Returns the metadata of commands
    */
-  async getMetaData(): Promise<(CommandMetaData & { filePath: string })[]> {
+  async getMetaData(): Promise<CommandMetaData[]> {
     const commandsCollection = await this.#loadCommands()
 
     Object.keys(commandsCollection).forEach((key) => {
@@ -104,8 +114,9 @@ export class FsLoader<Command extends AbstractBaseCommand> implements LoadersCon
    */
   async getCommand(metaData: CommandMetaData): Promise<Command | null> {
     return (
-      this.#commands.find(({ command }) => command.commandName === metaData.commandName)?.command ||
-      null
+      this.#commands.find(({ command }) => {
+        return command.commandName === metaData.commandName
+      })?.command || null
     )
   }
 }
