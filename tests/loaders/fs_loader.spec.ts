@@ -22,9 +22,9 @@ test.group('Loaders | fs', (group) => {
     return () => fs.remove(BASE_PATH)
   })
 
-  test('raise error when commands directory does not exists', async ({ assert }) => {
+  test('do not raise error when commands directory does not exists', async ({ assert }) => {
     const loader = new FsLoader(join(BASE_PATH, './commands'))
-    await assert.rejects(() => loader.getMetaData(), /ENOENT: no such file or directory/)
+    await assert.doesNotRejects(() => loader.getMetaData())
   })
 
   test('raise error when there is no default export in command file', async ({ assert }) => {
