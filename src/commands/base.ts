@@ -460,15 +460,11 @@ export class BaseCommand extends Macroable {
     try {
       this.result = await this.run()
       this.exitCode = this.exitCode ?? 0
+      return this.result
     } catch (error) {
       this.error = error
       this.exitCode = this.exitCode ?? 1
+      throw error
     }
-
-    if (this.error) {
-      this.logger.fatal(this.error)
-    }
-
-    return this.result
   }
 }

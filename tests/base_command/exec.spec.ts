@@ -110,13 +110,11 @@ test.group('Base command | execute | run fails', () => {
     MakeModel.defineFlag('connection', { type: 'string' })
 
     const kernel = Kernel.create()
-    kernel.ui = cliui({ mode: 'raw' })
     const model = await kernel.create(MakeModel, ['user', '--connection=sqlite'])
 
-    await model.exec()
+    await assert.rejects(() => model.exec())
     assert.isUndefined(model.result)
     assert.equal(model.error?.message, 'Something went wrong')
-    assert.lengthOf(model.ui.logger.getRenderer().getLogs(), 1)
     assert.equal(model.exitCode, 1)
   })
 })

@@ -18,8 +18,9 @@ import { Parser } from './parser.js'
 import * as errors from './errors.js'
 import { ListCommand } from './commands/list.js'
 import { BaseCommand } from './commands/base.js'
+import { sortAlphabetically } from './helpers.js'
 import { ListLoader } from './loaders/list_loader.js'
-import { sortAlphabetically, renderErrorWithSuggestions } from './helpers.js'
+import { ExceptionHandler } from './exception_handler.js'
 
 import type {
   Flag,
@@ -51,6 +52,10 @@ const knowErrorCodes = Object.keys(errors)
  * is tailored for a standard CLI environment.
  */
 export class Kernel<Command extends AbstractBaseCommand> {
+  #errorHandler: {
+    render(error: unknown, kernel: Kernel<any>): Promise<any>
+  } = new ExceptionHandler()
+
   /**
    * The default executor for creating command's instance
    * and running them
@@ -299,31 +304,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
     } catch (error) {
       this.exitCode = 1
       this.#state = 'completed'
-      await this.#handleError(error)
-    }
-  }
-
-  /**
-   * Handles the error raised during the main command execution.
-   *
-   * @note: Do not use this error handler for anything other than
-   * handling errors of the main command
-   */
-  async #handleError(error: any) {
-    /**
-     * Reporting errors with the best UI possible based upon the error
-     * type
-     */
-    if (error instanceof errors.E_COMMAND_NOT_FOUND) {
-      renderErrorWithSuggestions(
-        this.ui,
-        error.message,
-        this.getCommandSuggestions(error.commandName)
-      )
-    } else if (knowErrorCodes.includes(error.code)) {
-      this.ui.logger.logError(`${this.ui.colors.bgRed().white('  ERROR  ')} ${error.message}`)
-    } else {
-      console.log(error.stack)
+      await this.#errorHandler.render(error, this)
     }
   }
 
