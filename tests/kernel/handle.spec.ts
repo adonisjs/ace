@@ -219,4 +219,23 @@ test.group('Kernel | handle', (group) => {
     assert.equal(kernel.exitCode, 0)
     assert.equal(kernel.getState(), 'completed')
   })
+
+  test('test if a command is a main command or  not', async ({ assert }) => {
+    const kernel = Kernel.create()
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+      async run() {
+        assert.equal(this.kernel.getState(), 'running')
+        assert.strictEqual(this.kernel.getMainCommand(), this)
+        assert.isTrue(this.isMain)
+        return 'executed'
+      }
+    }
+
+    kernel.addLoader(new ListLoader([MakeController]))
+    await kernel.handle(['make:controller'])
+
+    assert.equal(kernel.exitCode, 0)
+    assert.equal(kernel.getState(), 'completed')
+  })
 })

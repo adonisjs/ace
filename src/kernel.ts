@@ -43,8 +43,6 @@ import type {
   ExecutingHookHandler,
 } from './types.js'
 
-const knowErrorCodes = Object.keys(errors)
-
 /**
  * The Ace kernel manages the registration and execution of commands.
  *

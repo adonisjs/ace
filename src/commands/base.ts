@@ -406,6 +406,14 @@ export class BaseCommand extends Macroable {
     return this.ui.colors
   }
 
+  /**
+   * Is the current command the main command executed from the
+   * CLI
+   */
+  get isMain(): boolean {
+    return this.kernel.getMainCommand() === this
+  }
+
   constructor(
     protected kernel: Kernel<any>,
     protected parsed: ParsedOutput,
