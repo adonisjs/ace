@@ -317,7 +317,10 @@ test.group('Loaders | fs', (group) => {
     `
     )
 
-    const loader = new FsLoader(join(BASE_PATH, './commands'), ['make_controller_v_2.js'])
+    const loader = new FsLoader(
+      join(BASE_PATH, './commands'),
+      (filePath: string) => filePath !== 'make_controller_v_2.js'
+    )
     const commands = await loader.getMetaData()
     assert.deepEqual(commands, [
       {

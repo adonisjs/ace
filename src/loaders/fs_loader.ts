@@ -28,18 +28,18 @@ export class FsLoader<Command extends AbstractBaseCommand> implements LoadersCon
   #comandsDirectory: string
 
   /**
-   * Paths to ignore
+   * File to ignore files
    */
-  #ignorePaths: string[]
+  #filter?: (filePath: string) => boolean
 
   /**
    * An array of loaded commands
    */
   #commands: { command: Command; filePath: string }[] = []
 
-  constructor(comandsDirectory: string, ignorePaths?: string[]) {
+  constructor(comandsDirectory: string, filter?: (filePath: string) => boolean) {
     this.#comandsDirectory = comandsDirectory
-    this.#ignorePaths = ignorePaths || []
+    this.#filter = filter
   }
 
   /**
@@ -83,7 +83,11 @@ export class FsLoader<Command extends AbstractBaseCommand> implements LoadersCon
 
       const relativeFileName = slash(relative(this.#comandsDirectory, fileURLToPath(file)))
 
-      if (!this.#ignorePaths?.includes(relativeFileName)) {
+      /**
+       * Import file if no filters are defined or the filter
+       * allows the file
+       */
+      if (!this.#filter || this.#filter(relativeFileName)) {
         commands[relativeFileName] = await importDefault(() => import(file), relativeFileName)
       }
     }

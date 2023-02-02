@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { join } from 'node:path'
+import { basename, join } from 'node:path'
 import { copyFile, mkdir, writeFile } from 'node:fs/promises'
 
 import { stubsRoot } from '../../stubs/main.js'
@@ -33,7 +33,14 @@ export class IndexGenerator {
    * Generate index
    */
   async generate(): Promise<any> {
-    const commandsMetaData = await new FsLoader(this.#commandsDir, ['main.js']).getMetaData()
+    const commandsMetaData = await new FsLoader(this.#commandsDir, (filePath: string) => {
+      if (filePath.startsWith('_') || basename(filePath).startsWith('_')) {
+        return false
+      }
+
+      return true
+    }).getMetaData()
+
     const indexJSON = JSON.stringify({ commands: commandsMetaData, version: 1 })
     const indexFile = join(this.#commandsDir, 'commands.json')
 
