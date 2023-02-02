@@ -421,13 +421,13 @@ export class BaseCommand extends Macroable {
     public prompt: Prompt
   ) {
     super()
-    this.#consumeParsedOutput()
   }
 
   /**
-   * Consume the parsed output and set property values on the command
+   * Hydrate command by setting class properties from
+   * the parsed output
    */
-  #consumeParsedOutput() {
+  hydrate() {
     const CommandConstructor = this.constructor as typeof BaseCommand
 
     /**

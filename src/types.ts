@@ -387,5 +387,5 @@ export type AbstractBaseCommand = {
     flagsParserOptions: Required<FlagsParserOptions>
     argumentsParserOptions: ArgumentsParserOptions[]
   }
-  new (...args: any[]): any
+  new (...args: any[]): { hydrate(): void; exitCode?: number }
 }

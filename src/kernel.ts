@@ -222,6 +222,8 @@ export class Kernel<Command extends AbstractBaseCommand> {
      * Construct command instance using the executor
      */
     const commandInstance = await this.#executor.create(Command, parsed, this)
+    commandInstance.hydrate()
+
     return commandInstance as InstanceType<T>
   }
 
@@ -316,6 +318,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
        * Keep a note of the main command
        */
       this.#mainCommand = await this.#executor.create(Command, parsed, this)
+      this.#mainCommand.hydrate()
 
       /**
        * Execute the command using the executor
