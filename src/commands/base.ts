@@ -475,4 +475,19 @@ export class BaseCommand extends Macroable {
       throw error
     }
   }
+
+  /**
+   * JSON representation of the command
+   */
+  toJSON() {
+    return {
+      commandName: (this.constructor as typeof BaseCommand).commandName,
+      options: (this.constructor as typeof BaseCommand).options,
+      args: this.parsed.args,
+      flags: this.parsed.flags,
+      error: this.error,
+      result: this.result,
+      exitCode: this.exitCode,
+    }
+  }
 }
