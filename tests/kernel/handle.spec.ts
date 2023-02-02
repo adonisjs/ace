@@ -13,6 +13,7 @@ import { Kernel } from '../../src/kernel.js'
 import { CommandOptions } from '../../src/types.js'
 import { BaseCommand } from '../../src/commands/base.js'
 import { ListLoader } from '../../src/loaders/list_loader.js'
+import { args, flags } from '../../index.js'
 
 test.group('Kernel | handle', (group) => {
   group.each.teardown(() => {
@@ -220,7 +221,7 @@ test.group('Kernel | handle', (group) => {
     assert.equal(kernel.getState(), 'completed')
   })
 
-  test('test if a command is a main command or  not', async ({ assert }) => {
+  test('test if a command is a main command', async ({ assert }) => {
     const kernel = Kernel.create()
     class MakeController extends BaseCommand {
       static commandName = 'make:controller'
@@ -234,6 +235,57 @@ test.group('Kernel | handle', (group) => {
 
     kernel.addLoader(new ListLoader([MakeController]))
     await kernel.handle(['make:controller'])
+
+    assert.equal(kernel.exitCode, 0)
+    assert.equal(kernel.getState(), 'completed')
+  })
+
+  test('execute command using alias', async ({ assert }) => {
+    const kernel = Kernel.create()
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+      async run() {
+        assert.equal(this.kernel.getState(), 'running')
+        assert.strictEqual(this.kernel.getMainCommand(), this)
+        return 'executed'
+      }
+    }
+
+    kernel.addLoader(new ListLoader([MakeController]))
+    kernel.addAlias('mc', 'make:controller')
+    await kernel.handle(['mc'])
+
+    assert.equal(kernel.exitCode, 0)
+    assert.equal(kernel.getState(), 'completed')
+  })
+
+  test('expand alias before executing command', async ({ assert }) => {
+    const kernel = Kernel.create()
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+
+      @args.string()
+      declare name: string
+
+      @flags.boolean()
+      declare resource: boolean
+
+      @flags.boolean()
+      declare singular: boolean
+
+      async run() {
+        assert.equal(this.kernel.getState(), 'running')
+        assert.strictEqual(this.kernel.getMainCommand(), this)
+        assert.equal(this.name, 'user')
+        assert.isTrue(this.resource)
+        assert.isTrue(this.singular)
+        return 'executed'
+      }
+    }
+
+    kernel.addLoader(new ListLoader([MakeController]))
+    kernel.addAlias('mc', 'make:controller --resource')
+    await kernel.handle(['mc', 'user', '--singular'])
 
     assert.equal(kernel.exitCode, 0)
     assert.equal(kernel.getState(), 'completed')

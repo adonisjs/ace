@@ -152,6 +152,13 @@ export class Kernel<Command extends AbstractBaseCommand> {
   #aliases: Map<string, string> = new Map()
 
   /**
+   * An collection of expansion arguments and flags set on
+   * an alias. The key is the alias name and the value is
+   * everything after it.
+   */
+  #aliasExpansions: Map<string, string[]> = new Map()
+
+  /**
    * A collection of commands by the command name. This allows us to keep only
    * the unique commands and also keep the loader reference to know which
    * loader to ask for loading the command.
@@ -224,6 +231,16 @@ export class Kernel<Command extends AbstractBaseCommand> {
    */
   async #exec<T extends Command>(commandName: string, argv: string[]): Promise<InstanceType<T>> {
     const Command = await this.find<T>(commandName)
+
+    /**
+     * Expand aliases
+     */
+    const aliasExpansions = this.#aliasExpansions.get(commandName)
+    if (aliasExpansions) {
+      argv = aliasExpansions.concat(argv)
+      debug('expanding alias %O, cli args %O', commandName, argv)
+    }
+
     const commandInstance = await this.#create<T>(Command, argv)
 
     /**
@@ -243,6 +260,15 @@ export class Kernel<Command extends AbstractBaseCommand> {
   async #execMain(commandName: string, argv: string[]) {
     try {
       const Command = await this.find(commandName)
+
+      /**
+       * Expand aliases
+       */
+      const aliasExpansions = this.#aliasExpansions.get(commandName)
+      if (aliasExpansions) {
+        argv = aliasExpansions.concat(argv)
+        debug('expanding alias %O, cli args %O', commandName, argv)
+      }
 
       /**
        * Parse CLI argv and also merge global flags parser options.
@@ -352,8 +378,17 @@ export class Kernel<Command extends AbstractBaseCommand> {
   /**
    * Register alias for a comamnd name.
    */
-  addAlias(alias: string, commandName: string): this {
+  addAlias(alias: string, command: string): this {
+    const [commandName, ...expansions] = command.split(' ')
     this.#aliases.set(alias, commandName)
+
+    if (expansions.length) {
+      debug('registering alias %O for command %O with options %O', alias, commandName, expansions)
+      this.#aliasExpansions.set(alias, expansions)
+    } else {
+      debug('registering alias %O for command %O', alias, commandName)
+    }
+
     return this
   }
 

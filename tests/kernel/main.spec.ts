@@ -307,4 +307,20 @@ test.group('Kernel', () => {
     const kernel = Kernel.create()
     assert.isTrue(kernel.shortcircuit())
   })
+
+  test('define aliases with flags', async ({ assert }) => {
+    const kernel = Kernel.create()
+
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+    }
+
+    kernel.addLoader(new ListLoader([MakeController]))
+    kernel.addAlias('resource', 'make:controller --resource')
+    await kernel.boot()
+
+    assert.deepEqual(kernel.getCommandAliases('make:controller'), ['resource'])
+    assert.deepEqual(kernel.getAliases(), ['resource'])
+    assert.deepEqual(kernel.getAliasCommand('resource')?.commandName, 'make:controller')
+  })
 })

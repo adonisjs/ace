@@ -53,6 +53,24 @@ test.group('Kernel | find', () => {
     assert.strictEqual(await kernel.find('controller'), MakeController)
   })
 
+  test('find command using the command alias with flags', async ({ assert }) => {
+    const kernel = Kernel.create()
+
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+    }
+
+    class MakeModel extends BaseCommand {
+      static commandName = 'make:model'
+    }
+
+    kernel.addLoader(new ListLoader([MakeController, MakeModel]))
+    kernel.addAlias('controller', 'make:controller --resource')
+    await kernel.boot()
+
+    assert.strictEqual(await kernel.find('controller'), MakeController)
+  })
+
   test('raise error when unable to find command', async ({ assert }) => {
     const kernel = Kernel.create()
 

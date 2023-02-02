@@ -9,6 +9,7 @@
 
 import { test } from '@japa/runner'
 import { Kernel } from '../../src/kernel.js'
+import { args, flags } from '../../index.js'
 import { BaseCommand } from '../../src/commands/base.js'
 import { ListLoader } from '../../src/loaders/list_loader.js'
 
@@ -215,5 +216,57 @@ test.group('Kernel | exec', () => {
       () => kernel.exec('make:controller', ['--help']),
       'Unknown flag "--help". The mentioned flag is not accepted by the command'
     )
+  })
+
+  test('execute command using alias', async ({ assert }) => {
+    const kernel = Kernel.create()
+
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+      async run() {
+        return 'executed'
+      }
+    }
+
+    kernel.addLoader(new ListLoader([MakeController]))
+    kernel.addAlias('mc', 'make:controller')
+    const command = await kernel.exec('mc', [])
+
+    assert.equal(command.result, 'executed')
+    assert.equal(command.result, 'executed')
+    assert.equal(command.exitCode, 0)
+
+    assert.isUndefined(kernel.exitCode)
+    assert.equal(kernel.getState(), 'booted')
+  })
+
+  test('expand alias before executing command', async ({ assert }) => {
+    const kernel = Kernel.create()
+
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+
+      @args.string()
+      declare name: string
+
+      @flags.boolean()
+      declare resource: boolean
+
+      @flags.boolean()
+      declare singular: boolean
+
+      async run() {
+        assert.equal(this.name, 'user')
+        assert.isTrue(this.resource)
+        assert.isTrue(this.singular)
+      }
+    }
+
+    kernel.addLoader(new ListLoader([MakeController]))
+    kernel.addAlias('mc', 'make:controller --resource')
+    const command = await kernel.exec('mc', ['user', '--singular'])
+
+    assert.equal(command.exitCode, 0)
+    assert.isUndefined(kernel.exitCode)
   })
 })
