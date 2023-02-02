@@ -34,6 +34,21 @@ test.group('Base command | execute', () => {
 
     await model.exec()
     assert.deepEqual(model.stack, ['run'])
+
+    assert.deepEqual(model.toJSON(), {
+      args: ['user'],
+      commandName: '',
+      error: undefined,
+      exitCode: 0,
+      flags: {
+        connection: 'sqlite',
+      },
+      options: {
+        allowUnknownFlags: false,
+        staysAlive: false,
+      },
+      result: undefined,
+    })
   })
 
   test('store run method return value in the result property', async ({ assert }) => {
