@@ -106,6 +106,10 @@ export class HelpCommand extends BaseCommand {
       endColumn: TERMINAL_SIZE,
     }).join('\n')
 
+    if (!description) {
+      return
+    }
+
     this.logger.log('')
     this.logger.log(this.colors.yellow('Description:'))
     this.logger.log(description)

@@ -376,6 +376,11 @@ export class BaseCommand extends Macroable {
   }
 
   /**
+   * Check if a command has been hypdrated
+   */
+  protected hydrated: boolean = false
+
+  /**
    * The exit code for the command
    */
   exitCode?: number
@@ -428,6 +433,10 @@ export class BaseCommand extends Macroable {
    * the parsed output
    */
   hydrate() {
+    if (this.hydrated) {
+      return
+    }
+
     const CommandConstructor = this.constructor as typeof BaseCommand
 
     /**
@@ -453,6 +462,8 @@ export class BaseCommand extends Macroable {
         configurable: true,
       })
     })
+
+    this.hydrated = true
   }
 
   /**
@@ -465,6 +476,8 @@ export class BaseCommand extends Macroable {
    * Executes the commands by running the command's run method.
    */
   async exec() {
+    this.hydrate()
+
     try {
       this.result = await this.run()
       this.exitCode = this.exitCode ?? 0
