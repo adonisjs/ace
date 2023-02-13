@@ -9,9 +9,9 @@
 
 import { test } from '@japa/runner'
 import { colors } from '@poppinss/cliui'
-import { BaseCommand } from '../../src/commands/base.js'
 import { args } from '../../src/decorators/args.js'
 import { flags } from '../../src/decorators/flags.js'
+import { BaseCommand } from '../../src/commands/base.js'
 import { CommandFormatter } from '../../src/formatters/command.js'
 
 test.group('Formatters | command', () => {

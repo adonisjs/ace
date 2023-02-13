@@ -10,10 +10,10 @@
 import { test } from '@japa/runner'
 import { cliui } from '@poppinss/cliui'
 import { Kernel } from '../../src/kernel.js'
-import { CommandOptions } from '../../src/types.js'
-import { BaseCommand } from '../../src/commands/base.js'
-import { ListLoader } from '../../src/loaders/list_loader.js'
 import { args, flags } from '../../index.js'
+import { BaseCommand } from '../../src/commands/base.js'
+import type { CommandOptions } from '../../src/types.js'
+import { ListLoader } from '../../src/loaders/list_loader.js'
 
 test.group('Kernel | handle', (group) => {
   group.each.teardown(() => {

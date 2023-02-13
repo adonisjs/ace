@@ -7,7 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import fs from 'fs-extra'
 import { join } from 'node:path'
 import { test } from '@japa/runner'
 import { fileURLToPath } from 'node:url'
@@ -18,13 +17,17 @@ const BASE_URL = new URL('./tmp/', import.meta.url)
 const BASE_PATH = fileURLToPath(BASE_URL)
 
 test.group('Index generator', (group) => {
-  group.each.setup(() => {
-    return () => fs.remove(BASE_PATH)
+  group.each.setup(({ context }) => {
+    context.fs.baseUrl = BASE_URL
+    context.fs.basePath = BASE_PATH
   })
 
-  test('generate loader and commands index by scanning commands directory', async ({ assert }) => {
-    await fs.outputFile(
-      join(BASE_PATH, 'commands', 'make_controller_v_2.ts'),
+  test('generate loader and commands index by scanning commands directory', async ({
+    assert,
+    fs,
+  }) => {
+    await fs.create(
+      'commands/make_controller_v_2.ts',
       `
       export default class MakeController {
         static commandName = 'make:controller'
@@ -50,13 +53,13 @@ test.group('Index generator', (group) => {
     `
     )
 
-    const generator = new IndexGenerator(join(BASE_PATH, 'commands'))
+    const generator = new IndexGenerator(join(fs.basePath, 'commands'))
     await generator.generate()
 
     /**
      * Validate index
      */
-    const indexJSON = await fs.readFile(join(BASE_PATH, 'commands', 'commands.json'), 'utf-8')
+    const indexJSON = await fs.contents('commands/commands.json')
     const commandsIndex = JSON.parse(indexJSON)
 
     assert.properties(commandsIndex, ['commands', 'version'])
@@ -77,9 +80,9 @@ test.group('Index generator', (group) => {
     validateCommand(command, './main.ts')
   })
 
-  test('ignore directories starting with _', async ({ assert }) => {
-    await fs.outputFile(
-      join(BASE_PATH, 'commands', '_make', 'make_controller_v_2.ts'),
+  test('ignore directories starting with _', async ({ assert, fs }) => {
+    await fs.create(
+      'commands/_make/make_controller_v_2.ts',
       `
       export default class MakeController {
         static commandName = 'make:controller'
@@ -105,13 +108,13 @@ test.group('Index generator', (group) => {
     `
     )
 
-    const generator = new IndexGenerator(join(BASE_PATH, 'commands'))
+    const generator = new IndexGenerator(join(fs.basePath, 'commands'))
     await generator.generate()
 
     /**
      * Validate index
      */
-    const indexJSON = await fs.readFile(join(BASE_PATH, 'commands', 'commands.json'), 'utf-8')
+    const indexJSON = await fs.contents('commands/commands.json')
     const commandsIndex = JSON.parse(indexJSON)
 
     assert.properties(commandsIndex, ['commands', 'version'])
@@ -127,9 +130,9 @@ test.group('Index generator', (group) => {
     assert.lengthOf(metaData, 0)
   })
 
-  test('ignore files starting with _', async ({ assert }) => {
-    await fs.outputFile(
-      join(BASE_PATH, 'commands', 'make', '_make_controller_v_2.ts'),
+  test('ignore files starting with _', async ({ assert, fs }) => {
+    await fs.create(
+      'commands/make/_make_controller_v_2.ts',
       `
       export default class MakeController {
         static commandName = 'make:controller'
@@ -155,13 +158,13 @@ test.group('Index generator', (group) => {
     `
     )
 
-    const generator = new IndexGenerator(join(BASE_PATH, 'commands'))
+    const generator = new IndexGenerator(join(fs.basePath, 'commands'))
     await generator.generate()
 
     /**
      * Validate index
      */
-    const indexJSON = await fs.readFile(join(BASE_PATH, 'commands', 'commands.json'), 'utf-8')
+    const indexJSON = await fs.contents('commands/commands.json')
     const commandsIndex = JSON.parse(indexJSON)
 
     assert.properties(commandsIndex, ['commands', 'version'])

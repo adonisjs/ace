@@ -10,9 +10,9 @@
 import { test } from '@japa/runner'
 
 import { Kernel } from '../../src/kernel.js'
+import { ListCommand } from '../../src/commands/list.js'
 import { BaseCommand } from '../../src/commands/base.js'
 import { ListLoader } from '../../src/loaders/list_loader.js'
-import { ListCommand } from '../../src/commands/list.js'
 
 test.group('Kernel', () => {
   test('get alphabetically sorted list of commands', async ({ assert }) => {

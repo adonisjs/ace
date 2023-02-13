@@ -11,8 +11,8 @@ import { test } from '@japa/runner'
 
 import { Kernel } from '../../src/kernel.js'
 import { BaseCommand } from '../../src/commands/base.js'
+import type { CommandMetaData } from '../../src/types.js'
 import { ListLoader } from '../../src/loaders/list_loader.js'
-import { CommandMetaData } from '../../src/types.js'
 
 test.group('Kernel | find', () => {
   test('find commands registered using a loader', async ({ assert }) => {

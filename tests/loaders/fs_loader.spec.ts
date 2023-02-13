@@ -7,44 +7,43 @@
  * file that was distributed with this source code.
  */
 
-import fs from 'fs-extra'
 import { join } from 'node:path'
 import { test } from '@japa/runner'
 import { fileURLToPath } from 'node:url'
-
 import { FsLoader } from '../../src/loaders/fs_loader.js'
 
 const BASE_URL = new URL('./tmp/', import.meta.url)
 const BASE_PATH = fileURLToPath(BASE_URL)
 
 test.group('Loaders | fs', (group) => {
-  group.each.setup(() => {
-    return () => fs.remove(BASE_PATH)
+  group.each.setup(({ context }) => {
+    context.fs.baseUrl = BASE_URL
+    context.fs.basePath = BASE_PATH
   })
 
-  test('do not raise error when commands directory does not exists', async ({ assert }) => {
-    const loader = new FsLoader(join(BASE_PATH, './commands'))
+  test('do not raise error when commands directory does not exists', async ({ assert, fs }) => {
+    const loader = new FsLoader(join(fs.basePath, './commands'))
     await assert.doesNotRejects(() => loader.getMetaData())
   })
 
-  test('raise error when there is no default export in command file', async ({ assert }) => {
-    await fs.outputFile(
-      join(BASE_PATH, 'commands', 'make_controller_v_1.ts'),
+  test('raise error when there is no default export in command file', async ({ assert, fs }) => {
+    await fs.create(
+      'commands/make_controller_v_1.ts',
       `
       export class MakeController {}
     `
     )
 
-    const loader = new FsLoader(join(BASE_PATH, './commands'))
+    const loader = new FsLoader(join(fs.basePath, './commands'))
     await assert.rejects(
       () => loader.getMetaData(),
       'Missing "export default" in module "make_controller_v_1.js"'
     )
   })
 
-  test('return commands metadata', async ({ assert }) => {
-    await fs.outputFile(
-      join(BASE_PATH, 'commands', 'make_controller_v_2.ts'),
+  test('return commands metadata', async ({ assert, fs }) => {
+    await fs.create(
+      'commands/make_controller_v_2.ts',
       `
       export default class MakeController {
         static commandName = 'make:controller'
@@ -70,7 +69,7 @@ test.group('Loaders | fs', (group) => {
     `
     )
 
-    const loader = new FsLoader(join(BASE_PATH, './commands'))
+    const loader = new FsLoader(join(fs.basePath, './commands'))
     const commands = await loader.getMetaData()
     assert.deepEqual(commands, [
       {
@@ -86,9 +85,9 @@ test.group('Loaders | fs', (group) => {
     ])
   })
 
-  test('load command from .js files', async ({ assert }) => {
-    await fs.outputFile(
-      join(BASE_PATH, 'commands', 'make_controller.js'),
+  test('load command from .js files', async ({ assert, fs }) => {
+    await fs.create(
+      'commands/make_controller.js',
       `
       export default class MakeController {
         static commandName = 'make:controller'
@@ -114,7 +113,7 @@ test.group('Loaders | fs', (group) => {
     `
     )
 
-    const loader = new FsLoader(join(BASE_PATH, './commands'))
+    const loader = new FsLoader(join(fs.basePath, './commands'))
     const commands = await loader.getMetaData()
     assert.deepEqual(commands, [
       {
@@ -130,9 +129,9 @@ test.group('Loaders | fs', (group) => {
     ])
   })
 
-  test('ignore .json files', async ({ assert }) => {
-    await fs.outputFile(
-      join(BASE_PATH, 'commands', 'make_controller_v_3.ts'),
+  test('ignore .json files', async ({ assert, fs }) => {
+    await fs.create(
+      'commands/make_controller_v_3.ts',
       `
       export default class MakeController {
         static commandName = 'make:controller'
@@ -158,9 +157,9 @@ test.group('Loaders | fs', (group) => {
     `
     )
 
-    await fs.outputFile(join(BASE_PATH, 'commands', 'foo.json'), `{}`)
+    await fs.create('commands/foo.json', `{}`)
 
-    const loader = new FsLoader(join(BASE_PATH, './commands'))
+    const loader = new FsLoader(join(fs.basePath, './commands'))
     const commands = await loader.getMetaData()
     assert.deepEqual(commands, [
       {
@@ -176,9 +175,9 @@ test.group('Loaders | fs', (group) => {
     ])
   })
 
-  test('get command constructor for a given command', async ({ assert }) => {
-    await fs.outputFile(
-      join(BASE_PATH, 'commands', 'make_controller_v_5.ts'),
+  test('get command constructor for a given command', async ({ assert, fs }) => {
+    await fs.create(
+      'commands/make_controller_v_5.ts',
       `
       export default class MakeController {
         static commandName = 'make:controller'
@@ -204,23 +203,23 @@ test.group('Loaders | fs', (group) => {
     `
     )
 
-    await fs.outputFile(join(BASE_PATH, 'commands', 'foo.json'), `{}`)
+    await fs.create('commands/foo.json', `{}`)
 
-    const loader = new FsLoader(join(BASE_PATH, './commands'))
+    const loader = new FsLoader(join(fs.basePath, './commands'))
     const commands = await loader.getMetaData()
     const command = await loader.getCommand(commands[0])
     assert.isFunction(command)
   })
 
-  test('return null when unable to lookup command', async ({ assert }) => {
-    const loader = new FsLoader(join(BASE_PATH, './commands'))
+  test('return null when unable to lookup command', async ({ assert, fs }) => {
+    const loader = new FsLoader(join(fs.basePath, './commands'))
     const command = await loader.getCommand({ commandName: 'make:model' } as any)
     assert.isNull(command)
   })
 
-  test('load commands from nested directories', async ({ assert }) => {
-    await fs.outputFile(
-      join(BASE_PATH, 'commands', 'make', 'controller.ts'),
+  test('load commands from nested directories', async ({ assert, fs }) => {
+    await fs.create(
+      'commands/make/controller.ts',
       `
       export default class MakeController {
         static commandName = 'make:controller'
@@ -246,7 +245,7 @@ test.group('Loaders | fs', (group) => {
     `
     )
 
-    const loader = new FsLoader(join(BASE_PATH, './commands'))
+    const loader = new FsLoader(join(fs.basePath, './commands'))
     const commands = await loader.getMetaData()
     assert.deepEqual(commands, [
       {
@@ -262,9 +261,9 @@ test.group('Loaders | fs', (group) => {
     ])
   })
 
-  test('ignore commands by filename', async ({ assert }) => {
-    await fs.outputFile(
-      join(BASE_PATH, 'commands', 'make_controller_v_2.ts'),
+  test('ignore commands using filters', async ({ assert, fs }) => {
+    await fs.create(
+      'commands/make_controller_v_2.ts',
       `
       export default class MakeController {
         static commandName = 'make:controller'
@@ -290,8 +289,8 @@ test.group('Loaders | fs', (group) => {
     `
     )
 
-    await fs.outputFile(
-      join(BASE_PATH, 'commands', 'make', 'controller.ts'),
+    await fs.create(
+      'commands/make/controller.ts',
       `
       export default class MakeController {
         static commandName = 'make:controller'
@@ -318,7 +317,7 @@ test.group('Loaders | fs', (group) => {
     )
 
     const loader = new FsLoader(
-      join(BASE_PATH, './commands'),
+      join(fs.basePath, './commands'),
       (filePath: string) => filePath !== 'make_controller_v_2.js'
     )
     const commands = await loader.getMetaData()
