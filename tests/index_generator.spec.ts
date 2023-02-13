@@ -80,9 +80,9 @@ test.group('Index generator', (group) => {
     validateCommand(command, './main.ts')
   })
 
-  test('ignore directories starting with _', async ({ assert, fs }) => {
+  test('index directories starting with _', async ({ assert, fs }) => {
     await fs.create(
-      'commands/_make/make_controller_v_2.ts',
+      'commands/_make/controller_v_3.ts',
       `
       export default class MakeController {
         static commandName = 'make:controller'
@@ -120,14 +120,19 @@ test.group('Index generator', (group) => {
     assert.properties(commandsIndex, ['commands', 'version'])
     assert.equal(commandsIndex.version, 1)
     assert.isArray(commandsIndex.commands)
-    assert.lengthOf(commandsIndex.commands, 0)
+    commandsIndex.commands.forEach((command: any) =>
+      validateCommandMetaData(command, './commands.json')
+    )
 
     /**
      * Validate loader
      */
     const loader = await import(new URL('./commands/main.js?v=1', BASE_URL).href)
     const metaData = await loader.getMetaData()
-    assert.lengthOf(metaData, 0)
+    metaData.forEach((command: any) => validateCommandMetaData(command, './commands.json'))
+
+    const command = await loader.getCommand(metaData[0])
+    validateCommand(command, './controller_v_3.ts')
   })
 
   test('ignore files starting with _', async ({ assert, fs }) => {

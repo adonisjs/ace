@@ -8,7 +8,7 @@
  */
 
 import { fileURLToPath } from 'node:url'
-import { extname, relative } from 'node:path'
+import { basename, extname, relative } from 'node:path'
 import { fsReadAll, importDefault, slash } from '@poppinss/utils'
 
 import { validateCommand } from '../helpers.js'
@@ -57,6 +57,14 @@ export class FsLoader<Command extends AbstractBaseCommand> implements LoadersCon
       ignoreMissingRoot: true,
       filter: (filePath: string) => {
         const ext = extname(filePath)
+
+        /**
+         * Ignore files prefixed with _
+         */
+        if (basename(filePath).startsWith('_')) {
+          return false
+        }
+
         if (JS_MODULES.includes(ext)) {
           return true
         }
