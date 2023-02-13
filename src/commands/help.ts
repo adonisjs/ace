@@ -100,11 +100,7 @@ export class HelpCommand extends BaseCommand {
    */
   protected renderDescription(command: CommandMetaData) {
     const formatter = new CommandFormatter(command, this.colors)
-    const description = wrap([formatter.formatDescription()], {
-      startColumn: 2,
-      trimStart: false,
-      endColumn: TERMINAL_SIZE,
-    }).join('\n')
+    const description = formatter.formatDescription()
 
     if (!description) {
       return
@@ -112,7 +108,13 @@ export class HelpCommand extends BaseCommand {
 
     this.logger.log('')
     this.logger.log(this.colors.yellow('Description:'))
-    this.logger.log(description)
+    this.logger.log(
+      wrap([description], {
+        startColumn: 2,
+        trimStart: false,
+        endColumn: TERMINAL_SIZE,
+      }).join('\n')
+    )
   }
 
   /**

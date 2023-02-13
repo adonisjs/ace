@@ -388,6 +388,39 @@ test.group('Help command', () => {
     ])
   })
 
+  test('do not display description when not defined', async ({ assert }) => {
+    const kernel = Kernel.create()
+    kernel.ui.switchMode('raw')
+
+    class MakeController extends BaseCommand {
+      static aliases: string[] = ['mc', 'controller']
+      static commandName: string = 'make:controller'
+    }
+
+    kernel.addLoader(new ListLoader([MakeController]))
+    kernel.info.set('binary', 'node ace')
+    const command = await kernel.create(HelpCommand, ['make:controller'])
+    await command.exec()
+
+    assert.equal(command.exitCode, 0)
+    assert.deepEqual(kernel.ui.logger.getLogs(), [
+      {
+        message: '',
+        stream: 'stdout',
+      },
+      {
+        message: 'yellow(Usage:)',
+        stream: 'stdout',
+      },
+      {
+        message: ['  node ace make:controller ', '  node ace mc ', '  node ace controller '].join(
+          '\n'
+        ),
+        stream: 'stdout',
+      },
+    ])
+  })
+
   test('error when command not found', async ({ assert }) => {
     const kernel = Kernel.create()
     kernel.ui.switchMode('raw')
