@@ -203,6 +203,31 @@ export class Kernel<Command extends AbstractBaseCommand> {
   }
 
   /**
+   * Process command line arguments. All flags before the command
+   * name are considered as Node.js argv and all flags after
+   * the command name are considered as command argv.
+   *
+   * The behavior is same as Node.js CLI, where all flags before the
+   * script file name are Node.js argv.
+   */
+  #processArgv(argv: string[]) {
+    const commandNameIndex = argv.findIndex((value) => !value.startsWith('-'))
+    if (commandNameIndex === -1) {
+      return {
+        nodeArgv: [],
+        commandName: null,
+        commandArgv: argv,
+      }
+    }
+
+    return {
+      nodeArgv: argv.slice(0, commandNameIndex),
+      commandName: argv[commandNameIndex],
+      commandArgv: argv.slice(commandNameIndex + 1),
+    }
+  }
+
+  /**
    * Creates an instance of a command by parsing and validating
    * the command line arguments.
    */
@@ -259,7 +284,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
    * Executes the main command and handles the exceptions by
    * reporting them
    */
-  async #execMain(commandName: string, argv: string[]) {
+  async #execMain(commandName: string, nodeArgv: string[], argv: string[]) {
     try {
       const Command = await this.find(commandName)
 
@@ -278,6 +303,11 @@ export class Kernel<Command extends AbstractBaseCommand> {
       const parsed = new Parser(
         Command.getParserOptions(this.#globalCommand.getParserOptions().flagsParserOptions)
       ).parse(argv)
+
+      /**
+       * Defined only for the main command
+       */
+      parsed.nodeArgs = nodeArgv
 
       /**
        * Validate the flags against the global list as well
@@ -728,22 +758,21 @@ export class Kernel<Command extends AbstractBaseCommand> {
     }
 
     this.#state = 'running'
+    const { commandName, nodeArgv, commandArgv } = this.#processArgv(argv)
 
     /**
-     * Run the default command when no argv are defined
-     * or if only flags are mentioned
+     * Run the default command
      */
-    if (!argv.length || argv[0].startsWith('-')) {
+    if (!commandName) {
       debug('running default command "%s"', this.#defaultCommand.commandName)
-      return this.#execMain(this.#defaultCommand.commandName, argv)
+      return this.#execMain(this.#defaultCommand.commandName, nodeArgv, commandArgv)
     }
 
     /**
      * Run the mentioned command as the main command
      */
-    const [commandName, ...args] = argv
     debug('running main command "%s"', commandName)
-    return this.#execMain(commandName, args)
+    return this.#execMain(commandName, nodeArgv, commandArgv)
   }
 
   /**

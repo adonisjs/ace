@@ -290,4 +290,42 @@ test.group('Kernel | handle', (group) => {
     assert.equal(kernel.exitCode, 0)
     assert.equal(kernel.getState(), 'completed')
   })
+
+  test('treat flags before the command name as nodeArgs', async ({ assert }) => {
+    const kernel = Kernel.create()
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+      async run() {
+        assert.deepEqual(this.parsed.nodeArgs, ['--no-warnings'])
+        assert.equal(this.kernel.getState(), 'running')
+        assert.strictEqual(this.kernel.getMainCommand(), this)
+        return 'executed'
+      }
+    }
+
+    kernel.addLoader(new ListLoader([MakeController]))
+    await kernel.handle(['--no-warnings', 'make:controller'])
+
+    assert.equal(kernel.exitCode, 0)
+    assert.equal(kernel.getState(), 'completed')
+  })
+
+  test('treat shorthand flags before the command name as nodeArgs', async ({ assert }) => {
+    const kernel = Kernel.create()
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+      async run() {
+        assert.deepEqual(this.parsed.nodeArgs, ['-w'])
+        assert.equal(this.kernel.getState(), 'running')
+        assert.strictEqual(this.kernel.getMainCommand(), this)
+        return 'executed'
+      }
+    }
+
+    kernel.addLoader(new ListLoader([MakeController]))
+    await kernel.handle(['-w', 'make:controller'])
+
+    assert.equal(kernel.exitCode, 0)
+    assert.equal(kernel.getState(), 'completed')
+  })
 })

@@ -126,6 +126,7 @@ export class Parser {
 
     return {
       args: output,
+      nodeArgs: [],
       _: args.slice(lastParsedIndex === -1 ? 0 : lastParsedIndex),
       unknownFlags: this.#scanUnknownFlags(rest),
       flags: rest,

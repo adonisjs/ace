@@ -25,6 +25,7 @@ test.group('Parser | flags', () => {
       ),
       {
         _: [],
+        nodeArgs: [],
         args: [],
         unknownFlags: [],
         flags: {
@@ -38,6 +39,7 @@ test.group('Parser | flags', () => {
 
     assert.deepEqual(new Parser(MakeModel.getParserOptions()).parse('--files=a --files=b'), {
       _: [],
+      nodeArgs: [],
       args: [],
       unknownFlags: [],
       flags: {
@@ -55,6 +57,7 @@ test.group('Parser | flags', () => {
 
     assert.deepEqual(new Parser(MakeModel.getParserOptions()).parse('-c=sqlite -d -b=1 -f=a,b'), {
       _: [],
+      nodeArgs: [],
       args: [],
       unknownFlags: [],
       flags: {
@@ -67,6 +70,7 @@ test.group('Parser | flags', () => {
 
     assert.deepEqual(new Parser(MakeModel.getParserOptions()).parse('-f=a -f=b'), {
       _: [],
+      nodeArgs: [],
       args: [],
       unknownFlags: [],
       flags: {
@@ -85,6 +89,7 @@ test.group('Parser | flags', () => {
     const output = new Parser(MakeModel.getParserOptions()).parse('')
     assert.deepEqual(output, {
       _: [],
+      nodeArgs: [],
       args: [],
       unknownFlags: [],
       flags: {},
@@ -101,6 +106,7 @@ test.group('Parser | flags', () => {
     const output = new Parser(MakeModel.getParserOptions()).parse('')
     assert.deepEqual(output, {
       _: [],
+      nodeArgs: [],
       args: [],
       unknownFlags: [],
       flags: {
@@ -124,6 +130,7 @@ test.group('Parser | flags', () => {
 
     assert.deepEqual(output, {
       _: [],
+      nodeArgs: [],
       args: [],
       unknownFlags: [],
       flags: {
@@ -172,6 +179,7 @@ test.group('Parser | flags', () => {
 
     assert.deepEqual(output, {
       _: [],
+      nodeArgs: [],
       args: [],
       unknownFlags: [],
       flags: {
@@ -217,6 +225,7 @@ test.group('Parser | flags', () => {
     const output = new Parser(MakeModel.getParserOptions()).parse('--batch-size')
     assert.deepEqual(output, {
       _: [],
+      nodeArgs: [],
       args: [],
       unknownFlags: [],
       flags: {
@@ -246,6 +255,7 @@ test.group('Parser | flags', () => {
     const output = new Parser(MakeModel.getParserOptions()).parse('')
     assert.deepEqual(output, {
       _: [],
+      nodeArgs: [],
       args: [],
       unknownFlags: [],
       flags: {},
@@ -262,6 +272,7 @@ test.group('Parser | flags', () => {
 
     assert.deepEqual(output, {
       _: [],
+      nodeArgs: [],
       args: [],
       unknownFlags: ['foo', 'bar'],
       flags: {
@@ -282,6 +293,7 @@ test.group('Parser | arguments', () => {
     const output = new Parser(MakeModel.getParserOptions()).parse('user sqlite mysql pg')
     assert.deepEqual(output, {
       _: [],
+      nodeArgs: [],
       args: ['user', ['sqlite', 'mysql', 'pg']],
       unknownFlags: [],
       flags: {},
@@ -296,6 +308,7 @@ test.group('Parser | arguments', () => {
     const output = new Parser(MakeModel.getParserOptions()).parse('user')
     assert.deepEqual(output, {
       _: [],
+      nodeArgs: [],
       args: ['user', ['sqlite']],
       unknownFlags: [],
       flags: {},
@@ -310,6 +323,7 @@ test.group('Parser | arguments', () => {
     const output = new Parser(MakeModel.getParserOptions()).parse(['user', ''])
     assert.deepEqual(output, {
       _: [],
+      nodeArgs: [],
       args: ['user', ['']],
       unknownFlags: [],
       flags: {},
@@ -334,6 +348,7 @@ test.group('Parser | arguments', () => {
     const output = new Parser(MakeModel.getParserOptions()).parse(['user', 'sqlite', 'pg'])
     assert.deepEqual(output, {
       _: [],
+      nodeArgs: [],
       args: ['USER', ['SQLITE', 'PG']],
       unknownFlags: [],
       flags: {},
@@ -360,6 +375,7 @@ test.group('Parser | arguments', () => {
     const output = new Parser(MakeModel.getParserOptions()).parse([])
     assert.deepEqual(output, {
       _: [],
+      nodeArgs: [],
       args: ['POST', ['SQLITE']],
       unknownFlags: [],
       flags: {},
@@ -384,6 +400,7 @@ test.group('Parser | arguments', () => {
     const output = new Parser(MakeModel.getParserOptions()).parse([])
     assert.deepEqual(output, {
       _: [],
+      nodeArgs: [],
       args: [undefined, undefined],
       unknownFlags: [],
       flags: {},
@@ -403,6 +420,7 @@ test.group('Parser | arguments', () => {
     const output = new Parser(MakeModel.getParserOptions()).parse([])
     assert.deepEqual(output, {
       _: [],
+      nodeArgs: [],
       args: [undefined, [1]],
       unknownFlags: [],
       flags: {},
@@ -423,6 +441,7 @@ test.group('Parser | arguments', () => {
     const output = new Parser(MakeModel.getParserOptions()).parse([])
     assert.deepEqual(output, {
       _: [],
+      nodeArgs: [],
       args: [null, [1]],
       unknownFlags: [],
       flags: {},

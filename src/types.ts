@@ -22,6 +22,8 @@ export type YargsOutput = Arguments
  * Parsed output from the parser
  */
 export type ParsedOutput = YargsOutput & {
+  nodeArgs: string[]
+
   /**
    * Parsed arguments
    */
