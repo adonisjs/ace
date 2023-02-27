@@ -25,7 +25,7 @@ test.group('Base command', () => {
     const kernel = Kernel.create()
     const model = new MakeModel(
       kernel,
-      { _: [], args: [], unknownFlags: [], flags: {} },
+      { _: [], args: [], unknownFlags: [], flags: {}, nodeArgs: [] },
       cliui(),
       kernel.prompt
     )
@@ -43,7 +43,7 @@ test.group('Base command', () => {
     const kernel = Kernel.create()
     const model = new MakeModel(
       kernel,
-      { _: [], args: [], unknownFlags: [], flags: {} },
+      { _: [], args: [], unknownFlags: [], flags: {}, nodeArgs: [] },
       cliui(),
       kernel.prompt
     )
