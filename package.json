@@ -5,7 +5,6 @@
   "main": "build/index.js",
   "type": "module",
   "files": [
-    "build/commands",
     "build/schemas",
     "build/src",
     "build/stubs",
@@ -15,9 +14,6 @@
   "exports": {
     ".": "./build/index.js",
     "./types": "./build/src/types.js"
-  },
-  "bin": {
-    "ace-toolkit": "./build/commands/main.js"
   },
   "scripts": {
     "pretest": "npm run lint",
