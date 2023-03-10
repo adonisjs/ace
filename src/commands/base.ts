@@ -419,6 +419,34 @@ export class BaseCommand extends Macroable {
     return this.kernel.getMainCommand() === this
   }
 
+  /**
+   * Reference to the command name
+   */
+  get commandName() {
+    return (this.constructor as typeof BaseCommand).commandName
+  }
+
+  /**
+   * Reference to the command options
+   */
+  get options() {
+    return (this.constructor as typeof BaseCommand).options
+  }
+
+  /**
+   * Reference to the command args
+   */
+  get args() {
+    return (this.constructor as typeof BaseCommand).args
+  }
+
+  /**
+   * Reference to the command flags
+   */
+  get flags() {
+    return (this.constructor as typeof BaseCommand).flags
+  }
+
   constructor(
     protected kernel: Kernel<any>,
     protected parsed: ParsedOutput,

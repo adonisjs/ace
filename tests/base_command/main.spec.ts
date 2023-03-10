@@ -12,8 +12,54 @@ import { cliui } from '@poppinss/cliui'
 
 import { Kernel } from '../../src/kernel.js'
 import { BaseCommand } from '../../src/commands/base.js'
+import type { Argument, CommandOptions, Flag } from '../../src/types.js'
 
 test.group('Base command', () => {
+  test('access command name from command instance', ({ assert }) => {
+    class MakeModel extends BaseCommand {
+      static commandName: string = 'make:model'
+      declare name: string
+      declare connection: string
+    }
+
+    MakeModel.boot()
+
+    const kernel = Kernel.create()
+    const model = new MakeModel(
+      kernel,
+      { _: [], args: [], unknownFlags: [], flags: {}, nodeArgs: [] },
+      cliui(),
+      kernel.prompt
+    )
+
+    assert.equal(model.commandName, 'make:model')
+  })
+
+  test('access command options from command instance', ({ assert, expectTypeOf }) => {
+    class MakeModel extends BaseCommand {
+      static options: CommandOptions = {
+        allowUnknownFlags: true,
+      }
+      declare name: string
+      declare connection: string
+    }
+
+    MakeModel.boot()
+
+    const kernel = Kernel.create()
+    const model = new MakeModel(
+      kernel,
+      { _: [], args: [], unknownFlags: [], flags: {}, nodeArgs: [] },
+      cliui(),
+      kernel.prompt
+    )
+
+    expectTypeOf(model.options).toEqualTypeOf<CommandOptions>()
+    assert.deepEqual(model.options, {
+      allowUnknownFlags: true,
+    })
+  })
+
   test('access the ui logger from the logger property', ({ assert }) => {
     class MakeModel extends BaseCommand {
       declare name: string
@@ -83,6 +129,36 @@ test.group('Base command | consume args', () => {
     assert.deepEqual(model.names, ['user', 'post'])
     assert.equal(model.connection, 'sqlite')
   })
+
+  test('access command args from command instance', ({ assert, expectTypeOf }) => {
+    class MakeModel extends BaseCommand {
+      static commandName: string = 'make:model'
+      declare name: string
+      declare connection: string
+    }
+
+    MakeModel.boot()
+    MakeModel.defineArgument('name', { type: 'string' })
+    MakeModel.defineFlag('connection', { type: 'string' })
+
+    const kernel = Kernel.create()
+    const model = new MakeModel(
+      kernel,
+      { _: [], args: [], unknownFlags: [], flags: {}, nodeArgs: [] },
+      cliui(),
+      kernel.prompt
+    )
+
+    expectTypeOf(model.args).toEqualTypeOf<Argument[]>()
+    assert.deepEqual(model.args, [
+      {
+        name: 'name',
+        argumentName: 'name',
+        required: true,
+        type: 'string',
+      },
+    ])
+  })
 })
 
 test.group('Base command | consume flags', () => {
@@ -145,5 +221,35 @@ test.group('Base command | consume flags', () => {
     assert.equal(model.name, 'user')
     assert.deepEqual(model.connections, ['sqlite'])
     assert.isUndefined(model.dropAll)
+  })
+
+  test('access command flags from command instance', ({ assert, expectTypeOf }) => {
+    class MakeModel extends BaseCommand {
+      static commandName: string = 'make:model'
+      declare name: string
+      declare connection: string
+    }
+
+    MakeModel.boot()
+    MakeModel.defineArgument('name', { type: 'string' })
+    MakeModel.defineFlag('connection', { type: 'string' })
+
+    const kernel = Kernel.create()
+    const model = new MakeModel(
+      kernel,
+      { _: [], args: [], unknownFlags: [], flags: {}, nodeArgs: [] },
+      cliui(),
+      kernel.prompt
+    )
+
+    expectTypeOf(model.flags).toEqualTypeOf<Flag[]>()
+    assert.deepEqual(model.flags, [
+      {
+        name: 'connection',
+        flagName: 'connection',
+        required: false,
+        type: 'string',
+      },
+    ])
   })
 })
