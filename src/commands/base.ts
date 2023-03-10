@@ -7,9 +7,11 @@
  * file that was distributed with this source code.
  */
 
+import { inspect } from 'node:util'
 import string from '@poppinss/utils/string'
 import Macroable from '@poppinss/macroable'
 import lodash from '@poppinss/utils/lodash'
+import { AssertionError } from 'node:assert'
 import type { Prompt } from '@poppinss/prompts'
 import { defineStaticProperty, InvalidArgumentsException } from '@poppinss/utils'
 
@@ -529,6 +531,130 @@ export class BaseCommand extends Macroable {
       error: this.error,
       result: this.result,
       exitCode: this.exitCode,
+    }
+  }
+
+  /**
+   * Assert the command exists with a given exit code
+   */
+  assertExitCode(code: number) {
+    if (this.exitCode !== code) {
+      const error = new AssertionError({
+        message: `Expected '${this.commandName}' command to finish with exit code '${code}'`,
+        actual: this.exitCode,
+        expected: code,
+        operator: 'strictEqual',
+        stackStartFn: this.assertExitCode,
+      })
+      Object.defineProperty(error, 'showDiff', { value: true })
+
+      throw error
+    }
+  }
+
+  /**
+   * Assert the command exists with a given exit code
+   */
+  assertNotExitCode(code: number) {
+    if (this.exitCode === code) {
+      throw new AssertionError({
+        message: `Expected '${this.commandName}' command to finish without exit code '${this.exitCode}'`,
+        stackStartFn: this.assertNotExitCode,
+      })
+    }
+  }
+
+  /**
+   * Assert the command exists with zero exit code
+   */
+  assertSucceeded() {
+    return this.assertExitCode(0)
+  }
+
+  /**
+   * Assert the command exists with non-zero exit code
+   */
+  assertFailed() {
+    return this.assertNotExitCode(0)
+  }
+
+  /**
+   * Assert command to log the expected message
+   */
+  assertLogMessage(message: string, stream?: 'stdout' | 'stderr') {
+    const logs = this.logger.getLogs()
+    const logMessages = logs.map((log) => log.message)
+    const matchingLog = logs.find((log) => log.message === message)
+
+    /**
+     * No log found
+     */
+    if (!matchingLog) {
+      const error = new AssertionError({
+        message: `Expected log messages to include ${inspect(message)}`,
+        actual: logMessages,
+        expected: [message],
+        operator: 'strictEqual',
+        stackStartFn: this.assertLogMessage,
+      })
+      Object.defineProperty(error, 'showDiff', { value: true })
+
+      throw error
+    }
+
+    /**
+     * Log is on a different stream
+     */
+    if (stream && matchingLog.stream !== stream) {
+      const error = new AssertionError({
+        message: `Expected log message stream to be ${inspect(stream)}, instead received ${inspect(
+          matchingLog.stream
+        )}`,
+        actual: matchingLog.stream,
+        expected: stream,
+        operator: 'strictEqual',
+        stackStartFn: this.assertLogMessage,
+      })
+      Object.defineProperty(error, 'showDiff', { value: true })
+
+      throw error
+    }
+  }
+
+  /**
+   * Assert command to log the expected message
+   */
+  assertLogMatches(matchingRegex: RegExp, stream?: 'stdout' | 'stderr') {
+    const logs = this.logger.getLogs()
+    const matchingLog = logs.find((log) => matchingRegex.test(log.message))
+
+    /**
+     * No log found
+     */
+    if (!matchingLog) {
+      const error = new AssertionError({
+        message: `Expected log messages to match ${inspect(matchingRegex)}`,
+        stackStartFn: this.assertLogMessage,
+      })
+      throw error
+    }
+
+    /**
+     * Log is on a different stream
+     */
+    if (stream && matchingLog.stream !== stream) {
+      const error = new AssertionError({
+        message: `Expected log message stream to be ${inspect(stream)}, instead received ${inspect(
+          matchingLog.stream
+        )}`,
+        actual: matchingLog.stream,
+        expected: stream,
+        operator: 'strictEqual',
+        stackStartFn: this.assertLogMessage,
+      })
+      Object.defineProperty(error, 'showDiff', { value: true })
+
+      throw error
     }
   }
 }

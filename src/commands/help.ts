@@ -32,7 +32,7 @@ export class HelpCommand extends BaseCommand {
    * The command name argument
    */
   @args.string({ description: 'Command name', argumentName: 'command' })
-  declare commandName: string
+  declare name: string
 
   /**
    * Returns the command arguments table
@@ -82,12 +82,12 @@ export class HelpCommand extends BaseCommand {
    * Validates the command name to ensure it exists
    */
   #validateCommandName(): boolean {
-    const command = this.kernel.getCommand(this.commandName)
+    const command = this.kernel.getCommand(this.name)
     if (!command) {
       renderErrorWithSuggestions(
         this.ui,
-        `Command "${this.commandName}" is not defined`,
-        this.kernel.getCommandSuggestions(this.commandName)
+        `Command "${this.name}" is not defined`,
+        this.kernel.getCommandSuggestions(this.name)
       )
       return false
     }
@@ -170,7 +170,7 @@ export class HelpCommand extends BaseCommand {
       return
     }
 
-    const command = this.kernel.getCommand(this.commandName)!
+    const command = this.kernel.getCommand(this.name)!
     this.renderDescription(command)
     this.renderUsage(command)
     this.renderList(command)
