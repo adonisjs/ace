@@ -123,17 +123,17 @@ test.group('Base command | assertions', () => {
     const model = await kernel.create(MakeModel, [])
     await model.exec()
 
-    assert.doesNotThrows(() => model.assertLogMessage('[ blue(info) ] Running make:model command'))
+    assert.doesNotThrows(() => model.assertLog('[ blue(info) ] Running make:model command'))
     assert.throws(
-      () => model.assertLogMessage('[ cyan(info) ] Running make:model command'),
+      () => model.assertLog('[ cyan(info) ] Running make:model command'),
       `Expected log messages to include '[ cyan(info) ] Running make:model command'`
     )
 
     assert.doesNotThrows(() =>
-      model.assertLogMessage('[ blue(info) ] Running make:model command', 'stdout')
+      model.assertLog('[ blue(info) ] Running make:model command', 'stdout')
     )
     assert.throws(
-      () => model.assertLogMessage('[ blue(info) ] Running make:model command', 'stderr'),
+      () => model.assertLog('[ blue(info) ] Running make:model command', 'stderr'),
       `Expected log message stream to be 'stderr', instead received 'stdout'`
     )
   })

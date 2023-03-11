@@ -581,7 +581,7 @@ export class BaseCommand extends Macroable {
   /**
    * Assert command to log the expected message
    */
-  assertLogMessage(message: string, stream?: 'stdout' | 'stderr') {
+  assertLog(message: string, stream?: 'stdout' | 'stderr') {
     const logs = this.logger.getLogs()
     const logMessages = logs.map((log) => log.message)
     const matchingLog = logs.find((log) => log.message === message)
@@ -595,7 +595,7 @@ export class BaseCommand extends Macroable {
         actual: logMessages,
         expected: [message],
         operator: 'strictEqual',
-        stackStartFn: this.assertLogMessage,
+        stackStartFn: this.assertLog,
       })
       Object.defineProperty(error, 'showDiff', { value: true })
 
@@ -613,7 +613,7 @@ export class BaseCommand extends Macroable {
         actual: matchingLog.stream,
         expected: stream,
         operator: 'strictEqual',
-        stackStartFn: this.assertLogMessage,
+        stackStartFn: this.assertLog,
       })
       Object.defineProperty(error, 'showDiff', { value: true })
 
@@ -634,7 +634,7 @@ export class BaseCommand extends Macroable {
     if (!matchingLog) {
       const error = new AssertionError({
         message: `Expected log messages to match ${inspect(matchingRegex)}`,
-        stackStartFn: this.assertLogMessage,
+        stackStartFn: this.assertLogMatches,
       })
       throw error
     }
@@ -650,7 +650,7 @@ export class BaseCommand extends Macroable {
         actual: matchingLog.stream,
         expected: stream,
         operator: 'strictEqual',
-        stackStartFn: this.assertLogMessage,
+        stackStartFn: this.assertLogMatches,
       })
       Object.defineProperty(error, 'showDiff', { value: true })
 
