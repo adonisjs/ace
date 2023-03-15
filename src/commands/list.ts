@@ -9,6 +9,7 @@
 
 import { BaseCommand } from './base.js'
 import { args } from '../decorators/args.js'
+import { flags } from '../decorators/flags.js'
 import { FlagFormatter } from '../formatters/flag.js'
 import { ListFormatter } from '../formatters/list.js'
 import { renderErrorWithSuggestions } from '../helpers.js'
@@ -40,6 +41,9 @@ export class ListCommand extends BaseCommand {
     required: false,
   })
   declare namespaces?: string[]
+
+  @flags.boolean({ description: 'Get list of commands as JSON' })
+  declare json?: boolean
 
   /**
    * Returns a table for an array of commands.
@@ -148,6 +152,23 @@ export class ListCommand extends BaseCommand {
     })
   }
 
+  protected renderToJSON() {
+    if (this.namespaces && this.namespaces.length) {
+      return this.namespaces
+        .map((namespace) => {
+          return this.kernel.getNamespaceCommands(namespace)
+        })
+        .flat(1)
+    }
+
+    return this.kernel.getNamespaceCommands().concat(
+      this.kernel
+        .getNamespaces()
+        .map((namespace) => this.kernel.getNamespaceCommands(namespace))
+        .flat(1)
+    )
+  }
+
   /**
    * Executed by ace directly
    */
@@ -155,6 +176,11 @@ export class ListCommand extends BaseCommand {
     const hasValidNamespaces = this.#validateNamespace()
     if (!hasValidNamespaces) {
       this.exitCode = 1
+      return
+    }
+
+    if (this.json) {
+      this.logger.log(JSON.stringify(this.renderToJSON(), null, 2))
       return
     }
 

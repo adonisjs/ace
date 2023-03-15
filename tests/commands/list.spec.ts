@@ -73,7 +73,7 @@ test.group('List command', () => {
     ])
   })
 
-  test('show list of all the registered commands for a namespace', async ({ assert }) => {
+  test('show JSON list of all the registered commands for a namespace', async ({ assert }) => {
     const kernel = Kernel.create()
     kernel.ui.switchMode('raw')
 
@@ -215,6 +215,174 @@ test.group('List command', () => {
       {
         message: '  green(make:controller) dim((mc))  dim(Make a new HTTP controller)',
         stream: 'stdout',
+      },
+    ])
+  })
+
+  test('show list of all the registered commands as JSON', async ({ assert }) => {
+    const kernel = Kernel.create()
+    kernel.ui.switchMode('raw')
+
+    class Serve extends BaseCommand {
+      static commandName: string = 'serve'
+      static description: string = 'Start the AdonisJS HTTP server'
+    }
+
+    class MakeController extends BaseCommand {
+      @args.string({ description: 'Name of the controller' })
+      name!: string
+
+      @flags.boolean({ description: 'Add resourceful methods', default: false })
+      resource!: boolean
+
+      static aliases: string[] = ['mc']
+      static commandName: string = 'make:controller'
+      static description: string = 'Make a new HTTP controller'
+    }
+
+    kernel.addLoader(new ListLoader([Serve, MakeController]))
+    const command = await kernel.create(ListCommand, ['--json'])
+    await command.exec()
+
+    assert.equal(command.exitCode, 0)
+    assert.deepEqual(JSON.parse(kernel.ui.logger.getLogs()[0].message), [
+      {
+        commandName: 'list',
+        description: 'View list of available commands',
+        help: [
+          'The list command displays a list of all the commands:',
+          '  {{ binaryName }}list',
+          '',
+          'You can also display the commands for a specific namespace:',
+          '  {{ binaryName }}list <namespace...>',
+        ],
+        namespace: null,
+        aliases: [],
+        flags: [
+          {
+            name: 'json',
+            flagName: 'json',
+            required: false,
+            type: 'boolean',
+            description: 'Get list of commands as JSON',
+          },
+        ],
+        args: [
+          {
+            name: 'namespaces',
+            argumentName: 'namespaces',
+            required: false,
+            description: 'Filter list by namespace',
+            type: 'spread',
+          },
+        ],
+        options: {
+          staysAlive: false,
+          allowUnknownFlags: false,
+        },
+      },
+      {
+        commandName: 'serve',
+        description: 'Start the AdonisJS HTTP server',
+        help: '',
+        namespace: null,
+        aliases: [],
+        flags: [],
+        args: [],
+        options: {
+          staysAlive: false,
+          allowUnknownFlags: false,
+        },
+      },
+      {
+        commandName: 'make:controller',
+        description: 'Make a new HTTP controller',
+        help: '',
+        namespace: 'make',
+        aliases: ['mc'],
+        flags: [
+          {
+            name: 'resource',
+            flagName: 'resource',
+            required: false,
+            type: 'boolean',
+            description: 'Add resourceful methods',
+            default: false,
+          },
+        ],
+        args: [
+          {
+            name: 'name',
+            argumentName: 'name',
+            required: true,
+            description: 'Name of the controller',
+            type: 'string',
+          },
+        ],
+        options: {
+          staysAlive: false,
+          allowUnknownFlags: false,
+        },
+      },
+    ])
+  })
+
+  test('show JSON list of all the registered commands for a namespace', async ({ assert }) => {
+    const kernel = Kernel.create()
+    kernel.ui.switchMode('raw')
+
+    class Serve extends BaseCommand {
+      static commandName: string = 'serve'
+      static description: string = 'Start the AdonisJS HTTP server'
+    }
+
+    class MakeController extends BaseCommand {
+      @args.string({ description: 'Name of the controller' })
+      name!: string
+
+      @flags.boolean({ description: 'Add resourceful methods', default: false })
+      resource!: boolean
+
+      static aliases: string[] = ['mc']
+      static commandName: string = 'make:controller'
+      static description: string = 'Make a new HTTP controller'
+    }
+
+    kernel.addLoader(new ListLoader([Serve, MakeController]))
+    const command = await kernel.create(ListCommand, ['make', '--json'])
+    await command.exec()
+
+    assert.equal(command.exitCode, 0)
+    assert.deepEqual(JSON.parse(kernel.ui.logger.getLogs()[0].message), [
+      {
+        commandName: 'make:controller',
+        description: 'Make a new HTTP controller',
+        help: '',
+        namespace: 'make',
+        aliases: ['mc'],
+        flags: [
+          {
+            name: 'resource',
+            flagName: 'resource',
+            required: false,
+            type: 'boolean',
+            description: 'Add resourceful methods',
+            default: false,
+          },
+        ],
+        args: [
+          {
+            name: 'name',
+            argumentName: 'name',
+            required: true,
+            description: 'Name of the controller',
+            type: 'string',
+          },
+        ],
+        options: {
+          staysAlive: false,
+          allowUnknownFlags: false,
+        },
       },
     ])
   })
