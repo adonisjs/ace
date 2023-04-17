@@ -46,7 +46,7 @@ export class CommandFormatter {
    * Returns multiline command help
    */
   formatHelp(binaryName?: AllowedInfoValues, terminalWidth: number = TERMINAL_SIZE): string {
-    const binary = binaryName ? `${binaryName} ` : ''
+    const binary = binaryName ? `${binaryName}` : ''
     if (!this.#command.help) {
       return ''
     }

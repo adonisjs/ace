@@ -337,7 +337,7 @@ test.group('Help command', () => {
       static aliases: string[] = ['mc', 'controller']
       static commandName: string = 'make:controller'
       static description: string = 'Make a new HTTP controller'
-      static help?: string | string[] | undefined = '{{ binaryName }}make:controller'
+      static help?: string | string[] | undefined = '{{ binaryName }} make:controller'
     }
 
     kernel.addLoader(new ListLoader([MakeController]))

@@ -185,7 +185,7 @@ test.group('Formatters | command', () => {
   test('subsitute binary name in help text', ({ assert }) => {
     class MakeController extends BaseCommand {
       static commandName: string = 'make:controller'
-      static help = 'Make a new HTTP controller {{binaryName}}make:controller <name>'
+      static help = 'Make a new HTTP controller {{binaryName}} make:controller <name>'
 
       @args.string()
       declare name: string
