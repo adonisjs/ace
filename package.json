@@ -21,7 +21,7 @@
   },
   "scripts": {
     "pretest": "npm run lint",
-    "test": "cross-env NODE_DEBUG=adonisjs:ace c8 npm run vscode:test",
+    "test": "cross-env NODE_DEBUG=adonisjs:ace c8 npm run quick:test",
     "clean": "del-cli build",
     "build:schema": "ts-json-schema-generator --path='src/types.ts' --type='CommandMetaData' --tsconfig='tsconfig.json' --out='schemas/command_metadata_schema.json'",
     "copy:files": "copyfiles schemas/* stubs/*.stub build",
@@ -35,7 +35,7 @@
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
     "sync-labels": "github-label-sync --labels .github/labels.json adonisjs/ace",
-    "vscode:test": "node --loader=ts-node/esm bin/test.ts"
+    "quick:test": "node --loader=ts-node/esm bin/test.ts"
   },
   "keywords": [
     "adonisjs",
