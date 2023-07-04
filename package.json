@@ -15,6 +15,9 @@
     ".": "./build/index.js",
     "./types": "./build/src/types.js"
   },
+  "engines": {
+    "node": ">=18.16.0"
+  },
   "scripts": {
     "pretest": "npm run lint",
     "test": "cross-env NODE_DEBUG=adonisjs:ace c8 npm run quick:test",
