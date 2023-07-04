@@ -21,11 +21,12 @@
   },
   "scripts": {
     "pretest": "npm run lint",
-    "test": "cross-env NODE_DEBUG=adonisjs:ace c8 npm run vscode:test",
+    "test": "cross-env NODE_DEBUG=adonisjs:ace c8 npm run quick:test",
     "clean": "del-cli build",
     "build:schema": "ts-json-schema-generator --path='src/types.ts' --type='CommandMetaData' --tsconfig='tsconfig.json' --out='schemas/command_metadata_schema.json'",
     "copy:files": "copyfiles schemas/* stubs/*.stub build",
     "precompile": "npm run lint && npm run clean",
+    "typecheck": "tsc --noEmit",
     "compile": "tsc",
     "postcompile": "npm run build:schema && npm run copy:files",
     "build": "npm run compile",
@@ -35,7 +36,7 @@
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
     "sync-labels": "github-label-sync --labels .github/labels.json adonisjs/ace",
-    "vscode:test": "node --loader=ts-node/esm bin/test.ts"
+    "quick:test": "node --loader=ts-node/esm bin/test.ts"
   },
   "keywords": [
     "adonisjs",
@@ -59,6 +60,9 @@
     "youch-terminal": "^2.2.1"
   },
   "devDependencies": {
+    "@adonisjs/eslint-config": "^1.1.7",
+    "@adonisjs/prettier-config": "^1.1.7",
+    "@adonisjs/tsconfig": "^1.1.7",
     "@commitlint/cli": "^17.6.6",
     "@commitlint/config-conventional": "^17.6.6",
     "@japa/assert": "^2.0.0-1",
@@ -73,9 +77,6 @@
     "cross-env": "^7.0.3",
     "del-cli": "^5.0.0",
     "eslint": "^8.44.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-adonis": "^3.0.3",
-    "eslint-plugin-prettier": "^4.2.1",
     "github-label-sync": "^2.3.1",
     "husky": "^8.0.3",
     "np": "^8.0.4",
@@ -91,37 +92,6 @@
   },
   "bugs": {
     "url": "https://github.com/adonisjs/ace/issues"
-  },
-  "eslintConfig": {
-    "extends": [
-      "plugin:adonis/typescriptPackage",
-      "prettier"
-    ],
-    "plugins": [
-      "prettier"
-    ],
-    "rules": {
-      "prettier/prettier": [
-        "error",
-        {
-          "endOfLine": "auto"
-        }
-      ]
-    }
-  },
-  "eslintIgnore": [
-    "build",
-    "backup"
-  ],
-  "prettier": {
-    "trailingComma": "es5",
-    "semi": false,
-    "singleQuote": true,
-    "useTabs": false,
-    "quoteProps": "consistent",
-    "bracketSpacing": true,
-    "arrowParens": "always",
-    "printWidth": 100
   },
   "commitlint": {
     "extends": [
@@ -148,5 +118,9 @@
       "build/**",
       "examples/**"
     ]
-  }
+  },
+  "eslintConfig": {
+    "extends": "@adonisjs/eslint-config/package"
+  },
+  "prettier": "@adonisjs/prettier-config"
 }
