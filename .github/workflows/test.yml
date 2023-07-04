@@ -1,7 +1,0 @@
-name: test
-on:
-  - push
-  - pull_request
-jobs:
-  test:
-    uses: adonisjs/.github/.github/workflows/test.yml@main
