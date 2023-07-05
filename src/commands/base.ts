@@ -657,4 +657,26 @@ export class BaseCommand extends Macroable {
       throw error
     }
   }
+
+  /**
+   * Assert the command prints a table to stdout
+   */
+  assertTableRows(rows: string[][]) {
+    const logs = this.logger.getLogs()
+    const hasAllMatchingRows = rows.every((row) => {
+      const columnsContent = row.join('|')
+      return !!logs.find((log) => log.message === columnsContent)
+    })
+
+    if (!hasAllMatchingRows) {
+      const error = new AssertionError({
+        message: `Expected log messages to include a table with the expected rows`,
+        operator: 'strictEqual',
+        stackStartFn: this.assertTableRows,
+      })
+      Object.defineProperty(error, 'showDiff', { value: true })
+
+      throw error
+    }
+  }
 }
