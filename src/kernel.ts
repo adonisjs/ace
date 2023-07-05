@@ -10,7 +10,7 @@
 import Hooks from '@poppinss/hooks'
 import { cliui } from '@poppinss/cliui'
 import { Prompt } from '@poppinss/prompts'
-import { findBestMatch } from 'string-similarity'
+import { distance } from 'fastest-levenshtein'
 import { RuntimeException } from '@poppinss/utils'
 
 import debug from './debug.js'
@@ -543,20 +543,36 @@ export class Kernel<Command extends AbstractBaseCommand> {
 
     const commandsAndAliases = [...this.#commands.keys()].concat([...this.#aliases.keys()])
 
-    return findBestMatch(keyword, commandsAndAliases)
-      .ratings.sort((current, next) => next.rating - current.rating)
-      .filter((rating) => rating.rating > 0.4)
-      .map((rating) => rating.target)
+    return commandsAndAliases
+      .map((value) => {
+        return {
+          value,
+          distance: distance(keyword, value),
+        }
+      })
+      .sort((current, next) => next.distance - current.distance)
+      .filter((rating) => {
+        return rating.distance <= 3
+      })
+      .map((rating) => rating.value)
   }
 
   /**
    * Returns an array of namespaces suggestions for a given keyword.
    */
   getNamespaceSuggestions(keyword: string): string[] {
-    return findBestMatch(keyword, this.#namespaces)
-      .ratings.sort((current, next) => next.rating - current.rating)
-      .filter((rating) => rating.rating > 0.4)
-      .map((rating) => rating.target)
+    return this.#namespaces
+      .map((value) => {
+        return {
+          value,
+          distance: distance(keyword, value),
+        }
+      })
+      .sort((current, next) => next.distance - current.distance)
+      .filter((rating) => {
+        return rating.distance <= 3
+      })
+      .map((rating) => rating.value)
   }
 
   /**

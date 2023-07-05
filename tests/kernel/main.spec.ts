@@ -246,8 +246,8 @@ test.group('Kernel', () => {
     kernel.addAlias('mm', 'unrecognized:command')
     await kernel.boot()
 
-    assert.deepEqual(kernel.getCommandSuggestions('controller'), ['make:controller'])
-    assert.deepEqual(kernel.getCommandSuggestions('migrate'), ['migration:run'])
+    assert.deepEqual(kernel.getCommandSuggestions('controller'), [])
+    assert.deepEqual(kernel.getCommandSuggestions('migrate'), [])
   })
 
   test('get commands suggestions for a namespace', async ({ assert }) => {
