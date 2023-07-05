@@ -539,16 +539,13 @@ export class BaseCommand extends Macroable {
    */
   assertExitCode(code: number) {
     if (this.exitCode !== code) {
-      const error = new AssertionError({
+      throw new AssertionError({
         message: `Expected '${this.commandName}' command to finish with exit code '${code}'`,
         actual: this.exitCode,
         expected: code,
         operator: 'strictEqual',
         stackStartFn: this.assertExitCode,
       })
-      Object.defineProperty(error, 'showDiff', { value: true })
-
-      throw error
     }
   }
 
@@ -590,23 +587,20 @@ export class BaseCommand extends Macroable {
      * No log found
      */
     if (!matchingLog) {
-      const error = new AssertionError({
+      throw new AssertionError({
         message: `Expected log messages to include ${inspect(message)}`,
         actual: logMessages,
         expected: [message],
         operator: 'strictEqual',
         stackStartFn: this.assertLog,
       })
-      Object.defineProperty(error, 'showDiff', { value: true })
-
-      throw error
     }
 
     /**
      * Log is on a different stream
      */
     if (stream && matchingLog.stream !== stream) {
-      const error = new AssertionError({
+      throw new AssertionError({
         message: `Expected log message stream to be ${inspect(stream)}, instead received ${inspect(
           matchingLog.stream
         )}`,
@@ -615,9 +609,6 @@ export class BaseCommand extends Macroable {
         operator: 'strictEqual',
         stackStartFn: this.assertLog,
       })
-      Object.defineProperty(error, 'showDiff', { value: true })
-
-      throw error
     }
   }
 
@@ -632,18 +623,17 @@ export class BaseCommand extends Macroable {
      * No log found
      */
     if (!matchingLog) {
-      const error = new AssertionError({
+      throw new AssertionError({
         message: `Expected log messages to match ${inspect(matchingRegex)}`,
         stackStartFn: this.assertLogMatches,
       })
-      throw error
     }
 
     /**
      * Log is on a different stream
      */
     if (stream && matchingLog.stream !== stream) {
-      const error = new AssertionError({
+      throw new AssertionError({
         message: `Expected log message stream to be ${inspect(stream)}, instead received ${inspect(
           matchingLog.stream
         )}`,
@@ -652,9 +642,6 @@ export class BaseCommand extends Macroable {
         operator: 'strictEqual',
         stackStartFn: this.assertLogMatches,
       })
-      Object.defineProperty(error, 'showDiff', { value: true })
-
-      throw error
     }
   }
 
@@ -669,14 +656,11 @@ export class BaseCommand extends Macroable {
     })
 
     if (!hasAllMatchingRows) {
-      const error = new AssertionError({
+      throw new AssertionError({
         message: `Expected log messages to include a table with the expected rows`,
         operator: 'strictEqual',
         stackStartFn: this.assertTableRows,
       })
-      Object.defineProperty(error, 'showDiff', { value: true })
-
-      throw error
     }
   }
 }
