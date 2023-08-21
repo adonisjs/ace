@@ -56,6 +56,8 @@ test.group('Index generator', (group) => {
     const generator = new IndexGenerator(join(fs.basePath, 'commands'))
     await generator.generate()
 
+    await assert.fileExists('commands/main.d.ts')
+
     /**
      * Validate index
      */

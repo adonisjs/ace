@@ -41,6 +41,9 @@ export class IndexGenerator {
     const loaderFile = join(this.#commandsDir, 'main.js')
     const loaderStub = join(stubsRoot, 'commands_loader.stub')
 
+    const loaderTypes = join(this.#commandsDir, 'main.d.ts')
+    const loaderTypesStub = join(stubsRoot, 'commands_loader_types.stub')
+
     await mkdir(this.#commandsDir, { recursive: true })
     console.log(`artifacts directory: ${this.#commandsDir}`)
 
@@ -49,5 +52,8 @@ export class IndexGenerator {
 
     await copyFile(loaderStub, loaderFile)
     console.log('create main.js')
+
+    await copyFile(loaderTypesStub, loaderTypes)
+    console.log('create main.d.ts')
   }
 }
