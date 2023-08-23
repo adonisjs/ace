@@ -2,7 +2,7 @@
 
 <br />
 
-[![gh-workflow-image]][gh-workflow-url] [![npm-image]][npm-url] ![][typescript-image] [![license-image]][license-url] [![synk-image]][synk-url]
+[![gh-workflow-image]][gh-workflow-url] [![npm-image]][npm-url] ![][typescript-image] [![license-image]][license-url]
 
 ## Introduction
 Ace is the command-line framework for Node.js. It is built with **testing in mind**, is **light weight** in comparison to other CLI frameworks, and offers a clean API for creating CLI commands.
@@ -21,8 +21,8 @@ In order to ensure that the AdonisJS community is welcoming to all, please revie
 ## License
 AdonisJS Ace is open-sourced software licensed under the [MIT license](LICENSE.md).
 
-[gh-workflow-image]: https://img.shields.io/github/actions/workflow/status/adonisjs/ace/test.yml?style=for-the-badge
-[gh-workflow-url]: https://github.com/adonisjs/ace/actions/workflows/test.yml "Github action"
+[gh-workflow-image]: https://img.shields.io/github/actions/workflow/status/adonisjs/ace/checks.yml?style=for-the-badge
+[gh-workflow-url]: https://github.com/adonisjs/ace/actions/workflows/checks.yml "Github action"
 
 [npm-image]: https://img.shields.io/npm/v/@adonisjs/ace/latest.svg?style=for-the-badge&logo=npm
 [npm-url]: https://npmjs.org/package/@adonisjs/ace/v/latest "npm"
@@ -31,6 +31,3 @@ AdonisJS Ace is open-sourced software licensed under the [MIT license](LICENSE.m
 
 [license-url]: LICENSE.md
 [license-image]: https://img.shields.io/github/license/adonisjs/ace?style=for-the-badge
-
-[synk-image]: https://img.shields.io/snyk/vulnerabilities/github/adonisjs/ace?label=Synk%20Vulnerabilities&style=for-the-badge
-[synk-url]: https://snyk.io/test/github/adonisjs/ace?targetFile=package.json "synk"
