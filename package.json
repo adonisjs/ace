@@ -5,11 +5,7 @@
   "main": "build/index.js",
   "type": "module",
   "files": [
-    "build/schemas",
-    "build/src",
-    "build/stubs",
-    "build/index.d.ts",
-    "build/index.js"
+    "build"
   ],
   "exports": {
     ".": "./build/index.js",
@@ -26,7 +22,7 @@
     "copy:files": "copyfiles schemas/* stubs/*.stub build",
     "precompile": "npm run lint && npm run clean",
     "typecheck": "tsc --noEmit",
-    "compile": "tsc",
+    "compile": "tsup-node",
     "postcompile": "npm run build:schema && npm run copy:files",
     "build": "npm run compile",
     "release": "np",
@@ -83,6 +79,7 @@
     "reflect-metadata": "^0.1.13",
     "ts-json-schema-generator": "^1.3.0",
     "ts-node": "^10.9.1",
+    "tsup": "^7.2.0",
     "typescript": "^5.1.6"
   },
   "repository": {
@@ -121,5 +118,16 @@
   "eslintConfig": {
     "extends": "@adonisjs/eslint-config/package"
   },
-  "prettier": "@adonisjs/prettier-config"
+  "prettier": "@adonisjs/prettier-config",
+  "tsup": {
+    "entry": [
+      "./index.ts",
+      "./src/types.ts"
+    ],
+    "outDir": "./build",
+    "clean": true,
+    "format": "esm",
+    "dts": true,
+    "target": "esnext"
+  }
 }
