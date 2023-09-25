@@ -7,7 +7,10 @@
  * file that was distributed with this source code.
  */
 
+import { errors } from '@poppinss/prompts'
 import { createError, Exception } from '@poppinss/utils'
+
+export const E_PROMPT_CANCELLED = errors.E_PROMPT_CANCELLED
 
 /**
  * Command is missing the static property command name
