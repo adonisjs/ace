@@ -8,9 +8,13 @@
  */
 
 import { Validator } from 'jsonschema'
+import { readFile } from 'node:fs/promises'
 import { RuntimeException } from '@poppinss/utils'
-import schema from '../schemas/command_metadata_schema.json' assert { type: 'json' }
 import type { AbstractBaseCommand, CommandMetaData, UIPrimitives } from './types.js'
+
+const schema = JSON.parse(
+  await readFile(new URL('./schemas/command_metadata_schema.json', import.meta.url), 'utf8')
+)
 
 /**
  * Helper to sort array of strings alphabetically.
