@@ -13,6 +13,7 @@ import Macroable from '@poppinss/macroable'
 import lodash from '@poppinss/utils/lodash'
 import { AssertionError } from 'node:assert'
 import type { Prompt } from '@poppinss/prompts'
+import type { Colors } from '@poppinss/cliui/types'
 import { defineStaticProperty, InvalidArgumentsException } from '@poppinss/utils'
 
 import debug from '../debug.js'
@@ -409,7 +410,7 @@ export class BaseCommand extends Macroable {
   /**
    * Add colors to console messages
    */
-  get colors() {
+  get colors(): Colors {
     return this.ui.colors
   }
 

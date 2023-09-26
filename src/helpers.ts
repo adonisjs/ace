@@ -10,10 +10,12 @@
 import { Validator } from 'jsonschema'
 import { readFile } from 'node:fs/promises'
 import { RuntimeException } from '@poppinss/utils'
+
+import { schemaRoot } from '../schemas/main.js'
 import type { AbstractBaseCommand, CommandMetaData, UIPrimitives } from './types.js'
 
 const schema = JSON.parse(
-  await readFile(new URL('./schemas/command_metadata_schema.json', import.meta.url), 'utf8')
+  await readFile(new URL('./command_metadata_schema.json', schemaRoot), 'utf8')
 )
 
 /**
