@@ -56,6 +56,10 @@ export class Parser {
     /**
      * Register alias (when exists)
      */
+    if (flag.type === 'string') {
+      options.string!.push(flag.name)
+    }
+
     if (flag.alias) {
       options.alias![flag.alias] = flag.name
     }
@@ -193,7 +197,7 @@ export class Parser {
      *
      * It is fine. Flags are optional anyways
      */
-    if (value === undefined) {
+    if (value === undefined || value === '') {
       return
     }
 

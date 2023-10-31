@@ -100,6 +100,20 @@ test.group('Parser | flags', () => {
     assert.deepEqual(output, { _: [], admin: 'true' })
   })
 
+  test('parse big "numbered" string as real string', ({ assert }) => {
+    const parser = new Parser({
+      str: {
+        type: 'string',
+        name: 'str',
+        propertyName: 'str',
+        handler: () => {},
+      },
+    })
+
+    const output = parser.parse(['--str=111111111111111111111111'])
+    assert.deepEqual(output, { _: [], str: '111111111111111111111111' })
+  })
+
   test('do not define string flag when it is not mentioned', ({ assert }) => {
     const parser = new Parser({
       admin: {
