@@ -5,7 +5,10 @@
   "main": "build/index.js",
   "type": "module",
   "files": [
-    "build"
+    "build",
+    "!build/bin",
+    "!build/examples",
+    "!build/tests"
   ],
   "exports": {
     ".": "./build/index.js",
@@ -19,10 +22,10 @@
     "test": "cross-env NODE_DEBUG=adonisjs:ace c8 npm run quick:test",
     "clean": "del-cli build",
     "build:schema": "ts-json-schema-generator --path='src/types.ts' --type='CommandMetaData' --tsconfig='tsconfig.json' --out='schemas/command_metadata_schema.json'",
-    "copy:files": "copyfiles --up=1 schemas/* build && copyfiles --up=1 stubs/*.stub build",
+    "copy:files": "copyfiles --up=1 schemas/*.stub build && copyfiles --up=1 stubs/*.stub build",
     "precompile": "npm run lint && npm run clean",
     "typecheck": "tsc --noEmit",
-    "compile": "tsup-node",
+    "compile": "tsup-node && tsc --emitDeclarationOnly --declaration",
     "postcompile": "npm run build:schema && npm run copy:files",
     "build": "npm run compile",
     "release": "np",
@@ -126,7 +129,8 @@
     "outDir": "./build",
     "clean": true,
     "format": "esm",
-    "dts": true,
+    "dts": false,
+    "sourcemap": true,
     "target": "esnext"
   }
 }
