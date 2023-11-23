@@ -79,8 +79,8 @@ export class Parser {
           value = Array.isArray(option.default)
             ? option.default
             : option.default === undefined
-            ? undefined
-            : [option.default]
+              ? undefined
+              : [option.default]
         }
 
         /**
