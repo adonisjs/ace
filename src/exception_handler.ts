@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { errors as promptsErrors } from '@poppinss/prompts'
 import { errors, Kernel } from '../index.js'
 import { renderErrorWithSuggestions } from './helpers.js'
 
@@ -72,6 +73,14 @@ export class ExceptionHandler {
         error.message,
         kernel.getCommandSuggestions(error.commandName)
       )
+      return
+    }
+
+    /**
+     * Display prompt cancellation error
+     */
+    if (error instanceof promptsErrors.E_PROMPT_CANCELLED) {
+      this.logError({ message: 'Process exited during prompt cancellation' }, kernel)
       return
     }
 
