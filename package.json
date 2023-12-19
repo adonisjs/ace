@@ -1,6 +1,6 @@
 {
   "name": "@adonisjs/ace",
-  "version": "12.3.2-3",
+  "version": "12.3.2-4",
   "description": "A CLI framework for Node.js",
   "main": "build/index.js",
   "type": "module",
