@@ -299,7 +299,7 @@ test.group('Parser | flags', () => {
         unknownFlags: [],
         flags: {
           'batch-size': 1.1111111111111111e23, // converted to number
-          'connection': '111111111111111111111111', // reatains string value
+          'connection': '111111111111111111111111', // retains string value
         },
       }
     )
