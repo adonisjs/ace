@@ -282,6 +282,28 @@ test.group('Parser | flags', () => {
       },
     })
   })
+
+  test('parse big numbers', ({ assert }) => {
+    class MakeModel extends BaseCommand {}
+    MakeModel.defineFlag('connection', { type: 'string' })
+    MakeModel.defineFlag('batchSize', { type: 'number' })
+
+    assert.deepEqual(
+      new Parser(MakeModel.getParserOptions()).parse(
+        '--connection=111111111111111111111111 --batch-size=111111111111111111111111'
+      ),
+      {
+        _: [],
+        nodeArgs: [],
+        args: [],
+        unknownFlags: [],
+        flags: {
+          'batch-size': 1.1111111111111111e23, // converted to number
+          'connection': '111111111111111111111111', // reatains string value
+        },
+      }
+    )
+  })
 })
 
 test.group('Parser | arguments', () => {
