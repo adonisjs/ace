@@ -80,7 +80,7 @@ export class ExceptionHandler {
      * Display prompt cancellation error
      */
     if (error instanceof promptsErrors.E_PROMPT_CANCELLED) {
-      this.logError({ message: 'Process exited during prompt cancellation' }, kernel)
+      this.logError({ message: 'Prompt cancelled' }, kernel)
       return
     }
 
