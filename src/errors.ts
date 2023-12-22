@@ -24,6 +24,7 @@ export const E_MISSING_COMMAND_NAME = createError<[command: string]>(
  * Cannot find a command for the given name
  */
 export const E_COMMAND_NOT_FOUND = class CommandNotFound extends Exception {
+  static status: number = 404
   commandName: string
   constructor(args: [command: string]) {
     super(`Command "${args[0]}" is not defined`, { code: 'E_COMMAND_NOT_FOUND' })
