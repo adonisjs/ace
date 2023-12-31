@@ -251,10 +251,10 @@ test.group('List command', () => {
         description: 'View list of available commands',
         help: [
           'The list command displays a list of all the commands:',
-          '  {{ binaryName }}list',
+          '  {{ binaryName }} list',
           '',
           'You can also display the commands for a specific namespace:',
-          '  {{ binaryName }}list <namespace...>',
+          '  {{ binaryName }} list <namespace...>',
         ],
         namespace: null,
         aliases: [],

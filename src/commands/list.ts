@@ -27,10 +27,10 @@ export class ListCommand extends BaseCommand {
   static description: string = 'View list of available commands'
   static help = [
     'The list command displays a list of all the commands:',
-    '  {{ binaryName }}list',
+    '  {{ binaryName }} list',
     '',
     'You can also display the commands for a specific namespace:',
-    '  {{ binaryName }}list <namespace...>',
+    '  {{ binaryName }} list <namespace...>',
   ]
 
   /**
