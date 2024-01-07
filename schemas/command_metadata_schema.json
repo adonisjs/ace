@@ -1,0 +1,172 @@
+{
+  "$ref": "#/definitions/CommandMetaData",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "CommandMetaData": {
+      "description": "Command metdata required to display command help.",
+      "properties": {
+        "aliases": {
+          "description": "Command aliases. The same command can be run using these aliases as well.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "args": {
+          "description": "Args accepted by the command",
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "allowEmptyValue": {
+                "description": "Whether or not to allow empty values. When set to false, the validation will fail if the argument is provided an empty string\n\nDefaults to false",
+                "type": "boolean"
+              },
+              "argumentName": {
+                "type": "string"
+              },
+              "default": {},
+              "description": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "required": {
+                "type": "boolean"
+              },
+              "type": {
+                "enum": [
+                  "string",
+                  "spread"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "argumentName",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "commandName": {
+          "description": "The name of the command",
+          "type": "string"
+        },
+        "description": {
+          "description": "The command description to show on the help screen",
+          "type": "string"
+        },
+        "flags": {
+          "description": "Flags accepted by the command",
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "alias": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  }
+                ]
+              },
+              "allowEmptyValue": {
+                "description": "Whether or not to allow empty values. When set to false, the validation will fail if the flag is mentioned but no value is provided\n\nDefaults to false",
+                "type": "boolean"
+              },
+              "default": {},
+              "description": {
+                "type": "string"
+              },
+              "flagName": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "required": {
+                "type": "boolean"
+              },
+              "showNegatedVariantInHelp": {
+                "description": "Whether or not to display the negated variant in the help output.\n\nApplicable for boolean flags only\n\nDefaults to false",
+                "type": "boolean"
+              },
+              "type": {
+                "enum": [
+                  "string",
+                  "boolean",
+                  "number",
+                  "array"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "flagName",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "help": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Help text for the command"
+        },
+        "namespace": {
+          "description": "Command namespace. The namespace is extracted from the command name",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "options": {
+          "$ref": "#/definitions/CommandOptions",
+          "description": "Command configuration options"
+        }
+      },
+      "required": [
+        "aliases",
+        "args",
+        "commandName",
+        "description",
+        "flags",
+        "namespace",
+        "options"
+      ],
+      "type": "object"
+    },
+    "CommandOptions": {
+      "description": "Static set of command options",
+      "properties": {
+        "allowUnknownFlags": {
+          "description": "Whether or not to allow for unknown flags. If set to false, the command will not run when unknown flags are provided through the CLI\n\nDefaults to false",
+          "type": "boolean"
+        },
+        "staysAlive": {
+          "description": "When flag set to true, the kernel will not trigger the termination process unless the command explicitly calls the terminate method.\n\nDefaults to false",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    }
+  }
+}
