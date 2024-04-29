@@ -367,7 +367,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
 
   /**
    * Listen for CLI options and execute an action. Only one listener
-   * can be defined per aption.
+   * can be defined per option.
    *
    * The callbacks are only executed for the main command
    */
