@@ -1,7 +1,10 @@
 {
   "name": "@adonisjs/ace",
-  "version": "13.0.1",
   "description": "A CLI framework for Node.js",
+  "version": "13.0.1",
+  "engines": {
+    "node": ">=18.16.0"
+  },
   "main": "build/index.js",
   "type": "module",
   "files": [
@@ -13,9 +16,6 @@
   "exports": {
     ".": "./build/index.js",
     "./types": "./build/src/types.js"
-  },
-  "engines": {
-    "node": ">=18.16.0"
   },
   "scripts": {
     "pretest": "npm run lint",
@@ -36,34 +36,13 @@
     "sync-labels": "github-label-sync --labels .github/labels.json adonisjs/ace",
     "quick:test": "node --loader=ts-node/esm bin/test.ts"
   },
-  "keywords": [
-    "adonisjs",
-    "commandline",
-    "cli",
-    "commander"
-  ],
-  "author": "virk,adonisjs",
-  "license": "MIT",
-  "dependencies": {
-    "@poppinss/cliui": "^6.3.0",
-    "@poppinss/hooks": "^7.2.2",
-    "@poppinss/macroable": "^1.0.1",
-    "@poppinss/prompts": "^3.1.2",
-    "@poppinss/utils": "^6.7.0",
-    "fastest-levenshtein": "^1.0.16",
-    "jsonschema": "^1.4.1",
-    "string-width": "^7.0.0",
-    "yargs-parser": "^21.1.1",
-    "youch": "^3.3.3",
-    "youch-terminal": "^2.2.3"
-  },
   "devDependencies": {
     "@adonisjs/eslint-config": "^1.2.1",
     "@adonisjs/prettier-config": "^1.2.1",
     "@adonisjs/tsconfig": "^1.2.1",
-    "@commitlint/cli": "^18.4.4",
-    "@commitlint/config-conventional": "^18.4.4",
-    "@japa/assert": "^2.1.0",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@japa/assert": "^3.0.0",
     "@japa/expect-type": "^2.0.1",
     "@japa/file-system": "^2.1.1",
     "@japa/runner": "^3.1.1",
@@ -84,6 +63,21 @@
     "tsup": "^8.0.1",
     "typescript": "^5.3.3"
   },
+  "dependencies": {
+    "@poppinss/cliui": "^6.3.0",
+    "@poppinss/hooks": "^7.2.2",
+    "@poppinss/macroable": "^1.0.1",
+    "@poppinss/prompts": "^3.1.2",
+    "@poppinss/utils": "^6.7.0",
+    "fastest-levenshtein": "^1.0.16",
+    "jsonschema": "^1.4.1",
+    "string-width": "^7.0.0",
+    "yargs-parser": "^21.1.1",
+    "youch": "^3.3.3",
+    "youch-terminal": "^2.2.3"
+  },
+  "author": "virk,adonisjs",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/adonisjs/ace.git"
@@ -91,6 +85,16 @@
   "bugs": {
     "url": "https://github.com/adonisjs/ace/issues"
   },
+  "keywords": [
+    "adonisjs",
+    "commandline",
+    "cli",
+    "commander"
+  ],
+  "eslintConfig": {
+    "extends": "@adonisjs/eslint-config/package"
+  },
+  "prettier": "@adonisjs/prettier-config",
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
@@ -111,10 +115,6 @@
       "examples/**"
     ]
   },
-  "eslintConfig": {
-    "extends": "@adonisjs/eslint-config/package"
-  },
-  "prettier": "@adonisjs/prettier-config",
   "tsup": {
     "entry": [
       "./index.ts",
