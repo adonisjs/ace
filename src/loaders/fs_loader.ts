@@ -8,7 +8,7 @@
  */
 
 import { fileURLToPath } from 'node:url'
-import { basename, extname, join, relative } from 'node:path'
+import { basename, extname, relative } from 'node:path'
 import { fsReadAll, importDefault, slash } from '@poppinss/utils'
 
 import { validateCommand } from '../helpers.js'
@@ -35,7 +35,7 @@ export class FsLoader<Command extends AbstractBaseCommand> implements LoadersCon
   /**
    * An array of loaded commands
    */
-  #commands: { command: Command; filePath: string; absoluteFilePath: string }[] = []
+  #commands: { command: Command; filePath: string }[] = []
 
   constructor(comandsDirectory: string, filter?: (filePath: string) => boolean) {
     this.#comandsDirectory = comandsDirectory
@@ -112,16 +112,11 @@ export class FsLoader<Command extends AbstractBaseCommand> implements LoadersCon
     Object.keys(commandsCollection).forEach((key) => {
       const command = commandsCollection[key]
       validateCommand<Command>(command, `"${key}" file`)
-
-      this.#commands.push({
-        command,
-        filePath: key,
-        absoluteFilePath: slash(join(this.#comandsDirectory, key)),
-      })
+      this.#commands.push({ command, filePath: key })
     })
 
-    return this.#commands.map(({ command, filePath, absoluteFilePath }) => {
-      return Object.assign({}, command.serialize(), { filePath, absoluteFilePath })
+    return this.#commands.map(({ command, filePath }) => {
+      return Object.assign({}, command.serialize(), { filePath })
     })
   }
 

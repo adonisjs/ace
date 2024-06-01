@@ -11,7 +11,6 @@ import { join } from 'node:path'
 import { test } from '@japa/runner'
 import { fileURLToPath } from 'node:url'
 import { FsLoader } from '../../src/loaders/fs_loader.js'
-import { slash } from '@poppinss/utils'
 
 const BASE_URL = new URL('./tmp/', import.meta.url)
 const BASE_PATH = fileURLToPath(BASE_URL)
@@ -75,7 +74,6 @@ test.group('Loaders | fs', (group) => {
     assert.deepEqual(commands, [
       {
         filePath: 'make_controller_v_2.js',
-        absoluteFilePath: slash(join(fs.basePath, './commands/make_controller_v_2.js')),
         commandName: 'make:controller',
         description: '',
         namespace: 'make',
@@ -121,7 +119,6 @@ test.group('Loaders | fs', (group) => {
       {
         commandName: 'make:controller',
         filePath: 'make_controller.js',
-        absoluteFilePath: slash(join(fs.basePath, './commands/make_controller.js')),
         description: '',
         namespace: 'make',
         args: [],
@@ -168,7 +165,6 @@ test.group('Loaders | fs', (group) => {
       {
         commandName: 'make:controller',
         filePath: 'make_controller_v_3.js',
-        absoluteFilePath: slash(join(fs.basePath, './commands/make_controller_v_3.js')),
         description: '',
         namespace: 'make',
         args: [],
@@ -255,7 +251,6 @@ test.group('Loaders | fs', (group) => {
       {
         commandName: 'make:controller',
         filePath: 'make/controller.js',
-        absoluteFilePath: slash(join(fs.basePath, './commands/make/controller.js')),
         description: '',
         namespace: 'make',
         args: [],
@@ -328,7 +323,6 @@ test.group('Loaders | fs', (group) => {
     const commands = await loader.getMetaData()
     assert.deepEqual(commands, [
       {
-        absoluteFilePath: slash(join(fs.basePath, 'commands/make/controller.js')),
         commandName: 'make:controller',
         filePath: 'make/controller.js',
         description: '',
