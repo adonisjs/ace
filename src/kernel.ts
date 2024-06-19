@@ -426,6 +426,14 @@ export class Kernel<Command extends AbstractBaseCommand> {
   }
 
   /**
+   * Check if a command or an alias is registered with kernel
+   */
+  hasCommand(commandName: string): boolean {
+    commandName = this.#aliases.get(commandName) || commandName
+    return this.#commands.has(commandName)
+  }
+
+  /**
    * Get the current state of the kernel.
    */
   getState() {

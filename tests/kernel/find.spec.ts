@@ -200,4 +200,27 @@ test.group('Kernel | find', () => {
     await assert.rejects(() => kernel.find('foo'), 'Command "foo" is not defined')
     assert.deepEqual(stack, ['finding'])
   })
+
+  test('check if a command exists', async ({ assert }) => {
+    const kernel = Kernel.create()
+
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+      static aliases: string[] = ['mc']
+    }
+
+    class MakeModel extends BaseCommand {
+      static commandName = 'make:model'
+    }
+
+    kernel.addLoader(new ListLoader([MakeController, MakeModel]))
+    kernel.addAlias('controller', 'make:controller')
+    await kernel.boot()
+
+    assert.isTrue(kernel.hasCommand('mc'))
+    assert.isTrue(kernel.hasCommand('controller'))
+    assert.isTrue(kernel.hasCommand('make:model'))
+    assert.isTrue(kernel.hasCommand('make:controller'))
+    assert.isFalse(kernel.hasCommand('make:view'))
+  })
 })
