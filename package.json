@@ -1,7 +1,7 @@
 {
   "name": "@adonisjs/ace",
   "description": "A CLI framework for Node.js",
-  "version": "13.0.1",
+  "version": "13.1.0",
   "engines": {
     "node": ">=18.16.0"
   },
