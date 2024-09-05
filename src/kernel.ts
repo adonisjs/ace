@@ -50,7 +50,7 @@ import type {
  * is tailored for a standard CLI environment.
  */
 export class Kernel<Command extends AbstractBaseCommand> {
-  #errorHandler: {
+  errorHandler: {
     render(error: unknown, kernel: Kernel<any>): Promise<any>
   } = new ExceptionHandler()
 
@@ -361,7 +361,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
     } catch (error) {
       this.exitCode = 1
       this.#state = 'completed'
-      await this.#errorHandler.render(error, this)
+      await this.errorHandler.render(error, this)
     }
   }
 
