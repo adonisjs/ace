@@ -122,4 +122,22 @@ test.group('Exception handler', () => {
     assert.equal(logs[0].stream, 'stderr')
     assert.equal(logs[0].message, 'bgRed(white(  ERROR  )) Something went wrong')
   })
+
+  test('allow errors to be self handled', async ({ assert }) => {
+    const kernel = Kernel.create()
+    kernel.ui.switchMode('raw')
+
+    class CustomError extends Exception {
+      render(error: CustomError, $kernel: Kernel<any>) {
+        $kernel.ui.logger.logError(`custom: ${error.message}`)
+      }
+    }
+
+    await new ExceptionHandler().render(new CustomError('Something went wrong'), kernel)
+
+    const logs = kernel.ui.logger.getLogs()
+    assert.lengthOf(logs, 1)
+    assert.equal(logs[0].stream, 'stderr')
+    assert.equal(logs[0].message, 'custom: Something went wrong')
+  })
 })

@@ -98,6 +98,13 @@ export class ExceptionHandler {
     }
 
     /**
+     * Allow errors to be self handled.
+     */
+    if ('render' in error && typeof error.render === 'function') {
+      return error.render(error, kernel)
+    }
+
+    /**
      * Log error message only when not in debug mode
      */
     if (!this.debug) {
