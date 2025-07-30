@@ -54,7 +54,8 @@
     "release-it": "^19.0.4",
     "ts-json-schema-generator": "^2.4.0",
     "tsup": "^8.5.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "youch": "^4.1.0-beta.11"
   },
   "dependencies": {
     "@poppinss/cliui": "^6.4.4",
@@ -65,8 +66,10 @@
     "fastest-levenshtein": "^1.0.16",
     "jsonschema": "^1.5.0",
     "string-width": "^7.2.0",
-    "yargs-parser": "^22.0.0",
-    "youch": "^4.1.0-beta.10"
+    "yargs-parser": "^22.0.0"
+  },
+  "peerDependencies": {
+    "youch": "^4.1.0-beta.11"
   },
   "author": "virk,adonisjs",
   "license": "MIT",
