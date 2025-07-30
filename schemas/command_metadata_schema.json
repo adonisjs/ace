@@ -35,18 +35,11 @@
                 "type": "boolean"
               },
               "type": {
-                "enum": [
-                  "string",
-                  "spread"
-                ],
+                "enum": ["string", "spread"],
                 "type": "string"
               }
             },
-            "required": [
-              "name",
-              "argumentName",
-              "type"
-            ],
+            "required": ["name", "argumentName", "type"],
             "type": "object"
           },
           "type": "array"
@@ -99,20 +92,11 @@
                 "type": "boolean"
               },
               "type": {
-                "enum": [
-                  "string",
-                  "boolean",
-                  "number",
-                  "array"
-                ],
+                "enum": ["string", "boolean", "number", "array"],
                 "type": "string"
               }
             },
-            "required": [
-              "name",
-              "flagName",
-              "type"
-            ],
+            "required": ["name", "flagName", "type"],
             "type": "object"
           },
           "type": "array"
@@ -133,10 +117,7 @@
         },
         "namespace": {
           "description": "Command namespace. The namespace is extracted from the command name",
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": ["string", "null"]
         },
         "options": {
           "$ref": "#/definitions/CommandOptions",

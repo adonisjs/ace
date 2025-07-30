@@ -9,7 +9,7 @@
 
 import { Validator } from 'jsonschema'
 import { readFile } from 'node:fs/promises'
-import { RuntimeException } from '@poppinss/utils'
+import { RuntimeException } from '@poppinss/utils/exception'
 
 import { schemaRoot } from '../schemas/main.js'
 import type { AbstractBaseCommand, CommandMetaData, UIPrimitives } from './types.js'

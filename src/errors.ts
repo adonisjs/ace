@@ -8,7 +8,7 @@
  */
 
 import { errors } from '@poppinss/prompts'
-import { createError, Exception } from '@poppinss/utils'
+import { createError, Exception } from '@poppinss/utils/exception'
 
 export const E_PROMPT_CANCELLED = errors.E_PROMPT_CANCELLED
 

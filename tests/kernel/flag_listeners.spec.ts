@@ -8,11 +8,11 @@
  */
 
 import { test } from '@japa/runner'
-import { Prompt } from '@poppinss/prompts'
+import { type Prompt } from '@poppinss/prompts'
 import { Kernel } from '../../src/kernel.js'
 import { BaseCommand } from '../../src/commands/base.js'
 import { ListLoader } from '../../src/loaders/list_loader.js'
-import { ParsedOutput, UIPrimitives } from '../../src/types.js'
+import { type ParsedOutput, type UIPrimitives } from '../../src/types.js'
 
 test.group('Kernel | handle', (group) => {
   group.each.teardown(() => {

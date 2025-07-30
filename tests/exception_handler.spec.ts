@@ -8,7 +8,8 @@
  */
 
 import { test } from '@japa/runner'
-import { Exception } from '@poppinss/utils'
+import { Exception } from '@poppinss/utils/exception'
+
 import { errors, Kernel } from '../index.js'
 import { ExceptionHandler } from '../src/exception_handler.js'
 
@@ -120,7 +121,7 @@ test.group('Exception handler', () => {
     const logs = kernel.ui.logger.getLogs()
     assert.lengthOf(logs, 1)
     assert.equal(logs[0].stream, 'stderr')
-    assert.equal(logs[0].message, 'bgRed(white(  ERROR  )) Something went wrong')
+    assert.include(logs[0].message, '[ red(error) ] Something went wrong')
   })
 
   test('allow errors to be self handled', async ({ assert }) => {

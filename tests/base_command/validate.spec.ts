@@ -9,7 +9,7 @@
 
 import { test } from '@japa/runner'
 import { Parser } from '../../src/parser.js'
-import { CommandOptions } from '../../src/types.js'
+import { type CommandOptions } from '../../src/types.js'
 import { BaseCommand } from '../../src/commands/base.js'
 
 test.group('Base command | validate args', () => {

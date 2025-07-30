@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Configuration } from 'yargs-parser'
+import { type Configuration } from 'yargs-parser'
 
 /**
  * The fixed config used to parse command line arguments using yargs. We

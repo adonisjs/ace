@@ -11,7 +11,7 @@ import Hooks from '@poppinss/hooks'
 import { cliui } from '@poppinss/cliui'
 import { Prompt } from '@poppinss/prompts'
 import { distance } from 'fastest-levenshtein'
-import { RuntimeException } from '@poppinss/utils'
+import { RuntimeException } from '@poppinss/utils/exception'
 
 import debug from './debug.js'
 import { Parser } from './parser.js'

@@ -8,7 +8,7 @@
  */
 
 import { errors as promptsErrors } from '@poppinss/prompts'
-import { errors, Kernel } from '../index.js'
+import { errors, type Kernel } from '../index.js'
 import { renderErrorWithSuggestions } from './helpers.js'
 
 /**
@@ -43,12 +43,10 @@ export class ExceptionHandler {
    * Pretty prints uncaught error in debug mode
    */
   protected async prettyPrintError(error: object) {
-    // @ts-expect-error
-    const { default: youchTerminal } = await import('youch-terminal')
-    const { default: Youch } = await import('youch')
+    const { Youch } = await import('youch')
 
-    const youch = new Youch(error, {})
-    console.log(youchTerminal(await youch.toJSON(), { displayShortPath: true }))
+    const youch = new Youch()
+    console.log(await youch.toANSI(error))
   }
 
   /**
@@ -105,10 +103,10 @@ export class ExceptionHandler {
     }
 
     /**
-     * Log error message only when not in debug mode
+     * Log error message and stack only when not in debug mode
      */
     if (!this.debug) {
-      this.logError({ message: error.message }, kernel)
+      kernel.ui.logger.fatal(error as any)
       return
     }
 

@@ -7,7 +7,14 @@
  * file that was distributed with this source code.
  */
 
-import { ArrayFlag, BooleanFlag, Flag, NumberFlag, StringFlag, UIPrimitives } from '../types.js'
+import {
+  type ArrayFlag,
+  type BooleanFlag,
+  type Flag,
+  type NumberFlag,
+  type StringFlag,
+  type UIPrimitives,
+} from '../types.js'
 
 /**
  * The flag formatter formats a flag as per the http://docopt.org/ specification.
