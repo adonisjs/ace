@@ -1,0 +1,13 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "@adonisjs/ace",
+  "includeVersion": true,
+  "excludeExternals": true,
+  "entryPoints": ["./index.ts", "./src/types.ts"],
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeInternal": true,
+  "readme": "none",
+  "gitRevision": "main",
+  "sort": ["source-order"]
+}
