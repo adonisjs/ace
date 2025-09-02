@@ -42,6 +42,7 @@ import type {
   ExecutedHookHandler,
   ExecutingHookHandler,
 } from './types.js'
+import { commandExec } from './tracing_channels.ts'
 
 /**
  * The Ace kernel manages the registration and execution of commands.
@@ -274,9 +275,20 @@ export class Kernel<Command extends AbstractBaseCommand> {
      * Execute the command using the executor
      */
     await this.#hooks.runner('executing').run(commandInstance, false)
-    await this.#executor.run(commandInstance, this)
+    await commandExec.tracePromise(
+      this.#executor.run,
+      commandExec.hasSubscribers
+        ? {
+            command: Command,
+            commandInstance,
+            argv,
+          }
+        : undefined,
+      this.#executor,
+      commandInstance,
+      this
+    )
     await this.#hooks.runner('executed').run(commandInstance, false)
-
     return commandInstance
   }
 
@@ -354,7 +366,19 @@ export class Kernel<Command extends AbstractBaseCommand> {
        * Execute the command using the executor
        */
       await this.#hooks.runner('executing').run(this.#mainCommand!, true)
-      await this.#executor.run(this.#mainCommand!, this)
+      await commandExec.tracePromise(
+        this.#executor.run,
+        commandExec.hasSubscribers
+          ? {
+              command: Command,
+              commandInstance: this.#mainCommand!,
+              argv,
+            }
+          : undefined,
+        this.#executor,
+        this.#mainCommand!,
+        this
+      )
       await this.#hooks.runner('executed').run(this.#mainCommand!, true)
       this.exitCode = this.exitCode ?? this.#mainCommand!.exitCode
       this.#state = 'completed'

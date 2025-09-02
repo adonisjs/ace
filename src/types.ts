@@ -12,6 +12,7 @@ import type { Arguments, Options } from 'yargs-parser'
 import type { HookHandler } from '@poppinss/hooks/types'
 
 import type { Kernel } from './kernel.js'
+import { type BaseCommand } from './commands/base.ts'
 
 /**
  * Parsed output of yargs
@@ -390,4 +391,10 @@ export type AbstractBaseCommand = {
     argumentsParserOptions: ArgumentsParserOptions[]
   }
   new (...args: any[]): { hydrate(): void; exitCode?: number }
+}
+
+export type CommandExecTracingData = {
+  command: AbstractBaseCommand
+  commandInstance: InstanceType<AbstractBaseCommand>
+  argv: string[]
 }
