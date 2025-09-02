@@ -8,12 +8,12 @@
  */
 
 import { test } from '@japa/runner'
-import { Kernel } from '../../src/kernel.js'
-import { HelpCommand } from '../../index.js'
-import { args } from '../../src/decorators/args.js'
-import { flags } from '../../src/decorators/flags.js'
-import { BaseCommand } from '../../src/commands/base.js'
-import { ListLoader } from '../../src/loaders/list_loader.js'
+import { Kernel } from '../../src/kernel.ts'
+import { HelpCommand } from '../../index.ts'
+import { args } from '../../src/decorators/args.ts'
+import { flags } from '../../src/decorators/flags.ts'
+import { BaseCommand } from '../../src/commands/base.ts'
+import { ListLoader } from '../../src/loaders/list_loader.ts'
 
 test.group('Help command', () => {
   test('show help for a registered command', async ({ assert }) => {

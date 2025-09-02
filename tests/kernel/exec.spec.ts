@@ -8,10 +8,10 @@
  */
 
 import { test } from '@japa/runner'
-import { Kernel } from '../../src/kernel.js'
-import { args, flags } from '../../index.js'
-import { BaseCommand } from '../../src/commands/base.js'
-import { ListLoader } from '../../src/loaders/list_loader.js'
+import { Kernel } from '../../src/kernel.ts'
+import { args, flags } from '../../index.ts'
+import { BaseCommand } from '../../src/commands/base.ts'
+import { ListLoader } from '../../src/loaders/list_loader.ts'
 
 test.group('Kernel | exec', () => {
   test('execute command', async ({ assert }) => {

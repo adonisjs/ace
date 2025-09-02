@@ -10,7 +10,7 @@
 import { join } from 'node:path'
 import { test } from '@japa/runner'
 import { fileURLToPath } from 'node:url'
-import { IndexGenerator } from '../index.js'
+import { IndexGenerator } from '../index.ts'
 import { validateCommand, validateCommandMetaData } from '../src/utils.ts'
 
 const BASE_URL = new URL('./tmp/', import.meta.url)

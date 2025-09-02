@@ -8,8 +8,8 @@
  */
 
 import { test } from '@japa/runner'
-import { Parser } from '../src/parser.js'
-import { BaseCommand } from '../src/commands/base.js'
+import { Parser } from '../src/parser.ts'
+import { BaseCommand } from '../src/commands/base.ts'
 
 test.group('Parser | flags', () => {
   test('parse flags for all datatypes', ({ assert }) => {

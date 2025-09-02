@@ -9,14 +9,14 @@
 
 import { TERMINAL_SIZE, wrap } from '@poppinss/cliui/helpers'
 
-import { BaseCommand } from './base.js'
-import { args } from '../decorators/args.js'
-import { ListFormatter } from '../formatters/list.js'
-import { FlagFormatter } from '../formatters/flag.js'
+import { BaseCommand } from './base.ts'
+import { args } from '../decorators/args.ts'
+import { ListFormatter } from '../formatters/list.ts'
+import { FlagFormatter } from '../formatters/flag.ts'
 import { renderErrorWithSuggestions } from '../utils.ts'
-import { CommandFormatter } from '../formatters/command.js'
-import { ArgumentFormatter } from '../formatters/argument.js'
-import type { CommandMetaData, ListTable } from '../types.js'
+import { CommandFormatter } from '../formatters/command.ts'
+import { ArgumentFormatter } from '../formatters/argument.ts'
+import type { CommandMetaData, ListTable } from '../types.ts'
 
 /**
  * The Help command is used to view help for a given command

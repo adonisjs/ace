@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { BaseCommand } from '../commands/base.js'
-import type { ArrayFlag, NumberFlag, StringFlag, BooleanFlag } from '../types.js'
+import type { BaseCommand } from '../commands/base.ts'
+import type { ArrayFlag, NumberFlag, StringFlag, BooleanFlag } from '../types.ts'
 
 /**
  * Namespace for defining flags using decorators.

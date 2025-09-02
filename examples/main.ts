@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import { Kernel } from '../src/kernel.js'
-import { args } from '../src/decorators/args.js'
-import { flags } from '../src/decorators/flags.js'
-import { BaseCommand } from '../src/commands/base.js'
-import { ListLoader } from '../src/loaders/list_loader.js'
-import { HelpCommand } from '../src/commands/help.js'
+import { Kernel } from '../src/kernel.ts'
+import { args } from '../src/decorators/args.ts'
+import { flags } from '../src/decorators/flags.ts'
+import { BaseCommand } from '../src/commands/base.ts'
+import { ListLoader } from '../src/loaders/list_loader.ts'
+import { HelpCommand } from '../src/commands/help.ts'
 
 const kernel = Kernel.create()
 

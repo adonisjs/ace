@@ -8,8 +8,8 @@
  */
 
 import { test } from '@japa/runner'
-import { BaseCommand } from '../../src/commands/base.js'
-import { flags } from '../../src/decorators/flags.js'
+import { BaseCommand } from '../../src/commands/base.ts'
+import { flags } from '../../src/decorators/flags.ts'
 
 test.group('Base command | flags', () => {
   test('define flags using decorators', ({ assert }) => {

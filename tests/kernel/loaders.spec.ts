@@ -9,9 +9,9 @@
 
 import { test } from '@japa/runner'
 
-import { Kernel } from '../../src/kernel.js'
-import { BaseCommand } from '../../src/commands/base.js'
-import { ListLoader } from '../../src/loaders/list_loader.js'
+import { Kernel } from '../../src/kernel.ts'
+import { BaseCommand } from '../../src/commands/base.ts'
+import { ListLoader } from '../../src/loaders/list_loader.ts'
 
 test.group('Kernel | loaders', () => {
   test('register commands using a loader', async ({ assert }) => {

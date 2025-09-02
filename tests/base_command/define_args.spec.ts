@@ -8,7 +8,7 @@
  */
 
 import { test } from '@japa/runner'
-import { BaseCommand } from '../../src/commands/base.js'
+import { BaseCommand } from '../../src/commands/base.ts'
 
 test.group('Base command | arguments', () => {
   test('define argument for the command', ({ assert }) => {

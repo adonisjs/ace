@@ -9,10 +9,10 @@
 
 import { test } from '@japa/runner'
 import { colors } from '@poppinss/cliui'
-import { args } from '../../src/decorators/args.js'
-import { flags } from '../../src/decorators/flags.js'
-import { BaseCommand } from '../../src/commands/base.js'
-import { CommandFormatter } from '../../src/formatters/command.js'
+import { args } from '../../src/decorators/args.ts'
+import { flags } from '../../src/decorators/flags.ts'
+import { BaseCommand } from '../../src/commands/base.ts'
+import { CommandFormatter } from '../../src/formatters/command.ts'
 
 test.group('Formatters | command', () => {
   test('format command description', ({ assert }) => {

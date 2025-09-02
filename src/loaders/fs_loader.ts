@@ -14,7 +14,7 @@ import { importDefault } from '@poppinss/utils'
 import { basename, extname, relative } from 'node:path'
 
 import { validateCommand } from '../utils.ts'
-import type { AbstractBaseCommand, CommandMetaData, LoadersContract } from '../types.js'
+import type { AbstractBaseCommand, CommandMetaData, LoadersContract } from '../types.ts'
 
 const JS_MODULES = ['.js', '.cjs', '.mjs']
 

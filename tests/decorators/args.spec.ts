@@ -8,8 +8,8 @@
  */
 
 import { test } from '@japa/runner'
-import { args } from '../../src/decorators/args.js'
-import { BaseCommand } from '../../src/commands/base.js'
+import { args } from '../../src/decorators/args.ts'
+import { BaseCommand } from '../../src/commands/base.ts'
 
 test.group('Decorators | args', () => {
   test('define string argument', ({ assert }) => {

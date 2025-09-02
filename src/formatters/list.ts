@@ -10,7 +10,7 @@
 import stringWidth from 'string-width'
 import { justify, TERMINAL_SIZE, wrap } from '@poppinss/cliui/helpers'
 
-import type { ListTable } from '../types.js'
+import type { ListTable } from '../types.ts'
 
 /**
  * The list formatter formats the list of commands and flags. The option column

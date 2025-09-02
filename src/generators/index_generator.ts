@@ -10,8 +10,8 @@
 import { join } from 'node:path'
 import { copyFile, mkdir, writeFile } from 'node:fs/promises'
 
-import { stubsRoot } from '../../stubs/main.js'
-import { FsLoader } from '../loaders/fs_loader.js'
+import { stubsRoot } from '../../stubs/main.ts'
+import { FsLoader } from '../loaders/fs_loader.ts'
 
 /**
  * The index generators creates a commands laoder that can be lazily

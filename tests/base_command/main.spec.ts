@@ -10,9 +10,9 @@
 import { test } from '@japa/runner'
 import { cliui } from '@poppinss/cliui'
 
-import { Kernel } from '../../src/kernel.js'
-import { BaseCommand } from '../../src/commands/base.js'
-import type { Argument, CommandOptions, Flag } from '../../src/types.js'
+import { Kernel } from '../../src/kernel.ts'
+import { BaseCommand } from '../../src/commands/base.ts'
+import type { Argument, CommandOptions, Flag } from '../../src/types.ts'
 
 test.group('Base command', () => {
   test('access command name from command instance', ({ assert }) => {

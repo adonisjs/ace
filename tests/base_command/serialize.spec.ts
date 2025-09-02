@@ -8,7 +8,7 @@
  */
 
 import { test } from '@japa/runner'
-import { BaseCommand } from '../../src/commands/base.js'
+import { BaseCommand } from '../../src/commands/base.ts'
 
 test.group('Base command | serialize', () => {
   test('serialize command', ({ assert }) => {

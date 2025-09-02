@@ -9,11 +9,11 @@
 
 import { test } from '@japa/runner'
 import { cliui } from '@poppinss/cliui'
-import { Kernel } from '../../src/kernel.js'
-import { args, flags } from '../../index.js'
-import { BaseCommand } from '../../src/commands/base.js'
-import type { CommandOptions } from '../../src/types.js'
-import { ListLoader } from '../../src/loaders/list_loader.js'
+import { Kernel } from '../../src/kernel.ts'
+import { args, flags } from '../../index.ts'
+import { BaseCommand } from '../../src/commands/base.ts'
+import type { CommandOptions } from '../../src/types.ts'
+import { ListLoader } from '../../src/loaders/list_loader.ts'
 
 test.group('Kernel | handle', (group) => {
   group.each.teardown(() => {

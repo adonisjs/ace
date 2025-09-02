@@ -8,8 +8,8 @@
  */
 
 import { test } from '@japa/runner'
-import { Kernel } from '../../src/kernel.js'
-import { BaseCommand } from '../../src/commands/base.js'
+import { Kernel } from '../../src/kernel.ts'
+import { BaseCommand } from '../../src/commands/base.ts'
 
 test.group('Base command | assertions', () => {
   test('assert command has exitCode', async ({ assert }) => {

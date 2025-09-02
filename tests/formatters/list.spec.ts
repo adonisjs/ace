@@ -8,7 +8,7 @@
  */
 
 import { test } from '@japa/runner'
-import { ListFormatter } from '../../src/formatters/list.js'
+import { ListFormatter } from '../../src/formatters/list.ts'
 
 test.group('Formatters | list', () => {
   test('justify option column in all tables', ({ assert }) => {

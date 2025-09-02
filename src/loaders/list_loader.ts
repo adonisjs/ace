@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { AbstractBaseCommand, CommandMetaData, LoadersContract } from '../types.js'
+import type { AbstractBaseCommand, CommandMetaData, LoadersContract } from '../types.ts'
 
 /**
  * List loader exposes the API to register commands as classes

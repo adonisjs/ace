@@ -14,7 +14,7 @@ import {
   type NumberFlag,
   type StringFlag,
   type UIPrimitives,
-} from '../types.js'
+} from '../types.ts'
 
 /**
  * The flag formatter formats a flag as per the http://docopt.org/ specification.

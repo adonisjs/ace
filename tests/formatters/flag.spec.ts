@@ -9,9 +9,9 @@
 
 import { test } from '@japa/runner'
 import { colors } from '@poppinss/cliui'
-import { flags } from '../../src/decorators/flags.js'
-import { BaseCommand } from '../../src/commands/base.js'
-import { FlagFormatter } from '../../src/formatters/flag.js'
+import { flags } from '../../src/decorators/flags.ts'
+import { BaseCommand } from '../../src/commands/base.ts'
+import { FlagFormatter } from '../../src/formatters/flag.ts'
 
 test.group('Formatters | flag', () => {
   test('format string flag name', ({ assert }) => {

@@ -8,9 +8,9 @@
  */
 
 import { test } from '@japa/runner'
-import { Parser } from '../../src/parser.js'
-import { type CommandOptions } from '../../src/types.js'
-import { BaseCommand } from '../../src/commands/base.js'
+import { Parser } from '../../src/parser.ts'
+import { type CommandOptions } from '../../src/types.ts'
+import { BaseCommand } from '../../src/commands/base.ts'
 
 test.group('Base command | validate args', () => {
   test('fail when required argument value is missing', ({ assert }) => {

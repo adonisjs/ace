@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { type Argument, type UIPrimitives } from '../types.js'
+import { type Argument, type UIPrimitives } from '../types.ts'
 
 /**
  * The argument formatter formats an argument as per the http://docopt.org/ specification.

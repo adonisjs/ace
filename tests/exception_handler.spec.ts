@@ -10,8 +10,8 @@
 import { test } from '@japa/runner'
 import { Exception } from '@poppinss/utils/exception'
 
-import { errors, Kernel } from '../index.js'
-import { ExceptionHandler } from '../src/exception_handler.js'
+import { errors, Kernel } from '../index.ts'
+import { ExceptionHandler } from '../src/exception_handler.ts'
 
 test.group('Exception handler', () => {
   test('render non object exceptions using the logger', async ({ assert }) => {

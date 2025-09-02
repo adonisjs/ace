@@ -13,14 +13,14 @@ import { Prompt } from '@poppinss/prompts'
 import { distance } from 'fastest-levenshtein'
 import { RuntimeException } from '@poppinss/utils/exception'
 
-import debug from './debug.js'
-import { Parser } from './parser.js'
-import * as errors from './errors.js'
-import { ListCommand } from './commands/list.js'
-import { BaseCommand } from './commands/base.js'
+import debug from './debug.ts'
+import { Parser } from './parser.ts'
+import * as errors from './errors.ts'
+import { ListCommand } from './commands/list.ts'
+import { BaseCommand } from './commands/base.ts'
 import { sortAlphabetically } from './utils.ts'
-import { ListLoader } from './loaders/list_loader.js'
-import { ExceptionHandler } from './exception_handler.js'
+import { ListLoader } from './loaders/list_loader.ts'
+import { ExceptionHandler } from './exception_handler.ts'
 
 import type {
   Flag,
@@ -41,7 +41,7 @@ import type {
   AbstractBaseCommand,
   ExecutedHookHandler,
   ExecutingHookHandler,
-} from './types.js'
+} from './types.ts'
 import { commandExec } from './tracing_channels.ts'
 
 /**

@@ -17,9 +17,9 @@ import type { Colors } from '@poppinss/cliui/types'
 import { defineStaticProperty } from '@poppinss/utils'
 import { InvalidArgumentsException } from '@poppinss/utils/exception'
 
-import debug from '../debug.js'
-import * as errors from '../errors.js'
-import type { Kernel } from '../kernel.js'
+import debug from '../debug.ts'
+import * as errors from '../errors.ts'
+import type { Kernel } from '../kernel.ts'
 import type {
   Flag,
   Argument,
@@ -29,7 +29,7 @@ import type {
   CommandMetaData,
   FlagsParserOptions,
   ArgumentsParserOptions,
-} from '../types.js'
+} from '../types.ts'
 
 /**
  * The base command sets the foundation for defining ace commands.

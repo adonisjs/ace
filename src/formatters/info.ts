@@ -9,7 +9,7 @@
 
 import stringWidth from 'string-width'
 import { justify, TERMINAL_SIZE } from '@poppinss/cliui/helpers'
-import type { AllowedInfoValues, UIPrimitives } from '../types.js'
+import type { AllowedInfoValues, UIPrimitives } from '../types.ts'
 
 /**
  * Info formatter is used to format the kernel info key-value pair

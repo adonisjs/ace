@@ -10,8 +10,8 @@
 import string from '@poppinss/utils/string'
 import { TERMINAL_SIZE, wrap } from '@poppinss/cliui/helpers'
 
-import { ArgumentFormatter } from './argument.js'
-import type { AllowedInfoValues, CommandMetaData, UIPrimitives } from '../types.js'
+import { ArgumentFormatter } from './argument.ts'
+import type { AllowedInfoValues, CommandMetaData, UIPrimitives } from '../types.ts'
 
 /**
  * The command formatter exposes API to format command data for the

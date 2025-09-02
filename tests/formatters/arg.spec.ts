@@ -9,9 +9,9 @@
 
 import { test } from '@japa/runner'
 import { colors } from '@poppinss/cliui'
-import { args } from '../../src/decorators/args.js'
-import { BaseCommand } from '../../src/commands/base.js'
-import { ArgumentFormatter } from '../../src/formatters/argument.js'
+import { args } from '../../src/decorators/args.ts'
+import { BaseCommand } from '../../src/commands/base.ts'
+import { ArgumentFormatter } from '../../src/formatters/argument.ts'
 
 test.group('Formatters | arg', () => {
   test('format string arg', ({ assert }) => {

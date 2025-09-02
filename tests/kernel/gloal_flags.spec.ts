@@ -8,7 +8,7 @@
  */
 
 import { test } from '@japa/runner'
-import { Kernel } from '../../src/kernel.js'
+import { Kernel } from '../../src/kernel.ts'
 
 test.group('Kernel | global flags', () => {
   test('define global flags', async ({ assert }) => {

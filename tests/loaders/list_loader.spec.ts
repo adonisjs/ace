@@ -8,8 +8,8 @@
  */
 
 import { test } from '@japa/runner'
-import { BaseCommand } from '../../src/commands/base.js'
-import { ListLoader } from '../../src/loaders/list_loader.js'
+import { BaseCommand } from '../../src/commands/base.ts'
+import { ListLoader } from '../../src/loaders/list_loader.ts'
 
 test.group('Loaders | list', () => {
   test('instantiate loader with commands', async ({ assert }) => {

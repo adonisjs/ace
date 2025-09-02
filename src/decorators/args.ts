@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { BaseCommand } from '../commands/base.js'
-import type { SpreadArgument, StringArgument } from '../types.js'
+import type { BaseCommand } from '../commands/base.ts'
+import type { SpreadArgument, StringArgument } from '../types.ts'
 
 /**
  * Namespace for defining arguments using decorators.

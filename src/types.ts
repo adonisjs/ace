@@ -11,8 +11,7 @@ import type { cliui } from '@poppinss/cliui'
 import type { Arguments, Options } from 'yargs-parser'
 import type { HookHandler } from '@poppinss/hooks/types'
 
-import type { Kernel } from './kernel.js'
-import { type BaseCommand } from './commands/base.ts'
+import type { Kernel } from './kernel.ts'
 
 /**
  * Parsed output of yargs

@@ -8,7 +8,7 @@
  */
 
 import { errors as promptsErrors } from '@poppinss/prompts'
-import { errors, type Kernel } from '../index.js'
+import { errors, type Kernel } from '../index.ts'
 import { renderErrorWithSuggestions } from './utils.ts'
 
 /**

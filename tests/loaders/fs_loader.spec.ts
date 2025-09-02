@@ -10,7 +10,7 @@
 import { join } from 'node:path'
 import { test } from '@japa/runner'
 import { fileURLToPath } from 'node:url'
-import { FsLoader } from '../../src/loaders/fs_loader.js'
+import { FsLoader } from '../../src/loaders/fs_loader.ts'
 
 const BASE_URL = new URL('./tmp/', import.meta.url)
 const BASE_PATH = fileURLToPath(BASE_URL)

@@ -7,14 +7,14 @@
  * file that was distributed with this source code.
  */
 
-import { BaseCommand } from './base.js'
-import { args } from '../decorators/args.js'
-import { flags } from '../decorators/flags.js'
-import { FlagFormatter } from '../formatters/flag.js'
-import { ListFormatter } from '../formatters/list.js'
+import { BaseCommand } from './base.ts'
+import { args } from '../decorators/args.ts'
+import { flags } from '../decorators/flags.ts'
+import { FlagFormatter } from '../formatters/flag.ts'
+import { ListFormatter } from '../formatters/list.ts'
 import { renderErrorWithSuggestions } from '../utils.ts'
-import { CommandFormatter } from '../formatters/command.js'
-import type { CommandMetaData, Flag, ListTable } from '../types.js'
+import { CommandFormatter } from '../formatters/command.ts'
+import type { CommandMetaData, Flag, ListTable } from '../types.ts'
 
 /**
  * The list command is used to view a list of commands

@@ -9,10 +9,10 @@
 
 import { test } from '@japa/runner'
 
-import { Kernel } from '../../src/kernel.js'
-import { BaseCommand } from '../../src/commands/base.js'
-import type { CommandMetaData } from '../../src/types.js'
-import { ListLoader } from '../../src/loaders/list_loader.js'
+import { Kernel } from '../../src/kernel.ts'
+import { BaseCommand } from '../../src/commands/base.ts'
+import type { CommandMetaData } from '../../src/types.ts'
+import { ListLoader } from '../../src/loaders/list_loader.ts'
 
 test.group('Kernel | find', () => {
   test('find commands registered using a loader', async ({ assert }) => {

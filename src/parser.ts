@@ -8,14 +8,14 @@
  */
 
 import yargsParser from 'yargs-parser'
-import { yarsConfig } from './yars_config.js'
+import { yarsConfig } from './yars_config.ts'
 
 import type {
   YargsOutput,
   ParsedOutput,
   FlagsParserOptions,
   ArgumentsParserOptions,
-} from './types.js'
+} from './types.ts'
 
 /**
  * Parses the command line arguments. The flags are parsed
