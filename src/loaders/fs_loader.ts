@@ -13,7 +13,7 @@ import { fsReadAll } from '@poppinss/utils/fs'
 import { importDefault } from '@poppinss/utils'
 import { basename, extname, relative } from 'node:path'
 
-import { validateCommand } from '../helpers.js'
+import { validateCommand } from '../utils.ts'
 import type { AbstractBaseCommand, CommandMetaData, LoadersContract } from '../types.js'
 
 const JS_MODULES = ['.js', '.cjs', '.mjs']

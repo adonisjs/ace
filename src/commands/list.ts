@@ -12,7 +12,7 @@ import { args } from '../decorators/args.js'
 import { flags } from '../decorators/flags.js'
 import { FlagFormatter } from '../formatters/flag.js'
 import { ListFormatter } from '../formatters/list.js'
-import { renderErrorWithSuggestions } from '../helpers.js'
+import { renderErrorWithSuggestions } from '../utils.ts'
 import { CommandFormatter } from '../formatters/command.js'
 import type { CommandMetaData, Flag, ListTable } from '../types.js'
 

@@ -14,7 +14,7 @@ import {
   sortAlphabetically,
   validateCommandMetaData,
   renderErrorWithSuggestions,
-} from '../src/helpers.js'
+} from '../src/utils.ts'
 
 test.group('Helpers | Sort', () => {
   test('sort values alphabetically', ({ assert }) => {

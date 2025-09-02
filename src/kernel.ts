@@ -18,7 +18,7 @@ import { Parser } from './parser.js'
 import * as errors from './errors.js'
 import { ListCommand } from './commands/list.js'
 import { BaseCommand } from './commands/base.js'
-import { sortAlphabetically } from './helpers.js'
+import { sortAlphabetically } from './utils.ts'
 import { ListLoader } from './loaders/list_loader.js'
 import { ExceptionHandler } from './exception_handler.js'
 

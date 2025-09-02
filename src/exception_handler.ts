@@ -9,7 +9,7 @@
 
 import { errors as promptsErrors } from '@poppinss/prompts'
 import { errors, type Kernel } from '../index.js'
-import { renderErrorWithSuggestions } from './helpers.js'
+import { renderErrorWithSuggestions } from './utils.ts'
 
 /**
  * The base exception handler that is used by default to exception
