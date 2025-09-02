@@ -319,18 +319,30 @@ export type CommandOptions = {
  * Finding hook handler and data
  */
 export type FindingHookArgs = [[string], [string]]
+
+/**
+ * Finding hook handler type
+ */
 export type FindingHookHandler = HookHandler<FindingHookArgs[0], FindingHookArgs[1]>
 
 /**
- * Found hook handler and data
+ * Loading hook handler and data
  */
 export type LoadingHookArgs = [[CommandMetaData], [CommandMetaData]]
+
+/**
+ * Loading hook handler type
+ */
 export type LoadingHookHandler = HookHandler<LoadingHookArgs[0], LoadingHookArgs[1]>
 
 /**
- * Found hook handler and data
+ * Loaded hook handler and data
  */
 export type LoadedHookArgs<Command extends AbstractBaseCommand> = [[Command], [Command]]
+
+/**
+ * Loaded hook handler type
+ */
 export type LoadedHookHandler<Command extends AbstractBaseCommand> = HookHandler<
   LoadedHookArgs<Command>[0],
   LoadedHookArgs<Command>[1]
@@ -340,6 +352,10 @@ export type LoadedHookHandler<Command extends AbstractBaseCommand> = HookHandler
  * Executing hook handler and data
  */
 export type ExecutingHookArgs<Command> = [[Command, boolean], [Command, boolean]]
+
+/**
+ * Executing hook handler type
+ */
 export type ExecutingHookHandler<Command> = HookHandler<
   ExecutingHookArgs<Command>[0],
   ExecutingHookArgs<Command>[1]
@@ -349,6 +365,10 @@ export type ExecutingHookHandler<Command> = HookHandler<
  * Executed hook handler and data
  */
 export type ExecutedHookArgs<Command> = ExecutingHookArgs<Command>
+
+/**
+ * Executed hook handler type
+ */
 export type ExecutedHookHandler<Command> = ExecutingHookHandler<Command>
 
 /**
@@ -392,6 +412,9 @@ export type AbstractBaseCommand = {
   new (...args: any[]): { hydrate(): void; exitCode?: number }
 }
 
+/**
+ * Command execution tracing data for observability
+ */
 export type CommandExecTracingData = {
   command: AbstractBaseCommand
   commandInstance: InstanceType<AbstractBaseCommand>

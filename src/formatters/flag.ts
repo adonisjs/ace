@@ -17,19 +17,42 @@ import {
 } from '../types.ts'
 
 /**
- * The flag formatter formats a flag as per the http://docopt.org/ specification.
+ * The flag formatter formats a flag as per the http://docopt.org/ specification
+ *
+ * @example
+ * ```ts
+ * const formatter = new FlagFormatter(flag, colors)
+ * const formatted = formatter.formatOption() // '--connection[=CONNECTION]'
+ * const description = formatter.formatDescription() // 'Database connection'
+ * ```
  */
 export class FlagFormatter {
+  /**
+   * The flag configuration
+   */
   #flag: Flag
+
+  /**
+   * Color utilities for formatting output
+   */
   #colors: UIPrimitives['colors']
 
+  /**
+   * Create a new flag formatter
+   *
+   * @param flag - The flag configuration to format
+   * @param colors - Color utilities for output formatting
+   */
   constructor(flag: Flag, colors: UIPrimitives['colors']) {
     this.#flag = flag
     this.#colors = colors
   }
 
   /**
-   * Formats the value flag
+   * Formats the value flag with proper placeholder syntax
+   *
+   * @param flag - The flag configuration
+   * @param valuePlaceholder - The placeholder text for the flag value
    */
   #formatValueFlag(flag: Flag, valuePlaceholder: string) {
     return flag.required ? `=${valuePlaceholder}` : `[=${valuePlaceholder}]`
@@ -37,6 +60,8 @@ export class FlagFormatter {
 
   /**
    * Formats the aliases for the flag
+   *
+   * @param flag - The flag configuration
    */
   #formatAliases(flag: Flag): string[] {
     if (!flag.alias) {
@@ -51,8 +76,9 @@ export class FlagFormatter {
   }
 
   /**
-   * Formats the array flag by appending ellipsis `...` and wrapping
-   * the value to indicate if it is required or not
+   * Formats the array flag by appending ellipsis and wrapping the value
+   *
+   * @param flag - The array flag configuration
    */
   #formatArrayFlag(flag: ArrayFlag<string[]>) {
     const value = this.#formatValueFlag(flag, `${flag.flagName.toUpperCase()}...`)
@@ -67,8 +93,9 @@ export class FlagFormatter {
   }
 
   /**
-   * Formats the string flag by wrapping the value to indicate
-   * if it is required or not
+   * Formats the string flag by wrapping the value to indicate if required
+   *
+   * @param flag - The string flag configuration
    */
   #formatStringFlag(flag: StringFlag<string>) {
     const value = this.#formatValueFlag(flag, `${flag.flagName.toUpperCase()}`)
@@ -83,8 +110,9 @@ export class FlagFormatter {
   }
 
   /**
-   * Formats the numeric flag by wrapping the value to indicate
-   * if it is required or not
+   * Formats the numeric flag by wrapping the value to indicate if required
+   *
+   * @param flag - The numeric flag configuration
    */
   #formatNumericFlag(flag: NumberFlag<number>) {
     const value = this.#formatValueFlag(flag, `${flag.flagName.toUpperCase()}`)
@@ -99,7 +127,9 @@ export class FlagFormatter {
   }
 
   /**
-   * Formats the boolean flag. Boolean flags needs no wrapping
+   * Formats the boolean flag. Boolean flags need no value wrapping
+   *
+   * @param flag - The boolean flag configuration
    */
   #formatBooleanFlag(flag: BooleanFlag<boolean>) {
     const aliases = this.#formatAliases(flag)
@@ -115,6 +145,11 @@ export class FlagFormatter {
 
   /**
    * Returns formatted description for the flag
+   *
+   * @example
+   * ```ts
+   * formatter.formatDescription() // 'Database connection [default: mysql]'
+   * ```
    */
   formatDescription(): string {
     const defaultValue = this.#flag.default !== undefined ? `[default: ${this.#flag.default}]` : ''
@@ -124,6 +159,11 @@ export class FlagFormatter {
 
   /**
    * Returns a formatted version of the flag name and aliases
+   *
+   * @example
+   * ```ts
+   * formatter.formatOption() // '--connection[=CONNECTION]' or '--force, -f'
+   * ```
    */
   formatOption(): string {
     switch (this.#flag.type) {

@@ -14,23 +14,40 @@ import { stubsRoot } from '../../stubs/main.ts'
 import { FsLoader } from '../loaders/fs_loader.ts'
 
 /**
- * The index generators creates a commands laoder that can be lazily
- * imported.
+ * The index generator creates a commands loader that can be lazily imported.
  *
- * Also, a command.json index file is created that has metadata for all
- * the files. Doing so, speeds up the commands lookup, as we do not
- * have to import all the classes just to find if a command exists
- * or not.
+ * Also, a commands.json index file is created that has metadata for all
+ * the files. Doing so speeds up commands lookup, as we do not
+ * have to import all the classes just to find if a command exists or not.
+ *
+ * @example
+ * ```ts
+ * const generator = new IndexGenerator('./build/commands')
+ * await generator.generate()
+ * ```
  */
 export class IndexGenerator {
+  /**
+   * The directory where commands are located
+   */
   #commandsDir: string
 
+  /**
+   * Create a new index generator
+   *
+   * @param commandsDir - The directory containing command files
+   */
   constructor(commandsDir: string) {
     this.#commandsDir = commandsDir
   }
 
   /**
-   * Generate index
+   * Generate the commands index files (commands.json, main.js, main.d.ts)
+   *
+   * @example
+   * ```ts
+   * await generator.generate()
+   * ```
    */
   async generate(): Promise<any> {
     const commandsMetaData = await new FsLoader(this.#commandsDir).getMetaData()

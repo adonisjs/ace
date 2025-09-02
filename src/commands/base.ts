@@ -34,8 +34,23 @@ import type {
 /**
  * The base command sets the foundation for defining ace commands.
  * Every command should inherit from the base command.
+ *
+ * @example
+ * ```ts
+ * export class MyCommand extends BaseCommand {
+ *   static commandName = 'my:command'
+ *   static description = 'My custom command'
+ *
+ *   async run() {
+ *     this.logger.info('Hello from my command!')
+ *   }
+ * }
+ * ```
  */
 export class BaseCommand extends Macroable {
+  /**
+   * Whether the command class has been booted
+   */
   static booted: boolean = false
 
   /**
@@ -77,6 +92,11 @@ export class BaseCommand extends Macroable {
   /**
    * Define static properties on the class. During inheritance, certain
    * properties must inherit from the parent.
+   *
+   * @example
+   * ```ts
+   * MyCommand.boot()
+   * ```
    */
   static boot() {
     if (Object.hasOwn(this, 'booted') && this.booted === true) {
@@ -102,8 +122,13 @@ export class BaseCommand extends Macroable {
    *
    * Mostly, you will be using the `@args` decorator to define the arguments.
    *
+   * @param name - The name of the argument
+   * @param options - Configuration options for the argument
+   *
+   * @example
    * ```ts
    * Command.defineArgument('entity', { type: 'string' })
+   * Command.defineArgument('files', { type: 'spread', required: false })
    * ```
    */
   static defineArgument(name: string, options: Partial<Argument> & { type: 'string' | 'spread' }) {
@@ -151,8 +176,14 @@ export class BaseCommand extends Macroable {
    *
    * Mostly, you will be using the `@flags` decorator to define a flag.
    *
+   * @param name - The name of the flag
+   * @param options - Configuration options for the flag
+   *
+   * @example
    * ```ts
    * Command.defineFlag('connection', { type: 'string', required: true })
+   * Command.defineFlag('force', { type: 'boolean' })
+   * Command.defineFlag('tags', { type: 'array' })
    * ```
    */
   static defineFlag(
@@ -180,6 +211,8 @@ export class BaseCommand extends Macroable {
 
   /**
    * Returns the options for parsing flags and arguments
+   *
+   * @param options - Optional parser options to merge
    */
   static getParserOptions(options?: FlagsParserOptions): {
     flagsParserOptions: Required<FlagsParserOptions>
@@ -248,6 +281,12 @@ export class BaseCommand extends Macroable {
   /**
    * Serializes the command to JSON. The return value satisfies the
    * {@link CommandMetaData}
+   *
+   * @example
+   * ```ts
+   * const metadata = MyCommand.serialize()
+   * console.log(metadata.commandName) // 'my:command'
+   * ```
    */
   static serialize(): CommandMetaData {
     this.boot()
@@ -276,7 +315,15 @@ export class BaseCommand extends Macroable {
   }
 
   /**
-   * Validate the yargs parsed output againts the command.
+   * Validate the yargs parsed output against the command.
+   *
+   * @param parsedOutput - The parsed CLI input to validate
+   *
+   * @example
+   * ```ts
+   * const parsed = { args: ['value'], flags: { force: true }, unknownFlags: [] }
+   * MyCommand.validate(parsed)
+   * ```
    */
   static validate(parsedOutput: ParsedOutput) {
     this.boot()
@@ -380,7 +427,7 @@ export class BaseCommand extends Macroable {
   }
 
   /**
-   * Check if a command has been hypdrated
+   * Check if a command has been hydrated
    */
   protected hydrated: boolean = false
 
@@ -390,19 +437,25 @@ export class BaseCommand extends Macroable {
   exitCode?: number
 
   /**
-   * The error raised at the time of the executing the command.
+   * The error raised at the time of executing the command.
    * The value is undefined if no error is raised.
    */
   error?: any
 
   /**
    * The result property stores the return value of the "run"
-   * method (unless commands sets it explicitly)
+   * method (unless command sets it explicitly)
    */
   result?: any
 
   /**
    * Logger to log messages
+   *
+   * @example
+   * ```ts
+   * this.logger.info('Command executed successfully')
+   * this.logger.error('Something went wrong')
+   * ```
    */
   get logger() {
     return this.ui.logger
@@ -410,14 +463,26 @@ export class BaseCommand extends Macroable {
 
   /**
    * Add colors to console messages
+   *
+   * @example
+   * ```ts
+   * this.logger.info(this.colors.green('Success!'))
+   * this.logger.error(this.colors.red('Error!'))
+   * ```
    */
   get colors(): Colors {
     return this.ui.colors
   }
 
   /**
-   * Is the current command the main command executed from the
-   * CLI
+   * Is the current command the main command executed from the CLI
+   *
+   * @example
+   * ```ts
+   * if (this.isMain) {
+   *   this.logger.info('This is the main command')
+   * }
+   * ```
    */
   get isMain(): boolean {
     return this.kernel.getMainCommand() === this
@@ -451,6 +516,14 @@ export class BaseCommand extends Macroable {
     return (this.constructor as typeof BaseCommand).flags
   }
 
+  /**
+   * Create a new base command instance
+   *
+   * @param kernel - The Ace kernel instance
+   * @param parsed - The parsed CLI input
+   * @param ui - UI primitives for output
+   * @param prompt - Prompt utilities for user interaction
+   */
   constructor(
     protected kernel: Kernel<any>,
     protected parsed: ParsedOutput,
@@ -461,8 +534,14 @@ export class BaseCommand extends Macroable {
   }
 
   /**
-   * Hydrate command by setting class properties from
-   * the parsed output
+   * Hydrate command by setting class properties from the parsed output
+   *
+   * @example
+   * ```ts
+   * command.hydrate()
+   * console.log(command.name) // Argument value
+   * console.log(command.force) // Flag value
+   * ```
    */
   hydrate() {
     if (this.hydrated) {
@@ -499,13 +578,28 @@ export class BaseCommand extends Macroable {
   }
 
   /**
-   * The run method should include the implementation for the
-   * command.
+   * The run method should include the implementation for the command.
+   *
+   * @param _ - Additional arguments (not used in base implementation)
+   *
+   * @example
+   * ```ts
+   * async run() {
+   *   this.logger.info('Running my command')
+   *   return 'Command completed'
+   * }
+   * ```
    */
   async run(..._: any[]): Promise<any> {}
 
   /**
-   * Executes the commands by running the command's run method.
+   * Executes the command by running the command's run method.
+   *
+   * @example
+   * ```ts
+   * const result = await command.exec()
+   * console.log('Exit code:', command.exitCode)
+   * ```
    */
   async exec() {
     this.hydrate()
@@ -523,6 +617,12 @@ export class BaseCommand extends Macroable {
 
   /**
    * JSON representation of the command
+   *
+   * @example
+   * ```ts
+   * const json = command.toJSON()
+   * console.log(json.commandName, json.exitCode)
+   * ```
    */
   toJSON() {
     return {
@@ -537,7 +637,15 @@ export class BaseCommand extends Macroable {
   }
 
   /**
-   * Assert the command exists with a given exit code
+   * Assert the command exits with a given exit code
+   *
+   * @param code - The expected exit code
+   *
+   * @example
+   * ```ts
+   * command.assertExitCode(0) // Assert successful execution
+   * command.assertExitCode(1) // Assert failure
+   * ```
    */
   assertExitCode(code: number) {
     if (this.exitCode !== code) {
@@ -552,7 +660,14 @@ export class BaseCommand extends Macroable {
   }
 
   /**
-   * Assert the command exists with a given exit code
+   * Assert the command does not exit with a given exit code
+   *
+   * @param code - The exit code that should not be used
+   *
+   * @example
+   * ```ts
+   * command.assertNotExitCode(1) // Assert no failure
+   * ```
    */
   assertNotExitCode(code: number) {
     if (this.exitCode === code) {
@@ -564,21 +679,40 @@ export class BaseCommand extends Macroable {
   }
 
   /**
-   * Assert the command exists with zero exit code
+   * Assert the command exits with zero exit code
+   *
+   * @example
+   * ```ts
+   * command.assertSucceeded() // Assert success
+   * ```
    */
   assertSucceeded() {
     return this.assertExitCode(0)
   }
 
   /**
-   * Assert the command exists with non-zero exit code
+   * Assert the command exits with non-zero exit code
+   *
+   * @example
+   * ```ts
+   * command.assertFailed() // Assert failure
+   * ```
    */
   assertFailed() {
     return this.assertNotExitCode(0)
   }
 
   /**
-   * Assert command to log the expected message
+   * Assert command logs the expected message
+   *
+   * @param message - The expected log message
+   * @param stream - Optional stream to check ('stdout' or 'stderr')
+   *
+   * @example
+   * ```ts
+   * command.assertLog('Command executed successfully')
+   * command.assertLog('Error occurred', 'stderr')
+   * ```
    */
   assertLog(message: string, stream?: 'stdout' | 'stderr') {
     const logs = this.logger.getLogs()
@@ -615,7 +749,16 @@ export class BaseCommand extends Macroable {
   }
 
   /**
-   * Assert command to log the expected message
+   * Assert command logs a message matching the given regex
+   *
+   * @param matchingRegex - The regex pattern to match against log messages
+   * @param stream - Optional stream to check ('stdout' or 'stderr')
+   *
+   * @example
+   * ```ts
+   * command.assertLogMatches(/^Command.*completed$/)
+   * command.assertLogMatches(/error/i, 'stderr')
+   * ```
    */
   assertLogMatches(matchingRegex: RegExp, stream?: 'stdout' | 'stderr') {
     const logs = this.logger.getLogs()
@@ -648,7 +791,18 @@ export class BaseCommand extends Macroable {
   }
 
   /**
-   * Assert the command prints a table to stdout
+   * Assert the command prints a table with the expected rows to stdout
+   *
+   * @param rows - The expected table rows as arrays of strings
+   *
+   * @example
+   * ```ts
+   * command.assertTableRows([
+   *   ['Name', 'Age'],
+   *   ['John', '25'],
+   *   ['Jane', '30']
+   * ])
+   * ```
    */
   assertTableRows(rows: string[][]) {
     const logs = this.logger.getLogs()

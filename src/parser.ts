@@ -18,18 +18,30 @@ import type {
 } from './types.ts'
 
 /**
- * Parses the command line arguments. The flags are parsed
- * using yargs-parser
+ * Parses the command line arguments. The flags are parsed using yargs-parser
+ *
+ * @example
+ * ```ts
+ * const parser = new Parser({ flagsParserOptions, argumentsParserOptions })
+ * const parsed = parser.parse(['--verbose', 'create', 'User'])
+ * console.log(parsed.args) // ['User']
+ * console.log(parsed.flags) // { verbose: true }
+ * ```
  */
 export class Parser {
   /**
-   * Parser options
+   * Parser options for flags and arguments
    */
   #options: {
     flagsParserOptions: FlagsParserOptions
     argumentsParserOptions: ArgumentsParserOptions[]
   }
 
+  /**
+   * Create a new parser instance
+   *
+   * @param options - Parser configuration options
+   */
   constructor(options: {
     flagsParserOptions: FlagsParserOptions
     argumentsParserOptions: ArgumentsParserOptions[]
@@ -38,14 +50,18 @@ export class Parser {
   }
 
   /**
-   * Parsers flags using yargs
+   * Parse flags using yargs parser
+   *
+   * @param argv - Command line arguments
    */
   #parseFlags(argv: string | string[]) {
     return yargsParser(argv, { ...this.#options.flagsParserOptions, configuration: yarsConfig })
   }
 
   /**
-   * Scans for unknown flags in yargs output.
+   * Scans for unknown flags in yargs output
+   *
+   * @param parsed - Parsed flags object
    */
   #scanUnknownFlags(parsed: { [key: string]: any }): string[] {
     const unknownFlags: string[] = []
@@ -60,7 +76,9 @@ export class Parser {
   }
 
   /**
-   * Parsers arguments by mimicking the yargs behavior
+   * Parse arguments by mimicking the yargs behavior
+   *
+   * @param parsedOutput - Output from yargs parser
    */
   #parseArguments(parsedOutput: YargsOutput): ParsedOutput {
     let lastParsedIndex = -1
@@ -134,7 +152,15 @@ export class Parser {
   }
 
   /**
-   * Parse commandline arguments
+   * Parse command-line arguments into structured format
+   *
+   * @param argv - Command line arguments as string or array
+   *
+   * @example
+   * ```ts
+   * const parsed = parser.parse(['--verbose', 'create', 'User'])
+   * // Returns: { args: ['User'], flags: { verbose: true }, ... }
+   * ```
    */
   parse(argv: string | string[]) {
     return this.#parseArguments(this.#parseFlags(argv))

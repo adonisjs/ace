@@ -20,6 +20,14 @@ import type { CommandMetaData, ListTable } from '../types.ts'
 
 /**
  * The Help command is used to view help for a given command
+ *
+ * @example
+ * ```ts
+ * // Usage from CLI: node ace help my:command
+ * // Or programmatically:
+ * const helpCommand = new HelpCommand(kernel, parsed, ui, prompt)
+ * await helpCommand.run()
+ * ```
  */
 export class HelpCommand extends BaseCommand {
   /**
@@ -36,6 +44,9 @@ export class HelpCommand extends BaseCommand {
 
   /**
    * Returns the command arguments table
+   *
+   * @param heading - The table heading text
+   * @param command - The command metadata
    */
   #makeArgumentsTable(heading: string, command: CommandMetaData): ListTable[] {
     if (!command.args.length) {
@@ -57,7 +68,10 @@ export class HelpCommand extends BaseCommand {
   }
 
   /**
-   * Returns the commands options table
+   * Returns the command options table
+   *
+   * @param heading - The table heading text
+   * @param command - The command metadata
    */
   #makeOptionsTable(heading: string, command: CommandMetaData): ListTable[] {
     if (!command.flags.length) {
@@ -97,6 +111,8 @@ export class HelpCommand extends BaseCommand {
 
   /**
    * Logs command description
+   *
+   * @param command - The command metadata
    */
   protected renderDescription(command: CommandMetaData) {
     const formatter = new CommandFormatter(command, this.colors)
@@ -119,6 +135,8 @@ export class HelpCommand extends BaseCommand {
 
   /**
    * Logs command usage
+   *
+   * @param command - The command metadata
    */
   protected renderUsage(command: CommandMetaData) {
     const aliases = this.kernel.getCommandAliases(command.commandName)
@@ -131,7 +149,9 @@ export class HelpCommand extends BaseCommand {
   }
 
   /**
-   * Logs commands arguments and options tables
+   * Logs command arguments and options tables
+   *
+   * @param command - The command metadata
    */
   protected renderList(command: CommandMetaData) {
     const tables = this.#makeArgumentsTable('Arguments:', command).concat(
@@ -147,6 +167,8 @@ export class HelpCommand extends BaseCommand {
 
   /**
    * Logs command help text
+   *
+   * @param command - The command metadata
    */
   protected renderHelp(command: CommandMetaData) {
     const formatter = new CommandFormatter(command, this.colors)
@@ -161,7 +183,12 @@ export class HelpCommand extends BaseCommand {
   }
 
   /**
-   * Executed by ace directly
+   * Executes the help command to display help for the specified command
+   *
+   * @example
+   * ```ts
+   * await helpCommand.run()
+   * ```
    */
   async run() {
     const isValidCommand = this.#validateCommandName()

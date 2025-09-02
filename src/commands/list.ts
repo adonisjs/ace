@@ -18,6 +18,15 @@ import type { CommandMetaData, Flag, ListTable } from '../types.ts'
 
 /**
  * The list command is used to view a list of commands
+ *
+ * @example
+ * ```ts
+ * // Usage from CLI: node ace list
+ * // Or with namespace filter: node ace list migrate
+ * // Or as JSON: node ace list --json
+ * const listCommand = new ListCommand(kernel, parsed, ui, prompt)
+ * await listCommand.run()
+ * ```
  */
 export class ListCommand extends BaseCommand {
   /**
@@ -34,7 +43,7 @@ export class ListCommand extends BaseCommand {
   ]
 
   /**
-   * Optional flag to filter list by namespace
+   * Optional namespaces to filter the command list
    */
   @args.spread({
     description: 'Filter list by namespace',
@@ -42,11 +51,17 @@ export class ListCommand extends BaseCommand {
   })
   declare namespaces?: string[]
 
+  /**
+   * Flag to output the command list as JSON
+   */
   @flags.boolean({ description: 'Get list of commands as JSON' })
   declare json?: boolean
 
   /**
-   * Returns a table for an array of commands.
+   * Returns a table for an array of commands
+   *
+   * @param heading - The table heading text
+   * @param commands - Array of command metadata
    */
   #makeCommandsTable(heading: string, commands: CommandMetaData[]): ListTable {
     return {
@@ -65,6 +80,9 @@ export class ListCommand extends BaseCommand {
 
   /**
    * Returns a table for an array of global options
+   *
+   * @param heading - The table heading text
+   * @param flagsList - Array of global flags
    */
   #makeOptionsTable(heading: string, flagsList: Flag[]): ListTable {
     return {
@@ -81,8 +99,9 @@ export class ListCommand extends BaseCommand {
   }
 
   /**
-   * Returns an array of tables for all the commands or for mentioned
-   * namespaces only
+   * Returns an array of tables for all commands or for mentioned namespaces only
+   *
+   * @param namespaces - Optional array of namespaces to filter by
    */
   #getCommandsTables(namespaces?: string[]) {
     if (namespaces && namespaces.length) {
@@ -113,8 +132,7 @@ export class ListCommand extends BaseCommand {
   }
 
   /**
-   * Validates the namespaces mentioned via the "namespaces"
-   * flag
+   * Validates the namespaces mentioned via the namespaces argument
    */
   #validateNamespace(): boolean {
     if (!this.namespaces) {
@@ -140,7 +158,7 @@ export class ListCommand extends BaseCommand {
   }
 
   /**
-   * The method is used to render a list of options and commands
+   * Renders a formatted list of options and commands to the console
    */
   protected renderList() {
     const tables = this.#getOptionsTable().concat(this.#getCommandsTables(this.namespaces))
@@ -152,6 +170,9 @@ export class ListCommand extends BaseCommand {
     })
   }
 
+  /**
+   * Returns command data as JSON for the --json flag
+   */
   protected renderToJSON() {
     if (this.namespaces && this.namespaces.length) {
       return this.namespaces
@@ -170,7 +191,12 @@ export class ListCommand extends BaseCommand {
   }
 
   /**
-   * Executed by ace directly
+   * Executes the list command to display available commands
+   *
+   * @example
+   * ```ts
+   * await listCommand.run()
+   * ```
    */
   async run() {
     const hasValidNamespaces = this.#validateNamespace()

@@ -49,15 +49,41 @@ import { commandExec } from './tracing_channels.ts'
  *
  * The kernel is the main entry point of a console application, and
  * is tailored for a standard CLI environment.
+ *
+ * @example
+ * ```ts
+ * const kernel = Kernel.create()
+ *
+ * kernel.defineFlag('help', {
+ *  type: 'boolean',
+ *  alias: 'h',
+ *  description: 'Display help for the given command. When no command is given display help for the list command'
+ * })
+ * kernel.on('help', async (command, $kernel, options) => {
+ *   options.args.unshift(command.commandName)
+ *   await new HelpCommand($kernel, options, kernel.ui, kernel.prompt).exec()
+ *   return true
+ * })
+ *
+ * kernel.addLoader(new FsLoader('./commands'))
+ *
+ * kernel.info.set('binary', 'node ace')
+ * kernel.info.set('Framework version', '9.1')
+ * kernel.info.set('App version', '1.1.1')
+ *
+ * await kernel.handle(process.argv.slice(2))
+ * ```
  */
 export class Kernel<Command extends AbstractBaseCommand> {
+  /**
+   * The error handler for rendering exceptions
+   */
   errorHandler: {
     render(error: unknown, kernel: Kernel<any>): Promise<any>
   } = new ExceptionHandler()
 
   /**
-   * The default executor for creating command's instance
-   * and running them
+   * The default executor for creating command instances and running them
    */
   static commandExecutor: ExecutorContract<typeof BaseCommand> = {
     create(command, parsedArgs, kernel) {
@@ -69,14 +95,17 @@ export class Kernel<Command extends AbstractBaseCommand> {
   }
 
   /**
-   * The default command to use when creating kernel instance
-   * via "static create" method.
+   * The default command to use when creating kernel instance via static create method
    */
   static defaultCommand: typeof BaseCommand = ListCommand
 
   /**
-   * Creates an instance of kernel with the default executor
-   * and default command
+   * Creates an instance of kernel with the default executor and default command
+   *
+   * @example
+   * ```ts
+   * const kernel = Kernel.create()
+   * ```
    */
   static create() {
     return new Kernel<typeof BaseCommand>(this.defaultCommand, this.commandExecutor)
@@ -169,7 +198,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
 
   /**
    * The exit code for the kernel. The exit code is inferred
-   * from the main code when not set explicitly.
+   * from the main command when not set explicitly
    */
   exitCode?: number
 
@@ -181,23 +210,33 @@ export class Kernel<Command extends AbstractBaseCommand> {
   /**
    * Instance of prompt to display CLI prompts. We share
    * a single instance with all the commands. This
-   * allows trapping prompts for commands executed
-   * internally.
+   * allows trapping prompts for commands executed internally
    */
   prompt = new Prompt()
 
   /**
-   * CLI info map
+   * CLI info map containing metadata about the application
    */
   info: Map<string, AllowedInfoValues> = new Map()
 
   /**
-   * List of global flags
+   * List of global flags available across all commands
+   *
+   * @example
+   * ```ts
+   * kernel.flags // [{ name: 'help', type: 'boolean', ... }]
+   * ```
    */
   get flags(): ({ name: string } & Flag)[] {
     return this.#globalCommand.flags
   }
 
+  /**
+   * Create a new Kernel instance
+   *
+   * @param defaultCommand - The default command to run when no command is specified
+   * @param executor - The executor for creating and running command instances
+   */
   constructor(defaultCommand: Command, executor: ExecutorContract<Command>) {
     this.#defaultCommand = defaultCommand
     this.#executor = executor
@@ -402,8 +441,15 @@ export class Kernel<Command extends AbstractBaseCommand> {
   }
 
   /**
-   * Define a global flag that is applicable for all the
-   * commands.
+   * Define a global flag that is applicable for all commands
+   *
+   * @param name - The flag name
+   * @param options - Flag configuration options
+   *
+   * @example
+   * ```ts
+   * kernel.defineFlag('verbose', { type: 'boolean', description: 'Enable verbose output' })
+   * ```
    */
   defineFlag(
     name: string,
@@ -417,11 +463,18 @@ export class Kernel<Command extends AbstractBaseCommand> {
   }
 
   /**
-   * Register a commands loader. The commands will be collected by
-   * all the loaders.
+   * Register a commands loader. The commands will be collected by all loaders.
    *
-   * Incase multiple loaders returns a single command, the command from the
+   * In case multiple loaders return a single command, the command from the
    * most recent loader will be used.
+   *
+   * @param loader - The loader instance or a function that returns a loader
+   *
+   * @example
+   * ```ts
+   * kernel.addLoader(new FsLoader('./commands'))
+   * kernel.addLoader(() => import('./lazy-loader').then(m => new m.LazyLoader()))
+   * ```
    */
   addLoader(loader: LoadersContract<Command> | (() => Promise<LoadersContract<Command>>)): this {
     if (this.#state !== 'idle') {
@@ -433,7 +486,16 @@ export class Kernel<Command extends AbstractBaseCommand> {
   }
 
   /**
-   * Register alias for a comamnd name.
+   * Register alias for a command name
+   *
+   * @param alias - The alias name
+   * @param command - The command name (can include arguments)
+   *
+   * @example
+   * ```ts
+   * kernel.addAlias('m', 'make:model')
+   * kernel.addAlias('migrate:fresh', 'migration:rollback --to=0 && migration:run')
+   * ```
    */
   addAlias(alias: string, command: string): this {
     const [commandName, ...expansions] = command.split(' ')
@@ -739,8 +801,16 @@ export class Kernel<Command extends AbstractBaseCommand> {
   }
 
   /**
-   * Execute a command. The second argument is an array of commandline
+   * Execute a command. The second argument is an array of command-line
    * arguments (without the command name)
+   *
+   * @param commandName - The name of the command to execute
+   * @param argv - Array of command-line arguments
+   *
+   * @example
+   * ```ts
+   * await kernel.exec('make:model', ['User', '--migration'])
+   * ```
    */
   async exec<T extends Command>(commandName: string, argv: string[]) {
     /**
@@ -763,8 +833,15 @@ export class Kernel<Command extends AbstractBaseCommand> {
   }
 
   /**
-   * Creates a command instance by parsing and validating
-   * the command-line arguments.
+   * Creates a command instance by parsing and validating the command-line arguments
+   *
+   * @param command - The command class to instantiate
+   * @param argv - Command-line arguments as string or array
+   *
+   * @example
+   * ```ts
+   * const commandInstance = await kernel.create(MyCommand, ['--verbose', 'arg1'])
+   * ```
    */
   async create<T extends Command>(command: T, argv: string | string[]): Promise<InstanceType<T>> {
     /**
@@ -780,6 +857,13 @@ export class Kernel<Command extends AbstractBaseCommand> {
   /**
    * Handle process argv and execute the command. Calling this method
    * makes kernel own the process and register SIGNAL listeners
+   *
+   * @param argv - Array of command-line arguments from process.argv
+   *
+   * @example
+   * ```ts
+   * await kernel.handle(process.argv.slice(2))
+   * ```
    */
   async handle(argv: string[]) {
     /**

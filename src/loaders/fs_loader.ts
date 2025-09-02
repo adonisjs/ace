@@ -22,6 +22,13 @@ const JS_MODULES = ['.js', '.cjs', '.mjs']
  * Fs loader exposes the API to load commands from a directory. All files
  * ending with ".js", ".cjs", ".mjs", ".ts" and ".mts" are considered
  * as commands
+ *
+ * @example
+ * ```ts
+ * const loader = new FsLoader('./commands')
+ * const metadata = await loader.getMetaData()
+ * const command = await loader.getCommand(metadata[0])
+ * ```
  */
 export class FsLoader<Command extends AbstractBaseCommand> implements LoadersContract<Command> {
   /**
@@ -30,23 +37,28 @@ export class FsLoader<Command extends AbstractBaseCommand> implements LoadersCon
   #comandsDirectory: string
 
   /**
-   * File to ignore files
+   * Filter function to ignore certain files
    */
   #filter?: (filePath: string) => boolean
 
   /**
-   * An array of loaded commands
+   * An array of loaded commands with their file paths
    */
   #commands: { command: Command; filePath: string }[] = []
 
+  /**
+   * Create a new filesystem loader
+   *
+   * @param comandsDirectory - Path to the directory containing command files
+   * @param filter - Optional filter function to exclude certain files
+   */
   constructor(comandsDirectory: string, filter?: (filePath: string) => boolean) {
     this.#comandsDirectory = comandsDirectory
     this.#filter = filter
   }
 
   /**
-   * Returns a collection of commands. The command value
-   * is unknown and must be validated
+   * Returns a collection of commands. The command values are unknown and must be validated
    */
   async #loadCommands(): Promise<Record<string, unknown>> {
     const commands: Record<string, unknown> = {}
@@ -108,7 +120,13 @@ export class FsLoader<Command extends AbstractBaseCommand> implements LoadersCon
   }
 
   /**
-   * Returns the metadata of commands
+   * Returns the metadata of all commands in the directory
+   *
+   * @example
+   * ```ts
+   * const metadata = await loader.getMetaData()
+   * metadata.forEach(cmd => console.log(cmd.commandName))
+   * ```
    */
   async getMetaData(): Promise<CommandMetaData[]> {
     const commandsCollection = await this.#loadCommands()
@@ -127,6 +145,16 @@ export class FsLoader<Command extends AbstractBaseCommand> implements LoadersCon
   /**
    * Returns the command class constructor for a given command. Null
    * is returned when unable to lookup the command
+   *
+   * @param metaData - The command metadata to find
+   *
+   * @example
+   * ```ts
+   * const command = await loader.getCommand(metadata)
+   * if (command) {
+   *   const instance = new command(kernel, parsed, ui, prompt)
+   * }
+   * ```
    */
   async getCommand(metaData: CommandMetaData): Promise<Command | null> {
     return (

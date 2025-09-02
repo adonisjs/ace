@@ -12,20 +12,38 @@ import { justify, TERMINAL_SIZE } from '@poppinss/cliui/helpers'
 import type { AllowedInfoValues, UIPrimitives } from '../types.ts'
 
 /**
- * Info formatter is used to format the kernel info key-value pair
- * into a table.
+ * Info formatter is used to format the kernel info key-value pairs into a table
+ *
+ * @example
+ * ```ts
+ * const formatter = new InfoFormatter(infoMap, colors)
+ * const rows = formatter.format() // ['binary ──── node ace', 'version ──── 1.0.0']
+ * ```
  */
 export default class InfoFormatter {
+  /**
+   * The kernel info map containing key-value pairs
+   */
   #info: Map<string, AllowedInfoValues>
+
+  /**
+   * Color utilities for formatting output
+   */
   #colors: UIPrimitives['colors']
 
+  /**
+   * Create a new info formatter
+   *
+   * @param info - Map of info key-value pairs
+   * @param colors - Color utilities for output formatting
+   */
   constructor(info: Map<string, AllowedInfoValues>, colors: UIPrimitives['colors']) {
     this.#info = info
     this.#colors = colors
   }
 
   /**
-   * Formats the info map into an array of columns.
+   * Formats the info map into an array of columns
    */
   #createFormattedColumns() {
     return [...this.#info.keys()].map((key) => {
@@ -42,7 +60,12 @@ export default class InfoFormatter {
   }
 
   /**
-   * Formats the info map into an array of rows
+   * Formats the info map into an array of formatted table rows
+   *
+   * @example
+   * ```ts
+   * formatter.format() // ['binary ──── node ace', 'version ──── 1.0.0']
+   * ```
    */
   format(): string[] {
     const columns = this.#createFormattedColumns()
