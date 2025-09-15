@@ -33,7 +33,7 @@
     "prepublishOnly": "npm run build",
     "lint": "eslint",
     "format": "prettier --write .",
-    "quick:test": "node --import=@poppinss/ts-exec bin/test.ts"
+    "quick:test": "node --import=@poppinss/ts-exec --enable-source-maps bin/test.ts"
   },
   "devDependencies": {
     "@adonisjs/eslint-config": "^3.0.0-next.1",

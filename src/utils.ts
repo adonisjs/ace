@@ -8,15 +8,10 @@
  */
 
 import { Validator } from 'jsonschema'
-import { readFile } from 'node:fs/promises'
 import { RuntimeException } from '@poppinss/utils/exception'
 
-import { schemaRoot } from '../schemas/main.ts'
+import { schema } from '../schemas/main.ts'
 import type { AbstractBaseCommand, CommandMetaData, UIPrimitives } from './types.ts'
-
-const schema = JSON.parse(
-  await readFile(new URL('./command_metadata_schema.json', schemaRoot), 'utf8')
-)
 
 /**
  * Helper to sort array of strings alphabetically.

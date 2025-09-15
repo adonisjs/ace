@@ -65,7 +65,7 @@ test.group('Helpers | validateCommandMetaData', () => {
   })
 
   test('work fine when command metadata is complete', ({ assert }) => {
-    assert.doesNotThrows(() =>
+    assert.doesNotThrow(() =>
       validateCommandMetaData(
         {
           commandName: 'serve',
@@ -127,7 +127,7 @@ test.group('Helpers | validateCommand', () => {
       }
     }
 
-    assert.doesNotThrows(
+    assert.doesNotThrow(
       () => validateCommand(MakeController, '"./foo.js" file'),
       'Invalid command exported from "./foo.js" file. requires property "aliases"'
     )
