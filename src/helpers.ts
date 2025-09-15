@@ -8,9 +8,9 @@
  */
 
 import { Validator } from 'jsonschema'
-import { RuntimeException } from '@poppinss/utils/exception'
+import { RuntimeException } from '@poppinss/utils'
 
-import { schema } from '../schemas/main.ts'
+import { schema } from '../schemas/main.js'
 import type { AbstractBaseCommand, CommandMetaData, UIPrimitives } from './types.ts'
 
 /**
