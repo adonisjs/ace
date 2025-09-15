@@ -27,6 +27,7 @@
     "compile": "tsup-node && tsc --emitDeclarationOnly --declaration",
     "postcompile": "npm run build:schema && npm run copy:files",
     "build": "npm run compile",
+    "docs": "typedoc",
     "release": "release-it",
     "version": "npm run build",
     "prepublishOnly": "npm run build",
@@ -54,6 +55,7 @@
     "release-it": "^19.0.4",
     "ts-json-schema-generator": "^2.4.0",
     "tsup": "^8.5.0",
+    "typedoc": "^0.28.12",
     "typescript": "^5.9.2",
     "youch": "^4.1.0-beta.11"
   },
