@@ -8,7 +8,7 @@
 Ace is the command-line framework for Node.js. It is built with **testing in mind**, is **light weight** in comparison to other CLI frameworks, and offers a clean API for creating CLI commands.
 
 ## Official Documentation
-The documentation is available on the official website
+The documentation is available on the [official website](https://docs.adonisjs.com/guides/ace).
 
 ## Contributing
 One of the primary goals of AdonisJS is to have a vibrant community of users and contributors who believes in the principles of the framework.
