@@ -12,6 +12,7 @@ test/tmp
 *.sublime-workspace
 *.log
 build
+schemas/command_metadata_schema.json
 dist
 yarn.lock
 shrinkwrap.yaml
