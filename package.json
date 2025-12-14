@@ -115,7 +115,7 @@
     "fixedExtension": false,
     "dts": false,
     "treeshake": false,
-    "sourcemap": false,
+    "sourcemaps": false,
     "target": "esnext"
   },
   "release-it": {
