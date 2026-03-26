@@ -60,7 +60,7 @@
     "youch": "^4.1.0"
   },
   "dependencies": {
-    "@poppinss/cliui": "^6.7.0",
+    "@poppinss/cliui": "^6.8.0",
     "@poppinss/hooks": "^7.3.0",
     "@poppinss/macroable": "^1.1.2",
     "@poppinss/prompts": "^3.1.6",
