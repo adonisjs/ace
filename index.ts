@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+export { cliui } from '@poppinss/cliui'
 export { Parser } from './src/parser.ts'
 export { Kernel } from './src/kernel.ts'
 export * as errors from './src/errors.ts'

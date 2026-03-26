@@ -296,7 +296,11 @@ export class Kernel<Command extends AbstractBaseCommand> {
    * Executes a given command. The main commands are executed using the
    * "execMain" method.
    */
-  async #exec<T extends Command>(commandName: string, argv: string[]): Promise<InstanceType<T>> {
+  async #exec<T extends Command>(
+    commandName: string,
+    argv: string[],
+    options?: { ui?: UIPrimitives }
+  ): Promise<InstanceType<T>> {
     const Command = await this.find<T>(commandName)
 
     /**
@@ -309,6 +313,15 @@ export class Kernel<Command extends AbstractBaseCommand> {
     }
 
     const commandInstance = await this.#create<T>(Command, argv)
+
+    /**
+     * Override the UI primitives when a custom instance is provided.
+     * This allows callers to silence command output by passing a
+     * UI backed by a memory renderer.
+     */
+    if (options?.ui && 'ui' in commandInstance) {
+      commandInstance.ui = options.ui
+    }
 
     /**
      * Execute the command using the executor
@@ -812,7 +825,11 @@ export class Kernel<Command extends AbstractBaseCommand> {
    * await kernel.exec('make:model', ['User', '--migration'])
    * ```
    */
-  async exec<T extends Command>(commandName: string, argv: string[]) {
+  async exec<T extends Command>(
+    commandName: string,
+    argv: string[],
+    options?: { ui?: UIPrimitives }
+  ) {
     /**
      * Boot if not already booted
      */
@@ -829,7 +846,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
       )
     }
 
-    return this.#exec<T>(commandName, argv)
+    return this.#exec<T>(commandName, argv, options)
   }
 
   /**
