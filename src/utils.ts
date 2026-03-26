@@ -65,7 +65,9 @@ export function validateCommandMetaData(
   try {
     new Validator().validate(command, schema, { throwError: true })
   } catch (error) {
-    throw new RuntimeException(`Invalid command exported from ${exportPath}. ${error.message}`)
+    if (error && typeof error === 'object' && 'message' in error) {
+      throw new RuntimeException(`Invalid command exported from ${exportPath}. ${error.message}`)
+    }
   }
 }
 
