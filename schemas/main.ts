@@ -8,6 +8,7 @@
  */
 
 export const schema = {
+  $id: 'adonisjs://ace/command-metadata',
   $ref: '#/definitions/CommandMetaData',
   $schema: 'http://json-schema.org/draft-07/schema#',
   definitions: {
