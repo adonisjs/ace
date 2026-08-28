@@ -103,6 +103,26 @@ test.group('Exception handler', () => {
     assert.equal(logs[0].message, 'Pretty printing: Something went wrong')
   })
 
+  test('fallback to the logger when pretty printing fails', async ({ assert }) => {
+    const kernel = Kernel.create()
+    kernel.ui.switchMode('raw')
+    let loggedError: unknown
+    kernel.ui.logger.fatal = (error) => {
+      loggedError = error
+    }
+
+    class CustomExceptionHandler extends ExceptionHandler {
+      protected async prettyPrintError() {
+        throw new Error('Unable to load error formatter')
+      }
+    }
+
+    const error = new Error('Something went wrong')
+    await new CustomExceptionHandler().render(error, kernel)
+
+    assert.strictEqual(loggedError, error)
+  })
+
   test('do not pretty print when not in debug mode', async ({ assert }) => {
     const kernel = Kernel.create()
     kernel.ui.switchMode('raw')

@@ -137,6 +137,10 @@ export class ExceptionHandler {
       return
     }
 
-    return this.prettyPrintError(error)
+    try {
+      await this.prettyPrintError(error)
+    } catch {
+      kernel.ui.logger.fatal(error as any)
+    }
   }
 }
