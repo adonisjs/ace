@@ -174,19 +174,12 @@ export class Kernel<Command extends AbstractBaseCommand> {
 
   /**
    * A collection of aliases for the commands. The key is the alias name
-   * and the value is the command name.
+   * and the value contains the command name and expansion arguments.
    *
    * In case of duplicate aliases, the most recent alias will override
    * the previous existing alias.
    */
-  #aliases: Map<string, string> = new Map()
-
-  /**
-   * An collection of expansion arguments and flags set on
-   * an alias. The key is the alias name and the value is
-   * everything after it.
-   */
-  #aliasExpansions: Map<string, string[]> = new Map()
+  #aliases: Map<string, { commandName: string; argv: string[] }> = new Map()
 
   /**
    * A collection of commands by the command name. This allows us to keep only
@@ -306,9 +299,9 @@ export class Kernel<Command extends AbstractBaseCommand> {
     /**
      * Expand aliases
      */
-    const aliasExpansions = this.#aliasExpansions.get(commandName)
-    if (aliasExpansions) {
-      argv = aliasExpansions.concat(argv)
+    const alias = this.#aliases.get(commandName)
+    if (alias?.argv.length) {
+      argv = alias.argv.concat(argv)
       debug('expanding alias %O, cli args %O', commandName, argv)
     }
 
@@ -355,9 +348,9 @@ export class Kernel<Command extends AbstractBaseCommand> {
       /**
        * Expand aliases
        */
-      const aliasExpansions = this.#aliasExpansions.get(commandName)
-      if (aliasExpansions) {
-        argv = aliasExpansions.concat(argv)
+      const alias = this.#aliases.get(commandName)
+      if (alias?.argv.length) {
+        argv = alias.argv.concat(argv)
         debug('expanding alias %O, cli args %O', commandName, argv)
       }
 
@@ -512,11 +505,10 @@ export class Kernel<Command extends AbstractBaseCommand> {
    */
   addAlias(alias: string, command: string): this {
     const [commandName, ...expansions] = command.split(' ')
-    this.#aliases.set(alias, commandName)
+    this.#aliases.set(alias, { commandName, argv: expansions })
 
     if (expansions.length) {
       debug('registering alias %O for command %O with options %O', alias, commandName, expansions)
-      this.#aliasExpansions.set(alias, expansions)
     } else {
       debug('registering alias %O for command %O', alias, commandName)
     }
@@ -528,7 +520,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
    * Check if a command or an alias is registered with kernel
    */
   hasCommand(commandName: string): boolean {
-    commandName = this.#aliases.get(commandName) || commandName
+    commandName = this.#aliases.get(commandName)?.commandName || commandName
     return this.#commands.has(commandName)
   }
 
@@ -613,7 +605,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
       return null
     }
 
-    return this.#commands.get(aliasCommand)?.metaData || null
+    return this.#commands.get(aliasCommand.commandName)?.metaData || null
   }
 
   /**
@@ -621,8 +613,8 @@ export class Kernel<Command extends AbstractBaseCommand> {
    */
   getCommandAliases(commandName: string) {
     return [...this.#aliases.entries()]
-      .filter(([, command]) => {
-        return command === commandName
+      .filter(([, alias]) => {
+        return alias.commandName === commandName
       })
       .map(([alias]) => alias)
   }
@@ -788,7 +780,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
     /**
      * Get command name from the alias (if one exists)
      */
-    commandName = this.#aliases.get(commandName) || commandName
+    commandName = this.#aliases.get(commandName)?.commandName || commandName
     await this.#hooks.runner('finding').run(commandName)
 
     /**

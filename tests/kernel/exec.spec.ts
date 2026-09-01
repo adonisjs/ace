@@ -269,4 +269,25 @@ test.group('Kernel | exec', () => {
     assert.equal(command.exitCode, 0)
     assert.isUndefined(kernel.exitCode)
   })
+
+  test('redefine an expanded alias as a plain alias', async ({ assert }) => {
+    const kernel = Kernel.create()
+
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+
+      @flags.boolean()
+      declare resource: boolean
+
+      async run() {
+        assert.isUndefined(this.resource)
+      }
+    }
+
+    kernel.addLoader(new ListLoader([MakeController]))
+    kernel.addAlias('mc', 'make:controller --resource')
+    kernel.addAlias('mc', 'make:controller')
+
+    await kernel.exec('mc', [])
+  })
 })

@@ -291,6 +291,29 @@ test.group('Kernel | handle', (group) => {
     assert.equal(kernel.getState(), 'completed')
   })
 
+  test('redefine a plain alias as an expanded alias', async ({ assert }) => {
+    const kernel = Kernel.create()
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+
+      @flags.boolean()
+      declare resource: boolean
+
+      async run() {
+        assert.isTrue(this.resource)
+      }
+    }
+
+    kernel.addLoader(new ListLoader([MakeController]))
+    kernel.addAlias('mc', 'make:controller')
+    kernel.addAlias('mc', 'make:controller --resource')
+
+    await kernel.handle(['mc'])
+
+    assert.equal(kernel.exitCode, 0)
+    assert.equal(kernel.getState(), 'completed')
+  })
+
   test('treat flags before the command name as nodeArgs', async ({ assert }) => {
     const kernel = Kernel.create()
     class MakeController extends BaseCommand {
