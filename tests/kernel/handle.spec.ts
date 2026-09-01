@@ -14,6 +14,8 @@ import { args, flags } from '../../index.ts'
 import { BaseCommand } from '../../src/commands/base.ts'
 import type { CommandOptions } from '../../src/types.ts'
 import { ListLoader } from '../../src/loaders/list_loader.ts'
+import { commandExec } from '../../src/tracing_channels.ts'
+import type { CommandExecTracingData } from '../../src/types.ts'
 
 test.group('Kernel | handle', (group) => {
   group.each.teardown(() => {
@@ -116,6 +118,76 @@ test.group('Kernel | handle', (group) => {
     assert.equal(kernel.getState(), 'completed')
     assert.equal(kernel.exitCode, 1)
     assert.deepEqual(stack, ['executing', 'run', 'executed'])
+  })
+
+  test('run the main command lifecycle using a custom executor', async ({ assert }) => {
+    const stack: string[] = []
+
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+
+      hydrate() {
+        if (!this.hydrated) {
+          stack.push('hydrating')
+        }
+        super.hydrate()
+      }
+
+      async run() {
+        stack.push('run')
+      }
+    }
+
+    const kernel = new Kernel(Kernel.defaultCommand, {
+      create(Command, parsed, self) {
+        stack.push('creating')
+        return new Command(self, parsed, self.ui, self.prompt)
+      },
+      run(command) {
+        stack.push('running')
+        return command.exec()
+      },
+    })
+
+    kernel.addLoader(new ListLoader([MakeController]))
+    kernel.executing((_command, isMain) => {
+      assert.isTrue(isMain)
+      stack.push('executing')
+    })
+    kernel.executed((_command, isMain) => {
+      assert.isTrue(isMain)
+      stack.push('executed')
+    })
+
+    await kernel.handle(['make:controller'])
+
+    assert.deepEqual(stack, ['creating', 'hydrating', 'executing', 'running', 'run', 'executed'])
+  })
+
+  test('trace main command execution', async ({ assert }) => {
+    const traces: CommandExecTracingData[] = []
+    const onStart = (trace: unknown) => {
+      traces.push(trace as CommandExecTracingData)
+    }
+
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+    }
+
+    const kernel = Kernel.create()
+    kernel.addLoader(new ListLoader([MakeController]))
+    commandExec.start.subscribe(onStart)
+
+    try {
+      await kernel.handle(['make:controller', 'users'])
+
+      assert.lengthOf(traces, 1)
+      assert.strictEqual(traces[0].command, MakeController)
+      assert.strictEqual(traces[0].commandInstance, kernel.getMainCommand())
+      assert.deepEqual(traces[0].argv, ['users'])
+    } finally {
+      commandExec.start.unsubscribe(onStart)
+    }
   })
 
   test('disallow calling handle method twice in parallel', async ({ assert }) => {

@@ -8,10 +8,13 @@
  */
 
 import { test } from '@japa/runner'
+import { cliui } from '@poppinss/cliui'
 import { Kernel } from '../../src/kernel.ts'
 import { args, flags } from '../../index.ts'
 import { BaseCommand } from '../../src/commands/base.ts'
 import { ListLoader } from '../../src/loaders/list_loader.ts'
+import { commandExec } from '../../src/tracing_channels.ts'
+import type { CommandExecTracingData } from '../../src/types.ts'
 
 test.group('Kernel | exec', () => {
   test('execute command', async ({ assert }) => {
@@ -145,6 +148,13 @@ test.group('Kernel | exec', () => {
       name!: string
       connection!: string
 
+      hydrate() {
+        if (!this.hydrated) {
+          stack.push('hydrating')
+        }
+        super.hydrate()
+      }
+
       async run() {
         stack.push('run')
       }
@@ -165,11 +175,63 @@ test.group('Kernel | exec', () => {
     })
 
     kernel.addLoader(new ListLoader([MakeModel]))
+    kernel.executing((_command, isMain) => {
+      assert.isFalse(isMain)
+      stack.push('executing')
+    })
+    kernel.executed((_command, isMain) => {
+      assert.isFalse(isMain)
+      stack.push('executed')
+    })
 
     await kernel.exec('make:model', ['users'])
-    assert.deepEqual(stack, ['creating', 'running', 'run'])
+    assert.deepEqual(stack, ['creating', 'hydrating', 'executing', 'running', 'run', 'executed'])
     assert.isUndefined(kernel.exitCode)
     assert.equal(kernel.getState(), 'booted')
+  })
+
+  test('trace command execution', async ({ assert }) => {
+    const traces: CommandExecTracingData[] = []
+    const onStart = (trace: unknown) => {
+      traces.push(trace as CommandExecTracingData)
+    }
+
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+    }
+
+    const kernel = Kernel.create()
+    kernel.addLoader(new ListLoader([MakeController]))
+    commandExec.start.subscribe(onStart)
+
+    try {
+      const command = await kernel.exec('make:controller', ['users'])
+
+      assert.lengthOf(traces, 1)
+      assert.strictEqual(traces[0].command, MakeController)
+      assert.strictEqual(traces[0].commandInstance, command)
+      assert.deepEqual(traces[0].argv, ['users'])
+    } finally {
+      commandExec.start.unsubscribe(onStart)
+    }
+  })
+
+  test('override command UI before running the lifecycle', async ({ assert }) => {
+    class MakeController extends BaseCommand {
+      static commandName = 'make:controller'
+    }
+
+    const kernel = Kernel.create()
+    const commandUi = cliui({ mode: 'raw' })
+    kernel.addLoader(new ListLoader([MakeController]))
+    kernel.executing((command) => {
+      assert.strictEqual(command.ui, commandUi)
+    })
+
+    const command = await kernel.exec('make:controller', [], { ui: commandUi })
+
+    assert.strictEqual(command.ui, commandUi)
+    assert.notStrictEqual(command.ui, kernel.ui)
   })
 
   test('do not trigger flag listeners when not executing a main command', async ({ assert }) => {

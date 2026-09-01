@@ -24,6 +24,7 @@ import { ExceptionHandler } from './exception_handler.ts'
 
 import type {
   Flag,
+  ParsedOutput,
   UIPrimitives,
   FlagListener,
   LoadedHookArgs,
@@ -261,6 +262,44 @@ export class Kernel<Command extends AbstractBaseCommand> {
   }
 
   /**
+   * Creates and hydrates a command from parsed and validated arguments.
+   */
+  async #createCommand<T extends Command>(
+    Command: T,
+    parsed: ParsedOutput
+  ): Promise<InstanceType<T>> {
+    const commandInstance = await this.#executor.create(Command, parsed, this)
+    commandInstance.hydrate()
+    return commandInstance as InstanceType<T>
+  }
+
+  /**
+   * Runs the shared lifecycle for a command instance.
+   */
+  async #runCommand<T extends Command>(
+    Command: T,
+    commandInstance: InstanceType<T>,
+    argv: string[],
+    isMain: boolean
+  ) {
+    await this.#hooks.runner('executing').run(commandInstance, isMain)
+    await commandExec.tracePromise(
+      this.#executor.run,
+      commandExec.hasSubscribers
+        ? {
+            command: Command,
+            commandInstance,
+            argv,
+          }
+        : undefined,
+      this.#executor,
+      commandInstance,
+      this
+    )
+    await this.#hooks.runner('executed').run(commandInstance, isMain)
+  }
+
+  /**
    * Creates an instance of a command by parsing and validating
    * the command line arguments.
    */
@@ -279,10 +318,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
     /**
      * Construct command instance using the executor
      */
-    const commandInstance = await this.#executor.create(Command, parsed, this)
-    commandInstance.hydrate()
-
-    return commandInstance as InstanceType<T>
+    return this.#createCommand(Command, parsed)
   }
 
   /**
@@ -319,21 +355,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
     /**
      * Execute the command using the executor
      */
-    await this.#hooks.runner('executing').run(commandInstance, false)
-    await commandExec.tracePromise(
-      this.#executor.run,
-      commandExec.hasSubscribers
-        ? {
-            command: Command,
-            commandInstance,
-            argv,
-          }
-        : undefined,
-      this.#executor,
-      commandInstance,
-      this
-    )
-    await this.#hooks.runner('executed').run(commandInstance, false)
+    await this.#runCommand(Command, commandInstance, argv, false)
     return commandInstance
   }
 
@@ -404,28 +426,13 @@ export class Kernel<Command extends AbstractBaseCommand> {
       /**
        * Keep a note of the main command
        */
-      this.#mainCommand = await this.#executor.create(Command, parsed, this)
-      this.#mainCommand.hydrate()
+      this.#mainCommand = await this.#createCommand(Command, parsed)
 
       /**
        * Execute the command using the executor
        */
-      await this.#hooks.runner('executing').run(this.#mainCommand!, true)
-      await commandExec.tracePromise(
-        this.#executor.run,
-        commandExec.hasSubscribers
-          ? {
-              command: Command,
-              commandInstance: this.#mainCommand!,
-              argv,
-            }
-          : undefined,
-        this.#executor,
-        this.#mainCommand!,
-        this
-      )
-      await this.#hooks.runner('executed').run(this.#mainCommand!, true)
-      this.exitCode = this.exitCode ?? this.#mainCommand!.exitCode
+      await this.#runCommand(Command, this.#mainCommand, argv, true)
+      this.exitCode = this.exitCode ?? this.#mainCommand.exitCode
       this.#state = 'completed'
     } catch (error) {
       this.exitCode = 1
