@@ -16,6 +16,5 @@ schemas/command_metadata_schema.json
 dist
 yarn.lock
 shrinkwrap.yaml
-package-lock.json
 test/__app
 backup
