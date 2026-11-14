@@ -55,7 +55,17 @@ export class Parser {
    * @param argv - Command line arguments
    */
   #parseFlags(argv: string | string[]) {
-    return yargsParser(argv, { ...this.#options.flagsParserOptions, configuration: yarsConfig })
+    const { string = [], array = [] } = this.#options.flagsParserOptions
+
+    return yargsParser(argv, {
+      ...this.#options.flagsParserOptions,
+      /**
+       * Array flags hold strings. Listing them as strings as well stops
+       * yargs from turning values like "1e3" or "0x10" into numbers
+       */
+      string: ([] as string[]).concat(string, array),
+      configuration: yarsConfig,
+    })
   }
 
   /**

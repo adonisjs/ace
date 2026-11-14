@@ -48,6 +48,39 @@ test.group('Parser | flags', () => {
     })
   })
 
+  test('keep numeric looking array flag values as strings', ({ assert }) => {
+    class MakeModel extends BaseCommand {}
+    MakeModel.defineFlag('tags', { type: 'array' })
+    MakeModel.defineFlag('name', { type: 'string' })
+
+    assert.deepEqual(
+      new Parser(MakeModel.getParserOptions()).parse([
+        '--tags',
+        '1',
+        '--tags',
+        '02',
+        '--tags',
+        '1e3',
+        '--tags',
+        '0x10',
+        '--tags',
+        'v1.0',
+        '--name',
+        '1e3',
+      ]),
+      {
+        _: [],
+        nodeArgs: [],
+        args: [],
+        unknownFlags: [],
+        flags: {
+          tags: ['1', '02', '1e3', '0x10', 'v1.0'],
+          name: '1e3',
+        },
+      }
+    )
+  })
+
   test('parse flags using aliases', ({ assert }) => {
     class MakeModel extends BaseCommand {}
     MakeModel.defineFlag('connection', { type: 'string', alias: 'c' })
