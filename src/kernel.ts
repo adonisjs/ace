@@ -276,8 +276,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
   /**
    * Runs the shared lifecycle for a command instance. An error raised by
    * the command or its "executing" and "executed" hooks fails the command
-   * with a non-zero exit code, which callers rely on to decide whether a
-   * "staysAlive" command should keep the process running.
+   * with a non-zero exit code.
    */
   async #runCommand<T extends Command>(
     Command: T,
