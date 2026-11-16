@@ -274,7 +274,10 @@ export class Kernel<Command extends AbstractBaseCommand> {
   }
 
   /**
-   * Runs the shared lifecycle for a command instance.
+   * Runs the shared lifecycle for a command instance. An error raised by
+   * the command or its "executing" and "executed" hooks fails the command
+   * with a non-zero exit code, which callers rely on to decide whether a
+   * "staysAlive" command should keep the process running.
    */
   async #runCommand<T extends Command>(
     Command: T,
@@ -282,21 +285,26 @@ export class Kernel<Command extends AbstractBaseCommand> {
     argv: string[],
     isMain: boolean
   ) {
-    await this.#hooks.runner('executing').run(commandInstance, isMain)
-    await commandExec.tracePromise(
-      this.#executor.run,
-      commandExec.hasSubscribers
-        ? {
-            command: Command,
-            commandInstance,
-            argv,
-          }
-        : undefined,
-      this.#executor,
-      commandInstance,
-      this
-    )
-    await this.#hooks.runner('executed').run(commandInstance, isMain)
+    try {
+      await this.#hooks.runner('executing').run(commandInstance, isMain)
+      await commandExec.tracePromise(
+        this.#executor.run,
+        commandExec.hasSubscribers
+          ? {
+              command: Command,
+              commandInstance,
+              argv,
+            }
+          : undefined,
+        this.#executor,
+        commandInstance,
+        this
+      )
+      await this.#hooks.runner('executed').run(commandInstance, isMain)
+    } catch (error) {
+      commandInstance.exitCode = commandInstance.exitCode || 1
+      throw error
+    }
   }
 
   /**

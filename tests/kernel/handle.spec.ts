@@ -117,7 +117,32 @@ test.group('Kernel | handle', (group) => {
 
     assert.equal(kernel.getState(), 'completed')
     assert.equal(kernel.exitCode, 1)
+    assert.equal(kernel.getMainCommand()!.exitCode, 1)
     assert.deepEqual(stack, ['executing', 'run', 'executed'])
+  })
+
+  test('fail the main command when executing hook fails', async ({ assert }) => {
+    const kernel = Kernel.create()
+    const stack: string[] = []
+
+    class QueueWork extends BaseCommand {
+      static commandName = 'queue:work'
+      static options: CommandOptions = { staysAlive: true }
+      async run() {
+        stack.push('run')
+      }
+    }
+
+    kernel.addLoader(new ListLoader([QueueWork]))
+    kernel.executing(() => {
+      throw new Error('Pre hook failed')
+    })
+
+    await kernel.handle(['queue:work'])
+
+    assert.equal(kernel.exitCode, 1)
+    assert.equal(kernel.getMainCommand()!.exitCode, 1)
+    assert.deepEqual(stack, [])
   })
 
   test('run the main command lifecycle using a custom executor', async ({ assert }) => {
