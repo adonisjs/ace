@@ -119,6 +119,24 @@ test.group('Parser | flags', () => {
     )
   })
 
+  test('keep alias coercers and array flags when collapsing repeated values', ({ assert }) => {
+    const parser = new Parser({
+      flagsParserOptions: {
+        all: ['name', 'tags'],
+        string: ['name', 'tags'],
+        array: ['tags'],
+        alias: { name: 'n' },
+        coerce: { n: (value: string) => value.toUpperCase() },
+      },
+      argumentsParserOptions: [],
+    })
+
+    assert.deepEqual(parser.parse(['-n', 'alice', '-n', 'bob', '--tags=a', '--tags=b']).flags, {
+      name: 'BOB',
+      tags: ['a', 'b'],
+    })
+  })
+
   test('parse flags using aliases', ({ assert }) => {
     class MakeModel extends BaseCommand {}
     MakeModel.defineFlag('connection', { type: 'string', alias: 'c' })
