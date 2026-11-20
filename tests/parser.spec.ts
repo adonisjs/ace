@@ -81,6 +81,62 @@ test.group('Parser | flags', () => {
     )
   })
 
+  test('use the last value when a string or number flag is repeated', ({ assert }) => {
+    class MakeModel extends BaseCommand {}
+    MakeModel.defineFlag('name', { type: 'string' })
+    MakeModel.defineFlag('batchSize', { type: 'number' })
+    MakeModel.defineFlag('connection', {
+      type: 'string',
+      parse(value) {
+        return `parsed:${value}`
+      },
+    })
+    MakeModel.defineFlag('tags', { type: 'array' })
+
+    assert.deepEqual(
+      new Parser(MakeModel.getParserOptions()).parse([
+        '--name=a',
+        '--name=b',
+        '--batch-size=1',
+        '--batch-size=2',
+        '--connection=pg',
+        '--connection=sqlite',
+        '--tags=a',
+        '--tags=b',
+      ]),
+      {
+        _: [],
+        nodeArgs: [],
+        args: [],
+        unknownFlags: [],
+        flags: {
+          'name': 'b',
+          'batch-size': 2,
+          'connection': 'parsed:sqlite',
+          'tags': ['a', 'b'],
+        },
+      }
+    )
+  })
+
+  test('keep alias coercers and array flags when collapsing repeated values', ({ assert }) => {
+    const parser = new Parser({
+      flagsParserOptions: {
+        all: ['name', 'tags'],
+        string: ['name', 'tags'],
+        array: ['tags'],
+        alias: { name: 'n' },
+        coerce: { n: (value: string) => value.toUpperCase() },
+      },
+      argumentsParserOptions: [],
+    })
+
+    assert.deepEqual(parser.parse(['-n', 'alice', '-n', 'bob', '--tags=a', '--tags=b']).flags, {
+      name: 'BOB',
+      tags: ['a', 'b'],
+    })
+  })
+
   test('parse flags using aliases', ({ assert }) => {
     class MakeModel extends BaseCommand {}
     MakeModel.defineFlag('connection', { type: 'string', alias: 'c' })
