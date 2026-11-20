@@ -55,7 +55,21 @@ export class Parser {
    * @param argv - Command line arguments
    */
   #parseFlags(argv: string | string[]) {
-    const { string = [], array = [] } = this.#options.flagsParserOptions
+    const { string = [], array = [], number = [], coerce = {} } = this.#options.flagsParserOptions
+
+    /**
+     * yargs collects a repeated flag into an array. String and number
+     * flags hold a single value, so the last one wins, like most CLIs.
+     * This runs before the flag's own "parse" method.
+     */
+    const scalarCoerce: Record<string, (value: any) => any> = { ...coerce }
+    for (const flagName of ([] as string[]).concat(string, number)) {
+      const parse = coerce[flagName]
+      scalarCoerce[flagName] = (value: any) => {
+        const lastValue = Array.isArray(value) ? value[value.length - 1] : value
+        return parse ? parse(lastValue) : lastValue
+      }
+    }
 
     return yargsParser(argv, {
       ...this.#options.flagsParserOptions,
@@ -64,6 +78,7 @@ export class Parser {
        * yargs from turning values like "1e3" or "0x10" into numbers
        */
       string: ([] as string[]).concat(string, array),
+      coerce: scalarCoerce,
       configuration: yarsConfig,
     })
   }
