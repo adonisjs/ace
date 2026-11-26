@@ -303,6 +303,44 @@ test.group('Kernel', () => {
     assert.deepEqual(kernel.getNamespaceSuggestions('migrate'), ['migration'])
   })
 
+  test('list closest command suggestions first', async ({ assert }) => {
+    const kernel = Kernel.create()
+
+    class Setup extends BaseCommand {
+      static commandName = 'setup'
+    }
+
+    class Seed extends BaseCommand {
+      static commandName = 'seed'
+    }
+
+    class Serve extends BaseCommand {
+      static commandName = 'serve'
+    }
+
+    kernel.addLoader(new ListLoader([Setup, Seed, Serve]))
+    await kernel.boot()
+
+    assert.deepEqual(kernel.getCommandSuggestions('serv'), ['serve', 'seed', 'setup'])
+  })
+
+  test('list closest namespace suggestions first', async ({ assert }) => {
+    const kernel = Kernel.create()
+
+    class MailSend extends BaseCommand {
+      static commandName = 'mail:send'
+    }
+
+    class MakeModel extends BaseCommand {
+      static commandName = 'make:model'
+    }
+
+    kernel.addLoader(new ListLoader([MailSend, MakeModel]))
+    await kernel.boot()
+
+    assert.deepEqual(kernel.getNamespaceSuggestions('mak'), ['make', 'mail'])
+  })
+
   test('return true when shorthand shortcircuit method', async ({ assert }) => {
     const kernel = Kernel.create()
     assert.isTrue(kernel.shortcircuit())

@@ -459,4 +459,33 @@ test.group('Help command', () => {
       },
     ])
   })
+
+  test('display the closest suggestions when there are many matching commands', async ({
+    assert,
+  }) => {
+    const kernel = Kernel.create()
+    kernel.ui.switchMode('raw')
+
+    const commands = ['seed', 'send', 'setup', 'sort', 'sync', 'serve'].map((commandName) => {
+      return class extends BaseCommand {
+        static commandName: string = commandName
+      }
+    })
+
+    kernel.addLoader(new ListLoader(commands))
+    const command = await kernel.create(HelpCommand, ['serv'])
+    await command.exec()
+
+    assert.equal(command.exitCode, 1)
+    assert.deepEqual(kernel.ui.logger.getLogs(), [
+      {
+        message: [
+          'red(Command "serv" is not defined)',
+          '',
+          'dim(Did you mean?) serve, seed, send, sort',
+        ].join('\n'),
+        stream: 'stderr',
+      },
+    ])
+  })
 })
