@@ -644,7 +644,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
 
   /**
    * Returns an array of command and aliases name suggestions for
-   * a given keyword.
+   * a given keyword. The closest matches come first.
    */
   getCommandSuggestions(keyword: string): string[] {
     /**
@@ -664,7 +664,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
           distance: distance(keyword, value),
         }
       })
-      .sort((current, next) => next.distance - current.distance)
+      .sort((current, next) => current.distance - next.distance)
       .filter((rating) => {
         return rating.distance <= 3
       })
@@ -672,7 +672,8 @@ export class Kernel<Command extends AbstractBaseCommand> {
   }
 
   /**
-   * Returns an array of namespaces suggestions for a given keyword.
+   * Returns an array of namespaces suggestions for a given keyword. The
+   * closest matches come first.
    */
   getNamespaceSuggestions(keyword: string): string[] {
     return this.#namespaces
@@ -682,7 +683,7 @@ export class Kernel<Command extends AbstractBaseCommand> {
           distance: distance(keyword, value),
         }
       })
-      .sort((current, next) => next.distance - current.distance)
+      .sort((current, next) => current.distance - next.distance)
       .filter((rating) => {
         return rating.distance <= 3
       })
