@@ -13,7 +13,5 @@ import { type CommandExecTracingData } from './types.ts'
 /**
  * Traces every command execution handled by the {@link Kernel} class.
  */
-export const commandExec = diagnostics_channel.tracingChannel<
-  'adonisjs.command.exec',
-  CommandExecTracingData
->('adonisjs.command.exec')
+export const commandExec =
+  diagnostics_channel.tracingChannel<CommandExecTracingData>('adonisjs.command.exec')
